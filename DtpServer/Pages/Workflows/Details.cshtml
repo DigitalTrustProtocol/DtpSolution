@@ -1,0 +1,65 @@
+@page
+@model DtpServer.Pages.Workflows.DetailsModel
+@using DtpServer.Extensions
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WorkflowContainer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.DatabaseID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.DatabaseID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.Type)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.Type)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.State)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.State)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.Active)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.Active)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.NextExecution)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.NextExecution)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.Tag)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.Tag)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowContainer.Data)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowContainer.Data)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (HttpContext.Session.Get<bool>("isadmin"))
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.WorkflowContainer.DatabaseID">Edit</a> @Html.Encode("|")
+    }
+    <a asp-page="./Index">Back to List</a>
+</div>

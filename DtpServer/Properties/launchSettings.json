@@ -1,0 +1,24 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://trust.dance",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://trust.dance",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "DTP": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://trust.dance"
+    }
+  }
+}

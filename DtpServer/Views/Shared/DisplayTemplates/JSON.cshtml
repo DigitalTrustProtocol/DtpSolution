@@ -1,0 +1,4 @@
+﻿@model string
+@{
+    <pre><code>@((Model == null) ? "": Newtonsoft.Json.Linq.JValue.Parse(Model).ToString(Newtonsoft.Json.Formatting.Indented))</code></pre>
+}

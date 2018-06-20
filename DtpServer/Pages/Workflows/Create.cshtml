@@ -1,0 +1,54 @@
+@page
+@model DtpServer.Pages.Workflows.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>WorkflowContainer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="WorkflowContainer.Type" class="control-label"></label>
+                <input asp-for="WorkflowContainer.Type" class="form-control" />
+                <span asp-validation-for="WorkflowContainer.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkflowContainer.State" class="control-label"></label>
+                <input asp-for="WorkflowContainer.State" class="form-control" />
+                <span asp-validation-for="WorkflowContainer.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkflowContainer.Active" class="control-label"></label>
+                <input asp-for="WorkflowContainer.Active" class="form-control" />
+                <span asp-validation-for="WorkflowContainer.Active" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkflowContainer.Tag" class="control-label"></label>
+                <input asp-for="WorkflowContainer.Tag" class="form-control" />
+                <span asp-validation-for="WorkflowContainer.Tag" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkflowContainer.Data" class="control-label"></label>
+                <input asp-for="WorkflowContainer.Data" class="form-control" />
+                <span asp-validation-for="WorkflowContainer.Data" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\TrustBuildController.cs" />
+    <Compile Remove="Diagnostics\ErrorEventLoggerTextWriter.cs" />
+    <Compile Remove="Diagnostics\EventLoggerTextWriter.cs" />
+    <Compile Remove="Extensions\SQLiteDataReaderExtensions.cs" />
+    <Compile Remove="Model\ClaimModel.cs" />
+    <Compile Remove="Model\CoreModel.cs" />
+    <Compile Remove="Model\HeadModel.cs" />
+    <Compile Remove="Model\IssuerModel.cs" />
+    <Compile Remove="Model\ProofEntity.cs" />
+    <Compile Remove="Model\ServerModel.cs" />
+    <Compile Remove="Model\SubjectModel.cs" />
+    <Compile Remove="Model\TimestampModel.cs" />
+    <Compile Remove="Model\TrustModel.cs" />
+    <Compile Remove="Repository\TrustDBContextOld.cs" />
+    <Compile Remove="Trust\TrustECDSASignature.cs" />
+    <Compile Remove="Trust\TrustManager.cs" />
+    <Compile Remove="Workflows\FailueWorkflow.cs" />
+    <Compile Remove="Workflows\SleepWorkflow.cs" />
+    <Compile Remove="Workflows\SuccessStep.cs" />
+    <Compile Remove="Workflows\SuccessWorkflow.cs" />
+    <Compile Remove="Workflows\WorkflowContextOld.cs" />
+    <Compile Remove="Workflows\WorkflowEngine.cs" />
+    <Compile Remove="Workflows\WorkflowStep.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.0" />
+    <PackageReference Include="NBitcoin" Version="4.1.1.12" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="Trust\" />
+  </ItemGroup>
+
+</Project>

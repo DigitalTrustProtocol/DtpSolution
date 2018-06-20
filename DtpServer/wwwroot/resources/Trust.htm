@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>Trust validation</title>
+    <style>
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trust validation</h1>
+    <h3>Trust data</h3>
+    <pre id="json"></pre>
+ 
+    <p>The Trust ID is <span class="valid" id="trustidStatus">(calculating)</span></p>
+    <p>The Trust Issuer signature is <span class="valid" id="issuerSignatureStatus">(calculating)</span></p>
+    <!-- <p>The Trust Timestamp merkle root <span class="" id="trusttimestampmerkleroot">(calculating)</span></p> -->
+    <p>The Trust Timestamp address <a href="#" class="" id="trusttimestampaddress" target="_blank">(calculating)</span></p>
+
+    <!-- <p>The publicKey is from private Key of SHA256(SHA256(merkleroot))</p>
+    <p>The address is RIPEMD(publicKey) (in hex)</p> -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="/lib/bitcoinjs/bitcoin.js"></script>
+    <script src="/lib/Merkle/TCmerkle.js"></script>
+    <script src="/js/TrustchainService.js"></script>
+    <script src="/js/PackageBuilder.js"></script>
+    <script>
+        function OnReady() {
+            var param = getQueryParams(window.location.href);
+
+            var settings = {
+                infoserver : "https://trust.dance"
+            }
+
+            var trustchainService = new TrustchainService(settings);
+            var packageBuilder = new PackageBuilder(settings);
+            var query = packageBuilder.CreateTrust(param.issueraddress, "", param.subjectaddress, param.type, param.scopevalue, "", 0, 0);
+
+            trustchainService.GetSimilarTrust(query).done(function(result){
+
+                var trust = result.data
+                document.getElementById("json").innerHTML = JSON.stringify(trust, undefined, 2);
+
+                var currentId = trust.id.base64ToBuffer()
+                packageBuilder.CalculateTrustId(trust)
+
+                SetResult('trustidStatus', (tce.buffer.Buffer.compare(currentId, trust.id) === 0))
+                var signatureResult = CheckSignature(trust.id, trust.issuer.address, trust.issuer.signature)
+                SetResult('issuerSignatureStatus', signatureResult)
+
+
+                var merkle = new MerkleTree(null, sha256, tce.buffer.Buffer)
+                var receipt = trust.receipt || ""
+                var root = hash256(merkle.calcRoot(receipt.base64ToBuffer(), trust.id))
+
+                //document.getElementById("trusttimestampmerkleroot").innerHTML = root.toString('HEX');
+                var link = document.getElementById("trusttimestampaddress");
+                link.innerText = GetAddress(hash256(root));
+                link.href = "https://chain.so/address/BTCTEST/"+link.innerText;
+            });
+            
+            
+
+        }
+
+        function CheckSignature(id, address, signature) {
+            var hash = id.base64ToBuffer();
+            var address = address.base64ToBuffer();
+            var signature = signature.base64ToBuffer();
+            var valid = tce.bitcoin.ECPair.verifyCompact(address, signature, hash, tce.bitcoin.networks.testnet);
+            return valid;
+        }
+
+        function SetResult(name, valid) {
+            var element = document.getElementById(name);
+            if (valid) {
+                element.className = "valid";
+                element.innerText = "OK";
+            }
+            else {
+                element.className = "Invalid";
+                element.innerText = "invalid";
+            }
+
+        }
+
+        function GetAddress(data) {
+            var d = tce.BigInteger.fromBuffer(data)
+            var keyPair = new tce.bitcoin.ECPair(d, null, { network: tce.bitcoin.networks.testnet})
+            var address = keyPair.getAddress()
+            return address;
+        }
+
+        function getQueryParams(url) {
+            var qparams = {},
+                parts = (url || '').split('?'),
+                qparts, qpart,
+                i = 0;
+
+            if (parts.length <= 1) {
+                return qparams;
+            } else {
+                qparts = parts[1].split('&');
+                for (i in qparts) {
+
+                    qpart = qparts[i].split('=');
+                    qparams[decodeURIComponent(qpart[0]).toLocaleLowerCase()] =
+                        decodeURIComponent(qpart[1] || '');
+                }
+            }
+
+            return qparams;
+        }
+
+        function sha256(data) {
+            // returns Buffer
+            return tce.bitcoin.crypto.sha256(data)
+        }
+
+        function hash256(data) {
+            return tce.bitcoin.crypto.hash256(data)
+        }
+
+        tce.buffer.Buffer.prototype.toJSON = function toJSON() {
+            return this.toString('base64');
+        };
+
+
+        tce.buffer.Buffer.prototype.base64ToBuffer = function () {
+            return this;
+        };
+
+        String.prototype.base64ToBuffer = function() {
+            if(!this || this.length === 0)
+                return new tce.buffer.Buffer(0);
+
+            return new tce.buffer.Buffer(this.toString(), 'base64');
+        };
+
+        (function () {
+            OnReady();
+        })()
+
+    </script>
+</body>
+</html>

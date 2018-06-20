@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Model\ClaimModel.cs" />
+    <Compile Remove="Model\ClaimQuery.cs" />
+    <Compile Remove="Model\TargetIndex.cs" />
+    <Compile Remove="Workflows\TrustPackageStep.cs" />
+    <Compile Remove="Workflows\TrustTimestampStep.cs" />
+    <Compile Remove="Workflows\TrustTimestampWorkflow.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Facade\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DtpCore\DtpCore.csproj" />
+    <ProjectReference Include="..\DtpStampCore\DtpStampCore.csproj" />
+  </ItemGroup>
+
+</Project>

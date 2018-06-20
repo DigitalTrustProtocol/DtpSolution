@@ -1,0 +1,5 @@
+﻿@model byte[]
+@{
+    <a href="javascript:void(0);" onclick="$(this).next().toggle()">View</a>
+    <div style="display:none" class="monospace200">@((Model != null) ? BitConverter.ToString(Model).Replace("-", "") : "")</div>
+}

@@ -1,0 +1,105 @@
+﻿@page
+@model DtpServer.Pages.Trusts.IndexModel
+
+@{
+    ViewData["Title"] = "Trust";
+    Layout = "~/Pages/_Layout.cshtml";
+}
+
+<h1>Trusts</h1>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find:
+            <input type="text" name="searchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-page="./Index">Reset</a>
+        </p>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Id)
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSortOrder!" asp-route-sortField="Created" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@Model.Trusts.PageIndex">
+                    @Html.DisplayNameFor(model => model.Trusts[0].Created)
+                </a>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Claim)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Activate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Expire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trusts[0].Replaced)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Trusts)
+        {
+        <tr>
+            <td>
+                <a asp-page="./Details" asp-route-id="@Convert.ToBase64String(item.Id)">@Html.DisplayFor(modelItem => item.Id)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Claim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Expire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Replaced)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Trusts.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Trusts.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+    asp-route-sortOrder="@Model.CurrentSortOrder"
+    asp-route-sortField="@Model.CurrentSortField"
+    asp-route-pageIndex="@(Model.Trusts.PageIndex - 1)"
+    asp-route-currentFilter="@Model.CurrentFilter"
+    class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+    asp-route-sortOrder="@Model.CurrentSortOrder"
+    asp-route-sortField="@Model.CurrentSortField"
+    asp-route-pageIndex="@(Model.Trusts.PageIndex + 1)"
+    asp-route-currentFilter="@Model.CurrentFilter"
+    class="btn btn-default @nextDisabled">
+    Next
+</a>

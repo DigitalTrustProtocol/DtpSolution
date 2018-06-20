@@ -1,0 +1,5 @@
+﻿@using NBitcoin;
+@model byte[]
+@{
+<div class="monospace">@((Model != null && Model.Length == 20) ? (new KeyId(Model)).GetAddress(Network.Main).ToString() : (Model != null) ? BitConverter.ToString(Model).Replace("-", "") : "")</div>
+}

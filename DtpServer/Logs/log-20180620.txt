@@ -1,0 +1,28 @@
+2018-06-20T23:22:10.2418521+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:22:11.4895898+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:22:11.9737314+02:00  [INF] Trust loaded: 4 ()
+2018-06-20T23:22:12.3048245+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:22:12.3513219+02:00  [INF] 20/06/2018 23.22.12 - Active Workflows found: 8 ({ Id: 1900119285 })
+2018-06-20T23:22:12.3525495+02:00  [INF] 20/06/2018 23.22.12 - Executing workflow id : 429 ({ Id: 1205534376 })
+2018-06-20T23:22:12.3853700+02:00  [FTL] An error occurred starting the application ({ Id: 9 })
+System.AggregateException: One or more errors occurred. (Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.) ---> System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.StartAsync(CancellationToken token)
+---> (Inner Exception #0) System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)<---
+
+2018-06-20T23:22:15.4161178+02:00 0HLEMUFHQO2GS:00000001 [INF] HTTP "GET" "/" responded 200 in 2190.5413 ms ()
+2018-06-20T23:22:21.8726077+02:00 0HLEMUFHQO2GS:00000002 [INF] HTTP "GET" "/About" responded 200 in 123.2631 ms ()
+2018-06-20T23:22:21.8941406+02:00 0HLEMUFHQO2GO:00000001 [INF] HTTP "GET" "/images/TP200.jpg" responded 200 in 13.5104 ms ()
+2018-06-20T23:22:21.8941406+02:00 0HLEMUFHQO2GS:00000003 [INF] HTTP "GET" "/images/CK200.jpg" responded 200 in 14.6249 ms ()
+2018-06-20T23:22:29.5050871+02:00 0HLEMUFHQO2GO:00000002 [INF] HTTP "GET" "/" responded 200 in 2.0274 ms ()

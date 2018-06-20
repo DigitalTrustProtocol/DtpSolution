@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{57F04FF0-3F98-47EF-8698-BEFB46FDD699}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{95FAF109-6E49-4E5F-AF99-97FC18CE0842}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\Database.txt = Documentation\Database.txt
+		Documentation\Install.txt = Documentation\Install.txt
+		Documentation\PackageSchema.json = Documentation\PackageSchema.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpCore", "DtpCore\DtpCore.csproj", "{886C20DC-9124-4E2F-B248-E638BE6D855B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpStampCore", "DtpStampCore\DtpStampCore.csproj", "{262C830C-330D-4EE6-8EC9-29F64B691066}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpGraphCore", "DtpGraphCore\DtpGraphCore.csproj", "{A6542C9E-F1FA-4E25-9DBB-E10F9B1C9FDD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpServer", "DtpServer\DtpServer.csproj", "{165331EA-B409-402E-8E1B-83BE1D07BFCB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57F04FF0-3F98-47EF-8698-BEFB46FDD699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F04FF0-3F98-47EF-8698-BEFB46FDD699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F04FF0-3F98-47EF-8698-BEFB46FDD699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F04FF0-3F98-47EF-8698-BEFB46FDD699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{886C20DC-9124-4E2F-B248-E638BE6D855B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886C20DC-9124-4E2F-B248-E638BE6D855B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886C20DC-9124-4E2F-B248-E638BE6D855B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886C20DC-9124-4E2F-B248-E638BE6D855B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262C830C-330D-4EE6-8EC9-29F64B691066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262C830C-330D-4EE6-8EC9-29F64B691066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262C830C-330D-4EE6-8EC9-29F64B691066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262C830C-330D-4EE6-8EC9-29F64B691066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6542C9E-F1FA-4E25-9DBB-E10F9B1C9FDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6542C9E-F1FA-4E25-9DBB-E10F9B1C9FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6542C9E-F1FA-4E25-9DBB-E10F9B1C9FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6542C9E-F1FA-4E25-9DBB-E10F9B1C9FDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{165331EA-B409-402E-8E1B-83BE1D07BFCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{165331EA-B409-402E-8E1B-83BE1D07BFCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{165331EA-B409-402E-8E1B-83BE1D07BFCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{165331EA-B409-402E-8E1B-83BE1D07BFCB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4776195B-C9FA-4F80-A1B7-0D8BBDA6AC4F}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

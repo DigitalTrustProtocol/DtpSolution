@@ -1,0 +1,64 @@
+@page
+@model DtpServer.Pages.Workflows.IndexModel
+
+@{
+    ViewData["Title"] = "Workflows";
+}
+
+<h2>Workflows</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkflowContainer[0].DatabaseID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkflowContainer[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkflowContainer[0].State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkflowContainer[0].Active)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.WorkflowContainer[0].Tag)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkflowContainer[0].Data)
+        </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.WorkflowContainer) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatabaseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            @*<td>
+            @Html.DisplayFor(modelItem => item.Tag)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Data)
+        </td>*@
+            <td>
+                <a asp-page="./List" asp-route-type="@item.Type">View</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

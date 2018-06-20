@@ -1,0 +1,16 @@
+﻿@page
+@model DtpServer.Pages.LoginModel
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@if(Model.IsAdmin)
+{
+    <h3>Login succesfull :)</h3>
+
+}
+else
+{
+    <h3>Login unsuccesfull :(</h3>
+}

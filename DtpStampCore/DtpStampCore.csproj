@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extensions\ByteExtensions.cs" />
+    <Compile Remove="Extensions\EncoderExtensions.cs" />
+    <Compile Remove="Extensions\JsonExtensions.cs" />
+    <Compile Remove="Model\TimestampProof.cs" />
+    <Compile Remove="Repository\BlockrRepository.cs" />
+    <Compile Remove="Services\Batch.cs" />
+    <Compile Remove="Services\Crypto.cs" />
+    <Compile Remove="Services\Info.cs" />
+    <Compile Remove="Services\Proof.cs" />
+    <Compile Remove="Workflows\AddressVerifyStep.cs" />
+    <Compile Remove="Workflows\BitcoinWorkflow.cs" />
+    <Compile Remove="Workflows\BlockchainWorkflowBatch.cs" />
+    <Compile Remove="Workflows\FailedWorkflow.cs" />
+    <Compile Remove="Workflows\LocalTimestampStep.cs" />
+    <Compile Remove="Workflows\MerkleStep.cs" />
+    <Compile Remove="Workflows\NewWorkflow.cs" />
+    <Compile Remove="Workflows\RemotePayWorkflow.cs" />
+    <Compile Remove="Workflows\RemoteStampWorkflow.cs" />
+    <Compile Remove="Workflows\RemoteTimestampStep.cs" />
+    <Compile Remove="Workflows\SleepWorkflow.cs" />
+    <Compile Remove="Workflows\SuccessWorkflow.cs" />
+    <Compile Remove="Workflows\TimestampScheduleStep.cs" />
+    <Compile Remove="Workflows\TimestampStep.cs" />
+    <Compile Remove="Workflows\WorkflowBatch.cs" />
+    <Compile Remove="Workflows\WorkflowContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="NBitcoin" Version="4.1.1.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Strategies\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DtpCore\DtpCore.csproj" />
+  </ItemGroup>
+
+</Project>

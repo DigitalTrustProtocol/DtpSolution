@@ -1,0 +1,23 @@
+Install
+
+Server
+
+1. Clone the project locally
+2. Create the folder "C:\tmp\"
+3. Copy the files: certpassword.txt, www_trust_dance.pfx to the c:\tmp folder (See google trustchain drive under resources)
+4. Open the windows hosts file (C:\Windows\System32\drivers\etc\hosts) and add "127.0.0.1 trust.dance", save and close.
+5. Make sure to close and reopen all browsers used for testing, needs to pickup the changes from the hosts file.
+6. Compile and run the project. Test url: https://trust.dance
+
+
+Client
+
+1. Clone the project locally
+2. Open Chrome browser and go to Extensions (write in url: chrome://extensions/)
+3. Enable "Developer mode"
+4. Select "Load unpacked" and navigate and select the project folder.
+5. A TC icon appears on the upper right corner of the browser. Click the icon.
+6. Add your password and seed, press save.
+
+
+

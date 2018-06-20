@@ -1,0 +1,84 @@
+Running on port 80
+
+Sometimes the Microsoft "Web Deployment Agent Service" can block access to http port 80.
+Uninstall or disable the service.
+https://www.file.net/process/msdepsvc.exe.html
+
+
+Publish by commandline
+dotnet publish -f netcoreapp2.0 -c Release
+
+
+Database managning
+
+
+SQLite
+https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
+
+Create the database
+Once you have a model, you can use migrations to create a database.
+Navigate to DtpSolution project 
+Command line:
+dotnet ef migrations add InitialCreate 
+dotnet ef database update
+
+Step by step
+*. Open Package Manager Console
+*. cd DtpServer
+*. Change default project to: DtpCore
+*. Delete files in Migration folder under DtpCore
+*. Delete trust.db in DtpServer project
+*. Maybe restart Visual Studio
+*. Add-Migration trust.db
+*. Update-Database
+
+
+New stuff
+Add-Migration [Name]
+Update-Database
+
+
+Add-Migration -Name MyMigration -OutputDir MyMigrationDir -Context MyContext -Project MyProject -StartupProject MyStartupProject
+
+
+Scaffold model
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/model
+
+
+dotnet aspnet-codegenerator razorpage -m Workflows -dc TrustDBContext -udl -outDir Pages\Workflow --referenceScriptLibraries
+
+
+dotnet aspnet-codegenerator razorpage -m ProofEntity -dc TrustDBContext -udl -outDir Pages\Proofs --referenceScriptLibraries
+
+
+
+  <ItemGroup>
+    <!--<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />-->
+  </ItemGroup>
+
+Configuration settings
+
+
+DtpStampCore
+            Config["endpoint"] = IPAddress.Loopback.ToString();
+            Config["port"] = 12700;
+            Config["eventlog"] = !Environment.UserInteractive; // Activate event logger if no console is active.
+            Config["test"] = false; // General test, no real data is stored, run in memory database!
+            Config["partition"] = "yyyyMMddhhmm00"; // Create a new batch every hour.
+            Config["processinterval"] = 1000 * 30; // 30 sec
+
+            // Bitcoin
+            Config["network"] = "TestNet";  // Bitcoin Private key in wif format
+            Config["btcwif"] = "cMcGZkth7ufvQC59NSTSCTpepSxXbig9JfhCYJtn9RppU4DXx4cy"; // Test net key
+            Config["btcfee"] = "0.0001";
+            Config["remoteendpoint"] = ""; // Connect to a remote TrustStamp server
+            Config["remoteport"] = 12700; // Connect to a remote TrustStamp server port
+
+
+            Config["dbconnectionstring"] = "";  // Connection or dbfilename
+            Config["dbfilename"] = "trust.db";
+            Config["database"] = new JObject();
+            Config["database"]["pooling"] = true;
+            Config["database"]["cache"] = "shared";
+            Config["database"]["syncmode"] = 0;
+            Config["database"]["journalmode"] = -1;

@@ -1,0 +1,60 @@
+@page
+@model DtpServer.Pages.Timestamps.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Timestamp</h2>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Source):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Source)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Registered):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Registered)</td>
+        </tr>
+
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Blockchain):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Blockchain)</td>
+        </tr>
+
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Service):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Service)</td>
+        </tr>
+
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Receipt):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Receipt)</td>
+        </tr>
+
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Algorithm):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Algorithm)</td>
+        </tr>
+
+        <tr>
+            <td>Merkle root:</td>
+            <td><div class="monospace">@Html.Encode(ViewData["root"])</div></td>
+        </tr>
+        <tr>
+            <td>Root Address:</td>
+            <td><a href="@ViewData["addressLookupUrl"]" target="_blank">@Html.Encode(ViewData["address"])</a></td>
+        </tr>
+        <tr>
+            <td>Confirmations:</td>
+            <td>@ViewData["confirmations"]</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.WorkflowID):</td>
+            <td><a asp-page="/Workflows/Details" asp-route-id="@Model.Timestamp.WorkflowID">@Html.DisplayFor(t => Model.Timestamp.WorkflowID)</a></td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>

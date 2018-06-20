@@ -1,0 +1,204 @@
+﻿@page
+@model DtpServer.Pages.Trusts.DetailsModel
+
+@{
+    ViewData["Title"] = "Trust";
+    Layout = "~/Pages/_Layout.cshtml";
+}
+<h2>Trust</h2>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Id)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Algorithm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Algorithm)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Created)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Issuer)
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Type):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Type)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Address):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Address)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Signature):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Signature)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Subject)
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Subject.Type):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Type)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Subject.Address):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Address)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Trust.Subject.Signature):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Signature)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Type)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Claim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Claim)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Scope)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Scope)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Cost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Cost)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Activate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Activate)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Expire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Expire)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Replaced)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Trust.Replaced)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.Timestamps)
+            </td>
+            <td>
+                <table class="table">
+                    <tbody>
+                        @foreach (var timestamp in Model.Trust.Timestamps)
+                        {
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Source):</td>
+                                <td><a asp-page="/Timestamps/Details" asp-route-source="@Convert.ToBase64String(timestamp.Source)">@Html.DisplayFor(t => timestamp.Source)</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Registered):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Registered)</td>
+                            </tr>
+
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Blockchain):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Blockchain)</td>
+                            </tr>
+
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Service):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Service)</td>
+                            </tr>
+
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Receipt):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Receipt)</td>
+                            </tr>
+
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Algorithm):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Algorithm)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <pre><code>@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Trust, Newtonsoft.Json.Formatting.Indented)</code></pre>
+</div>

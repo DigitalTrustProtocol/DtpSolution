@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <UserSecretsId>2af78036-f463-4616-8b5b-d83582cb7f5b</UserSecretsId>
+    <ApplicationIcon></ApplicationIcon>
+    <RazorCompileToolset>PrecompilationTool</RazorCompileToolset>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <OutputType>Exe</OutputType>
+    <StartupObject>DtpServer.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <Content Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\StampController.cs" />
+    <Compile Remove="Controllers\TrustController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Shared\DisplayTemplates\TitleDetailLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="trust - backup.old" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="2.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="2.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="2.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\lib\bootstrap-table\bootstrap-table.js" />
+    <None Include="wwwroot\resources\Trust.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logs\" />
+    <Folder Include="wwwroot\lib\NewFolder\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DtpCore\DtpCore.csproj" />
+    <ProjectReference Include="..\DtpGraphCore\DtpGraphCore.csproj" />
+    <ProjectReference Include="..\DtpStampCore\DtpStampCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Shared\DisplayTemplates\ByteToAddress.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="wwwroot\resources\Proof.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="trust.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,4 @@
+﻿@model object
+@{
+    <pre><code>@((Model == null) ? "" : Newtonsoft.Json.JsonConvert.SerializeObject(Model, Newtonsoft.Json.Formatting.Indented))</code></pre>
+}

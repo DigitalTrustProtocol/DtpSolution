@@ -1,0 +1,48 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Digital Trust Protocol</h1>
+        <p>Decentrialized Trust</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <p>With the introduction of the World Wide Web, the possibility for everybody to produce content that could potentially reach anyone else became possible. However, one crucial element was digitally left behind - Trust. The reputation of a few persons is easily managed, however for an individual to maintain the status of a huge number of only loosely known people, becomes an exhausting task. Relying on friends and family’s trust network is a way to solve this, but usually, they are not available at the time or do not even have the same interest sphere. Further, the possibility to be anonymous and still provide content make it hard for the reader to verify if the message is authentic.</p>
+            <p>The Digital Trust Protocol (DTP) will put back the trust system into the digital world. It will make it possible for everybody to leverage the trust network of anybody else. The goal of the DTP system is it will be able to be used for literally anything that covers the subject of trust, security, and identity.</p>
+            <p><hr /></p>
+            <h2>Try it out</h2>
+            <p>Install a Chrome Extension and try out DTP on reddit.com</p>
+            <p>
+                <a href="~/resources/TrustChromeExtension.zip">TrustChromeExtension.zip</a> (<a href="https://github.com/keutmann/TrustChromeExtension" target="_blank">Github</a>)
+            </p>
+            <h3>Install Client</h3>
+            <ul>
+                <li>1. Download the Zip file locally and unpack it.</li>
+                <li>2. Open Chrome browser and go to Extensions (write in url: chrome://extensions/)</li>
+                <li>3. Enable "Developer mode"</li>
+                <li>
+                    4. Select "Load unpacked" and navigate and select the zip file unpack folder.<br />
+                    <img src="~/images/ChromeExtenion.JPG" />
+                </li>
+                <li>5. A TC icon appears on the upper right corner of the browser. Click the icon.</li>
+                <li>6. Add your password and seed, press save.</li>
+            </ul>
+
+            <p>When browsing the reddit site, some changes should be visible.<br />
+                <img src="~/images/RedditExtension1.png" />
+            </p>            
+            <h3>Trust server</h3>
+            <p>Its possible to host your own Trust server, it runs on ASP.NET Core C#</p>
+            <p>Get it her <a href="https://github.com/keutmann/Trustchain-Solution" target="_blank">Github</a></p>
+
+        </div>
+    </div>
+</div>
+
