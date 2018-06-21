@@ -20,10 +20,7 @@ namespace DtpStampCore.Workflows
     public class TimestampWorkflow : WorkflowContext, ITimestampWorkflow
     {
         public enum TimestampStates { Synchronization, Merkle, Timestamp, LocalTimestamp, RemoteTimestamp, AddressVerify }
-
-        //[JsonProperty(PropertyName = "metode", NullValueHandling = NullValueHandling.Ignore)]
-        //public BlockchainProof Proof { get; set; }
-
+        
         [JsonProperty(PropertyName = "proof", NullValueHandling = NullValueHandling.Ignore)]
         public BlockchainProof Proof { get; set; }
 
@@ -31,9 +28,8 @@ namespace DtpStampCore.Workflows
 
         public IList<byte[]> OutTx { get; set; }
 
-        public TimestampStates CurrentState = TimestampStates.Synchronization;
-
-
+        public TimestampStates CurrentState { get; set; }
+        
         [JsonIgnore]
         public Action MethodCallback { get; set; }
         [JsonIgnore]
@@ -56,9 +52,9 @@ namespace DtpStampCore.Workflows
         private ILogger<TimestampWorkflow> _logger;
 
 
-
         public TimestampWorkflow()
         {
+            CurrentState = TimestampStates.Synchronization;
         }
 
         public void SetCurrentState(TimestampStates state)

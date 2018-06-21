@@ -27,6 +27,8 @@
     <Content Remove="Views\Shared\DisplayTemplates\TitleDetailLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Logs\log-20180620.txt" />
+    <None Remove="Logs\log-20180621.txt" />
     <None Remove="trust - backup.old" />
   </ItemGroup>
   <ItemGroup>

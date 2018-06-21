@@ -12,6 +12,7 @@ using DtpCore.Interfaces;
 using DtpStampCore.Interfaces;
 using DtpCore.Services;
 using DtpCore.Extensions;
+using DtpStampCore.Workflows;
 
 namespace DtpServer.Pages.Timestamps
 {
@@ -52,7 +53,7 @@ namespace DtpServer.Pages.Timestamps
                 var root = _merkleTree.ComputeRoot(hash, Timestamp.Receipt);
 
                 if (Timestamp.WorkflowID > 0) {
-                    var wf = _workflowService.Load<ITimestampWorkflow>(Timestamp.WorkflowID);
+                    var wf = _workflowService.Load<TimestampWorkflow>(Timestamp.WorkflowID);
 
                     if (String.IsNullOrEmpty(Timestamp.Blockchain))
                         Timestamp.Blockchain = wf.Proof.Blockchain;
