@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using DtpCore.Model;
 using DtpCore.Services;
+using DtpCore.Workflows;
 
 namespace DtpCore.Interfaces
 {
@@ -16,7 +15,7 @@ namespace DtpCore.Interfaces
         [JsonIgnore]
         WorkflowContainer Container { get; set; }
 
-        List<IWorkflowLog> Logs { get; set; }
+        List<WorkflowLog> Logs { get; set; }
 
         void Execute();
         void UpdateContainer();

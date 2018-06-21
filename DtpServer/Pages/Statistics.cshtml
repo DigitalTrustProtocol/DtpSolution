@@ -66,5 +66,57 @@
 
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Graph</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Table
+                        </th>
+                        <th>
+                            Count
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Issuers
+                        </td>
+                        <td>
+                            @Model.Graph.Issuers.Count
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Alias
+                        </td>
+                        <td>
+                            @Model.Graph.Alias.Count()
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Claims
+                        </td>
+                        <td>
+                            @Model.Graph.Claims.Count
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Scopes
+                        </td>
+                        <td>
+                            @Model.Graph.Scopes.Count()
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 </div>
 

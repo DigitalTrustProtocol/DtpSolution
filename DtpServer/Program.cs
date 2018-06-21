@@ -79,8 +79,8 @@ namespace DtpServer
                     options.Listen(IPAddress.Any, 80);
                     options.Listen(IPAddress.Any, 443, listenOptions =>
                     {
-                        var password = File.ReadAllText(@"C:\tmp\certpassword.txt");
-                        listenOptions.UseHttps(@"C:\tmp\www_trust_dance.pfx", password);
+                        var password = File.ReadAllText(@"C:\tmp\trust.dance.txt");
+                        listenOptions.UseHttps(@"C:\tmp\trust.dance.pfx", password);
                     });
                 })
                 .UseSerilog()

@@ -17,13 +17,10 @@ namespace DtpCore.Workflows
         public WorkflowContainer Container { get; set; }
 
         [JsonProperty(PropertyName = "logs", NullValueHandling = NullValueHandling.Ignore)]
-        public List<IWorkflowLog> Logs { get; set; }
+        public List<WorkflowLog> Logs { get; set; }
 
         [JsonIgnore]
         public IWorkflowService WorkflowService { get; set; }
-
-        private Dictionary<string, IWorkflowLog> _logDictionary = null;
-
 
         public WorkflowContext() 
         {
@@ -32,7 +29,7 @@ namespace DtpCore.Workflows
                 Type = GetType().AssemblyQualifiedName,
                 State = WorkflowStatusType.New.ToString()
             };
-            Logs = new List<IWorkflowLog>();
+            Logs = new List<WorkflowLog>();
         }
 
         public virtual void UpdateContainer()
@@ -47,9 +44,6 @@ namespace DtpCore.Workflows
 
         public virtual void Save()
         {
-            if(_logDictionary != null)
-                Logs = _logDictionary.Values.ToList<IWorkflowLog>();
-
             WorkflowService.Save(this);
         }
 
@@ -84,25 +78,11 @@ namespace DtpCore.Workflows
 
         public virtual void Log(string message)
         {
-            if(_logDictionary == null)
+            if(Logs.Count > 100)
             {
-                _logDictionary = new Dictionary<string, IWorkflowLog>();
-                foreach(var l in Logs)
-                {
-                    if (_logDictionary.ContainsKey(l.Message))
-                        continue;
-
-                    _logDictionary.Add(l.Message, l);
-                }
+                Logs.RemoveAt(0);
             }
-
-            var log = new WorkflowLog { Message = message };
-            if (_logDictionary.TryGetValue(log.Message, out IWorkflowLog oldLog))
-            {
-                log.Count = oldLog.Count + 1;
-            }
-
-            _logDictionary[log.Message] = log;
+            Logs.Add(new WorkflowLog { Message = message });
         }
 
         public void CombineLog(ILogger logger, string msg)

@@ -22,10 +22,10 @@ namespace DtpServer.Pages
         public void OnGet(string command)
         {
             // Temp hack for controlling data on the database
-            //if (command == "cleandatabase")
-            //{
-            //    _context.ClearAllData();
-            //}
+            if (command == "cleandatabase")
+            {
+                _context.ClearAllData();
+            }
         }
     }
 }

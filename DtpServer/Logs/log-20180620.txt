@@ -26,3 +26,172 @@ System.AggregateException: One or more errors occurred. (Unable to cast object o
 2018-06-20T23:22:21.8941406+02:00 0HLEMUFHQO2GO:00000001 [INF] HTTP "GET" "/images/TP200.jpg" responded 200 in 13.5104 ms ()
 2018-06-20T23:22:21.8941406+02:00 0HLEMUFHQO2GS:00000003 [INF] HTTP "GET" "/images/CK200.jpg" responded 200 in 14.6249 ms ()
 2018-06-20T23:22:29.5050871+02:00 0HLEMUFHQO2GO:00000002 [INF] HTTP "GET" "/" responded 200 in 2.0274 ms ()
+2018-06-20T23:50:45.4722897+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:50:46.5037361+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:50:46.9631932+02:00  [INF] Trust loaded: 4 ()
+2018-06-20T23:50:47.2788440+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:50:47.3238949+02:00  [INF] 20/06/2018 23.50.47 - Active Workflows found: 9 ({ Id: 232482071 })
+2018-06-20T23:50:47.3251014+02:00  [INF] 20/06/2018 23.50.47 - Executing workflow id : 429 ({ Id: 1468513071 })
+2018-06-20T23:50:47.3580087+02:00  [FTL] An error occurred starting the application ({ Id: 9 })
+System.AggregateException: One or more errors occurred. (Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.) ---> System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.StartAsync(CancellationToken token)
+---> (Inner Exception #0) System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)<---
+
+2018-06-20T23:50:50.2635884+02:00 0HLEMUVGST2VI:00000001 [INF] HTTP "GET" "/" responded 200 in 2205.7805 ms ()
+2018-06-20T23:52:13.5997151+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:52:14.6277235+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:52:15.0876222+02:00  [INF] Trust loaded: 4 ()
+2018-06-20T23:52:41.5928792+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:52:41.6413877+02:00  [INF] 20/06/2018 23.52.41 - Active Workflows found: 11 ({ Id: 1172524298 })
+2018-06-20T23:52:41.6431596+02:00  [INF] 20/06/2018 23.52.41 - Executing workflow id : 429 ({ Id: 1906624499 })
+2018-06-20T23:53:17.1386310+02:00  [FTL] An error occurred starting the application ({ Id: 9 })
+System.AggregateException: One or more errors occurred. (Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.) ---> System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.StartAsync(CancellationToken token)
+---> (Inner Exception #0) System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)<---
+
+2018-06-20T23:53:19.3924629+02:00 0HLEMV0TEKCOM:00000001 [INF] HTTP "GET" "/" responded 200 in 2047.5898 ms ()
+2018-06-20T23:53:53.6006630+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:53:54.5924526+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:53:55.0508599+02:00  [INF] Trust loaded: 4 ()
+2018-06-20T23:53:57.4137618+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:53:57.4588631+02:00  [INF] 20/06/2018 23.53.57 - Active Workflows found: 11 ({ Id: 327026130 })
+2018-06-20T23:53:57.4614328+02:00  [INF] 20/06/2018 23.53.57 - Executing workflow id : 429 ({ Id: 298838024 })
+2018-06-20T23:53:57.6957203+02:00  [FTL] An error occurred starting the application ({ Id: 9 })
+System.AggregateException: One or more errors occurred. (Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.) ---> System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.StartAsync(CancellationToken token)
+---> (Inner Exception #0) System.InvalidCastException: Unable to cast object of type 'Newtonsoft.Json.Linq.JObject' to type 'DtpCore.Interfaces.IWorkflowContext'.
+   at DtpCore.Services.WorkflowService.Create(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 84
+   at DtpCore.Services.WorkflowService.Execute(WorkflowContainer container) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 189
+   at DtpCore.Services.WorkflowService.RunWorkflows() in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowService.cs:line 132
+   at DtpCore.Services.WorkflowHostedService.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\keutm\source\repos\DtpSolution\DtpCore\Services\WorkflowHostedService.cs:line 39
+   at Microsoft.AspNetCore.Hosting.Internal.HostedServiceExecutor.ExecuteAsync(Func`2 callback)<---
+
+2018-06-20T23:54:00.2523511+02:00 0HLEMV19HGDK8:00000001 [INF] HTTP "GET" "/" responded 200 in 2207.5020 ms ()
+2018-06-20T23:54:05.3145988+02:00 0HLEMV19HGDK8:00000002 [INF] HTTP "GET" "/" responded 200 in 145.9900 ms ()
+2018-06-20T23:54:07.7796683+02:00 0HLEMV19HGDK8:00000003 [WRN] The LINQ expression '"GroupBy([p].Type, [p])"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:54:07.7830230+02:00 0HLEMV19HGDK8:00000003 [WRN] The LINQ expression '"orderby [t].DatabaseID desc"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:54:07.7842542+02:00 0HLEMV19HGDK8:00000003 [WRN] The LINQ expression '"First()"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:54:07.8194414+02:00 0HLEMV19HGDK8:00000003 [INF] HTTP "GET" "/workflows/" responded 200 in 271.6152 ms ()
+2018-06-20T23:54:08.9415165+02:00 0HLEMV19HGDK8:00000004 [INF] HTTP "GET" "/" responded 200 in 1.1186 ms ()
+2018-06-20T23:54:18.9068079+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:54:19.9296583+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:54:20.2918631+02:00  [INF] Trust loaded: 0 ()
+2018-06-20T23:54:20.6388908+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:54:20.6899388+02:00  [INF] 20/06/2018 23.54.20 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:20.6930729+02:00  [INF] 20/06/2018 23.54.20 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:29.1933282+02:00  [INF] 20/06/2018 23.54.29 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:29.1944828+02:00  [INF] 20/06/2018 23.54.29 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:34.9687280+02:00  [INF] 20/06/2018 23.54.34 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:34.9693881+02:00  [INF] 20/06/2018 23.54.34 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:35.4730146+02:00  [INF] 20/06/2018 23.54.35 - Active Workflows found: 1 ({ Id: 23838235 })
+2018-06-20T23:54:35.4743994+02:00  [INF] 20/06/2018 23.54.35 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:40.7743489+02:00  [INF] 20/06/2018 23.54.40 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:40.7756088+02:00  [INF] 20/06/2018 23.54.40 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:41.2785850+02:00  [INF] 20/06/2018 23.54.41 - Active Workflows found: 1 ({ Id: 23838235 })
+2018-06-20T23:54:41.2811872+02:00  [INF] 20/06/2018 23.54.41 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:42.7035093+02:00  [INF] 20/06/2018 23.54.42 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:42.7048726+02:00  [INF] 20/06/2018 23.54.42 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:43.2121967+02:00  [INF] 20/06/2018 23.54.43 - Active Workflows found: 1 ({ Id: 23838235 })
+2018-06-20T23:54:43.2135933+02:00  [INF] 20/06/2018 23.54.43 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:43.2429779+02:00  [INF] 20/06/2018 23.54.43 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:43.2436060+02:00  [INF] 20/06/2018 23.54.43 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:43.6981220+02:00 0HLEMV1IT74V9:00000001 [INF] HTTP "GET" "/" responded 200 in 8819.3112 ms ()
+2018-06-20T23:54:43.7526316+02:00  [INF] 20/06/2018 23.54.43 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:43.7538113+02:00  [INF] 20/06/2018 23.54.43 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:43.7834657+02:00  [INF] 20/06/2018 23.54.43 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:43.7853178+02:00  [INF] 20/06/2018 23.54.43 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:43.7951049+02:00  [INF] 20/06/2018 23.54.43 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:43.7960935+02:00  [INF] 20/06/2018 23.54.43 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:44.3004791+02:00  [INF] 20/06/2018 23.54.44 - Active Workflows found: 1 ({ Id: 23838235 })
+2018-06-20T23:54:44.3031733+02:00  [INF] 20/06/2018 23.54.44 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:44.3043562+02:00  [INF] 20/06/2018 23.54.44 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:44.3049340+02:00  [INF] 20/06/2018 23.54.44 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:44.8123346+02:00  [INF] 20/06/2018 23.54.44 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:44.8140577+02:00  [INF] 20/06/2018 23.54.44 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:44.8293761+02:00  [INF] 20/06/2018 23.54.44 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:44.8299030+02:00  [INF] 20/06/2018 23.54.44 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:44.8419123+02:00  [INF] 20/06/2018 23.54.44 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:44.8429133+02:00  [INF] 20/06/2018 23.54.44 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:45.8614090+02:00  [INF] 20/06/2018 23.54.45 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:45.8622716+02:00  [INF] 20/06/2018 23.54.45 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:45.8890956+02:00  [INF] 20/06/2018 23.54.45 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:45.8903021+02:00  [INF] 20/06/2018 23.54.45 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:45.8984766+02:00  [INF] 20/06/2018 23.54.45 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:45.8991577+02:00  [INF] 20/06/2018 23.54.45 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:46.4035187+02:00  [INF] 20/06/2018 23.54.46 - Active Workflows found: 1 ({ Id: 23838235 })
+2018-06-20T23:54:46.4078857+02:00  [INF] 20/06/2018 23.54.46 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:46.4087148+02:00  [INF] 20/06/2018 23.54.46 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:46.4091857+02:00  [INF] 20/06/2018 23.54.46 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:46.9109244+02:00  [INF] 20/06/2018 23.54.46 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:46.9158420+02:00  [INF] 20/06/2018 23.54.46 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:46.9339943+02:00  [INF] 20/06/2018 23.54.46 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:46.9355915+02:00  [INF] 20/06/2018 23.54.46 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:46.9448707+02:00  [INF] 20/06/2018 23.54.46 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:46.9459605+02:00  [INF] 20/06/2018 23.54.46 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:47.9609910+02:00  [INF] 20/06/2018 23.54.47 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:47.9668553+02:00  [INF] 20/06/2018 23.54.47 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:47.9938320+02:00  [INF] 20/06/2018 23.54.47 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:47.9947995+02:00  [INF] 20/06/2018 23.54.47 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:48.0030090+02:00  [INF] 20/06/2018 23.54.48 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:48.0036551+02:00  [INF] 20/06/2018 23.54.48 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:48.5073618+02:00  [INF] 20/06/2018 23.54.48 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:49.9125104+02:00  [INF] 20/06/2018 23.54.49 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:49.9299934+02:00  [INF] 20/06/2018 23.54.49 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:49.9311145+02:00  [INF] 20/06/2018 23.54.49 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:49.9391652+02:00  [INF] 20/06/2018 23.54.49 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:49.9403239+02:00  [INF] 20/06/2018 23.54.49 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:54:50.9457724+02:00  [INF] 20/06/2018 23.54.50 - Active Workflows found: 2 ({ Id: 2079105092 })
+2018-06-20T23:54:50.9475742+02:00  [INF] 20/06/2018 23.54.50 - Executing workflow id : 442 ({ Id: 799524444 })
+2018-06-20T23:54:50.9801103+02:00  [INF] 20/06/2018 23.54.50 - ContinueWith -> Done executing workflow id 442 ({ Id: 1601049891 })
+2018-06-20T23:54:50.9810726+02:00  [INF] 20/06/2018 23.54.50 - Executing workflow id : 443 ({ Id: 132860288 })
+2018-06-20T23:54:50.9886221+02:00  [INF] 20/06/2018 23.54.50 - ContinueWith -> Done executing workflow id 443 ({ Id: 1661263706 })
+2018-06-20T23:54:50.9900912+02:00  [INF] 20/06/2018 23.54.50 - TaskProcessor done ({ Id: 1638612851 })
+2018-06-20T23:58:15.9285731+02:00  [INF] Getting the motors running... ()
+2018-06-20T23:58:17.0149258+02:00  [INF] Loading trust into Graph ()
+2018-06-20T23:58:17.3767821+02:00  [INF] Trust loaded: 0 ()
+2018-06-20T23:58:17.7183147+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-06-20T23:58:17.7657641+02:00  [INF] 20/06/2018 23.58.17 - Active Workflows found: 2 ({ Id: 1506816449 })
+2018-06-20T23:58:17.7679905+02:00  [INF] 20/06/2018 23.58.17 - Executing workflow id : 442 ({ Id: 733427887 })
+2018-06-20T23:58:17.8084437+02:00  [INF] 20/06/2018 23.58.17 - ContinueWith -> Done executing workflow id 442 ({ Id: 1881431839 })
+2018-06-20T23:58:17.8100352+02:00  [INF] 20/06/2018 23.58.17 - Executing workflow id : 443 ({ Id: 925215809 })
+2018-06-20T23:58:17.9336088+02:00  [INF] 20/06/2018 23.58.17 - No proofs found ({ Id: 443 })
+2018-06-20T23:58:17.9498581+02:00  [INF] 20/06/2018 23.58.17 - ContinueWith -> Done executing workflow id 443 ({ Id: 857050589 })
+2018-06-20T23:58:17.9512086+02:00  [INF] 20/06/2018 23.58.17 - TaskProcessor done ({ Id: 784965546 })
+2018-06-20T23:58:20.5398594+02:00 0HLEMV3N4PFIG:00000001 [INF] HTTP "GET" "/" responded 200 in 2078.7715 ms ()
+2018-06-20T23:58:24.0397578+02:00 0HLEMV3N4PFIG:00000002 [INF] HTTP "GET" "/timestamps/" responded 200 in 384.7847 ms ()
+2018-06-20T23:58:24.7752454+02:00 0HLEMV3N4PFIG:00000003 [WRN] The LINQ expression '"GroupBy([p].Type, [p])"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:58:24.7783461+02:00 0HLEMV3N4PFIG:00000003 [WRN] The LINQ expression '"orderby [t].DatabaseID desc"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:58:24.7793841+02:00 0HLEMV3N4PFIG:00000003 [WRN] The LINQ expression '"First()"' could not be translated and will be evaluated locally. ({ Id: 20500, Name: "Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning" })
+2018-06-20T23:58:24.8365158+02:00 0HLEMV3N4PFIG:00000003 [INF] HTTP "GET" "/workflows/" responded 200 in 214.9841 ms ()
+2018-06-20T23:58:28.6341039+02:00 0HLEMV3N4PFIG:00000004 [INF] HTTP "GET" "/" responded 200 in 1.7858 ms ()

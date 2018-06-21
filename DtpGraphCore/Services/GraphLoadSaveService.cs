@@ -29,7 +29,7 @@ namespace DtpGraphCore.Services
             var time = DateTime.Now.ToUnixTime();
 
             var trusts = from trust in _trustDBService.Trusts
-                     where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0)
+                     where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0) && !trust.Replaced 
                      select trust;
 
             foreach (var trust in trusts)

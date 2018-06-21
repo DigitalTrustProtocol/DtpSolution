@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using DtpCore.Repository;
+using DtpGraphCore.Model;
 
 namespace DtpServer.Pages
 {
@@ -12,10 +13,12 @@ namespace DtpServer.Pages
     {
 
         public readonly TrustDBContext DB;
+        public readonly GraphModel Graph;
 
-        public StatisticsModel(TrustDBContext context)
+        public StatisticsModel(TrustDBContext context, GraphModel graphModel)
         {
             DB = context;
+            Graph = graphModel;
         }
 
         public void OnGet()

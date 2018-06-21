@@ -11,6 +11,7 @@ using DtpCore.Interfaces;
 using DtpCore.Services;
 using DtpStampCore.Interfaces;
 using DtpStampCore.Workflows;
+using DtpCore.Workflows;
 
 namespace UnitTest.DtpStampCore.Workflows
 {
@@ -22,7 +23,6 @@ namespace UnitTest.DtpStampCore.Workflows
         {
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<TimestampWorkflow>();
-
             var firstTime = workflow.SerializeObject();
             Console.WriteLine(firstTime);
             var wf2 = JsonConvert.DeserializeObject<TimestampWorkflow>(firstTime);

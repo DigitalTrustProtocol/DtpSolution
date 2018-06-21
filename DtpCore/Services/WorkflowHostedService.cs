@@ -39,7 +39,7 @@ namespace DtpCore.Services
                         workflowService.RunWorkflows();
                     }
                 }
-                await Task.Delay(_configuration.WorkflowInterval(), stoppingToken);
+                await Task.Delay(_configuration.WorkflowInterval()*1000, stoppingToken); // WorkflowInterval is in seconds
             }
 
             _logger.LogDebug($"Workflow Hosted Service is stopping.");
