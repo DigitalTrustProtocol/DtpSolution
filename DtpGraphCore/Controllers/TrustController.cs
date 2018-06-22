@@ -81,12 +81,13 @@ namespace DtpGraphCore.Controllers
                 // TODO: Needs to verfify with Timestamp if exist, for deciding action!
                 // The trick is to compare "created" in order to awoid old trust being replayed.
                 // For now, we just remove the old trust
-                //if (dbTrust.Created < trust.Created)
-                //{
-                    dbTrust.Replaced = true;
-                    _trustDBService.Update(dbTrust);
-                    _graphTrustService.Remove(trust);
-                //}
+                if (dbTrust.Created > trust.Created)
+                    throw new ApplicationException("Cannot add old trust, newer trust exist.");
+
+
+                dbTrust.Replaced = true;
+                _trustDBService.Update(dbTrust);
+                _graphTrustService.Remove(trust);
             }
 
             trust.Timestamps = _timestampService.FillIn(trust.Timestamps, trust.Id);

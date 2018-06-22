@@ -64,17 +64,29 @@ namespace DtpGraphCore.Services
 
             var subject = graphIssuer.Subjects[subjectIndex];
 
-            var graphClaim = CreateGraphClaim(trust);
-            var id = graphClaim.ID();
 
-            if (!Graph.ClaimIndex.TryGetValue(id, out int claimIndex))
-                return; // No cliam, no trust to remove!
+            if (!Graph.ClaimType.TryGetKey(trust.Type, out int claimTypeIndex))
+                return; // Scope was not found !
 
-            var claim = Graph.Claims[claimIndex];
-            if (!subject.Claims.GetIndex(claim.Scope, claim.Type, out int subjectClaimIndex))
-                return; // No claim on subject that is a match;
+            if (!Graph.Scopes.TryGetKey(trust.Scope.Value, out int scopeIndex))
+                return; // Scope was not found !
 
-            subject.Claims.Remove(claim.Scope, claim.Type);
+            //var graphClaim = CreateGraphClaim(trust);
+            //var id = graphClaim.ID();
+
+            //if (!Graph.ClaimIndex.TryGetValue(id, out int claimIndex))
+            //    return; // No cliam, no trust to remove!
+
+            //var claim = Graph.Claims[claimIndex];
+            //if (!subject.Claims.GetIndex(claim.Scope, claim.Type, out int subjectClaimIndex))
+            //    return; // No claim on subject that is a match;
+
+            var claimIndex = subject.Claims.Remove(scopeIndex, claimTypeIndex);
+            if (claimIndex < 0)
+                return; // There was no claim found
+            
+            // Its currently no prossible to remove GraphClaim object, as we do not know if any other is referencing to it.
+
 
             if (subject.Claims.Count > 0)
                 return; // There are more claims, therefore do not remove subject.

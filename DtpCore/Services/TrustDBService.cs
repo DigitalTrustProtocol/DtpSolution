@@ -82,12 +82,12 @@ namespace DtpCore.Services
 
         public Trust GetSimilarTrust(Trust trust)
         {
-            var query = from p in DBContext.Trusts
-                        where StructuralComparisons.StructuralEqualityComparer.Equals(p.Issuer.Address, trust.Issuer.Address)
+            var query = from p in DBContext.Trusts select p;
+
+            query = query.Where(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Issuer.Address, trust.Issuer.Address)
                               && StructuralComparisons.StructuralEqualityComparer.Equals(p.Subject.Address, trust.Subject.Address)
                               && p.Type == trust.Type
-                              && p.Replaced == false
-                        select p;
+                              && p.Replaced == false);
 
             if (trust.Scope != null)
             {

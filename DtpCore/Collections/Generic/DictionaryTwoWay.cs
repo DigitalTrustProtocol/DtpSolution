@@ -65,5 +65,11 @@ namespace DtpCore.Collections.Generic
         {
             return _reverse.TryGetValue(index, out value);
         }
+
+        public bool TryGetKey(T2 value, out int index)
+        {
+            return _forward.TryGetValue(value, out index);
+        }
+
     }
 }

@@ -16,5 +16,6 @@ namespace DtpGraphCore.Model
         public DictionaryTwoWay<string> ClaimAttributes = new DictionaryTwoWay<string>(StringComparer.OrdinalIgnoreCase);
         public DictionaryTwoWay<string> Scopes = new DictionaryTwoWay<string>(StringComparer.OrdinalIgnoreCase);
         public DictionaryTwoWay<string> Alias = new DictionaryTwoWay<string>(StringComparer.OrdinalIgnoreCase);
+        public DictionaryTwoWay<string> Notes = new DictionaryTwoWay<string>(StringComparer.OrdinalIgnoreCase);
     }
 }

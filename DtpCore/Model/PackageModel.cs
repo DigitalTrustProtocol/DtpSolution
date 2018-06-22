@@ -113,9 +113,6 @@ namespace DtpCore.Model
         [JsonProperty(PropertyName = "claim")]
         public string Claim { get; set; }
 
-        //[JsonProperty(PropertyName = "scopeType")]
-        //public string ScopeType { get; set; }
-
         [UIHint("Serialize")]
         [JsonProperty(PropertyName = "scope")]
         public Scope Scope { get; set; }
@@ -135,9 +132,13 @@ namespace DtpCore.Model
         public uint Expire { get; set; }
         public bool ShouldSerializeExpire() { return Expire > 0; }
 
-        //[JsonProperty(PropertyName = "note")]
-        //public string Note { get; set; }
-        //public bool ShouldSerializeNote() { return Note != null; }
+        /// <summary>
+        /// A short comment on the reason for the trust. Very limit in size. Single word is optimal.
+        /// </summary>
+        [JsonProperty(PropertyName = "note")]
+        [Description("Issuers comment on the trust.")]
+        public string Note { get; set; }
+        public bool ShouldSerializeNote() { return Note != null; }
 
 
         [UIHint("Serialize")]
