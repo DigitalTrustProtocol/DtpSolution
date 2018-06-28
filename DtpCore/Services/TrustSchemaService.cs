@@ -142,10 +142,25 @@ namespace DtpCore.Services
 
                 if (_options == TrustSchemaValidationOptions.Full)
                 {
+                    ValidateClaim(trust, location, result);
+
                     var hashService = _hashAlgorithmFactory.GetAlgorithm(trust.Algorithm);
                     var trustID = hashService.HashOf(_trustBinary.GetIssuerBinary(trust));
                     if (trustID.Compare(trust.Id) != 0)
                         result.Errors.Add(location + "Invalid trust id");
+
+                    
+                }
+            }
+
+            private void ValidateClaim(Trust trust, string location, SchemaValidationResult result)
+            {
+                if (trust.Claim == null) return;
+
+                var maxClaimLength = 100;
+                if(trust.Claim.Length > maxClaimLength)
+                {
+                    result.Errors.Add(location + $"Claim is {trust.Claim.Length} in serialized length, may not be more than {maxClaimLength}");
                 }
             }
 
