@@ -15,7 +15,7 @@ namespace DtpCore.Services
     {
         private readonly ILogger _logger;
         private IConfiguration _configuration;
-        private Timer _timer;
+        //private Timer _timer;
 
         public WorkflowHostedService(IServiceProvider services, ILogger<WorkflowHostedService> logger, IConfiguration configuration)
         {

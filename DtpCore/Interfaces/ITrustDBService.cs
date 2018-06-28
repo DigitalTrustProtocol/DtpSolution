@@ -18,7 +18,7 @@ namespace DtpCore.Interfaces
 
         bool TrustExist(byte[] id);
         Trust GetTrustById(byte[] id);
-        IQueryable<Trust> GetTrusts(byte[] issuerAddress, byte[] subjectAddress, string scopeValue);
+        IQueryable<Trust> GetTrusts(string issuerAddress, string subjectAddress, string scopeValue);
         Trust GetSimilarTrust(Trust trust);
 
         void Add(Trust trust);

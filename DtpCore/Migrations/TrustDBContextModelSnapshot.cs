@@ -156,7 +156,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("PackageDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 
@@ -192,7 +192,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 
@@ -228,7 +228,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 

@@ -13,10 +13,9 @@ namespace DtpCore.Builders
 {
     public class TrustBuilder
     {
-        public const string FOLLOWTRUST_TC1 = "follow.tc1";
-        public const string BINARYTRUST_TC1 = "binarytrust.tc1";
-        public const string CONFIRMTRUST_TC1 = "confirm.tc1";
-        public const string RATING_TC1 = "rating.tc1";
+        public const string BINARY_TRUST_DTP1 = "binary.trust.dtp1";
+        public const string CONFIRM_TRUST_DTP1 = "confirm.trust.dtp1";
+        public const string RATING_TRUST_DTP1 = "rating.trust.dtp1";
 
         public Package Package { get; set; }
         private ITrustBinary _trustBinary;
@@ -152,7 +151,7 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public TrustBuilder SetIssuer(byte[] address, string type = "", SignDelegate sign = null)
+        public TrustBuilder SetIssuer(string address, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
@@ -167,7 +166,7 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public TrustBuilder SetServer(byte[] address, string type = "", SignDelegate sign = null)
+        public TrustBuilder SetServer(string address, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
@@ -240,7 +239,7 @@ namespace DtpCore.Builders
         }
 
 
-        public TrustBuilder AddSubject(byte[] address)
+        public TrustBuilder AddSubject(string address)
         {
             if (CurrentTrust.Subject == null)
                 CurrentTrust.Subject = new SubjectIdentity();
@@ -342,11 +341,6 @@ namespace DtpCore.Builders
         //    return this;
         //}
 
-        //public static Claim CreateFollowClaim()
-        //{
-        //    return CreateClaim(FOLLOWTRUST_TC1, "", "");
-        //}
-
         public static string CreateBinaryTrustAttributes(bool trust = true)
         {
             return CreateTrust(trust).ToString(Formatting.None);
@@ -392,7 +386,7 @@ namespace DtpCore.Builders
 
         public static bool IsTrustTrue(string type, string data)
         {
-            if (!BINARYTRUST_TC1.EqualsIgnoreCase(type))
+            if (!BINARY_TRUST_DTP1.EqualsIgnoreCase(type))
                 return false;
 
             var jData = JObject.Parse(data);

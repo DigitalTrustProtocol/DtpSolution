@@ -10,7 +10,7 @@ namespace DtpGraphCore.Model
     public class GraphIssuer
     {
         [JsonProperty(PropertyName = "address", Order = 10)]
-        public byte[] Address;
+        public string Address;
 
         [JsonProperty(PropertyName = "index", Order = 10)]
         public int Index;

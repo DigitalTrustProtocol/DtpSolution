@@ -33,7 +33,7 @@ namespace DtpServer.Pages.Trusts
         }
 
 
-        public async Task OnGetAsync(string sortOrder, string sortField, string currentFilter, string searchString, byte[] issuerAddress, byte[] subjectAddress, string scopeValue, int? pageIndex)
+        public async Task OnGetAsync(string sortOrder, string sortField, string currentFilter, string searchString, string issuerAddress, string subjectAddress, string scopeValue, int? pageIndex)
         {
             if (sortOrder.EndsWithIgnoreCase("!"))
                 sortOrder = sortOrder == "!" ? "_desc" : "";
@@ -52,10 +52,10 @@ namespace DtpServer.Pages.Trusts
             var query = BuildQuery(searchString);
 
             if (issuerAddress != null)
-                query = query.Where(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Issuer.Address, issuerAddress));
+                query = query.Where(p => p.Issuer.Address == issuerAddress);
 
             if (subjectAddress != null)
-                query = query.Where(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Subject.Address, subjectAddress));
+                query = query.Where(p => p.Subject.Address == subjectAddress);
 
             if (scopeValue != null)
                 query = query.Where(p => p.Scope.Value == scopeValue);
@@ -90,10 +90,6 @@ namespace DtpServer.Pages.Trusts
                 if (hex.Length == 32)
                     query = query.Where(s => StructuralComparisons.StructuralEqualityComparer.Equals(s.Id, hex));
 
-                if (hex.Length == 20)
-                    query = query.Where(s => StructuralComparisons.StructuralEqualityComparer.Equals(s.Issuer.Address, hex)
-                                          || StructuralComparisons.StructuralEqualityComparer.Equals(s.Subject.Address, hex));
-
                 return query;
             }
 
@@ -106,6 +102,8 @@ namespace DtpServer.Pages.Trusts
 
                 return query;
             }
+
+            query = query.Where(s => s.Issuer.Address == searchString || s.Subject.Address == searchString);
 
             Expression<Func<Trust, bool>> q = null;
             if (short.TryParse(searchString, out short cost))

@@ -27,7 +27,7 @@ namespace DtpCore.Services
             return key;
         }
 
-        public byte[] GetAddressFromPassword(string password)
+        public string GetAddressFromPassword(string password)
         {
             return Derivation.GetAddress(GetKeyFromPassword(password));
         }

@@ -66,11 +66,11 @@ namespace DtpCore.Services
         }
 
 
-        public IQueryable<Trust> GetTrusts(byte[] issuerAddress, byte[] subjectAddress, string scopeValue)
+        public IQueryable<Trust> GetTrusts(string issuerAddress, string subjectAddress, string scopeValue)
         {
             var query = from p in DBContext.Trusts
-                        where StructuralComparisons.StructuralEqualityComparer.Equals(p.Issuer.Address, issuerAddress)
-                              && StructuralComparisons.StructuralEqualityComparer.Equals(p.Subject.Address, subjectAddress)
+                        where p.Issuer.Address == issuerAddress
+                              && p.Subject.Address == subjectAddress
                         select p;
 
             if (scopeValue != null)
@@ -84,8 +84,8 @@ namespace DtpCore.Services
         {
             var query = from p in DBContext.Trusts select p;
 
-            query = query.Where(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Issuer.Address, trust.Issuer.Address)
-                              && StructuralComparisons.StructuralEqualityComparer.Equals(p.Subject.Address, trust.Subject.Address)
+            query = query.Where(p => p.Issuer.Address == trust.Issuer.Address
+                              && p.Subject.Address == trust.Subject.Address
                               && p.Type == trust.Type
                               && p.Replaced == false);
 

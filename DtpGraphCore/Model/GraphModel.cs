@@ -6,7 +6,7 @@ namespace DtpGraphCore.Model
 {
     public class GraphModel
     {
-        public Dictionary<byte[], int> IssuerIndex = new Dictionary<byte[], int>(ByteComparer.Standard);
+        public Dictionary<string, int> IssuerIndex = new Dictionary<string, int>(StringComparer.Ordinal);
         public List<GraphIssuer> Issuers = new List<GraphIssuer>();
 
         public List<GraphClaim> Claims = new List<GraphClaim>();

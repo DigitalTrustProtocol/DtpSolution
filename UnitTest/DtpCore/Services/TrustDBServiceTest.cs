@@ -29,7 +29,7 @@ namespace UnitTest.DtpCore.Builders
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
             builder.AddTrust("testissuer1")
-                .AddSubject("testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build()
                 .Sign();
 
@@ -48,7 +48,7 @@ namespace UnitTest.DtpCore.Builders
 
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+            builder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build()
                 .Sign();
 
@@ -110,9 +110,9 @@ namespace UnitTest.DtpCore.Builders
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
             builder.AddTrust("testissuer1")
-                .AddSubject("testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .AddTrust("testissuer2")
-                .AddSubject("testsubject2", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject2", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build()
                 .Sign();
 
@@ -136,8 +136,8 @@ namespace UnitTest.DtpCore.Builders
 
             var _trustBuilder = new TrustBuilder(ServiceProvider);
             _trustBuilder.SetServer("testserver");
-            _trustBuilder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
-                .AddTrust("testissuer2", "testsubject2", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+            _trustBuilder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddTrust("testissuer2", "testsubject2", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build().Sign();
 
             Console.WriteLine(JsonConvert.SerializeObject(_trustBuilder.Package, Formatting.Indented));
@@ -160,16 +160,16 @@ namespace UnitTest.DtpCore.Builders
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
             builder.AddTrust("testissuer1")
-                .AddSubject("testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build()
                 .Sign();
 
             var builder2 = new TrustBuilder(ServiceProvider);
             builder2.SetServer("testserver");
             builder2.AddTrust("testissuer1")
-                .AddSubject("testsubject1", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .AddTrust("testissuer2")
-                .AddSubject("testsubject2", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true))
+                .AddSubject("testsubject2", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
                 .Build()
                 .Sign();
 

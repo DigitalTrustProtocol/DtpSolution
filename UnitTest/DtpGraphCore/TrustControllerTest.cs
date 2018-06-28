@@ -67,7 +67,7 @@ namespace UnitTest.DtpGraphCore
 
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", TrustBuilder.BINARYTRUST_TC1, BinaryTrustFalseAttributes);
+            builder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.Build().Sign();
 
             result = (OkObjectResult)_trustController.Add(builder.Package);
@@ -75,7 +75,7 @@ namespace UnitTest.DtpGraphCore
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
             // Test Graph
-            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARYTRUST_TC1);
+            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARY_TRUST_DTP1);
             BuildQuery(queryBuilder, "A", "B");
 
             // Execute
@@ -101,7 +101,7 @@ namespace UnitTest.DtpGraphCore
 
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", TrustBuilder.BINARYTRUST_TC1, BinaryTrustFalseAttributes);
+            builder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.CurrentTrust.Expire = 1; // Remove the trust from Graph!
             builder.Build().Sign();
 
@@ -110,7 +110,7 @@ namespace UnitTest.DtpGraphCore
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
             // Test Graph
-            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARYTRUST_TC1);
+            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARY_TRUST_DTP1);
             BuildQuery(queryBuilder, "A", "B");
 
             // Execute

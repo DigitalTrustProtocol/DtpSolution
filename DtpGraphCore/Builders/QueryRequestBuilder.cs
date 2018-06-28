@@ -24,7 +24,7 @@ namespace DtpGraphCore.Builders
             };
         }
 
-        public QueryRequestBuilder Add(byte[] issuerId, byte[] subjectAddress)
+        public QueryRequestBuilder Add(string issuerId, string subjectAddress)
         {
             Query.Issuer = issuerId;
             Query.Subjects.Add(new SubjectQuery { Address = subjectAddress });

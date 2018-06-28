@@ -107,7 +107,7 @@ namespace DtpGraphCore.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("build")]
-        public ActionResult BuildTrust(byte[] issuer, byte[] subject, string issuerScript = "", string type = TrustBuilder.BINARYTRUST_TC1, string attributes = "", string scope = "", string alias = "")
+        public ActionResult BuildTrust(string issuer, string subject, string issuerScript = "", string type = TrustBuilder.BINARY_TRUST_DTP1, string attributes = "", string scope = "", string alias = "")
         {
             if (issuer == null || issuer.Length < 1)
                 throw new ApplicationException("Missing issuer");
@@ -116,7 +116,7 @@ namespace DtpGraphCore.Controllers
                 throw new ApplicationException("Missing subject");
 
             if (string.IsNullOrEmpty(attributes))
-                if (type == TrustBuilder.BINARYTRUST_TC1)
+                if (type == TrustBuilder.BINARY_TRUST_DTP1)
                     attributes = TrustBuilder.CreateBinaryTrustAttributes();
 
             var trustBuilder = new TrustBuilder(_serviceProvider);
@@ -167,7 +167,7 @@ namespace DtpGraphCore.Controllers
 
         [HttpGet]
         [Route("get")]
-        public ActionResult Get([FromQuery]byte[] issuer, [FromQuery]byte[] subject, [FromQuery]string type, [FromQuery]string scopevalue)
+        public ActionResult Get([FromQuery]string issuer, [FromQuery]string subject, [FromQuery]string type, [FromQuery]string scopevalue)
         {
             var query = new Trust
             {

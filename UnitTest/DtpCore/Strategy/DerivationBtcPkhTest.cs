@@ -9,14 +9,14 @@ namespace UnitTest.DtpCore.Strategy
     public class DerivationBtcPkhTest : StartupMock
     {
         [TestMethod]
-        public void StringifyAddress()
+        public void GetAddress()
         {
             var derivationBtcPkh = new DerivationBTCPKH();
 
             var seed = Encoding.UTF8.GetBytes("Hello");
             var key = derivationBtcPkh.GetKey(seed);
 
-            var addressString = derivationBtcPkh.StringifyAddress(key);
+            var addressString = derivationBtcPkh.GetAddress(key);
 
             Console.WriteLine(addressString);
             Assert.IsNotNull(addressString);

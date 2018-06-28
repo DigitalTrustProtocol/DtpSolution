@@ -18,13 +18,13 @@ namespace DtpCore.Strategy
                 if (trust.Issuer != null)
                 {
                     ms.WriteString(trust.Issuer.Type.ToLowerSafe());
-                    ms.WriteBytes(trust.Issuer.Address);
+                    ms.WriteString(trust.Issuer.Address);
                 }
 
                 if (trust.Subject != null)
                 {
                     ms.WriteString(trust.Subject.Type.ToLowerSafe());
-                    ms.WriteBytes(trust.Subject.Address);
+                    ms.WriteString(trust.Subject.Address);
                 }
 
                 ms.WriteString(trust.Type.ToLowerSafe());

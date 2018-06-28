@@ -33,7 +33,7 @@ namespace UnitTest.DtpCore.DBContext
 
             var builder = new TrustBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", TrustBuilder.BINARYTRUST_TC1, TrustBuilder.CreateBinaryTrustAttributes(true));
+            builder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true));
             builder.Build().Sign();
 
             var trust = builder.CurrentTrust;

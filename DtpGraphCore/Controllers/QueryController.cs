@@ -50,9 +50,9 @@ namespace DtpGraphCore.Controllers
         //}
 
         [HttpGet]
-        public ActionResult Get(byte[] issuer, byte[] subject, QueryFlags flags = QueryFlags.LeafsOnly)
+        public ActionResult Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
         {
-            var builder = new QueryRequestBuilder(null, TrustBuilder.BINARYTRUST_TC1);
+            var builder = new QueryRequestBuilder(null, TrustBuilder.BINARY_TRUST_DTP1);
             builder.Query.Flags = flags;
             builder.Add(issuer, subject);
 

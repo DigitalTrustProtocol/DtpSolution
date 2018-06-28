@@ -26,7 +26,7 @@ namespace UnitTest.DtpGraphCore
     [TestClass]
     public class GraphQueryTrustTest : TrustGraphMock
     {
-        private const string ClaimType = TrustBuilder.BINARYTRUST_TC1;
+        private const string ClaimType = TrustBuilder.BINARY_TRUST_DTP1;
 
         //[TestMethod]
         //public void Search1()

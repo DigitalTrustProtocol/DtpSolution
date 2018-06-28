@@ -112,7 +112,7 @@ namespace DtpGraphCore.Model
 
             if (!GraphTrustService.Graph.IssuerIndex.ContainsKey(query.Issuer))
             {
-                Errors.Add($"Unknown Issuer {query.Issuer.ConvertToBase64()}");
+                Errors.Add($"Unknown Issuer {query.Issuer}");
                 return;
             }
 
@@ -130,7 +130,7 @@ namespace DtpGraphCore.Model
                     Targets[index] = GraphTrustService.Graph.Issuers[index];
                 }
                 else
-                    Errors.Add($"Unknown subject {subject.Address.ConvertToBase64()}");
+                    Errors.Add($"Unknown subject {subject.Address}");
             }
 
         }
@@ -145,7 +145,7 @@ namespace DtpGraphCore.Model
 
             if (query.Types == null || query.Types.Count == 0)
             {
-                var graphClaim = GraphTrustService.CreateGraphClaim(TrustBuilder.BINARYTRUST_TC1, "", TrustBuilder.CreateBinaryTrustAttributes(true));
+                var graphClaim = GraphTrustService.CreateGraphClaim(TrustBuilder.BINARY_TRUST_DTP1, "", TrustBuilder.CreateBinaryTrustAttributes(true));
                 ClaimTypes.Add(graphClaim.Index);
             }
             else

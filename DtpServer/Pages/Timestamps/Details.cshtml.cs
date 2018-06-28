@@ -60,7 +60,7 @@ namespace DtpServer.Pages.Timestamps
 
                     var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
                     var key = blockchainService.DerivationStrategy.GetKey(root);
-                    var address = blockchainService.DerivationStrategy.StringifyAddress(key);
+                    var address = blockchainService.DerivationStrategy.GetAddress(key);
 
                     if (String.IsNullOrEmpty(Timestamp.Service))
                         Timestamp.Service = blockchainService.Repository.ServiceUrl;

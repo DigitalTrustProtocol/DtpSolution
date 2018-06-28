@@ -33,7 +33,7 @@ namespace DtpGraphCore.Model
     public class QueryRequest
     {
         [JsonProperty(PropertyName = "issuers")]
-        public byte[] Issuer;
+        public string Issuer;
 
         [JsonProperty(PropertyName = "subjects")]
         public List<SubjectQuery> Subjects;

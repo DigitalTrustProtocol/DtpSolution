@@ -20,13 +20,13 @@ namespace DtpGraphCore.Services
             if (query.Issuer == null)
                 throw new ApplicationException("Missing issuers");
 
-            if (query.Issuer.Length != _derivationStrategy.AddressLength)
-                throw new ApplicationException("Invalid byte length on Issuer : " + query.Issuer.ConvertToBase64());
+            if (query.Issuer.Length > _derivationStrategy.AddressLength)
+                throw new ApplicationException("Invalid byte length on Issuer : " + query.Issuer);
 
             foreach (var subject in query.Subjects)
             {
-                if (subject.Address.Length != _derivationStrategy.AddressLength)
-                    throw new ApplicationException("Invalid byte length on subject id: " +subject.Address.ConvertToBase64());
+                if (subject.Address.Length > _derivationStrategy.AddressLength)
+                    throw new ApplicationException("Invalid byte length on subject id: " +subject.Address);
             }
         }
     }

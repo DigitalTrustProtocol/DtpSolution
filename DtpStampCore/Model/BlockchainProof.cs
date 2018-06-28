@@ -17,7 +17,7 @@ namespace DtpCore.Model
         public byte[] Receipt { get; set; }
 
         [JsonProperty(PropertyName = "address", NullValueHandling = NullValueHandling.Ignore)]
-        public byte[] Address { get; set; }
+        public string Address { get; set; }
 
         [JsonProperty(PropertyName = "confirmations")]
         public int Confirmations { get; set; }

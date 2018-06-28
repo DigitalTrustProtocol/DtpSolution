@@ -68,7 +68,8 @@ namespace DtpGraphCore.Services
             if (!Graph.ClaimType.TryGetKey(trust.Type, out int claimTypeIndex))
                 return; // Scope was not found !
 
-            if (!Graph.Scopes.TryGetKey(trust.Scope.Value, out int scopeIndex))
+            int scopeIndex = -1;
+            if (trust.Scope != null && !Graph.Scopes.TryGetKey(trust.Scope.Value, out scopeIndex))
                 return; // Scope was not found !
 
             //var graphClaim = CreateGraphClaim(trust);
@@ -99,7 +100,7 @@ namespace DtpGraphCore.Services
             // There is no backpointer, so this would be a DB query.
         }
 
-        public GraphIssuer EnsureGraphIssuer(byte[] address)
+        public GraphIssuer EnsureGraphIssuer(string address)
         {
 
             if (!Graph.IssuerIndex.TryGetValue(address, out int index))
@@ -114,7 +115,7 @@ namespace DtpGraphCore.Services
             return Graph.Issuers[index];
         }
 
-        public GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, byte[] subjectAddress)
+        public GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectAddress)
         {
             var index = EnsureGraphIssuer(subjectAddress).Index;
             if (!graphIssuer.Subjects.ContainsKey(index))
@@ -125,7 +126,7 @@ namespace DtpGraphCore.Services
             return graphIssuer.Subjects[index];
         }
 
-        public GraphSubject CreateGraphSubject(byte[] subjectAddress)
+        public GraphSubject CreateGraphSubject(string subjectAddress)
         {
             var graphSubject = new GraphSubject
             {
@@ -231,7 +232,7 @@ namespace DtpGraphCore.Services
                     }
                     else
                     {
-                        trust.Type = TrustBuilder.BINARYTRUST_TC1;
+                        trust.Type = TrustBuilder.BINARY_TRUST_DTP1;
                         trust.Claim = TrustBuilder.CreateBinaryTrustAttributes(true);
                     }
 

@@ -190,8 +190,7 @@ namespace DtpStampCore.Workflows
             var merkleRootKey = _blockchainService.DerivationStrategy.GetKey(Proof.MerkleRoot);
             Proof.Address = _blockchainService.DerivationStrategy.GetAddress(merkleRootKey);
 
-            var merkleAddressString = _blockchainService.DerivationStrategy.StringifyAddress(merkleRootKey);
-            CombineLog(_logger, $"Merkle root: {Proof.MerkleRoot.ConvertToHex()} has been timestamped with address: {merkleAddressString}");
+            CombineLog(_logger, $"Merkle root: {Proof.MerkleRoot.ConvertToHex()} has been timestamped with address: {Proof.Address}");
 
             SetCurrentState(TimestampStates.AddressVerify);
             Wait(_configuration.ConfirmationWait(Proof.Blockchain));

@@ -16,15 +16,15 @@ namespace DtpGraphCore.Interfaces
         void Add(Trust trust);
         void Remove(Trust trust);
 
-        GraphSubject CreateGraphSubject(byte[] subjectAddress);
+        GraphSubject CreateGraphSubject(string subjectAddress);
         //void InitSubjectModel(Subject node, Claim claim, GraphSubject edge);
-        GraphIssuer EnsureGraphIssuer(byte[] id);
+        GraphIssuer EnsureGraphIssuer(string address);
         //GraphClaim EnsureSubjectClaim(GraphSubject graphSubject, Claim trustClaim);
         GraphClaim EnsureGraphClaim(Trust trust);
         GraphClaim CreateGraphClaim(Trust trust);
         GraphClaim CreateGraphClaim(string type, string scope, string attributes, short cost = 100);
         int GetClaimDataIndex(Trust trust);
-        GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, byte[] subjectAddress);
+        GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectAddress);
         void BuildPackage(QueryContext context);
 
     }

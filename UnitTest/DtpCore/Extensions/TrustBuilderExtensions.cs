@@ -13,7 +13,7 @@ namespace UnitTest.DtpCore.Extensions
     {
         public static IDerivationStrategy ScriptService { get; set; } = new DerivationBTCPKH();
 
-        public static byte[] GetAddress(string name)
+        public static string GetAddress(string name)
         {
             var issuerKey = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
             var address = ScriptService.GetAddress(issuerKey);
@@ -28,7 +28,7 @@ namespace UnitTest.DtpCore.Extensions
 
             builder.AddTrust().SetIssuer(address, ScriptService.ScriptName, (byte[] data) =>
             {
-                return ScriptService.Sign(issuerKey, data);
+                return ScriptService.SignMessage(issuerKey, data);
             });
 
             return builder;
@@ -42,7 +42,7 @@ namespace UnitTest.DtpCore.Extensions
 
         public static TrustBuilder AddTrustTrue(this TrustBuilder builder, string issuerName, string subjectName)
         {
-            builder.AddTrust(issuerName, subjectName, TrustBuilder.BINARYTRUST_TC1,  TrustBuilder.CreateBinaryTrustAttributes());
+            builder.AddTrust(issuerName, subjectName, TrustBuilder.BINARY_TRUST_DTP1,  TrustBuilder.CreateBinaryTrustAttributes());
             return builder;
         }
 
@@ -63,7 +63,7 @@ namespace UnitTest.DtpCore.Extensions
 
             builder.SetServer(address, ScriptService.ScriptName, (byte[] data) =>
             {
-                return ScriptService.Sign(key, data);
+                return ScriptService.SignMessage(key, data);
             });
 
             return builder;

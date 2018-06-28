@@ -177,10 +177,11 @@ namespace DtpCore.Model
         public string Type { get; set; }
         public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
 
-        [UIHint("ByteToAddress")]
+        //[UIHint("ByteToAddress")]
         [JsonProperty(PropertyName = "address")]
         //[JsonConverter(typeof(ByteBase58CheckConverter))]
-        public byte[] Address { get; set; }
+        public string Address { get; set; }
+        public bool ShouldSerializeAddress() { return !string.IsNullOrWhiteSpace(Address); }
 
         //[UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "signature")]

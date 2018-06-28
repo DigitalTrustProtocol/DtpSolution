@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20180622090639_Note")]
-    partial class Note
+    [Migration("20180628223214_StringAddress")]
+    partial class StringAddress
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -158,7 +158,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("PackageDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 
@@ -194,7 +194,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 
@@ -230,7 +230,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<byte[]>("Address");
+                            b1.Property<string>("Address");
 
                             b1.Property<byte[]>("Signature");
 

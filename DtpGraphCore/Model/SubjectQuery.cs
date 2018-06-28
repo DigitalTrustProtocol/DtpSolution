@@ -6,6 +6,6 @@ namespace DtpGraphCore.Model
     public class SubjectQuery
     {
         [JsonProperty(PropertyName = "address")]
-        public byte[] Address;
+        public string Address;
     }
 }

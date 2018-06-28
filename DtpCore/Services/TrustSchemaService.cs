@@ -169,7 +169,7 @@ namespace DtpCore.Services
                 if (trust.Issuer == null)
                     result.Errors.Add(location + "Missing issuer");
 
-                if (trust.Issuer.Address == null || trust.Issuer.Address.Length == 0)
+                if (String.IsNullOrWhiteSpace(trust.Issuer.Address))
                     result.Errors.Add(location + "Missing issuer address");
 
                 if (_options == TrustSchemaValidationOptions.Full)
