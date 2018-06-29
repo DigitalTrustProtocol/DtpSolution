@@ -126,16 +126,16 @@ namespace DtpGraphCore.Services
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void SearchSubject(QueryContext context, GraphTracker tracker, GraphSubject subject)
         {
-            var claims = new List<Tuple<long, int>>();
             int index = 0;
-            foreach (var type in context.ClaimTypes)
-            {
-                if (subject.Claims.GetIndex(context.ClaimScope, type, out index)) // Check local scope for claims
-                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, type).Value, index));
-                else
-                    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, type, out index)) // Check global scope for claims
-                        claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, type).Value, index));
-            }
+            var claims = GetClaims(context, subject);
+            //foreach (var type in context.ClaimTypes)
+            //{
+            //    if (subject.Claims.GetIndex(context.ClaimScope, type, out index)) // Check local scope for claims
+            //        claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, type).Value, index));
+            //    else
+            //        if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, type, out index)) // Check global scope for claims
+            //            claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, type).Value, index));
+            //}
 
             if (claims.Count == 0)
                 return;
@@ -151,6 +151,24 @@ namespace DtpGraphCore.Services
 
             var targetIssuer = tracker.Issuer.Subjects[tracker.SubjectKey].TargetIssuer;
             context.TargetsFound[targetIssuer.Index] = targetIssuer;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected List<Tuple<long, int>> GetClaims(QueryContext context, GraphSubject subject)
+        {
+            var claims = new List<Tuple<long, int>>();
+            int index = 0;
+            foreach (var type in context.ClaimTypes)
+            {
+                if (subject.Claims.GetIndex(context.ClaimScope, type, out index)) // Check local scope for claims
+                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, type).Value, index));
+                else
+                    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, type, out index)) // Check global scope for claims
+                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, type).Value, index));
+            }
+
+            return claims;
         }
 
 
@@ -172,7 +190,7 @@ namespace DtpGraphCore.Services
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void AddResult(QueryContext context, int issuerIndex, List<Tuple<long, int>> claimsFound, GraphTracker tracker)
+        private void AddResult(QueryContext context, int issuerIndex, List<Tuple<long, int>> claimsFound, GraphTracker tracker)
         {
             if (!context.TrackerResults.ContainsKey(tracker.Issuer.Index))
             {
@@ -182,17 +200,24 @@ namespace DtpGraphCore.Services
 
             var result = context.TrackerResults[tracker.Issuer.Index];
 
+            GraphSubject graphSubject;
             if (!result.Subjects.ContainsKey(tracker.SubjectKey))
             {   // Only subjects with unique keys
-                var graphSubject = tracker.Issuer.Subjects[tracker.SubjectKey]; // GraphSubject is a value type and therefore its copied
+                graphSubject = tracker.Issuer.Subjects[tracker.SubjectKey]; // GraphSubject is a value type and therefore its copied
                 graphSubject.Claims = new Dictionary<long, int>();
                 result.Subjects.Add(tracker.SubjectKey, graphSubject);
                 // Register the target found 
+            } else
+            {
+                graphSubject = result.Subjects[tracker.SubjectKey];
             }
 
-            if (result.Issuer.Index == issuerIndex)
+            if (graphSubject.Claims.Count == 0)
             {
-                foreach (var item in claimsFound)
+                // Add claims to the current tracker level.
+                var subject = tracker.Issuer.Subjects[tracker.SubjectKey];
+                var claims = GetClaims(context, subject);
+                foreach (var item in claims)
                 {
                     result.Subjects[tracker.SubjectKey].Claims[item.Item1] = item.Item2;
                 }

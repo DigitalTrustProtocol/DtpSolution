@@ -202,16 +202,28 @@ namespace DtpGraphCore.Services
             {
                 foreach (var ts in tracker.Subjects.Values)
                 {
-                    var trust = new Trust
+                    if(ts.Claims.Count() == 0)
                     {
-                        Issuer = new IssuerIdentity { Address = tracker.Issuer.Address },
-                        Subject = new SubjectIdentity { Address = ts.TargetIssuer.Address }
-                    };
+                        var trust = new Trust
+                        {
+                            Issuer = new IssuerIdentity { Address = tracker.Issuer.Address },
+                            Subject = new SubjectIdentity { Address = ts.TargetIssuer.Address }
+                        };
 
-                    if (ts.Claims.Count() > 0)
+                        trust.Type = TrustBuilder.BINARY_TRUST_DTP1;
+                        trust.Claim = TrustBuilder.CreateBinaryTrustAttributes(true);
+
+                        context.Results.Trusts.Add(trust);
+                    }
+                    else
                     {
                         foreach (var claimEntry in ts.Claims)
                         {
+                            var trust = new Trust
+                            {
+                                Issuer = new IssuerIdentity { Address = tracker.Issuer.Address },
+                                Subject = new SubjectIdentity { Address = ts.TargetIssuer.Address }
+                            };
 
                             var claimIndex = claimEntry.Value;
                             var trackerClaim = Graph.Claims[claimIndex];
@@ -228,16 +240,10 @@ namespace DtpGraphCore.Services
                             trust.Cost = trackerClaim.Cost;
                             trust.Expire = 0;
                             trust.Activate = 0;
+
+                            context.Results.Trusts.Add(trust);
                         }
                     }
-                    else
-                    {
-                        trust.Type = TrustBuilder.BINARY_TRUST_DTP1;
-                        trust.Claim = TrustBuilder.CreateBinaryTrustAttributes(true);
-                    }
-
-                    context.Results.Trusts.Add(trust);
-
                 }
             }
         }

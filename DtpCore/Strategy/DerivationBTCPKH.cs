@@ -20,7 +20,7 @@ namespace DtpCore.Strategy
             Length = 32; // SHA 256 = 32 bytes
             AddressLength = 40; // Temp setting, need reajustment
             ScriptName = "btc-pkh";
-            network = Network.TestNet;
+            network = Network.Main;
         }
 
         public byte[] HashOf(byte[] data)

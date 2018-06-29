@@ -120,7 +120,7 @@ namespace DtpCore.Model
 
         [JsonProperty(PropertyName = "cost")]
         public short Cost { get; set; }
-        public bool ShouldSerializeCost() { return Cost > 0; }
+        public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
 
         [UIHint("UnixTimeUint")]
         [JsonProperty(PropertyName = "activate")]

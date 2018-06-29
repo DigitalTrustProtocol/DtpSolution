@@ -84,6 +84,13 @@ namespace DtpGraphCore.Controllers
                 if (dbTrust.Created > trust.Created)
                     throw new ApplicationException("Cannot add old trust, newer trust exist.");
 
+                // Check if everything is the same except Created date, then what?
+                //trust.Activate 
+                //trust.Expire
+                //trust.Cost
+                //trust.Claim
+                //trust.Note
+                
 
                 dbTrust.Replaced = true;
                 _trustDBService.Update(dbTrust);
