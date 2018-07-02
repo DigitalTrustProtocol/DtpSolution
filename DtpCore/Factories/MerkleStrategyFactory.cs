@@ -20,13 +20,13 @@ namespace DtpCore.Factories
             if(string.IsNullOrWhiteSpace(name))
                 name = DOUBLE256_MERKLE_DTP1;
 
-            var parts = name.ToLower().Split("-");
-            if (parts.Length != 2)
-                throw new ApplicationException($"name {name} has to many parts.");
+            var parts = name.ToLower().Split(".");
+            if (parts.Length != 3)
+                throw new ApplicationException($"name {name} do not have 3 parts.");
 
-            var hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(parts[1]);
+            var hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(parts[0]);
 
-            if (parts[0].Equals("merkle.tc1"))
+            if (parts[1].Equals("merkle") && parts[2].Equals("dtp1"))
                 return new MerkleTreeSorted(hashAlgorithm);
 
             return null;
