@@ -11,6 +11,7 @@ namespace DtpStampCore.Services
         public BitcoinTestService(IBlockchainRepository blockchain, IDerivationStrategyFactory derivationStrategyFactory) : base(blockchain, derivationStrategyFactory)
         {
             Network = Network.TestNet;
+            DerivationStrategy.NetworkName = Network.NetworkType.ToString();
         }
     }
 }

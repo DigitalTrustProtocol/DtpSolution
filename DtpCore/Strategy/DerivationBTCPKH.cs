@@ -13,6 +13,19 @@ namespace DtpCore.Strategy
         public int AddressLength { get; }
         public string ScriptName { get; }
 
+        public string NetworkName
+        {
+            get {
+                return network.Name;
+            }
+            set
+            {
+                var n = Enum.Parse<NetworkType>(value, true);
+                network = Bitcoin.Instance.GetNetwork(n);
+            }
+        }
+
+        
         private Network network;
 
         public DerivationBTCPKH()

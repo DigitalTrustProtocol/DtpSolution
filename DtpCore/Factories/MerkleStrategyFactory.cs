@@ -8,17 +8,17 @@ namespace DtpCore.Factories
     {
         private IHashAlgorithmFactory _hashAlgorithmFactory;
 
-        public const string MERKLE_TC1_DOUBLE256 = "merkle.tc1-double256";
+        public const string DOUBLE256_MERKLE_DTP1 = "double256.merkle.dtp1";
 
         public MerkleStrategyFactory(IHashAlgorithmFactory hashAlgorithmFactory)
         {
             _hashAlgorithmFactory = hashAlgorithmFactory;
         }
 
-        public IMerkleTree GetStrategy(string name = MERKLE_TC1_DOUBLE256)
+        public IMerkleTree GetStrategy(string name = DOUBLE256_MERKLE_DTP1)
         {
             if(string.IsNullOrWhiteSpace(name))
-                name = MERKLE_TC1_DOUBLE256;
+                name = DOUBLE256_MERKLE_DTP1;
 
             var parts = name.ToLower().Split("-");
             if (parts.Length != 2)

@@ -5,6 +5,7 @@
         int Length { get; }
         int AddressLength { get; }
         string ScriptName { get; }
+        string NetworkName { get; set; }
 
         byte[] HashOf(byte[] data);
         byte[] KeyFromString(string wif);

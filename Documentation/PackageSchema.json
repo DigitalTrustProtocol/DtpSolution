@@ -22,7 +22,7 @@
   "timestamp": [
     {
       "blockchain": "btc",
-      "algorithm": "merkle.tc1-double256",
+      "algorithm": "double256.merkle.dtp1",
       "registered": 1524569739,
       "recipt": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3"
     }
@@ -38,7 +38,7 @@ A package of Trust
 Its a way for sharing trust between servers.
 
 {
-  "algorithm": "merkle.tc1-double256", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+  "algorithm": "double256.merkle.dtp1", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
   "id": "", // Merkle root of the trust ids.
   "trusts": [
     {
@@ -76,7 +76,7 @@ Its a way for sharing trust between servers.
       "timestamp": [
           {
           "blockchain": "btc", // The blockchain used for the timestamp
-          "algorithm": "merkle.tc1-double256", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+          "algorithm": "double256.merkle.dtp1", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
           "registered": 1231006505, // Transaction time used for the timestamp
           "recipt": "", // Merkletree path or description text, used for recreating the merkle root value.
           "service": "" // Optional, the url or name of the service provided the timestamp
@@ -94,7 +94,7 @@ Its a way for sharing trust between servers.
   "timestamps": [ // Array of timestamps, then fast and slow timestamps are possible
     {
       "blockchain": "btc", // The blockchain used for the timestamp
-      "algorithm": "merkle.tc1-double256", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+      "algorithm": "double256.merkle.dtp1", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
       "registered": 1231006505, // Transaction time used for the timestamp
       "recipt": "", // Merkletree path or description text, used for recreating the merkle root value.
       "service": "" // Optional, the url or name of the service provided the timestamp

@@ -19,7 +19,7 @@ namespace UnitTest.DtpCore.Strategy
         public void One()
         {
             var merkleFactory = ServiceProvider.GetRequiredService<IMerkleStrategyFactory>();
-            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.MERKLE_TC1_DOUBLE256);
+            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1);
             var hashAlgorithmFactory = ServiceProvider.GetRequiredService<IHashAlgorithmFactory>();
             var hashAlgorithm = hashAlgorithmFactory.GetAlgorithm(HashAlgorithmFactory.DOUBLE256);
 
@@ -42,7 +42,7 @@ namespace UnitTest.DtpCore.Strategy
         public void Two()
         {
             var merkleFactory = ServiceProvider.GetRequiredService<IMerkleStrategyFactory>();
-            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.MERKLE_TC1_DOUBLE256);
+            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1);
             var hashAlgorithmFactory = ServiceProvider.GetRequiredService<IHashAlgorithmFactory>();
             var hashAlgorithm = hashAlgorithmFactory.GetAlgorithm(HashAlgorithmFactory.DOUBLE256);
 
@@ -76,7 +76,7 @@ namespace UnitTest.DtpCore.Strategy
         public void Three()
         {
             var merkleFactory = ServiceProvider.GetRequiredService<IMerkleStrategyFactory>();
-            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.MERKLE_TC1_DOUBLE256);
+            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1);
             var hashAlgorithmFactory = ServiceProvider.GetRequiredService<IHashAlgorithmFactory>();
             var hashAlgorithm = hashAlgorithmFactory.GetAlgorithm(HashAlgorithmFactory.DOUBLE256);
 
@@ -116,7 +116,7 @@ namespace UnitTest.DtpCore.Strategy
         public void Receipt()
         {
             var merkleFactory = ServiceProvider.GetRequiredService<IMerkleStrategyFactory>();
-            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.MERKLE_TC1_DOUBLE256);
+            var merkle = merkleFactory.GetStrategy(MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1);
             var hashAlgorithmFactory = ServiceProvider.GetRequiredService<IHashAlgorithmFactory>();
             var hashAlgorithm = hashAlgorithmFactory.GetAlgorithm(HashAlgorithmFactory.DOUBLE256);
 

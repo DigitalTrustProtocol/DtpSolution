@@ -50,7 +50,7 @@ namespace DtpStampCore.Services
             var timestamp = new Timestamp
             {
                 WorkflowID = _timestampSynchronizationService.CurrentWorkflowID,
-                Algorithm = MerkleStrategyFactory.MERKLE_TC1_DOUBLE256,
+                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1,
                 Blockchain = _configuration.Blockchain(),
                 Source = source,
                 Registered = DateTime.Now.ToUnixTime()

@@ -25,8 +25,9 @@ namespace DtpStampCore.Services
             Repository = repository;
             _derivationStrategyFactory = derivationStrategyFactory;
 
-            DerivationStrategy = _derivationStrategyFactory.GetService("btcpkh");
-            Network =  Network.TestNet;
+            DerivationStrategy = _derivationStrategyFactory.GetService("btc-pkh");
+            Network = Network.Main;
+            DerivationStrategy.NetworkName = Network.NetworkType.ToString();
         }
 
         /// <summary>
@@ -37,9 +38,10 @@ namespace DtpStampCore.Services
         /// <returns>0 = sufficient funds. 1 = No coins to spend, 2 = Not enough coin to spend</returns>
         public int VerifyFunds(byte[] fundingKey, IList<byte[]> previousTx = null)
         {
+            //var serverAddress2 = DerivationStrategy.GetAddress(fundingKey);
             var serverKey = new Key(fundingKey);
             var serverAddress = serverKey.PubKey.GetAddress(Network);
-
+            
             var fee = Repository.GetEstimatedFee().FeePerK;
 
             var coins = GetCoins(previousTx, fee, serverAddress);
