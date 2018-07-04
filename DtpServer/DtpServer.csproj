@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="trust.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>
