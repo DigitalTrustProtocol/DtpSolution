@@ -86,9 +86,9 @@ namespace DtpServer.Pages.Trusts
 
             if (searchString.IsHex() && searchString.Length > 39)
             {
-                var hex = searchString.FromHexToBytes();
-                if (hex.Length == 32)
-                    query = query.Where(s => StructuralComparisons.StructuralEqualityComparer.Equals(s.Id, hex));
+                var searchBytes = searchString.FromHexToBytes();
+                if (searchBytes.Length == 32)
+                    query = query.Where(s => s.Id == searchBytes);
 
                 return query;
             }

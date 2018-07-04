@@ -32,7 +32,7 @@ namespace DtpServer.Pages.Timestamps
 
 
             if (source != null)
-                query = query.Where(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Source, source));
+                query = query.Where(p => p.Source == source);
             else
                 query = BuildQuery(CurrentFilter, query);
 
@@ -57,10 +57,9 @@ namespace DtpServer.Pages.Timestamps
 
             if (searchString.IsHex() && searchString.Length > 7)
             {
-                var hex = searchString.FromHexToBytes();
-                query = query.Where(s => StructuralComparisons.StructuralEqualityComparer.Equals(s.Source, hex));
-                query = query.Where(s => StructuralComparisons.StructuralEqualityComparer.Equals(s.Receipt, hex));
-
+                var searchBytes = searchString.FromHexToBytes();
+                query = query.Where(s => s.Source == searchBytes || s.Receipt == searchBytes);
+                
                 return query;
             }
 

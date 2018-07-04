@@ -39,39 +39,43 @@ namespace DtpServer.Pages.Timestamps
             if (source == null)
                 return NotFound();
 
-            Timestamp = await _context.Timestamps.SingleOrDefaultAsync(m => StructuralComparisons.StructuralEqualityComparer.Equals(m.Source, source));
+            Timestamp = await _context.Timestamps.SingleOrDefaultAsync(m => m.Source == source);
 
             if (Timestamp == null)
                 return NotFound();
 
             if (String.IsNullOrEmpty(Timestamp.Algorithm))
-                Timestamp.Algorithm = "merkle-sha256.tc1";
+                Timestamp.Algorithm = "double256.merkle.dtp1";
 
-            if (Timestamp.Source != null && Timestamp.Source.Length > 0)
-            {
+            if (Timestamp.Source == null && Timestamp.Source.Length == 0)
+                return Page();
+            
+
+            if (Timestamp.WorkflowID > 0) {
+                var wf = _workflowService.Load<TimestampWorkflow>(Timestamp.WorkflowID);
+                    
+                // If the workflow still waiting for execution?
+                if (wf.CurrentState == TimestampWorkflow.TimestampStates.Synchronization)
+                    return Page();
+
                 var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
                 var root = _merkleTree.ComputeRoot(hash, Timestamp.Receipt);
 
-                if (Timestamp.WorkflowID > 0) {
-                    var wf = _workflowService.Load<TimestampWorkflow>(Timestamp.WorkflowID);
+                if (String.IsNullOrEmpty(Timestamp.Blockchain))
+                    Timestamp.Blockchain = wf.Proof.Blockchain;
 
-                    if (String.IsNullOrEmpty(Timestamp.Blockchain))
-                        Timestamp.Blockchain = wf.Proof.Blockchain;
+                var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
+                var key = blockchainService.DerivationStrategy.GetKey(root);
+                var address = blockchainService.DerivationStrategy.GetAddress(key);
 
-                    var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
-                    var key = blockchainService.DerivationStrategy.GetKey(root);
-                    var address = blockchainService.DerivationStrategy.GetAddress(key);
+                if (String.IsNullOrEmpty(Timestamp.Service))
+                    Timestamp.Service = blockchainService.Repository.ServiceUrl;
 
-                    if (String.IsNullOrEmpty(Timestamp.Service))
-                        Timestamp.Service = blockchainService.Repository.ServiceUrl;
-
-                    ViewData["root"] = root.ToHex();
-                    ViewData["rootMacth"] = (root.SequenceEqual(wf.Proof.MerkleRoot));
-                    ViewData["address"] = address;
-                    ViewData["confirmations"] = wf.Proof.Confirmations;
-                    ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
-                }
-                
+                ViewData["root"] = root.ToHex();
+                ViewData["rootMacth"] = (wf.Proof != null && wf.Proof.MerkleRoot != null) ? (root.SequenceEqual(wf.Proof.MerkleRoot)) : false;
+                ViewData["address"] = address;
+                ViewData["confirmations"] = wf.Proof != null ? wf.Proof.Confirmations : -1;
+                ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
             }
 
             return Page();

@@ -61,7 +61,7 @@ namespace DtpCore.Services
 
         public Trust GetTrustById(byte[] id)
         {
-            var dbTrust = DBContext.Trusts.AsNoTracking().Include(p => p.Timestamps).FirstOrDefault(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Id, id));
+            var dbTrust = DBContext.Trusts.AsNoTracking().Include(p => p.Timestamps).FirstOrDefault(p => p.Id == id);
             return dbTrust;
         }
 
@@ -120,7 +120,7 @@ namespace DtpCore.Services
 
             foreach (var trust in package.Trusts.ToArray())
             {
-                var dbTrust = DBContext.Trusts.FirstOrDefault(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Id, trust.Id));
+                var dbTrust = DBContext.Trusts.FirstOrDefault(p => p.Id == trust.Id);
                 if (dbTrust == null)
                     continue;
 

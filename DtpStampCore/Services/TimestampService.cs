@@ -73,7 +73,7 @@ namespace DtpStampCore.Services
 
         public Timestamp Get(byte[] source)
         {
-            var proof = _trustDBService.Timestamps.FirstOrDefault(p => StructuralComparisons.StructuralEqualityComparer.Equals(p.Source, source));
+            var proof = _trustDBService.Timestamps.FirstOrDefault(p => p.Source == source);
             return proof;
         }
 
