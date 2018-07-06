@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using DtpCore.Model;
 using System.Collections;
+using DtpGraphCore.Interfaces;
 
 namespace UnitTest.DtpCore.Builders
 {
@@ -189,6 +190,39 @@ namespace UnitTest.DtpCore.Builders
             Assert.AreEqual(3, trustDBService.DBContext.Trusts.Count(), "Wrong number of Trusts");
         }
 
+
+        /// Add global trust and then untrust it.
+        [TestMethod]
+        public void AddRemoveGlobalTrust()
+        {
+
+            var builder = new TrustBuilder(ServiceProvider);
+            builder.SetServer("testserver");
+            builder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true));
+            builder.CurrentTrust.Scope = new Scope();
+            builder.Build()
+                .Sign();
+
+
+            Assert.IsNull(builder.CurrentTrust.PackageDatabaseID);
+
+            var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
+            trustDBService.Add(builder.CurrentTrust);
+
+            trustDBService.DBContext.SaveChanges();
+
+            var similarTrust = trustDBService.GetSimilarTrust(builder.CurrentTrust);
+
+            var compareResult = builder.CurrentTrust.JsonCompare(similarTrust);
+            Assert.IsTrue(compareResult, "Trust from database is not the same as Builder");
+
+            similarTrust.Replaced = true;
+            trustDBService.Update(similarTrust);
+            trustDBService.DBContext.SaveChanges();
+
+            var activeTrust = trustDBService.GetActiveTrust().FirstOrDefault();
+            Assert.IsNull(activeTrust);
+        }
 
     }
 }

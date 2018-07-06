@@ -25,12 +25,9 @@ namespace DtpGraphCore.Services
         {
             _logger.LogInformation("Loading trust into Graph");
             var count = 0;
-            // No need to load packages, just load trusts directly.
-            var time = DateTime.Now.ToUnixTime();
 
-            var trusts = from trust in _trustDBService.Trusts
-                     where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0) && !trust.Replaced 
-                     select trust;
+            // No need to load packages, just load trusts directly.
+            var trusts = _trustDBService.GetActiveTrust();
 
             foreach (var trust in trusts)
             {

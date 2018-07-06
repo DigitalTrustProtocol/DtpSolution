@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using System.Collections;
+using DtpCore.Extensions;
 
 namespace DtpCore.Services
 {
@@ -79,6 +80,16 @@ namespace DtpCore.Services
             return query;
         }
 
+        public IQueryable<Trust> GetActiveTrust()
+        {
+            var time = DateTime.Now.ToUnixTime();
+
+            var trusts = from trust in DBContext.Trusts
+                         where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0) && !trust.Replaced
+                         select trust;
+
+            return trusts;
+        }
 
         public Trust GetSimilarTrust(Trust trust)
         {
@@ -102,6 +113,7 @@ namespace DtpCore.Services
 
             return dbTrust;
         }
+
 
         public void Add(Trust trust)
         {
