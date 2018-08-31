@@ -3,13 +3,12 @@
   "algorithm": "double256",
   "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
   "issuer": {
-    "algorithm": "secp256k1.pkh",
-    "script": "",
+    "type": "secp256k1.pkh",
     "address": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
     "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
   },
   "subject": {
-    "algorithm": "sha160.base58check.dtp1",
+    "type": "sha160.base58check.dtp1",
     "address": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
     "signature": ""
   },
