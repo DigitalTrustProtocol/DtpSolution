@@ -209,6 +209,12 @@ namespace DtpStampCore.Workflows
 
                 UpdateProofTimestamp(); 
 
+                if(Proof.Confirmations < 0)
+                {
+                    SetCurrentState(TimestampStates.Timestamp);
+                    return;
+                }
+
                 if (Proof.Confirmations >= 0)
                 {
                     var confirmationThreshold = _configuration.ConfirmationThreshold(Proof.Blockchain);

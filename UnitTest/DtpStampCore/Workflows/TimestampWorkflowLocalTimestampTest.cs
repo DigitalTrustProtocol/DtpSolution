@@ -117,5 +117,36 @@ namespace UnitTest.DtpStampCore.Workflows
             }
         }
 
+        [TestMethod]
+        public void CheckFundingKey()
+        {
+
+            var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
+            IBlockchainRepository _blockchain = new SoChainTransactionRepository(configuration);
+            IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
+
+            var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);
+            var fundingKeyWIF = configuration.FundingKey();
+
+            var fundingKey = bitcoinService.DerivationStrategy.KeyFromString(fundingKeyWIF);
+
+            //var root = Guid.NewGuid().ToByteArray();
+            //Console.WriteLine("Raw root: " + root.ToHex());
+
+            //Key merkleRootKey = new Key(bitcoinService.DerivationStrategy.GetKey(root));
+            //Console.WriteLine("Root Address: " + merkleRootKey.PubKey.GetAddress(Network.TestNet));
+            var serverKey = new Key(fundingKey);
+            var serverAddress = serverKey.PubKey.GetAddress(Network.TestNet);
+            Console.WriteLine("Funding Address: " + serverAddress);
+
+            //var txs = bitcoinService.Send(root, fundingKey);
+
+            //foreach (var item in txs)
+            //{
+            //    var tx = new Transaction(item);
+            //    Console.WriteLine("Transaction:" + tx.ToString());
+            //}
+        }
+
     }
 }

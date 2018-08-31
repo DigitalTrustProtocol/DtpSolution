@@ -128,15 +128,16 @@ namespace DtpStampCore.Services
         {
             IEnumerable<Coin> coins = null;
             long sumOfCoins = 0;
-            if (previousTx != null)
-            {
-                foreach (var rawTx in previousTx)
-                {
-                    var tx = new Transaction(rawTx);
-                    coins = tx.Outputs.AsCoins().Where(c => c.ScriptPubKey.GetDestinationAddress(Network) == address);
-                    sumOfCoins = coins.Sum(c => c.Amount.Satoshi);
-                }
-            }
+            // Deactivated for now!
+            //if (previousTx != null)
+            //{
+            //    foreach (var rawTx in previousTx)
+            //    {
+            //        var tx = new Transaction(rawTx);
+            //        coins = tx.Outputs.AsCoins().Where(c => c.ScriptPubKey.GetDestinationAddress(Network) == address);
+            //        sumOfCoins = coins.Sum(c => c.Amount.Satoshi);
+            //    }
+            //}
 
             if (fee.Satoshi * 2 > sumOfCoins)
             {
