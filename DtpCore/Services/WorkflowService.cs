@@ -97,6 +97,7 @@ namespace DtpCore.Services
 
             if (workflow.Container.DatabaseID != 0)
             {
+                _trustDBService.DBContext.Workflows.Update(workflow.Container);
                 return _trustDBService.DBContext.SaveChanges();
             }
             else

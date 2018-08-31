@@ -179,7 +179,6 @@ namespace DtpCore.Model
 
         //[UIHint("ByteToAddress")]
         [JsonProperty(PropertyName = "address")]
-        //[JsonConverter(typeof(ByteBase58CheckConverter))]
         public string Address { get; set; }
         public bool ShouldSerializeAddress() { return !string.IsNullOrWhiteSpace(Address); }
 

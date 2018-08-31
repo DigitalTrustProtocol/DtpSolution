@@ -1,21 +1,25 @@
 /* Basic trust */
 {
-  "id": "KRBDm5sAKcmj84fj8qUsNAEROCRm7tBWU3utQss77AU=",
-  "created": 1524569738,
+  "algorithm": "double256",
+  "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
   "issuer": {
-    "type": "btc-pkh",
-    "address": "jXPD0b2gvZfPXXQh/ylxSSTU9QQ=",
-    "signature": "H9cdxdmEDtM+287JPV5aFtA1Axs5/74S4nf5ORwJVec2SwkNHoB6avTybq105yuwzhSjAYnA1icn2jgKHA22fvw="
+    "algorithm": "secp256k1.pkh",
+    "script": "",
+    "address": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+    "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
   },
   "subject": {
-    "address": "cnd9xXlQhg1mi4NB04kvVHv4JC4="
+    "algorithm": "sha160.base58check.dtp1",
+    "address": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+    "signature": ""
   },
-  "type": "binarytrust.tc1",
+  "type": "binary.trust.dtp1",
   "claim": "{\"trust\":true}",
   "scope": {
-    "type": "domain",
+    "type": "uri",
     "value": "www.reddit.com"
   },
+  "created": 1524569738,
   "cost": 100,
   "activate": 1231006505,
   "expire": 2231006505,
@@ -28,7 +32,6 @@
     }
   ]
 }
-
 // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
 // Transaction time used for the timestamp
 // Merkletree path or description text, used for recreating the merkle root value.

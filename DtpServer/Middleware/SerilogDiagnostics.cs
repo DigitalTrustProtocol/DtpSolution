@@ -11,7 +11,7 @@ namespace DtpServer.Middleware
 {
     public class SerilogDiagnostics
     {
-        public const string MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        public const string MessageTemplate = "HTTP {RemoteIpAddress} {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
         public static readonly ILogger Log = Serilog.Log.ForContext<SerilogDiagnostics>();
 
@@ -39,7 +39,7 @@ namespace DtpServer.Middleware
                 var level = statusCode > 499 ? LogEventLevel.Error : LogEventLevel.Information;
 
                 var log = level == LogEventLevel.Error ? LogForErrorContext(httpContext) : Log;
-                log.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, statusCode, elapsedMs);
+                log.Write(level, MessageTemplate, httpContext.Connection.RemoteIpAddress, httpContext.Request.Method, httpContext.Request.Path, statusCode, elapsedMs);
             }
             // Never caught, because `LogException()` returns false.
             catch (Exception ex) when (LogException(httpContext, GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()), ex)) { }
@@ -48,7 +48,7 @@ namespace DtpServer.Middleware
         private static bool LogException(HttpContext httpContext, double elapsedMs, Exception ex)
         {
             LogForErrorContext(httpContext)
-                .Error(ex, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500, elapsedMs);
+                .Error(ex, MessageTemplate, httpContext.Connection.RemoteIpAddress, httpContext.Request.Method, httpContext.Request.Path, 500, elapsedMs);
 
             return false;
         }

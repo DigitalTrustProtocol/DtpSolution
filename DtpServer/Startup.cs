@@ -89,7 +89,14 @@ namespace DtpServer
 
         public virtual void AddBackgroundServices(IServiceCollection services)
         {
-            services.AddHostedService<WorkflowHostedService>();
+            //services.AddHostedService<WorkflowHostedService>();
+            //services.AddSingleton<IScheduledTask, SomeOtherTask>();
+            services.AddScheduler((sender, args) =>
+            {
+                Console.Write(args.Exception.Message);
+                args.SetObserved();
+            });
+
         }
 
 
