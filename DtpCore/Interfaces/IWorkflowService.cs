@@ -28,8 +28,8 @@ namespace DtpCore.Services
         //WorkflowContainer Load();
         //WorkflowContainer CreateWorkflowContainer(IWorkflowContext workflow);
         IList<WorkflowContainer> GetRunningWorkflows();
-        void RunWorkflows();
-        void Execute(WorkflowContainer container);
+        //void RunWorkflows();
+        //void Execute(WorkflowContainer container);
         //void ExecuteAsync(ConcurrentDictionary<string, bool> workflows, WorkflowContainer container);
         //T GetRunningWorkflow<T>() where T : class, IWorkflowContext;
         T EnsureWorkflow<T>() where T : class, IWorkflowContext;

@@ -4,16 +4,10 @@ using Newtonsoft.Json;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using DtpCore.Enumerations;
 using Newtonsoft.Json.Serialization;
 using DtpCore.Extensions;
-using DtpCore.Workflows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
-using System.Threading;
 
 namespace DtpCore.Services
 {
@@ -27,7 +21,7 @@ namespace DtpCore.Services
         private ILogger _logger;
         private IConfiguration _configuration;
 
-        private Dictionary<string, bool> runningWorkflows = new Dictionary<string, bool>();
+        //private Dictionary<string, bool> runningWorkflows = new Dictionary<string, bool>();
 
 
         public IQueryable<WorkflowContainer> Workflows {
@@ -119,24 +113,24 @@ namespace DtpCore.Services
         //    return entity;
         //}
 
-        public void RunWorkflows()
-        {
-                var containers = GetRunningWorkflows();
+        //public void RunWorkflows()
+        //{
+        //        var containers = GetRunningWorkflows();
 
-                if (containers.Count > 0)
-                {
-                    _logger.DateInformation($"Active Workflows found: {containers.Count}");
+        //        if (containers.Count > 0)
+        //        {
+        //            _logger.DateInformation($"Active Workflows found: {containers.Count}");
 
-                    foreach (var container in containers)
-                    {
-                        // Run workflows serialized! May still be problems with the async parallel processing
-                        Execute(container);
-                    }
+        //            foreach (var container in containers)
+        //            {
+        //                // Run workflows serialized! May still be problems with the async parallel processing
+        //                Execute(container);
+        //            }
 
-                    _logger.DateInformation($"TaskProcessor done");
-                }
+        //            _logger.DateInformation($"TaskProcessor done");
+        //        }
 
-            }
+        //    }
 
         public IList<WorkflowContainer> GetRunningWorkflows()
         {
@@ -176,26 +170,26 @@ namespace DtpCore.Services
         //    _logger.DateInformation($"ContinueWith -> Done executing workflow id {container.DatabaseID}");
         //}
 
-        public void Execute(WorkflowContainer container)
-        {
-            // Make sure that only one of the same type of workflow can run 
-            if (runningWorkflows.ContainsKey(container.Type))
-                return;
+        //public void Execute(WorkflowContainer container)
+        //{
+        //    // Make sure that only one of the same type of workflow can run 
+        //    if (runningWorkflows.ContainsKey(container.Type))
+        //        return;
 
-            if (!runningWorkflows.TryAdd(container.Type, true))
-                return;
+        //    if (!runningWorkflows.TryAdd(container.Type, true))
+        //        return;
 
-            _logger.DateInformation($"Executing workflow id : {container.DatabaseID}");
+        //    _logger.DateInformation($"Executing workflow id : {container.DatabaseID}");
 
-            var workflow = Create(container);
-            workflow.Container.State = WorkflowStatusType.Running.ToString();
-            _trustDBService.DBContext.SaveChanges(); // Update state
-            workflow.Execute();
+        //    var workflow = Create(container);
+        //    workflow.Container.State = WorkflowStatusType.Running.ToString();
+        //    _trustDBService.DBContext.SaveChanges(); // Update state
+        //    workflow.Execute();
 
-            runningWorkflows.Remove(container.Type, out bool val);
+        //    runningWorkflows.Remove(container.Type, out bool val);
 
-            _logger.DateInformation($"ContinueWith -> Done executing workflow id {container.DatabaseID}");
-        }
+        //    _logger.DateInformation($"ContinueWith -> Done executing workflow id {container.DatabaseID}");
+        //}
 
 
         public T EnsureWorkflow<T>() where T : class, IWorkflowContext

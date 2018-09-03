@@ -11,6 +11,9 @@ using DtpCore.Extensions;
 
 namespace DtpCore.Services
 {
+    /// <summary>
+    /// Depricated, replaced by SchedulerHostedService for better async handling.
+    /// </summary>
     public class WorkflowHostedService : BackgroundService //IHostedService
     {
         private readonly ILogger _logger;
@@ -36,7 +39,7 @@ namespace DtpCore.Services
                 {
                     var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
                     {
-                        workflowService.RunWorkflows();
+                        //workflowService.RunWorkflows();
                     }
                 }
                 await Task.Delay(_configuration.WorkflowInterval()*1000, stoppingToken); // WorkflowInterval is in seconds

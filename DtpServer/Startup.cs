@@ -11,13 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using DtpCore.Attributes;
-using Microsoft.Extensions.FileProviders;
-using System.IO;
 using System;
-//using Microsoft.Extensions.Hosting;
-using DtpCore.Services;
 using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -78,27 +72,19 @@ namespace DtpServer
         public virtual void ConfigureDbContext(IServiceCollection services)
         {
             services.AddDbContext<TrustDBContext>(options =>
-                //options.UseSqlite(Configuration.GetConnectionString("TrustDB"), b => b.MigrationsAssembly("DtpCore"))); 
                 options.UseSqlite("Filename=./trust.db", b => b.MigrationsAssembly("DtpCore"))
                 .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))
-
                 );
-                //options.UseSqlite("Filename=./trust.db"));
-
         }
 
         public virtual void AddBackgroundServices(IServiceCollection services)
         {
-            //services.AddHostedService<WorkflowHostedService>();
-            //services.AddSingleton<IScheduledTask, SomeOtherTask>();
             services.AddScheduler((sender, args) =>
             {
                 Console.Write(args.Exception.Message);
                 args.SetObserved();
             });
-
         }
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

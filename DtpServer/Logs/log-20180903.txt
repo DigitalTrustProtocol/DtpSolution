@@ -1,0 +1,67 @@
+2018-09-03T10:12:13.3752745+02:00  [INF] Getting the motors running... ()
+2018-09-03T10:12:16.2704126+02:00  [INF] Loading trust into Graph ()
+2018-09-03T10:12:17.3334021+02:00  [INF] Trust loaded: 225 ()
+2018-09-03T10:12:51.0556702+02:00  [INF] Getting the motors running... ()
+2018-09-03T10:12:53.2892872+02:00  [INF] Loading trust into Graph ()
+2018-09-03T10:12:54.1360496+02:00  [INF] Trust loaded: 225 ()
+2018-09-03T10:13:04.6774872+02:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()
+2018-09-03T10:14:21.8070587+02:00  [INF] 03/09/2018 10.14.21 - Current confirmations 0 of 6 ({ Id: 88 })
+2018-09-03T10:16:58.2026533+02:00  [INF] 03/09/2018 10.16.58 - Current confirmations 0 of 6 ({ Id: 89 })
+2018-09-03T10:17:05.3333599+02:00  [INF] 03/09/2018 10.17.05 - Current confirmations 0 of 6 ({ Id: 90 })
+2018-09-03T10:17:08.4376336+02:00  [INF] 03/09/2018 10.17.08 - Current confirmations 0 of 6 ({ Id: 91 })
+2018-09-03T10:17:52.6790489+02:00  [INF] 03/09/2018 10.17.52 - Current confirmations 0 of 6 ({ Id: 92 })
+2018-09-03T10:17:52.7586520+02:00 0HLGHEKB7LFOR:00000001 [INF] HTTP "127.0.0.1" "GET" "/" responded 200 in 241205.7536 ms ()
+2018-09-03T10:17:52.8905549+02:00  [INF] 03/09/2018 10.17.52 - Current confirmations 0 of 6 ({ Id: 93 })
+2018-09-03T10:17:52.9976163+02:00 0HLGHEKB7LFOT:00000001 [INF] HTTP "127.0.0.1" "GET" "/js/site.js" responded 200 in 14.2748 ms ()
+2018-09-03T10:17:53.0155888+02:00 0HLGHEKB7LFOS:00000001 [INF] HTTP "127.0.0.1" "GET" "/lib/bootstrap/dist/js/bootstrap.js" responded 200 in 33.7586 ms ()
+2018-09-03T10:17:53.0378772+02:00 0HLGHEKB7LFOR:00000002 [INF] HTTP "127.0.0.1" "GET" "/lib/jquery/dist/jquery.js" responded 200 in 63.6679 ms ()
+2018-09-03T10:17:53.0923806+02:00  [INF] 03/09/2018 10.17.53 - Current confirmations 0 of 6 ({ Id: 94 })
+2018-09-03T10:17:53.2834322+02:00  [INF] 03/09/2018 10.17.53 - Current confirmations 0 of 6 ({ Id: 95 })
+2018-09-03T10:17:53.4686029+02:00  [INF] 03/09/2018 10.17.53 - Current confirmations 0 of 6 ({ Id: 96 })
+2018-09-03T10:17:53.6580538+02:00  [INF] 03/09/2018 10.17.53 - Current confirmations 0 of 6 ({ Id: 97 })
+2018-09-03T10:17:53.8570095+02:00  [INF] 03/09/2018 10.17.53 - Current confirmations 0 of 6 ({ Id: 98 })
+2018-09-03T10:17:54.0380005+02:00  [INF] 03/09/2018 10.17.54 - Current confirmations 0 of 6 ({ Id: 99 })
+2018-09-03T10:17:54.2826523+02:00  [ERR] Execute failed ({ Id: 100 })
+System.AggregateException: One or more errors occurred. (Unexpected character encountered while parsing value: T. Path '', line 0, position 0.) ---> Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Linq.JObject.Load(JsonReader reader, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json)
+   at DtpStampCore.Repository.SoChainTransactionRepository.GetReceivedAsync(String address) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Repository\SoChainTransactionRepository.cs:line 106
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at DtpStampCore.Services.BitcoinService.GetTimestamp(Byte[] merkleRoot) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Services\BitcoinService.cs:line 66
+   at DtpStampCore.Workflows.TimestampWorkflow.UpdateProofTimestamp() in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Workflows\TimestampWorkflow.cs:line 171
+   at DtpStampCore.Workflows.TimestampWorkflow.AddressVerify() in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Workflows\TimestampWorkflow.cs:line 210
+---> (Inner Exception #0) Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Linq.JObject.Load(JsonReader reader, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json)
+   at DtpStampCore.Repository.SoChainTransactionRepository.GetReceivedAsync(String address) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Repository\SoChainTransactionRepository.cs:line 106<---
+
+2018-09-03T10:17:54.5546036+02:00  [ERR] Execute failed ({ Id: 102 })
+System.AggregateException: One or more errors occurred. (Unexpected character encountered while parsing value: T. Path '', line 0, position 0.) ---> Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Linq.JObject.Load(JsonReader reader, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json)
+   at DtpStampCore.Repository.SoChainTransactionRepository.GetReceivedAsync(String address) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Repository\SoChainTransactionRepository.cs:line 106
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at DtpStampCore.Services.BitcoinService.GetTimestamp(Byte[] merkleRoot) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Services\BitcoinService.cs:line 66
+   at DtpStampCore.Workflows.TimestampWorkflow.UpdateProofTimestamp() in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Workflows\TimestampWorkflow.cs:line 171
+   at DtpStampCore.Workflows.TimestampWorkflow.AddressVerify() in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Workflows\TimestampWorkflow.cs:line 210
+---> (Inner Exception #0) Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Linq.JObject.Load(JsonReader reader, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json, JsonLoadSettings settings)
+   at Newtonsoft.Json.Linq.JObject.Parse(String json)
+   at DtpStampCore.Repository.SoChainTransactionRepository.GetReceivedAsync(String address) in C:\Users\keutm\source\repos\DtpSolution\DtpStampCore\Repository\SoChainTransactionRepository.cs:line 106<---
+
+2018-09-03T10:17:54.5893774+02:00  [INF] 03/09/2018 10.17.54 - No proofs found ({ Id: 108 })
+2018-09-03T10:17:54.6028857+02:00  [INF] 03/09/2018 10.17.54 - No proofs found ({ Id: 109 })

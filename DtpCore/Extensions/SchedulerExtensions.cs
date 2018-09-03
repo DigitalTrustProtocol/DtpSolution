@@ -3,10 +3,11 @@
 
 using System;
 using System.Threading.Tasks;
-using DtpCore.Interfaces;
 using DtpCore.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DtpCore.Extensions
 {
@@ -22,8 +23,10 @@ namespace DtpCore.Extensions
             return services.AddSingleton<IHostedService, SchedulerHostedService>(serviceProvider =>
             {
                 var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                var logger = serviceProvider.GetRequiredService<ILogger<SchedulerHostedService>>();
 
-                var instance = new SchedulerHostedService(serviceProvider.GetServices<IScheduledTask>(), serviceScopeFactory);
+                var instance = new SchedulerHostedService(serviceScopeFactory, logger, configuration);
                 instance.UnobservedTaskException += unobservedTaskExceptionHandler;
                 return instance;
             });
