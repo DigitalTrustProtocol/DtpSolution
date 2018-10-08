@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using NicolasDorier.RateLimits;
 
 namespace DtpServer
 {
@@ -40,7 +41,14 @@ namespace DtpServer
 
             ConfigureDbContext(services);
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // Mvc stuff
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddRateLimits(); // Add Rate limits for against DDOS attacks
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -87,7 +95,7 @@ namespace DtpServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, RateLimitService rateLimitService)
         {
             
             if (env.IsDevelopment())
@@ -99,6 +107,7 @@ namespace DtpServer
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
+                rateLimitService.SetZone($"zone=ALL rate=10r/s");
             }
 
             app.Graph(); // Load the Trust Graph from Database
@@ -118,6 +127,7 @@ namespace DtpServer
             });
 
             app.UseSession();
+
 
             app.UseMvc(routes =>
             {

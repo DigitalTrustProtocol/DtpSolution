@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 Trustchain/Program.cs
 /Trustchain/Logs
+/DtpServer/Logs/log-20181008.txt
