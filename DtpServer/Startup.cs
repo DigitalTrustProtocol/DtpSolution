@@ -15,6 +15,7 @@ using System;
 using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NicolasDorier.RateLimits;
+using DtpServer.Extensions;
 
 namespace DtpServer
 {
@@ -44,7 +45,10 @@ namespace DtpServer
             // Mvc stuff
             services.AddMvc(options =>
             {
-                options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
+                if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
+                    options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
+
+                options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddRateLimits(); // Add Rate limits for against DDOS attacks
@@ -107,7 +111,9 @@ namespace DtpServer
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
-                rateLimitService.SetZone($"zone=ALL rate=10r/s");
+
+                if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
+                    rateLimitService.SetZone(Configuration.RateLimits());
             }
 
             app.Graph(); // Load the Trust Graph from Database

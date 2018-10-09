@@ -262,3 +262,5 @@ __pycache__/
 Trustchain/Program.cs
 /Trustchain/Logs
 /DtpServer/Logs/log-20181008.txt
+/DtpServer/Logs/log-20181009.txt
+/DtpServer/trust20181009.db
