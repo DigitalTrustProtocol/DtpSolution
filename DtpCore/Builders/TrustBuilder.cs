@@ -262,7 +262,6 @@ namespace DtpCore.Builders
         {
             var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
 
-            var hash = new byte[0];
             foreach (var trust in Package.Trusts)
             {
                 if(trust.Id == null)

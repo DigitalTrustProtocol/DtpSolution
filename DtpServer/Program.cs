@@ -76,6 +76,7 @@ namespace DtpServer
                 })
                 .UseKestrel(options =>
                 {
+                    options.AddServerHeader = false;
                     options.Limits.MaxRequestBodySize = 10*1024*1024; // 10Mb, 
                     options.Listen(IPAddress.Any, 80);
                     options.Listen(IPAddress.Any, 443, listenOptions =>

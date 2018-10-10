@@ -16,6 +16,8 @@ using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NicolasDorier.RateLimits;
 using DtpServer.Extensions;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace DtpServer
 {
@@ -78,6 +80,8 @@ namespace DtpServer
                 options.Cookie.HttpOnly = false;
             });
 
+            services.AddDirectoryBrowser();
+
             _services = services;
         }
 
@@ -122,6 +126,24 @@ namespace DtpServer
             app.UseMiddleware<SerilogDiagnostics>();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // public file folder
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(PublicFileRepository.FilePath),
+                RequestPath = PublicFileRepository.REQUESTPATH,
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age=31536000"); // 1 year
+                }
+            });
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(PublicFileRepository.FilePath),
+                RequestPath = PublicFileRepository.REQUESTPATH,
+            });
+
+
             app.UseCookiePolicy();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
