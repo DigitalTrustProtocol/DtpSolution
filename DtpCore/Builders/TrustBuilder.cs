@@ -206,8 +206,11 @@ namespace DtpCore.Builders
             if (sign != null) 
                 Package.SetSignature(sign(Package.Id));
             else
-                if(Package.ServerSign != null)
-                    Package.SetSignature(Package.ServerSign(Package.Id)); 
+                if(Package.Server.Sign != null)
+                    Package.SetSignature(Package.Server.Sign(Package.Id));
+                else
+                    if (Package.ServerSign != null)
+                        Package.SetSignature(Package.ServerSign(Package.Id)); 
             return this;
         }
 

@@ -8,6 +8,7 @@ using DtpCore.Model;
 using DtpCore.Services;
 using DtpCore.Strategy;
 using DtpCore.Workflows;
+using DtpCore.Repository;
 
 namespace DtpCore.Extensions
 {
@@ -39,7 +40,11 @@ namespace DtpCore.Extensions
             services.AddTransient<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
             services.AddTransient<IWorkflowContext, WorkflowContext>();
 
+            services.AddTransient<IPublicFileRepository, PublicFileRepository>();
+            
+
             services.AddTransient<WorkflowContainer>();
+
 
 
 

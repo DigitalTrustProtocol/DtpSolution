@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using DtpStampCore.Interfaces;
 using UnitTest.DtpStampCore.Mocks;
 using DtpGraphCore.Controllers;
+using DtpCore.Interfaces;
+using UnitTest.DtpCore.Repository;
 
 namespace UnitTest
 {
@@ -34,6 +36,7 @@ namespace UnitTest
 
             //Services.AddTransient<IBlockingWorkflowStep, BlockingWorkflowStep>();
             Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
+            Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
 
             Services.AddTransient<TrustController>();
             Services.AddTransient<QueryController>();
@@ -42,7 +45,7 @@ namespace UnitTest
             ServiceProvider = ServiceScope.ServiceProvider;
             LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
             LoggerFactory.AddConsole();
-            
+
         }
 
         [TestCleanup]

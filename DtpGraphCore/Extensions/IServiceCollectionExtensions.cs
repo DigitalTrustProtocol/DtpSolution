@@ -22,11 +22,6 @@ namespace DtpGraphCore.Extensions
             services.AddTransient<IGraphWorkflowService, GraphWorkflowService>();
 
             services.AddTransient<TrustPackageWorkflow>();
-
-            //services.AddTransient<ITrustTimestampStep, TrustTimestampStep>();
-            //services.AddTransient<TrustTimestampWorkflow>();
-
-
         }
 
     }

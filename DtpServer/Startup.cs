@@ -130,7 +130,7 @@ namespace DtpServer
             // public file folder
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(PublicFileRepository.FilePath),
+                FileProvider = new PhysicalFileProvider(PublicFileRepository.PublicFullPath),
                 RequestPath = PublicFileRepository.REQUESTPATH,
                 OnPrepareResponse = ctx =>
                 {
@@ -139,7 +139,7 @@ namespace DtpServer
             });
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                FileProvider = new PhysicalFileProvider(PublicFileRepository.FilePath),
+                FileProvider = new PhysicalFileProvider(PublicFileRepository.PublicFullPath),
                 RequestPath = PublicFileRepository.REQUESTPATH,
             });
 

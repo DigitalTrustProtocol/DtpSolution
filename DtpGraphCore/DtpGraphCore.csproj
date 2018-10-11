@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\ITrustPackageWorkflow.cs" />
     <Compile Remove="Model\ClaimModel.cs" />
     <Compile Remove="Model\ClaimQuery.cs" />
     <Compile Remove="Model\TargetIndex.cs" />
