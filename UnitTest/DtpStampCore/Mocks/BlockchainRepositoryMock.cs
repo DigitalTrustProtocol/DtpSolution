@@ -6,6 +6,8 @@ using NBitcoin;
 using Newtonsoft.Json.Linq;
 using DtpStampCore.Interfaces;
 using Microsoft.Extensions.Configuration;
+using QBitNinja.Client.Models;
+using DtpCore.Extensions;
 
 namespace UnitTest.DtpStampCore.Mocks
 {
@@ -22,17 +24,48 @@ namespace UnitTest.DtpStampCore.Mocks
             }
         }
 
-        public static string ReceivedData { get; set; } = @"{
-                ""data"" : {
-                    ""txs"" : [
-                            {
-                                ""confirmations"" : 10
-                            }
-                        ]
-                    }
-                }";
 
-        public static string UnspentData { get; set; } = @"{
+
+        public static BalanceModel StandardData { get; set; } = new BalanceModel
+        {
+            Operations = new List<BalanceOperation>
+            {
+                new BalanceOperation
+                {
+                    Amount = 0,
+                    TransactionId = uint256.Parse("8e8bdc68a4546962bf21582af8c827cb6f27715986391bdbbeee8b2b19488896"),
+                    FirstSeen = DatetimeExtensions.FromUnixTime(1509013624),
+                    Confirmations= 2487,
+                    ReceivedCoins = new List<ICoin>
+                    {
+                        new Coin
+                        {
+                            Amount = new Money(0.10771213m, MoneyUnit.BTC),
+                            Outpoint = new OutPoint(),
+                            ScriptPubKey = new Script("OP_DUP OP_HASH160 fe7f117cdd180643e8efbf5a60a151bf8afde947 OP_EQUALVERIFY OP_CHECKSIG"),
+                        }
+
+                    }
+                }
+            }
+        };
+
+        public static BalanceModel ReceivedData { get; set; } = StandardData;
+
+        //= @"{
+        //    ""data"" : {
+        //        ""txs"" : [
+        //                {
+        //                    ""confirmations"" : 10
+        //                }
+        //            ]
+        //        }
+        //    }";
+
+        public static BalanceModel UnspentData { get; set; } = StandardData;
+            
+            /*
+            @"{
                 ""data"" : {
                     ""txs"" : [
                             {
@@ -46,7 +79,7 @@ namespace UnitTest.DtpStampCore.Mocks
                         ]
                     }
                 }";
-
+                */
         public BlockchainRepositoryMock(IConfiguration configuration)
         {
             BlockchainName = (!String.IsNullOrWhiteSpace(configuration["blockchain"])) ? configuration["blockchain"] : "btctest";
@@ -62,14 +95,14 @@ namespace UnitTest.DtpStampCore.Mocks
             return new FeeRate(new Money(100));
         }
 
-        public Task<JObject> GetReceivedAsync(string address)
+        public Task<BalanceModel> GetReceivedAsync(string address)
         {
-            return Task.Run<JObject>(() => JObject.Parse(ReceivedData));
+            return Task.Run<BalanceModel>(() => ReceivedData);
         }
 
-        public Task<JObject> GetUnspentAsync(string Address)
+        public Task<BalanceModel> GetUnspentAsync(string Address)
         {
-            return Task.Run<JObject>(() => JObject.Parse(UnspentData));
+            return Task.Run<BalanceModel>(() => UnspentData);
         }
 
         public string AddressLookupUrl(string blockchain, string address)

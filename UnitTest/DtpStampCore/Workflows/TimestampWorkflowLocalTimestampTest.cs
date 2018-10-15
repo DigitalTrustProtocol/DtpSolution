@@ -14,6 +14,7 @@ using DtpStampCore.Repository;
 using DtpStampCore.Services;
 using DtpStampCore.Workflows;
 using UnitTest.DtpStampCore.Mocks;
+using QBitNinja.Client.Models;
 
 namespace UnitTest.DtpStampCore.Workflows
 {
@@ -37,10 +38,7 @@ namespace UnitTest.DtpStampCore.Workflows
             workflow.SetCurrentState(TimestampWorkflow.TimestampStates.Merkle);
 
             // No received
-            BlockchainRepositoryMock.ReceivedData = @"{
-                ""data"" : {
-                    }
-                }";
+            BlockchainRepositoryMock.ReceivedData = new BalanceModel();
 
             // Test
             workflow.Execute();
@@ -67,15 +65,7 @@ namespace UnitTest.DtpStampCore.Workflows
             workflow.SetCurrentState(TimestampWorkflow.TimestampStates.Merkle);
 
             // No received
-            BlockchainRepositoryMock.ReceivedData = @"{
-                ""data"" : {
-                    ""txs"" : [
-                            {
-                                ""confirmations"" : 10
-                            }
-                        ]
-                    }
-                }";
+            BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
 
 
             // Test
@@ -92,7 +82,7 @@ namespace UnitTest.DtpStampCore.Workflows
         {
 
             var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
-            IBlockchainRepository _blockchain = new SoChainTransactionRepository(configuration);
+            IBlockchainRepository _blockchain = new QBitNinjaRepository(configuration);
             IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
 
             var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);
@@ -122,7 +112,7 @@ namespace UnitTest.DtpStampCore.Workflows
         {
 
             var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
-            IBlockchainRepository _blockchain = new SoChainTransactionRepository(configuration);
+            IBlockchainRepository _blockchain = new QBitNinjaRepository(configuration);
             IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
 
             var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);

@@ -23,7 +23,7 @@ namespace DtpStampCore.Extensions
 
             services.AddTransient<TimestampScheduleWorkflow>();
             services.AddTransient<TimestampWorkflow>();
-            services.AddTransient<IBlockchainRepository, SoChainTransactionRepository>();
+            services.AddTransient<IBlockchainRepository, QBitNinjaRepository>();
             services.AddTransient<IBlockchainService, BitcoinService>();
 
             services.AddTransient<IBlockchainServiceFactory, BlockchainServiceFactory>();

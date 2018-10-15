@@ -10,6 +10,7 @@
     <Compile Remove="Extensions\JsonExtensions.cs" />
     <Compile Remove="Model\TimestampProof.cs" />
     <Compile Remove="Repository\BlockrRepository.cs" />
+    <Compile Remove="Repository\SoChainTransactionRepository.cs" />
     <Compile Remove="Services\Batch.cs" />
     <Compile Remove="Services\Crypto.cs" />
     <Compile Remove="Services\Info.cs" />
@@ -35,6 +36,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="NBitcoin" Version="4.1.1.12" />
+    <PackageReference Include="QBitNinja.Client" Version="1.0.3.47" />
   </ItemGroup>
 
   <ItemGroup>

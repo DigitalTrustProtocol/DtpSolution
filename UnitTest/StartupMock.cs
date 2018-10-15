@@ -34,8 +34,7 @@ namespace UnitTest
                 return config;
                 });
 
-            //Services.AddTransient<IBlockingWorkflowStep, BlockingWorkflowStep>();
-            Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
+            //Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
             Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
 
             Services.AddTransient<TrustController>();

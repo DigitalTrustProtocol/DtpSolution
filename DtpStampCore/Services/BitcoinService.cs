@@ -63,17 +63,16 @@ namespace DtpStampCore.Services
             var address = key.PubKey.GetAddress(Network);
             result.Address = address.Hash.ToBytes(); // Address without Network format
 
-            var json = Repository.GetReceivedAsync(address.ToString()).Result; //.ToWif());
+            var balance = Repository.GetReceivedAsync(address.ToString()).Result; //.ToWif());
+            if (balance != null && balance.Operations != null)
+                return result;
 
-            var txs = json["data"]["txs"];
-            if (txs == null)
-                return result; // -1
+            var operation = balance.Operations.OrderBy(p => p.BlockId).FirstOrDefault();
+            if (operation == null)
+                return result;
 
-            if (txs.Count() == 0)
-                return result; // -1
-
-            result.Time = txs.Min(p => p["time"].ToInteger());
-            result.Confirmations = txs.Max(p => p["confirmations"].ToInteger());
+            result.Time = operation.FirstSeen.ToUniversalTime().ToUnixTimeSeconds();
+            result.Confirmations = operation.Confirmations;
 
             return result;
         }
@@ -124,9 +123,9 @@ namespace DtpStampCore.Services
             return txs;
         }
 
-        private IEnumerable<Coin> GetCoins(IList<byte[]> previousTx, Money fee, BitcoinAddress address)
+        private IEnumerable<ICoin> GetCoins(IList<byte[]> previousTx, Money fee, BitcoinAddress address)
         {
-            IEnumerable<Coin> coins = null;
+            List<ICoin> coins = new List<ICoin>();
             long sumOfCoins = 0;
             // Deactivated for now!
             //if (previousTx != null)
@@ -141,32 +140,26 @@ namespace DtpStampCore.Services
 
             if (fee.Satoshi * 2 > sumOfCoins)
             {
-                var unspent = Repository.GetUnspentAsync(address.ToString()); //.ToWif());
-                unspent.Wait();
-                var obj = unspent.Result;
-
-                coins = ParseTX(obj);
+                var balance = Repository.GetUnspentAsync(address.ToString()).Result; 
+                if(balance != null && balance.Operations != null)
+                {
+                    foreach (var op in balance.Operations)
+                    {
+                        coins.AddRange(op.ReceivedCoins);
+                    }
+                }
             }
 
             return coins;
         }
 
-        private List<Coin> ParseTX(JObject json)
-        {
-            List<Coin> list = new List<Coin>();
-            foreach (var element in json["data"]["txs"])
-            {
-                list.Add(new Coin(uint256.Parse(element["txid"].ToString()), (uint)element["output_no"], new Money((decimal)element["value"], MoneyUnit.BTC), new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(element["script_hex"].ToString()))));
-            }
-            return list;
-        }
 
-        private int EnsureFee(Money fee, IEnumerable<Coin> coins)
+        private int EnsureFee(Money fee, IEnumerable<ICoin> coins)
         {
             if (coins.Count() == 0)
                 return 1;
 
-            var sumOfCoins = coins.Sum(c => c.Amount.Satoshi);
+            var sumOfCoins = coins.Sum(c => ((Money)c.Amount).Satoshi);
             if (fee.Satoshi * 2 > sumOfCoins)
                 return 2;
             return 0;

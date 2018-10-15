@@ -58,7 +58,7 @@ namespace UnitTest.DtpStampCore.Services
             //var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
             var config = ServiceProvider.GetRequiredService<IConfiguration>();
             var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-            var repo = new SoChainTransactionRepository(config);
+            var repo = new QBitNinjaRepository(config);
             var blockchainService = new BitcoinService(repo, derivationStrategyFactory);
 
             var key = new Key(blockchainService.DerivationStrategy.HashOf(Guid.NewGuid().ToByteArray())); // A random key
@@ -79,7 +79,7 @@ namespace UnitTest.DtpStampCore.Services
             //var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
             var config = ServiceProvider.GetRequiredService<IConfiguration>();
             var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-            var repo = new SoChainTransactionRepository(config);
+            var repo = new QBitNinjaRepository(config);
             var blockchainService = new BitcoinService(repo, derivationStrategyFactory); 
             
             var fundingKey = blockchainService.DerivationStrategy.KeyFromString(FundingKeyWIF);

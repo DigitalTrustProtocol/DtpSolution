@@ -9,6 +9,7 @@ using DtpCore.Services;
 using DtpStampCore.Interfaces;
 using DtpStampCore.Workflows;
 using UnitTest.DtpStampCore.Mocks;
+using QBitNinja.Client.Models;
 
 namespace UnitTest.DtpStampCore.Workflows
 {
@@ -21,10 +22,10 @@ namespace UnitTest.DtpStampCore.Workflows
         [TestMethod]
         public void NoConfirmations()
         {
-            BlockchainRepositoryMock.ReceivedData = @"{
-                ""data"" : {
-                    }
-                }";
+            BlockchainRepositoryMock.ReceivedData = new QBitNinja.Client.Models.BalanceModel
+            {
+                Operations = new List<BalanceOperation>()
+            };
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<TimestampWorkflow>();
@@ -52,15 +53,9 @@ namespace UnitTest.DtpStampCore.Workflows
         [TestMethod]
         public void OneConfirmation()
         {
-            BlockchainRepositoryMock.ReceivedData = @"{
-                ""data"" : {
-                    ""txs"" : [
-                            {
-                                ""confirmations"" : 1
-                            }
-                        ]
-                    }
-                }";
+            BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
+            BlockchainRepositoryMock.ReceivedData.Operations[0].Confirmations = 1;
+
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<TimestampWorkflow>();
@@ -82,15 +77,7 @@ namespace UnitTest.DtpStampCore.Workflows
         [TestMethod]
         public void ManyConfirmation()
         {
-            BlockchainRepositoryMock.ReceivedData = @"{
-                ""data"" : {
-                    ""txs"" : [
-                            {
-                                ""confirmations"" : 10
-                            }
-                        ]
-                    }
-                }";
+            BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<TimestampWorkflow>();

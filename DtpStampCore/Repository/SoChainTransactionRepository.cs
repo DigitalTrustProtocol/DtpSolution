@@ -92,8 +92,40 @@ namespace DtpStampCore.Repository
                     return json;
                 }
             }
+
+            //var json = Repository.GetReceivedAsync(address.ToString()).Result; //.ToWif());
+
+            //var txs = json["data"]["txs"];
+            //if (txs == null)
+            //    return result; // -1
+
+            //if (txs.Count() == 0)
+            //    return result; // -1
+
+            //result.Time = txs.Min(p => p["time"].ToInteger());
+            //result.Confirmations = txs.Max(p => p["confirmations"].ToInteger());
+
         }
 
+
+        private List<Coin> ParseTX(JObject json)
+        {
+            List<Coin> list = new List<Coin>();
+            foreach (var element in json["data"]["txs"])
+            {
+                list.Add(new Coin(uint256.Parse(element["txid"].ToString()), (uint)element["output_no"], new Money((decimal)element["value"], MoneyUnit.BTC), new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(element["script_hex"].ToString()))));
+            }
+            return list;
+
+            //if (fee.Satoshi * 2 > sumOfCoins)
+            //{
+            //    var unspent = Repository.GetUnspentAsync(address.ToString()); //.ToWif());
+            //    unspent.Wait();
+            //    var obj = unspent.Result;
+
+            //    coins = ParseTX(obj);
+            //}
+        }
         public async Task<JObject> GetReceivedAsync(string address)
         {
             while (true)
