@@ -64,7 +64,7 @@ namespace DtpStampCore.Services
             result.Address = address.Hash.ToBytes(); // Address without Network format
 
             var balance = Repository.GetReceivedAsync(address.ToString()).Result; //.ToWif());
-            if (balance != null && balance.Operations != null)
+            if (balance == null || balance.Operations == null)
                 return result;
 
             var operation = balance.Operations.OrderBy(p => p.BlockId).FirstOrDefault();
@@ -106,7 +106,8 @@ namespace DtpStampCore.Services
                 .SetChange(serverAddress)
                 .BuildTransaction(true);
 
-            Repository.BroadcastAsync(sourceTx);
+            Repository.BroadcastAsync(sourceTx).Wait();
+
             txs.Add(sourceTx.ToBytes());
 
             var txNota = new TransactionBuilder()
@@ -117,7 +118,8 @@ namespace DtpStampCore.Services
                 .SetChange(serverAddress)
                 .BuildTransaction(true);
 
-            Repository.BroadcastAsync(txNota);
+            Repository.BroadcastAsync(txNota).Wait();
+
             txs.Add(txNota.ToBytes());
 
             return txs;

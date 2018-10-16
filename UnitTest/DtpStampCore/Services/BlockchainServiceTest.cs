@@ -21,7 +21,8 @@ namespace UnitTest.DtpStampCore.Services
         [TestMethod]
         public void VerifyFunds()
         {
-            var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
+            var factory = ServiceProvider.GetRequiredService<IBlockchainServiceFactory>();
+            var blockchainService = factory.GetService("btctest");
 
             var fundingKey = blockchainService.DerivationStrategy.KeyFromString(FundingKeyWIF);
 
@@ -33,10 +34,11 @@ namespace UnitTest.DtpStampCore.Services
             Assert.AreEqual(0, result, "Missing funds on address: " + address);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void AddressTimestampedConfirmed()
         {
-            var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
+            var factory = ServiceProvider.GetRequiredService<IBlockchainServiceFactory>();
+            var blockchainService = factory.GetService("btctest");
 
             var fundingKey = blockchainService.DerivationStrategy.KeyFromString(FundingKeyWIF);
 
@@ -52,7 +54,7 @@ namespace UnitTest.DtpStampCore.Services
             
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void AddressTimestampedUnknown()
         {
             //var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
@@ -72,16 +74,18 @@ namespace UnitTest.DtpStampCore.Services
         }
 
 
-        //[TestMethod] // Live test - be carefull
+        [TestMethod] // Live test - be carefull
         public void Send()
         {
             //var BitcoinService
             //var blockchainService = ServiceProvider.GetRequiredService<IBlockchainService>();
-            var config = ServiceProvider.GetRequiredService<IConfiguration>();
-            var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-            var repo = new QBitNinjaRepository(config);
-            var blockchainService = new BitcoinService(repo, derivationStrategyFactory); 
-            
+            //var config = ServiceProvider.GetRequiredService<IConfiguration>();
+            //var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
+            //var repo = new QBitNinjaRepository(config);
+            //var blockchainService = new BitcoinService(repo, derivationStrategyFactory); 
+            var factory = ServiceProvider.GetRequiredService<IBlockchainServiceFactory>();
+            var blockchainService = factory.GetService("btctest");
+
             var fundingKey = blockchainService.DerivationStrategy.KeyFromString(FundingKeyWIF);
 
             var key = new Key(fundingKey);

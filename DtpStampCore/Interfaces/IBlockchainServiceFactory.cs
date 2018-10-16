@@ -2,6 +2,6 @@
 {
     public interface IBlockchainServiceFactory
     {
-        IBlockchainService GetService(string name);
+        IBlockchainService GetService(string name = null);
     }
 }

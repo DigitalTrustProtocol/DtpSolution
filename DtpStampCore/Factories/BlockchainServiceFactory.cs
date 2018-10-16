@@ -2,22 +2,30 @@
 using System;
 using DtpStampCore.Interfaces;
 using DtpStampCore.Services;
+using Microsoft.Extensions.Configuration;
+using DtpStampCore.Extensions;
 
 namespace DtpStampCore.Factories
 {
     public class BlockchainServiceFactory : IBlockchainServiceFactory
     {
         private IServiceProvider _serviceProvider;
+        private IConfiguration _configuration;
 
-        public BlockchainServiceFactory(IServiceProvider serviceProvider)
+        public BlockchainServiceFactory(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _serviceProvider = serviceProvider;
+            _configuration = configuration;
         }
 
-        public IBlockchainService GetService(string name)
+        public IBlockchainService GetService(string name = null)
         {
             if (String.IsNullOrEmpty(name))
-                throw new ApplicationException("Name cannot be null or empty");
+            {
+                //var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
+                name = _configuration.Blockchain();
+                //throw new ApplicationException("Name cannot be null or empty");
+            }
 
             Type type = null;
             switch(name.ToLower())

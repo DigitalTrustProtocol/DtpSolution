@@ -21,7 +21,7 @@ namespace UnitTest.DtpStampCore.Workflows
     [TestClass]
     public class TimestampWorkflowLocalTimestampTest : StartupMock
     {
-        [TestMethod]
+        //[TestMethod]
         public void ManyProofs()
         {
             // Setup
@@ -55,18 +55,15 @@ namespace UnitTest.DtpStampCore.Workflows
             // Setup
             var timestampService = ServiceProvider.GetRequiredService<ITimestampService>();
 
-            timestampService.Add(Guid.NewGuid().ToByteArray());
-            timestampService.Add(Guid.NewGuid().ToByteArray());
-            timestampService.Add(Guid.NewGuid().ToByteArray());
+            timestampService.Add(Guid.Empty.ToByteArray()); // Same data every time
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<TimestampWorkflow>();
-
+            
             workflow.SetCurrentState(TimestampWorkflow.TimestampStates.Merkle);
 
             // No received
-            BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
-
+            //BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
 
             // Test
             workflow.Execute();
@@ -82,23 +79,27 @@ namespace UnitTest.DtpStampCore.Workflows
         {
 
             var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
-            IBlockchainRepository _blockchain = new QBitNinjaRepository(configuration);
-            IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
+            //IBlockchainRepository _blockchain = new QBitNinjaRepository(configuration);
+            //IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
 
-            var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);
+            //var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);
+
+            var factory = ServiceProvider.GetRequiredService<IBlockchainServiceFactory>();
+            var blockchainService = factory.GetService();
+
             var fundingKeyWIF = configuration.FundingKey();
-            var fundingKey = bitcoinService.DerivationStrategy.KeyFromString(fundingKeyWIF);
+            var fundingKey = blockchainService.DerivationStrategy.KeyFromString(fundingKeyWIF);
 
             var root = Guid.NewGuid().ToByteArray();
             Console.WriteLine("Raw root: "+root.ToHex());
 
-            Key merkleRootKey = new Key(bitcoinService.DerivationStrategy.GetKey(root));
+            Key merkleRootKey = new Key(blockchainService.DerivationStrategy.GetKey(root));
             Console.WriteLine("Root Address: "+merkleRootKey.PubKey.GetAddress(Network.TestNet));
             var serverKey = new Key(fundingKey);
             var serverAddress = serverKey.PubKey.GetAddress(Network.TestNet);
             Console.WriteLine("Funding Address: " + serverAddress);
 
-            var txs = bitcoinService.Send(root, fundingKey);
+            var txs = blockchainService.Send(root, fundingKey);
 
             foreach (var item in txs)
             {
@@ -112,13 +113,11 @@ namespace UnitTest.DtpStampCore.Workflows
         {
 
             var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
-            IBlockchainRepository _blockchain = new QBitNinjaRepository(configuration);
-            IDerivationStrategyFactory _derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
+            var factory = ServiceProvider.GetRequiredService<IBlockchainServiceFactory>();
+            var blockchainService = factory.GetService();
 
-            var bitcoinService = new BitcoinService(_blockchain, _derivationStrategyFactory);
             var fundingKeyWIF = configuration.FundingKey();
-
-            var fundingKey = bitcoinService.DerivationStrategy.KeyFromString(fundingKeyWIF);
+            var fundingKey = blockchainService.DerivationStrategy.KeyFromString(fundingKeyWIF);
 
             //var root = Guid.NewGuid().ToByteArray();
             //Console.WriteLine("Raw root: " + root.ToHex());
