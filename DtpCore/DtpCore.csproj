@@ -31,10 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
-    <PackageReference Include="NBitcoin" Version="4.1.1.12" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
+    <PackageReference Include="NBitcoin" Version="4.1.1.54" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.18" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Trust\" />

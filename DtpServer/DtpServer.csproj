@@ -32,18 +32,18 @@
     <None Remove="trust - backup.old" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.0.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="2.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="2.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="2.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\lib\bootstrap-table\bootstrap-table.js" />
