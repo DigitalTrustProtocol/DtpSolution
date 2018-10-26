@@ -14,8 +14,13 @@ namespace DtpCore.Builders
     public class TrustBuilder
     {
         public const string BINARY_TRUST_DTP1 = "binary.trust.dtp1";
+        public const string BINARY_TRUST_DTP1_SHORTFORM = "bt1";
+
         public const string CONFIRM_TRUST_DTP1 = "confirm.trust.dtp1";
+        public const string CONFIRM_TRUST_DTP1_SHORTFORM = "ct1";
+
         public const string RATING_TRUST_DTP1 = "rating.trust.dtp1";
+        public const string RATING_TRUST_DTP1_SHORTFORM = "rt1";
 
         public Package Package { get; set; }
         private ITrustBinary _trustBinary;
@@ -391,34 +396,44 @@ namespace DtpCore.Builders
             if (!BINARY_TRUST_DTP1.EqualsIgnoreCase(type))
                 return false;
 
-            var jData = JObject.Parse(data);
-
-            if (jData["trust"] != null && jData["trust"].Value<bool>() == true)
-                return true;
-
+            var jData = JToken.Parse(data);
+            if (jData.Type == JTokenType.Boolean)
+            {
+                return (bool)((JValue)jData).Value;
+            }
+            else {
+                if(jData.Type == JTokenType.Object)
+                    if (jData["trust"] != null && jData["trust"].Value<bool>() == true)
+                            return true;
+            }
             return false;
         }
 
-        public static JObject CreateTrust(bool value = true)
+        public static JToken CreateTrust(bool value = true)
         {
-            var obj = new JObject(
-                    new JProperty("trust", value)
-                    );
-            return obj;
+            //var obj = new JObject(
+            //        new JProperty("trust", value)
+            //        );
+            //return obj;
+            return new JValue(value);
         }
 
-        public static JObject CreateRating(byte value)
+        public static JToken CreateRating(byte value)
         {
-            return new JObject(
-                    new JProperty("rating", value)
-                    );
+            //return new JObject(
+            //        new JProperty("rating", value)
+            //        );
+
+            return new JValue(value);
         }
 
-        public static JObject CreateConfirm(bool value = true)
+        public static JToken CreateConfirm(bool value = true)
         {
-            return new JObject(
-                    new JProperty("confirm", value)
-                    );
+            //return new JObject(
+            //        new JProperty("confirm", value)
+            //        );
+            return new JValue(value);
+
         }
 
 

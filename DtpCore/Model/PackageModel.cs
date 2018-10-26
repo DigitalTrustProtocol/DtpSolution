@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DtpCore.Attributes;
 using DtpCore.Interfaces;
+using DtpCore.Strategy.Serialization;
 
 namespace DtpCore.Model
 {
@@ -107,11 +108,13 @@ namespace DtpCore.Model
 
 
         [JsonProperty(PropertyName = "type")]
+        [JsonConverter(typeof(ObjectToStringConverter))]
         public string Type { get; set; }
 
         [UIHint("JSON")]
         [JsonProperty(PropertyName = "claim")]
-        public string Claim { get; set; }
+        [JsonConverter(typeof(ObjectToStringConverter))]
+        public virtual string Claim { get; set; }
 
         [UIHint("Serialize")]
         [JsonProperty(PropertyName = "scope")]
@@ -152,7 +155,27 @@ namespace DtpCore.Model
         [JsonIgnore]
         [Description("Current Trust has been replaced by a new Trust.")]
         public bool Replaced { get; set; }
+    }
 
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TrustType
+    {
+        [JsonProperty(PropertyName = "attribute")]
+        public string Attribute { get; set; }
+        public bool ShouldSerializeAttribute() { return !string.IsNullOrWhiteSpace(Attribute); }
+
+        [JsonProperty(PropertyName = "group")]
+        public string Group { get; set; }
+        public bool ShouldSerializeGroup() { return !string.IsNullOrWhiteSpace(Group); }
+
+        [JsonProperty(PropertyName = "protocol")]
+        public string Protocol { get; set; }
+        public bool ShouldSerializeProtocol() { return !string.IsNullOrWhiteSpace(Protocol); }
+
+        public override string ToString()
+        {
+            return String.Join('.', Attribute, Group, Protocol);
+        }
     }
 
     [JsonObject(MemberSerialization.OptIn)]

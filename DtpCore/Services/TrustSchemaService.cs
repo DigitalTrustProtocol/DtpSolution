@@ -7,6 +7,8 @@ using System;
 using DtpCore.Factories;
 using DtpCore.Enumerations;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace DtpCore.Services
 {
@@ -17,13 +19,8 @@ namespace DtpCore.Services
         private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
         private IHashAlgorithmFactory _hashAlgorithmFactory;
-
         private ITrustBinary _trustBinary;
 
-        //public TrustSchemaService(IServiceProvider serviceProvider) : this(new DerivationStrategyFactory(serviceProvider), new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new TrustBinary())
-        //{
-
-        //}
 
         public TrustSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, ITrustBinary trustBinary)
         {
@@ -32,6 +29,61 @@ namespace DtpCore.Services
             _hashAlgorithmFactory = hashAlgorithmFactory;
             _trustBinary = trustBinary;
         }
+
+        /// <summary>
+        /// Gets the trust type string in a sanitized form, always in lowercase.
+        /// </summary>
+        /// <param name="trust"></param>
+        /// <returns></returns>
+        public string GetTrustTypeString(Trust trust)
+        {
+            if (IsTrustTypeAnObject(trust))
+            {
+                var trustType = GetTrustTypeObject(trust);
+                return trustType.ToString().ToLower();
+            }
+
+            switch (trust.Type.ToLower())
+            {
+                case TrustBuilder.BINARY_TRUST_DTP1_SHORTFORM : return TrustBuilder.BINARY_TRUST_DTP1;
+                case TrustBuilder.CONFIRM_TRUST_DTP1_SHORTFORM: return TrustBuilder.CONFIRM_TRUST_DTP1;
+                case TrustBuilder.RATING_TRUST_DTP1_SHORTFORM : return TrustBuilder.RATING_TRUST_DTP1;
+            }
+            
+            return trust.Type.ToLower();
+        }
+
+        public TrustType GetTrustTypeObject(Trust trust)
+        {
+            TrustType result;
+            if (!IsTrustTypeAnObject(trust))
+            {
+                result = new TrustType();
+                var parts = trust.Type.Split(".");
+                if (parts.Length > 0) result.Attribute = parts[0];
+                if (parts.Length > 1) result.Group = parts[1];
+                if (parts.Length > 2) result.Protocol = parts[2];
+            }
+            else
+            {
+                result = JsonConvert.DeserializeObject<TrustType>(trust.Type);
+            }
+
+            return result;
+        }
+
+        public bool IsTrustTypeAnObject(Trust trust)
+        {
+            if (trust.Type == null)
+                return false;
+
+            var data = trust.Type.Trim();
+            if (data.StartsWith("{") && data.EndsWith("}"))
+                return true;
+
+            return false;
+        }
+
 
         public SchemaValidationResult Validate(Trust trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {

@@ -132,7 +132,7 @@ namespace DtpStampCore.Repository
             if (tx == null)
                 throw new ArgumentNullException("tx");
 
-            var broadcastResponse = await Client.Broadcast(tx);
+            BroadcastResponse broadcastResponse = await Client.Broadcast(tx);
 
             if (!broadcastResponse.Success)
             {

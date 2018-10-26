@@ -12,6 +12,7 @@ using DtpGraphCore.Model;
 using DtpGraphCore.Services;
 using DtpGraphCore.Enumerations;
 using UnitTest.DtpCore.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTest.DtpGraphCore
 {
@@ -23,7 +24,7 @@ namespace UnitTest.DtpGraphCore
         public void NodeIndex()
         {
             var trustDerivationService = new TrustDerivationService();
-            var graphModelService = new GraphTrustService();
+            var graphModelService = ServiceProvider.GetRequiredService<IGraphTrustService>();
 
             var keyA = trustDerivationService.GetAddressFromPassword("A");
             var keyB = trustDerivationService.GetAddressFromPassword("B");

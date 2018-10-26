@@ -7,24 +7,22 @@ using DtpGraphCore.Extensions;
 using DtpGraphCore.Enumerations;
 using System.Linq;
 using DtpCore.Extensions;
-
+using DtpCore.Interfaces;
 
 namespace DtpGraphCore.Services
 {
     public class GraphTrustService : IGraphTrustService
     {
         public GraphModel Graph { get; set;}
+        public ITrustSchemaService TrustSchema { get; }
 
         public int GlobalScopeIndex { get; set; }
         public int BinaryTrustTypeIndex { get; set; }
 
-        public GraphTrustService() : this(new GraphModel())
-        {
-        }
-
-        public GraphTrustService(GraphModel graph)
+        public GraphTrustService(GraphModel graph, ITrustSchemaService trustSchemaService)
         {
             Graph = graph;
+            TrustSchema = trustSchemaService;
         }
 
         public void Add(Package package)
@@ -162,7 +160,8 @@ namespace DtpGraphCore.Services
         }
         public GraphClaim CreateGraphClaim(Trust trust)
         {
-            return CreateGraphClaim(trust.Type, trust.Scope.GetValue(), trust.Claim, 100);
+            var trustTypeString = TrustSchema.GetTrustTypeString(trust);
+            return CreateGraphClaim(trustTypeString, trust.Scope.GetValue(), trust.Claim, 100);
         }
 
         public GraphClaim CreateGraphClaim(string type, string scope, string attributes, short cost = 100)
