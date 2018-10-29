@@ -3,24 +3,24 @@ using Newtonsoft.Json.Serialization;
 using System;
 using DtpCore.Interfaces;
 
-namespace DtpCore.Extensions
+namespace DtpCore.Strategy.Serialization
 {
     /// <summary>
     /// http://www.dotnet-programming.com/post/2017/05/08/Aspnet-core-Deserializing-Json-with-Dependency-Injection.aspx
     /// </summary>
-    public class DIContractReverseResolver : CamelCasePropertyNamesContractResolver, IContractReverseResolver
+    public class DIContractResolver : DefaultContractResolver
     {
-        IDIReverseMeta _diReverseMeta;
+        IDIMeta _diMeta;
         IServiceProvider _serviceProvider;
 
-        public DIContractReverseResolver(IDIReverseMeta diReverseMeta, IServiceProvider serviceProvider)
+        public DIContractResolver(IDIMeta diMeta, IServiceProvider serviceProvider)
         {
-            _diReverseMeta = diReverseMeta;
+            _diMeta = diMeta;
             _serviceProvider = serviceProvider;
         }
         protected override JsonObjectContract CreateObjectContract(Type objectType)
         {
-            if (_diReverseMeta.IsRegistred(objectType))
+            if (_diMeta.IsRegistred(objectType))
             {
                 JsonObjectContract contract = DIResolveContract(objectType);
                 contract.DefaultCreator = () => _serviceProvider.GetRequiredService(objectType);
@@ -33,7 +33,7 @@ namespace DtpCore.Extensions
 
         private JsonObjectContract DIResolveContract(Type objectType)
         {
-            var fType = _diReverseMeta.RegistredTypeFor(objectType);
+            var fType = _diMeta.RegistredTypeFor(objectType);
             if (fType != null)
                 return base.CreateObjectContract(fType);
             else

@@ -17,6 +17,18 @@ namespace UnitTest.DtpGraphCore.Workflows
     {
 
         [TestMethod]
+        public void Create()
+        {
+            var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
+            var workflow = workflowService.Create<TrustPackageWorkflow>();
+            Assert.IsNotNull(workflow);
+            workflow.UpdateContainer();
+
+            var workflow2 = workflowService.Create(workflow.Container);
+            Assert.IsNotNull(workflow2);
+        }
+
+        [TestMethod]
         public void Execute()
         {
             // Setup

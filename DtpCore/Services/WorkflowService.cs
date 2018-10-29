@@ -8,6 +8,7 @@ using Newtonsoft.Json.Serialization;
 using DtpCore.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace DtpCore.Services
 {
@@ -65,7 +66,22 @@ namespace DtpCore.Services
 
         public T Create<T>() where T : class, IWorkflowContext
         {
-            T instance =  (T)Activator.CreateInstance<T>();
+            var t = typeof(T);
+
+            var constructors = t.GetConstructors();
+
+            if(constructors.Length <= 0)
+            {
+                throw new ApplicationException("Unable to create object without constructor!");
+            }
+            var item = constructors[0];
+            var arguments = item.GetParameters()
+                            .Select(a => ServiceProvider.GetService(a.ParameterType))
+                            .ToArray();
+
+            T instance = (T)Activator.CreateInstance(t, arguments);
+
+            //T instance =  (T)Activator.CreateInstance<T>();
             instance.WorkflowService = this;
 
             return instance;
@@ -73,7 +89,13 @@ namespace DtpCore.Services
 
         public IWorkflowContext Create(WorkflowContainer container)
         {
-            var settings = new JsonSerializerSettings();
+            // Adding Dependency injection available in json deserialization
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = _contractResolver
+            };
+
+
             var type = Type.GetType(container.Type);
             var instance = (IWorkflowContext)JsonConvert.DeserializeObject(container.Data, type, settings);
             instance.Container = container;

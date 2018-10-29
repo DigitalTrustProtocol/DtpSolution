@@ -3,22 +3,19 @@ using System;
 using System.Collections.Generic;
 using DtpCore.Interfaces;
 
-namespace DtpCore.Extensions
+namespace DtpCore.Strategy.Serialization
 {
     /// <summary>
     /// http://www.dotnet-programming.com/post/2017/05/08/Aspnet-core-Deserializing-Json-with-Dependency-Injection.aspx
     /// </summary>
-    public class DIMetaReverseDefault : IDIReverseMeta
+    public class DIMetaDefault : IDIMeta
     {
         IDictionary<Type, Type> register = new Dictionary<Type, Type>();
-        public DIMetaReverseDefault(IServiceCollection services)
+        public DIMetaDefault(IServiceCollection services)
         {
             foreach (var s in services)
             {
-                if(s.ImplementationType != null)
-                {
-                    register[s.ImplementationType] = s.ServiceType;
-                }
+                register[s.ServiceType] = s.ImplementationType;
             }
         }
         public bool IsRegistred(Type t)

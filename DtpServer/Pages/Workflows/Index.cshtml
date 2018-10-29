@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.WorkflowContainer[0].DatabaseID)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.WorkflowContainer[0].Type)
             </th>
             <th>
@@ -37,9 +34,6 @@
     <tbody>
 @foreach (var item in Model.WorkflowContainer) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatabaseID)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
             </td>

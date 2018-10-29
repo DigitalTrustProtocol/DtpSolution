@@ -9,6 +9,7 @@ using DtpCore.Services;
 using DtpCore.Strategy;
 using DtpCore.Workflows;
 using DtpCore.Repository;
+using DtpCore.Strategy.Serialization;
 
 namespace DtpCore.Extensions
 {
@@ -44,8 +45,6 @@ namespace DtpCore.Extensions
             
 
             services.AddTransient<WorkflowContainer>();
-
-
 
 
             // ---------------------------------------------------------------------------------------------------------------

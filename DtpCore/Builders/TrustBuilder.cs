@@ -149,12 +149,24 @@ namespace DtpCore.Builders
         //    return this;
         //}
 
+        public TrustBuilder AddTrust(IEnumerable<Trust> trusts)
+        {
+            foreach (var trust in trusts)
+            {
+                _currentTrust = trust;
+                Package.Trusts.Add(trust);
+            }
+
+            return this;
+        }
+
         public TrustBuilder AddTrust(Trust trust)
         {
             _currentTrust = trust;
             Package.Trusts.Add(_currentTrust);
             return this;
         }
+
 
         public TrustBuilder SetIssuer(string address, string type = "", SignDelegate sign = null)
         {
