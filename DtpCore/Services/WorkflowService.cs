@@ -22,9 +22,6 @@ namespace DtpCore.Services
         private ILogger _logger;
         private IConfiguration _configuration;
 
-        //private Dictionary<string, bool> runningWorkflows = new Dictionary<string, bool>();
-
-
         public IQueryable<WorkflowContainer> Workflows {
             get
             {
@@ -81,7 +78,6 @@ namespace DtpCore.Services
 
             T instance = (T)Activator.CreateInstance(t, arguments);
 
-            //T instance =  (T)Activator.CreateInstance<T>();
             instance.WorkflowService = this;
 
             return instance;
@@ -123,36 +119,6 @@ namespace DtpCore.Services
             }
         }
 
-        //public WorkflowContainer CreateWorkflowContainer(IWorkflowContext workflow)
-        //{
-        //    var entity = new WorkflowContainer
-        //    {
-        //        Type = workflow.GetType().FullName,
-        //        State = workflow.Container.State,
-        //        Tag = workflow.Container.Tag,
-        //        Data = JsonConvert.SerializeObject(workflow)
-        //    };
-        //    return entity;
-        //}
-
-        //public void RunWorkflows()
-        //{
-        //        var containers = GetRunningWorkflows();
-
-        //        if (containers.Count > 0)
-        //        {
-        //            _logger.DateInformation($"Active Workflows found: {containers.Count}");
-
-        //            foreach (var container in containers)
-        //            {
-        //                // Run workflows serialized! May still be problems with the async parallel processing
-        //                Execute(container);
-        //            }
-
-        //            _logger.DateInformation($"TaskProcessor done");
-        //        }
-
-        //    }
 
         public IList<WorkflowContainer> GetRunningWorkflows()
         {
@@ -165,55 +131,12 @@ namespace DtpCore.Services
             return containers;
         }
 
-        //public async void ExecuteAsync(ConcurrentDictionary<string, bool> workflows, WorkflowContainer container)
-        //{
-        //    if (workflows.ContainsKey(container.Type))
-        //        return;
 
-        //    if (!workflows.TryAdd(container.Type, true))
-        //        return;
-
-        //    _logger.DateInformation($"Executing workflow id : {container.DatabaseID}");
-
-        //    await Task.Run(() => {
-        //        // Make a scope for the workflow to run in.
-        //        //var taskServiceProvider = services.BuildServiceProvider();
-        //        using (var taskScope = ServiceProvider.CreateScope())
-        //        {
-        //            var taskWorkflowService = taskScope.ServiceProvider.GetRequiredService<IWorkflowService>();
-        //            var workflow = taskWorkflowService.Create(container);
-
-        //            workflow.Execute();
-        //        }
-        //    });
-
-        //    workflows.TryRemove(container.Type, out bool val);
-
-        //    _logger.DateInformation($"ContinueWith -> Done executing workflow id {container.DatabaseID}");
-        //}
-
-        //public void Execute(WorkflowContainer container)
-        //{
-        //    // Make sure that only one of the same type of workflow can run 
-        //    if (runningWorkflows.ContainsKey(container.Type))
-        //        return;
-
-        //    if (!runningWorkflows.TryAdd(container.Type, true))
-        //        return;
-
-        //    _logger.DateInformation($"Executing workflow id : {container.DatabaseID}");
-
-        //    var workflow = Create(container);
-        //    workflow.Container.State = WorkflowStatusType.Running.ToString();
-        //    _trustDBService.DBContext.SaveChanges(); // Update state
-        //    workflow.Execute();
-
-        //    runningWorkflows.Remove(container.Type, out bool val);
-
-        //    _logger.DateInformation($"ContinueWith -> Done executing workflow id {container.DatabaseID}");
-        //}
-
-
+        /// <summary>
+        /// Ensures that a workflow is installed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T EnsureWorkflow<T>() where T : class, IWorkflowContext
         {
             var container = Workflows.FirstOrDefault(p => p.Type == typeof(T).AssemblyQualifiedName

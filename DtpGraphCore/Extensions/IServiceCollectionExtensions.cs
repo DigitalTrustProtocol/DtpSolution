@@ -4,7 +4,6 @@ using DtpCore.Strategy;
 using DtpGraphCore.Interfaces;
 using DtpGraphCore.Model;
 using DtpGraphCore.Services;
-using DtpGraphCore.Workflows;
 
 namespace DtpGraphCore.Extensions
 {
@@ -20,8 +19,6 @@ namespace DtpGraphCore.Extensions
             services.AddTransient<IGraphQueryService, GraphQueryService>();
             services.AddTransient<IQueryRequestService, QueryRequestService>();
             services.AddTransient<IGraphWorkflowService, GraphWorkflowService>();
-
-            services.AddTransient<TrustPackageWorkflow>();
         }
 
     }

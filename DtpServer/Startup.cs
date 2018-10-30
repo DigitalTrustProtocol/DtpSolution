@@ -18,6 +18,8 @@ using NicolasDorier.RateLimits;
 using DtpServer.Extensions;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using DtpPackageCore.Extensions;
+using MediatR;
 
 namespace DtpServer
 {
@@ -64,9 +66,12 @@ namespace DtpServer
                 });
             });
 
+            services.AddMediatR();
+
             services.DtpCore();
             services.DtpGraphCore();
             services.DtpStrampCore();
+            services.DtpPackageCore();
 
             AddBackgroundServices(services);
 
@@ -120,8 +125,11 @@ namespace DtpServer
                     rateLimitService.SetZone(Configuration.RateLimits());
             }
 
-            app.Graph(); // Load the Trust Graph from Database
-            app.Truststamp();
+            
+
+            app.DtpGraph(); // Load the Trust Graph from Database
+            app.DtpStamp();
+            app.DtpPackage();
 
             app.UseMiddleware<SerilogDiagnostics>();
             app.UseHttpsRedirection();

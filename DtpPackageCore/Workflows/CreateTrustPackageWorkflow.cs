@@ -1,33 +1,32 @@
-﻿using DtpGraphCore.Interfaces;
-using DtpCore.Services;
-using DtpCore.Workflows;
+﻿using DtpCore.Workflows;
 using System;
 using System.Linq;
 using DtpCore.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using DtpCore.Repository;
 using DtpCore.Interfaces;
 using DtpCore.Builders;
-using DtpStampCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model.Configuration;
 using System.Text;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
-namespace DtpGraphCore.Workflows
+namespace DtpPackageCore.Workflows
 {
     /// <summary>
     /// Makes sure to timestamp a package
     /// </summary>
-    public class TrustPackageWorkflow : WorkflowContext
+    [DisplayName("Create Trust Packages")]
+    [Description("Create trust packages from new trusts received.")]
+    public class CreateTrustPackageWorkflow : WorkflowContext
     {
 
         public int LastTrustDatabaseID { get; set; }
 
-        private ILogger<TrustPackageWorkflow> _logger;
+        private ILogger<CreateTrustPackageWorkflow> _logger;
         private IConfiguration _configuration;
         private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
@@ -40,7 +39,7 @@ namespace DtpGraphCore.Workflows
         [NotMapped]
         public IPublicFileRepository FileRepository { get; set; } 
 
-        public TrustPackageWorkflow(ILogger<TrustPackageWorkflow> logger)
+        public CreateTrustPackageWorkflow(ILogger<CreateTrustPackageWorkflow> logger)
         {
             _logger = logger;
         }

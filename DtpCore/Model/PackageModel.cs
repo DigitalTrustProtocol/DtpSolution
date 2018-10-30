@@ -44,24 +44,6 @@ namespace DtpCore.Model
         [JsonProperty(PropertyName = "server", NullValueHandling = NullValueHandling.Ignore)]
         public ServerIdentity Server { get; set; }
 
-        //[JsonProperty(PropertyName = "serverScript")]
-        //public string ServerScript { get; set; }
-        //public bool ShouldSerializeServerScript() { return !string.IsNullOrWhiteSpace(ServerScript); }
-
-        //[JsonProperty(PropertyName = "serverAddress")]
-        //public byte[] ServerAddress { get; set; }
-
-        /// <summary>
-        /// Internal property for holding the private key to sign with
-        /// </summary>
-        [JsonIgnore]
-        [NotMapped]
-        public SignDelegate ServerSign { get; set; }
-
-        //[JsonProperty(PropertyName = "serverSignature")]
-        //public byte[] ServerSignature { get; set; }
-        //public bool ShouldSerializeServerSignature() { return ServerSignature != null && ServerSignature.Length > 0; }
-
         [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() { return Timestamps != null && Timestamps.Count > 0; }

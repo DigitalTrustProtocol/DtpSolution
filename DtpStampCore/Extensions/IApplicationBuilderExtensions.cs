@@ -6,7 +6,7 @@ namespace DtpStampCore.Extensions
 {
     public static class IApplicationBuilderExtensions
     {
-        public static void Truststamp(this IApplicationBuilder app)
+        public static void DtpStamp(this IApplicationBuilder app)
         {
             // Ensure that a Timestamp workflow is running.
             using (var scope = app.ApplicationServices.CreateScope())

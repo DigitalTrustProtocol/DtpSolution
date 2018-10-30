@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Facade\" />
+    <Folder Include="Workflows\" />
   </ItemGroup>
 
   <ItemGroup>
