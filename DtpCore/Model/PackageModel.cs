@@ -25,28 +25,33 @@ namespace DtpCore.Model
     {
         [JsonProperty(PropertyName = "algorithm")]
         public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
+        public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
 
         [UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "id")]
         public byte[] Id { get; set; }
-        public bool ShouldSerializeId() { return Id != null && Id.Length > 0; }
+        public bool ShouldSerializeId() => Id != null && Id.Length > 0;
 
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created")]
         public uint Created { get; set; }
-        public bool ShouldSerializeCreated() { return Created > 0; }
+        public bool ShouldSerializeCreated() => Created > 0;
 
         [JsonProperty(PropertyName = "trusts", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Trust> Trusts { get; set; }
-        public bool ShouldSerializeTrusts() { return Trusts != null && Trusts.Count > 0; }
+        public bool ShouldSerializeTrusts() => Trusts != null && Trusts.Count > 0;
 
         [JsonProperty(PropertyName = "server", NullValueHandling = NullValueHandling.Ignore)]
         public ServerIdentity Server { get; set; }
 
         [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Timestamp> Timestamps { get; set; }
-        public bool ShouldSerializeTimestamps() { return Timestamps != null && Timestamps.Count > 0; }
+        public bool ShouldSerializeTimestamps() => Timestamps != null && Timestamps.Count > 0;
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
     }
 
 

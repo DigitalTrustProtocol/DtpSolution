@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
     <PackageReference Include="NBitcoin" Version="4.1.1.54" />
     <PackageReference Include="QBitNinja.Client" Version="1.0.3.47" />

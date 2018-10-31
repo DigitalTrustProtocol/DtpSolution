@@ -34,17 +34,17 @@ namespace DtpServer.Pages.Timestamps
 
         public Timestamp Timestamp { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(byte[] source)
+        public IActionResult OnGet(byte[] source)
         {
             if (source == null)
                 return NotFound();
 
-            Timestamp = await _context.Timestamps.SingleOrDefaultAsync(m => m.Source == source);
+            Timestamp = _context.Timestamps.SingleOrDefault(m => m.Source == source);
 
             if (Timestamp == null)
                 return NotFound();
 
-            if (String.IsNullOrEmpty(Timestamp.Algorithm))
+            if (string.IsNullOrEmpty(Timestamp.Algorithm))
                 Timestamp.Algorithm = "double256.merkle.dtp1";
 
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)

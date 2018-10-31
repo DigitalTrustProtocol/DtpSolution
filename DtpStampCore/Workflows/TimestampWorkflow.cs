@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using DtpStampCore.Enumerations;
 using System.Collections.Generic;
 using DtpStampCore.Model;
+using MediatR;
 
 namespace DtpStampCore.Workflows
 {
@@ -51,9 +52,13 @@ namespace DtpStampCore.Workflows
 
         private ILogger<TimestampWorkflow> _logger;
 
+        private readonly Mediator _mediator;
 
-        public TimestampWorkflow()
+
+        public TimestampWorkflow(Mediator mediator)
         {
+            _mediator = mediator;
+
             CurrentState = TimestampStates.Synchronization;
         }
 

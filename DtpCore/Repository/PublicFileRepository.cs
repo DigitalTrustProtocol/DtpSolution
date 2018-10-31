@@ -35,7 +35,7 @@ namespace DtpCore.Repository
 
         }
 
-        public async Task WriteFileAsync(string name, string contents)
+        public Task WriteFileAsync(string name, string contents)
         {
             var fullName = name;
             if (!name.Contains("\\") && !name.Contains("/"))
@@ -43,7 +43,7 @@ namespace DtpCore.Repository
                 fullName = Path.Combine(PublicFullPath, name);
             }
 
-            await File.WriteAllTextAsync(fullName, contents);
+            return File.WriteAllTextAsync(fullName, contents);
         }
 
     }
