@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using DtpCore.Model;
+using MediatR;
 
 namespace DtpPackageCore.Commands
 {
-    public class CreateTrustPackageCommand : IRequest<bool>
+    public class CreateTrustPackageCommand : IRequest<Package>
     {
-        public string Name { get; set; }
+        // Some filtering data, to narrow down the package.
     }
 }

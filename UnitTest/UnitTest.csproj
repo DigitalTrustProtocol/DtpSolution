@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DtpCore\Repository\" />
     <Folder Include="DtpCore\Workflows\" />
   </ItemGroup>
 

@@ -10,7 +10,8 @@ using DtpStampCore.Interfaces;
 using UnitTest.DtpStampCore.Mocks;
 using DtpGraphCore.Controllers;
 using DtpCore.Interfaces;
-using UnitTest.DtpCore.Repository;
+using UnitTest.DtpPackage.Mocks;
+using MediatR;
 
 namespace UnitTest
 {
@@ -20,6 +21,7 @@ namespace UnitTest
         public IServiceScope ServiceScope { get; set; }
         public IServiceCollection Services { get; set; }
         public ILoggerFactory LoggerFactory { get; set; }
+        public IMediator Mediator { get; set; }
 
         [TestInitialize]
         public virtual void Init()
@@ -44,6 +46,8 @@ namespace UnitTest
             ServiceProvider = ServiceScope.ServiceProvider;
             LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
             LoggerFactory.AddConsole();
+
+            Mediator = ServiceProvider.GetRequiredService<IMediator>();
 
         }
 

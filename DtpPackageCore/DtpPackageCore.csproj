@@ -5,12 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\UpdateTrustPackageCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DtpCore\DtpCore.csproj" />
+    <ProjectReference Include="..\DtpStampCore\DtpStampCore.csproj" />
   </ItemGroup>
 
 </Project>

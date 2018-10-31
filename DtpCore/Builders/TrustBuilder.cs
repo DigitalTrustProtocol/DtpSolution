@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Extensions;
 using DtpCore.Factories;
 using System;
 using DtpCore.Strategy;
+using DtpCore.Collections.Generic;
 
 namespace DtpCore.Builders
 {
@@ -49,6 +50,7 @@ namespace DtpCore.Builders
         {
             Package = new Package
             {
+                Created = (uint)DateTime.UtcNow.ToUnixTime(),
                 Trusts = new List<Trust>()
             };
             _derivationServiceFactory = derivationServiceFactory;
@@ -167,6 +169,16 @@ namespace DtpCore.Builders
             return this;
         }
 
+        public void OrderTrust()
+        {
+            Package.Trusts = Package.Trusts.OrderBy(p => p.Id, ByteComparer.Compare).ToList();
+        }
+
+        public void OrderTrustDescending()
+        {
+            Package.Trusts = Package.Trusts.OrderByDescending(p => p.Id, ByteComparer.Compare).ToList();
+        }
+
 
         public TrustBuilder SetIssuer(string address, string type = "", SignDelegate sign = null)
         {
@@ -277,18 +289,31 @@ namespace DtpCore.Builders
 
         public TrustBuilder Build()
         {
+            IMerkleTree merkleTree = CreateMerkleTree();
+
+            var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(Package.Algorithm);
+
+            if (string.IsNullOrEmpty(Package.Algorithm))
+                Package.Algorithm = _hashAlgorithm.AlgorithmName;
+
+            Package.Id = _hashAlgorithm.HashOf(_trustBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
+
+            return this;
+        }
+
+        private IMerkleTree CreateMerkleTree()
+        {
             var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
 
             foreach (var trust in Package.Trusts)
             {
-                if(trust.Id == null)
+                if (trust.Id == null)
                     BuildTrustID(trust);
 
                 merkleTree.Add(new Timestamp { Source = trust.Id });
             }
-            Package.Id = merkleTree.Build().Hash;
-                
-            return this;
+
+            return merkleTree;
         }
 
         public Package Sign()

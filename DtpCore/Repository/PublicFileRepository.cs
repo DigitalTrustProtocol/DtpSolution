@@ -1,5 +1,6 @@
 ﻿using DtpCore.Interfaces;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DtpCore.Repository
 {
@@ -33,6 +34,18 @@ namespace DtpCore.Repository
             File.WriteAllText(fullName, contents);
 
         }
+
+        public async Task WriteFileAsync(string name, string contents)
+        {
+            var fullName = name;
+            if (!name.Contains("\\") && !name.Contains("/"))
+            {
+                fullName = Path.Combine(PublicFullPath, name);
+            }
+
+            await File.WriteAllTextAsync(fullName, contents);
+        }
+
     }
 }
 

@@ -1,10 +1,11 @@
 ﻿using DtpCore.Interfaces;
+using System.Threading.Tasks;
 
-namespace UnitTest.DtpCore.Repository
+namespace UnitTest.DtpPackage.Mocks
 {
     public class PublicFileRepositoryMock : IPublicFileRepository
     {
-        public bool FileExist = false;
+        public bool FileExist = true;
         public string FileName = null;
         public string FileContent = null;
 
@@ -18,5 +19,11 @@ namespace UnitTest.DtpCore.Repository
             FileName = name;
             FileContent = contents;
         }
+
+        public Task WriteFileAsync(string name, string contents)
+        {
+            return Task.Run( () => WriteFile(name, contents));
+        }
+
     }
 }

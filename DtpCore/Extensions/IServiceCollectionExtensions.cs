@@ -10,6 +10,7 @@ using DtpCore.Strategy;
 using DtpCore.Workflows;
 using DtpCore.Repository;
 using DtpCore.Strategy.Serialization;
+using DtpCore.Builders;
 
 namespace DtpCore.Extensions
 {
@@ -22,8 +23,9 @@ namespace DtpCore.Extensions
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IKeyValueService, KeyValueService>();
-            
-            
+
+
+            services.AddTransient<TrustBuilder>();
             services.AddTransient<ITrustSchemaService, TrustSchemaService>();
 
             services.AddTransient<IHashAlgorithmFactory, HashAlgorithmFactory>();

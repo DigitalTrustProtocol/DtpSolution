@@ -44,5 +44,33 @@ namespace DtpCore.Strategy
                 return ms.ToArray();
             }
         }
+
+
+        public byte[] GetPackageBinary(Package package, byte[] merkleRoot)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                if (merkleRoot != null)
+                    ms.WriteBytes(merkleRoot);
+
+                if (package == null)
+                    return ms.ToArray();
+
+                if(package.Algorithm != null)
+                {
+                    ms.WriteString(package.Algorithm);
+                }
+
+                ms.WriteInteger(package.Created);
+
+                if(package.Server != null)
+                {
+                    ms.WriteString(package.Server.Type.ToLowerSafe());
+                    ms.WriteString(package.Server.Address);
+                }
+                
+                return ms.ToArray();
+            }
+        }
     }
 }

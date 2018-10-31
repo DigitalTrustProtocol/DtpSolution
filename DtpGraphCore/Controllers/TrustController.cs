@@ -52,11 +52,12 @@ namespace DtpGraphCore.Controllers
                 return ApiError(validationResult, null, "Validation failed");
             // Timestamp validation service disabled for the moment
 
-            if ((package.Id != null && package.Id.Length > 0))
-            {
-                if (_trustDBService.DBContext.Packages.Any(f => f.Id == package.Id))
-                    throw new ApplicationException("Package already exist");
-            }
+            // Do not add external packages, as this system do not support this in data structure.
+            //if ((package.Id != null && package.Id.Length > 0))
+            //{
+            //    if (_trustDBService.DBContext.Packages.Any(f => f.Id == package.Id))
+            //        throw new ApplicationException("Package already exist");
+            //}
 
             foreach (var trust in package.Trusts)
             {
@@ -90,7 +91,6 @@ namespace DtpGraphCore.Controllers
                 //trust.Cost
                 //trust.Claim
                 //trust.Note
-                
 
                 dbTrust.Replaced = true;
                 _trustDBService.Update(dbTrust);
@@ -99,7 +99,8 @@ namespace DtpGraphCore.Controllers
 
             trust.Timestamps = _timestampService.FillIn(trust.Timestamps, trust.Id);
 
-            _trustDBService.Add(trust);   // Add to database
+            // Timestamp objects gets added to the Timestamp table as well!
+            _trustDBService.Add(trust);   
 
             var time = DateTime.Now.ToUnixTime();
             if ((trust.Expire  == 0 || trust.Expire > time) 

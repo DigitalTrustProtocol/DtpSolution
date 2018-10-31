@@ -250,6 +250,12 @@ namespace DtpCore.Model
         [JsonIgnore]
         public int WorkflowID { get; set; }
 
+        [JsonIgnore]
+        public int PackageDatabaseID { get; set; }
+
+        [JsonIgnore]
+        public int TrustDatabaseID { get; set; }
+
     }
 
 
