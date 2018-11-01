@@ -23,6 +23,10 @@ namespace DtpCore.Services
         T Create<T>(WorkflowContainer container) where T : class, IWorkflowContext;
         T Create<T>() where T : class, IWorkflowContext;
         IWorkflowContext Create(WorkflowContainer container);
+
+        IWorkflowContext Deserialize<T>(string data);
+        IWorkflowContext Deserialize(Type type, string data);
+
         //void Execute(Dictionary<string, bool> workflows, WorkflowContainer container, );
         int Save(IWorkflowContext workflow);
         //WorkflowContainer Load();

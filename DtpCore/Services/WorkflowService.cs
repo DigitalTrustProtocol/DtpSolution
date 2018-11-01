@@ -85,15 +85,9 @@ namespace DtpCore.Services
 
         public IWorkflowContext Create(WorkflowContainer container)
         {
-            // Adding Dependency injection available in json deserialization
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = _contractResolver
-            };
-
-
             var type = Type.GetType(container.Type);
-            var instance = (IWorkflowContext)JsonConvert.DeserializeObject(container.Data, type, settings);
+            var instance = Deserialize(type, container.Data);
+
             instance.Container = container;
             instance.WorkflowService = this;
 
@@ -101,7 +95,20 @@ namespace DtpCore.Services
 
         }
 
+        public IWorkflowContext Deserialize<T>(string data)
+        {
+            return Deserialize(typeof(T), data);
+        }
 
+        public IWorkflowContext Deserialize(Type type, string data)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = _contractResolver
+            };
+            var instance = (IWorkflowContext)JsonConvert.DeserializeObject(data, type, settings);
+            return instance;
+        }
 
         public int Save(IWorkflowContext workflow)
         {

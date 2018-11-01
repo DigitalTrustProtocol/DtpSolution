@@ -4,6 +4,7 @@ using DtpStampCore.Interfaces;
 using DtpStampCore.Services;
 using Microsoft.Extensions.Configuration;
 using DtpStampCore.Extensions;
+using DtpCore.Extensions;
 
 namespace DtpStampCore.Factories
 {

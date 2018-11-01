@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpGraphCore", "DtpGraphCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpServer", "DtpServer\DtpServer.csproj", "{165331EA-B409-402E-8E1B-83BE1D07BFCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtpPackageCore", "DtpPackageCore\DtpPackageCore.csproj", "{E3EDBD81-365A-4A18-91E0-393E59070AA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpPackageCore", "DtpPackageCore\DtpPackageCore.csproj", "{E3EDBD81-365A-4A18-91E0-393E59070AA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

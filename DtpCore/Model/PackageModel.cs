@@ -252,8 +252,10 @@ namespace DtpCore.Model
         public long Registered { get; set; }
         public bool ShouldSerializeRegistered() { return Registered != 0; }
 
+        //[JsonIgnore]
+        //public int WorkflowID { get; set; }
         [JsonIgnore]
-        public int WorkflowID { get; set; }
+        public int BlockchainProofDatabaseID { get; set; }
 
         [JsonIgnore]
         public int PackageDatabaseID { get; set; }

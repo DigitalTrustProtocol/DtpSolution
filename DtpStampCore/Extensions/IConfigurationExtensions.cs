@@ -1,14 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DtpCore.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace DtpStampCore.Extensions
 {
     public static class IConfigurationExtensions
     {
-        public static string Blockchain(this IConfiguration configuration, string defaultValue = "btctest")
-        {
-            return configuration.GetValue("blockchain", defaultValue);
-        }
-
         public static string FundingKey(this IConfiguration configuration, string blockchain = null, string defaultValue = "")
         {
             if (blockchain == null)

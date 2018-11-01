@@ -107,6 +107,7 @@ namespace DtpCore.Services
 
 
                             container.State = WorkflowStatusType.Running.ToString();
+                            workflowService.Save(workflowInstance);
 
                             //invoke.
                             if (typeof(Task).Equals(method.ReturnType))

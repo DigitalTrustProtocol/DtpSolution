@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using DtpCore.Enumerations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using DtpStampCore.Enumerations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DtpCore.Model
 {
-    public class BlockchainProof 
+    [Table("BlockchainProof")]
+    [JsonObject(MemberSerialization.OptIn)]
+    public class BlockchainProof : DatabaseEntity
     {
         [JsonProperty(PropertyName = "blockchain", NullValueHandling = NullValueHandling.Ignore)]
         public string Blockchain { get; set; }
@@ -21,28 +24,32 @@ namespace DtpCore.Model
 
         [JsonProperty(PropertyName = "confirmations")]
         public int Confirmations { get; set; }
+        public bool ShouldSerializeConfirmations() => Confirmations != -1;
 
         [JsonProperty(PropertyName = "blocktime")]
         public long BlockTime { get; set; }
+        public bool ShouldSerializeBlockTime() => BlockTime != 0;
 
+        [NotMapped]
         [JsonProperty(PropertyName = "remote", NullValueHandling = NullValueHandling.Ignore)]
         public BlockchainProof Remote { get; set; }
 
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
 
-        [JsonProperty(PropertyName = "proofs", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Timestamp> Proofs { get; set; }
+        [JsonProperty(PropertyName = "retryAttempts")]
+        public int RetryAttempts { get; set; }
+
+        [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Timestamp> Timestamps { get; set; }
 
         public BlockchainProof()
         {
+            BlockTime = 0;
             Confirmations = -1;
-            Status = TimestampProofStatusType.New.ToString();
+            Status = ProofStatusType.New.ToString();
+            RetryAttempts = 0;
         }
 
-        public bool ShouldSerializeConfirmations()
-        {
-            return Confirmations != -1;
-        }
     }
 }

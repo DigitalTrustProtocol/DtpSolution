@@ -1,4 +1,5 @@
 ﻿using DtpCore.Builders;
+using DtpCore.Commands;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -20,31 +22,31 @@ using System.Threading.Tasks;
 
 namespace DtpPackageCore.Commands
 {
-    public class TrustPackageCommandHandler :
-        IRequestHandler<CreateTrustPackageCommand, Package>
-        //IRequestHandler<UpdateTrustPackageCommand, bool>
+    public class AddNewTrustPackageCommandHandler :
+        IRequestHandler<AddNewTrustPackageCommand, Package>
     {
+        private IMediator _mediator;
 
         private IConfiguration _configuration;
         private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
         private ITrustPackageService _trustPackageService;
-        private ITimestampService _timestampService;
-        private readonly ILogger<TrustPackageCommandHandler> logger;
+        private readonly ILogger<AddNewTrustPackageCommandHandler> logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public TrustPackageCommandHandler(IServiceProvider serviceProvider, IConfiguration configuration, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, ITimestampService timestampService, ILogger<TrustPackageCommandHandler> logger)
+        public AddNewTrustPackageCommandHandler(IMediator mediator, IServiceProvider serviceProvider, IConfiguration configuration, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, ILogger<AddNewTrustPackageCommandHandler> logger)
         {
+            _mediator = mediator;
+
             _serviceProvider = serviceProvider;
             _configuration = configuration;
             _trustDBService = trustDBService;
             _derivationStrategyFactory = derivationStrategyFactory;
             _trustPackageService = trustPackageService;
-            _timestampService = timestampService;
             this.logger = logger;
         }
 
-        public async Task<Package> Handle(CreateTrustPackageCommand request, CancellationToken cancellationToken)
+        public Task<Package> Handle(AddNewTrustPackageCommand request, CancellationToken cancellationToken)
         {
 
             var trusts = GetTrusts();
@@ -57,12 +59,14 @@ namespace DtpPackageCore.Commands
 
             SignPackage(_builder);
 
-            _builder.Package.Timestamps = _timestampService.FillIn(_builder.Package.Timestamps, _builder.Package.Id);
+            var timestamp = _mediator.SendAndWait(new CreateTimestampCommand { Source = _builder.Package.Id });
+            _builder.Package.Timestamps = _builder.Package.Timestamps ?? new List<Timestamp>();
+            _builder.Package.Timestamps.Add(timestamp);
 
             _trustDBService.DBContext.Packages.Add(_builder.Package);
-            await _trustDBService.DBContext.SaveChangesAsync();
+            _trustDBService.DBContext.SaveChanges();
 
-            return _builder.Package;
+            return Task.FromResult(_builder.Package);
         }
 
         //public async Task<bool> Handle(UpdateTrustPackageCommand request, CancellationToken cancellationToken)

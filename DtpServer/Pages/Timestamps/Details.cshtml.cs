@@ -49,34 +49,28 @@ namespace DtpServer.Pages.Timestamps
 
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)
                 return Page();
+
+            var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProofDatabaseID);
+            if (proof == null)
+                return Page();
             
+            var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
+            var root = _merkleTree.ComputeRoot(hash, Timestamp.Receipt);
 
-            if (Timestamp.WorkflowID > 0) {
-                var wf = _workflowService.Load<TimestampWorkflow>(Timestamp.WorkflowID);
-                    
-                // If the workflow still waiting for execution?
-                if (wf.CurrentState == TimestampWorkflow.TimestampStates.Synchronization)
-                    return Page();
+            Timestamp.Blockchain = proof.Blockchain;
 
-                var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
-                var root = _merkleTree.ComputeRoot(hash, Timestamp.Receipt);
+            var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
+            var key = blockchainService.DerivationStrategy.GetKey(root);
+            var address = blockchainService.DerivationStrategy.GetAddress(key);
 
-                if (String.IsNullOrEmpty(Timestamp.Blockchain))
-                    Timestamp.Blockchain = wf.Proof.Blockchain;
+            if (String.IsNullOrEmpty(Timestamp.Service))
+                Timestamp.Service = blockchainService.Repository.ServiceUrl;
 
-                var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
-                var key = blockchainService.DerivationStrategy.GetKey(root);
-                var address = blockchainService.DerivationStrategy.GetAddress(key);
-
-                if (String.IsNullOrEmpty(Timestamp.Service))
-                    Timestamp.Service = blockchainService.Repository.ServiceUrl;
-
-                ViewData["root"] = root.ToHex();
-                ViewData["rootMacth"] = (wf.Proof != null && wf.Proof.MerkleRoot != null) ? (root.SequenceEqual(wf.Proof.MerkleRoot)) : false;
-                ViewData["address"] = address;
-                ViewData["confirmations"] = wf.Proof != null ? wf.Proof.Confirmations : -1;
-                ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
-            }
+            ViewData["root"] = root.ToHex();
+            ViewData["rootMacth"] = root.SequenceEqual(proof.MerkleRoot);
+            ViewData["address"] = proof.Address;
+            ViewData["confirmations"] = proof.Confirmations;
+            ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
 
             return Page();
         }

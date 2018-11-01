@@ -5,9 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\TimestampController.cs" />
     <Compile Remove="Extensions\ByteExtensions.cs" />
     <Compile Remove="Extensions\EncoderExtensions.cs" />
     <Compile Remove="Extensions\JsonExtensions.cs" />
+    <Compile Remove="Factories\TimestampProofFactory.cs" />
+    <Compile Remove="Interfaces\ITimestampProofFactory.cs" />
+    <Compile Remove="Interfaces\ITimestampService.cs" />
+    <Compile Remove="Interfaces\ITimestampStep.cs" />
+    <Compile Remove="Interfaces\ITimestampSynchronizationService.cs" />
+    <Compile Remove="Interfaces\ITimestampWorkflowService.cs" />
     <Compile Remove="Model\TimestampProof.cs" />
     <Compile Remove="Repository\BlockrRepository.cs" />
     <Compile Remove="Repository\SoChainTransactionRepository.cs" />
@@ -15,6 +22,9 @@
     <Compile Remove="Services\Crypto.cs" />
     <Compile Remove="Services\Info.cs" />
     <Compile Remove="Services\Proof.cs" />
+    <Compile Remove="Services\TimestampService.cs" />
+    <Compile Remove="Services\TimestampSynchronizationService.cs" />
+    <Compile Remove="Services\TimestampWorkflowService.cs" />
     <Compile Remove="Workflows\AddressVerifyStep.cs" />
     <Compile Remove="Workflows\BitcoinWorkflow.cs" />
     <Compile Remove="Workflows\BlockchainWorkflowBatch.cs" />
@@ -41,6 +51,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Enumerations\" />
     <Folder Include="Strategies\" />
   </ItemGroup>
 

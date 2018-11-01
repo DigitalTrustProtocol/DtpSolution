@@ -14,7 +14,33 @@ namespace DtpCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799");
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+
+            modelBuilder.Entity("DtpCore.Model.BlockchainProof", b =>
+                {
+                    b.Property<int>("DatabaseID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<long>("BlockTime");
+
+                    b.Property<string>("Blockchain");
+
+                    b.Property<int>("Confirmations");
+
+                    b.Property<byte[]>("MerkleRoot");
+
+                    b.Property<byte[]>("Receipt");
+
+                    b.Property<int>("RetryAttempts");
+
+                    b.Property<string>("Status");
+
+                    b.HasKey("DatabaseID");
+
+                    b.ToTable("BlockchainProof");
+                });
 
             modelBuilder.Entity("DtpCore.Model.KeyValue", b =>
                 {
@@ -60,7 +86,9 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Blockchain");
 
-                    b.Property<int?>("PackageDatabaseID");
+                    b.Property<int>("BlockchainProofDatabaseID");
+
+                    b.Property<int>("PackageDatabaseID");
 
                     b.Property<byte[]>("Receipt");
 
@@ -70,19 +98,17 @@ namespace DtpCore.Migrations
 
                     b.Property<byte[]>("Source");
 
-                    b.Property<int?>("TrustDatabaseID");
-
-                    b.Property<int>("WorkflowID");
+                    b.Property<int>("TrustDatabaseID");
 
                     b.HasKey("DatabaseID");
+
+                    b.HasIndex("BlockchainProofDatabaseID");
 
                     b.HasIndex("PackageDatabaseID");
 
                     b.HasIndex("Source");
 
                     b.HasIndex("TrustDatabaseID");
-
-                    b.HasIndex("WorkflowID");
 
                     b.ToTable("Timestamp");
                 });
@@ -173,13 +199,20 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>
                 {
+                    b.HasOne("DtpCore.Model.BlockchainProof")
+                        .WithMany("Timestamps")
+                        .HasForeignKey("BlockchainProofDatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DtpCore.Model.Package")
                         .WithMany("Timestamps")
-                        .HasForeignKey("PackageDatabaseID");
+                        .HasForeignKey("PackageDatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DtpCore.Model.Trust")
                         .WithMany("Timestamps")
-                        .HasForeignKey("TrustDatabaseID");
+                        .HasForeignKey("TrustDatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DtpCore.Model.Trust", b =>

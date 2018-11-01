@@ -44,7 +44,7 @@ namespace DtpStampCore.Services
                 return;
 
             // Activate the previous workflow
-            var oldWf = WorkflowService.Load<TimestampWorkflow>(oldID);
+            var oldWf = WorkflowService.Load<ProcessProofWorkflow>(oldID);
             if(oldWf != null)
             {
                 oldWf.Container.State = WorkflowStatusType.Starting.ToString();
@@ -55,12 +55,12 @@ namespace DtpStampCore.Services
 
         public void EnsureTimestampScheduleWorkflow()
         {
-            WorkflowService.EnsureWorkflow<TimestampScheduleWorkflow>();
+            WorkflowService.EnsureWorkflow<CreateProofWorkflow>();
         }
 
         public void CreateTimestampWorkflow()
         {
-            var wf = WorkflowService.Create<TimestampWorkflow>();
+            var wf = WorkflowService.Create<ProcessProofWorkflow>();
             wf.Container.State = WorkflowStatusType.Waiting.ToString();
             wf.Container.NextExecution = DateTime.Now.AddSeconds(_configuration.TimestampInterval()).ToUnixTime();
             WorkflowService.Save(wf);

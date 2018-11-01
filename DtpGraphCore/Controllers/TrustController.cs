@@ -10,27 +10,31 @@ using DtpCore.Builders;
 using DtpCore.Enumerations;
 using DtpCore.Extensions;
 using System.Collections.Generic;
+using MediatR;
+using DtpCore.Commands;
 
 namespace DtpGraphCore.Controllers
 {
     [Route("api/[controller]")]
     public class TrustController : ApiController
     {
+        private IMediator _mediator;
+
         private IGraphTrustService _graphTrustService;
         private ITrustSchemaService _trustSchemaService;
         private ITrustDBService _trustDBService;
-        private ITimestampService _timestampService;
         private IBlockchainServiceFactory _blockchainServiceFactory;
         private IServiceProvider _serviceProvider;
 
 
 
-        public TrustController(IGraphTrustService graphTrustService, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, ITimestampService timestampService, IBlockchainServiceFactory blockchainServiceFactory, IServiceProvider serviceProvider)
+        public TrustController(IMediator mediator, IGraphTrustService graphTrustService, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IBlockchainServiceFactory blockchainServiceFactory, IServiceProvider serviceProvider)
         {
+            _mediator = mediator;
+
             _graphTrustService = graphTrustService;
             _trustSchemaService = trustSchemaService;
             _trustDBService = trustDBService;
-            _timestampService = timestampService;
             _blockchainServiceFactory = blockchainServiceFactory;
             _serviceProvider = serviceProvider;
         }
@@ -97,7 +101,10 @@ namespace DtpGraphCore.Controllers
                 _graphTrustService.Remove(trust);
             }
 
-            trust.Timestamps = _timestampService.FillIn(trust.Timestamps, trust.Id);
+
+            var timestamp = _mediator.SendAndWait(new CreateTimestampCommand { Source = trust.Id });
+            trust.Timestamps = trust.Timestamps ?? new List<Timestamp>();
+            trust.Timestamps.Add(timestamp);
 
             // Timestamp objects gets added to the Timestamp table as well!
             _trustDBService.Add(trust);   

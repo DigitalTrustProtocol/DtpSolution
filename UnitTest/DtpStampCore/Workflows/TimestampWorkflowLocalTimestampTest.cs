@@ -32,10 +32,10 @@ namespace UnitTest.DtpStampCore.Workflows
             timestampService.Add(Guid.NewGuid().ToByteArray());
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
 
 
-            workflow.SetCurrentState(TimestampWorkflow.TimestampStates.Merkle);
+            workflow.SetCurrentState(ProcessProofWorkflow.TimestampStates.Merkle);
 
             // No received
             BlockchainRepositoryMock.ReceivedData = new BalanceModel();
@@ -46,7 +46,7 @@ namespace UnitTest.DtpStampCore.Workflows
             // Verify
             Assert.AreNotEqual(workflow.OutTx.Count, 0);
 
-            Assert.AreEqual(TimestampWorkflow.TimestampStates.AddressVerify, workflow.CurrentState);
+            Assert.AreEqual(ProcessProofWorkflow.TimestampStates.AddressVerify, workflow.CurrentState);
         }
 
         [TestMethod]
@@ -58,9 +58,9 @@ namespace UnitTest.DtpStampCore.Workflows
             timestampService.Add(Guid.Empty.ToByteArray()); // Same data every time
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             
-            workflow.SetCurrentState(TimestampWorkflow.TimestampStates.Merkle);
+            workflow.SetCurrentState(ProcessProofWorkflow.TimestampStates.Merkle);
 
             // No received
             //BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
@@ -71,7 +71,7 @@ namespace UnitTest.DtpStampCore.Workflows
             // Verify
             Assert.IsNull(workflow.OutTx);
 
-            Assert.AreEqual(TimestampWorkflow.TimestampStates.AddressVerify, workflow.CurrentState);
+            Assert.AreEqual(ProcessProofWorkflow.TimestampStates.AddressVerify, workflow.CurrentState);
         }
 
         //[TestMethod]

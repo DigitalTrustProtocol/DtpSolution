@@ -28,7 +28,7 @@ namespace UnitTest.DtpStampCore.Workflows
             };
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             workflow.Container.NextExecution = 0;
             workflow.Proof = new BlockchainProof
             {
@@ -37,7 +37,7 @@ namespace UnitTest.DtpStampCore.Workflows
                 Confirmations = -1
             };
 
-            workflow.SetCurrentState(TimestampWorkflow.TimestampStates.AddressVerify);
+            workflow.SetCurrentState(ProcessProofWorkflow.TimestampStates.AddressVerify);
             workflow.Execute();
 
             Assert.IsTrue(workflow.Container.NextExecution > 0); // Wait is called
@@ -58,7 +58,7 @@ namespace UnitTest.DtpStampCore.Workflows
 
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             workflow.Container.NextExecution = 0;
             workflow.Proof = new BlockchainProof
             {
@@ -67,7 +67,7 @@ namespace UnitTest.DtpStampCore.Workflows
                 Confirmations = -1
             };
 
-            workflow.SetCurrentState(TimestampWorkflow.TimestampStates.AddressVerify);
+            workflow.SetCurrentState(ProcessProofWorkflow.TimestampStates.AddressVerify);
             workflow.Execute();
 
             Assert.IsTrue(workflow.Container.NextExecution > 0); // Wait is called
@@ -80,7 +80,7 @@ namespace UnitTest.DtpStampCore.Workflows
             BlockchainRepositoryMock.ReceivedData = BlockchainRepositoryMock.StandardData;
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             workflow.Container.NextExecution = 0;
             workflow.Proof = new BlockchainProof
             {
@@ -89,7 +89,7 @@ namespace UnitTest.DtpStampCore.Workflows
                 Confirmations = -1
             };
 
-            workflow.SetCurrentState(TimestampWorkflow.TimestampStates.AddressVerify);
+            workflow.SetCurrentState(ProcessProofWorkflow.TimestampStates.AddressVerify);
             workflow.Execute();
 
             Assert.IsTrue(workflow.Container.NextExecution == 0); // Wait is called

@@ -13,21 +13,20 @@ namespace DtpStampCore.Extensions
     {
         public static void DtpStrampCore(this IServiceCollection services)
         {
-            services.AddSingleton<ITimestampSynchronizationService, TimestampSynchronizationService>();
+            //services.AddSingleton<ITimestampSynchronizationService, TimestampSynchronizationService>();
 
-            services.AddTransient<ITimestampWorkflowService, TimestampWorkflowService>();
-            services.AddTransient<ITimestampService, TimestampService>();
+            //services.AddTransient<ITimestampWorkflowService, TimestampWorkflowService>();
+            //services.AddTransient<ITimestampService, TimestampService>();
 
             services.AddTransient<IHashAlgorithm, Double256>();
             services.AddTransient<IMerkleTree, MerkleTreeSorted>();
 
-            services.AddTransient<TimestampScheduleWorkflow>();
-            services.AddTransient<TimestampWorkflow>();
+            services.AddTransient<CreateProofWorkflow>();
+            services.AddTransient<ProcessProofWorkflow>();
             services.AddTransient<IBlockchainRepository, QBitNinjaRepository>();
             services.AddTransient<IBlockchainService, BitcoinService>();
 
             services.AddTransient<IBlockchainServiceFactory, BlockchainServiceFactory>();
-            services.AddTransient<IBlockchainProofFactory, BlockchainProofFactory>();
 
             services.AddTransient<BitcoinService>();
             services.AddTransient<BitcoinTestService>();

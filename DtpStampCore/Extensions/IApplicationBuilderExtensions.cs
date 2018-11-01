@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using DtpStampCore.Interfaces;
+using DtpStampCore.Workflows;
+using DtpCore.Services;
 
 namespace DtpStampCore.Extensions
 {
@@ -11,10 +13,14 @@ namespace DtpStampCore.Extensions
             // Ensure that a Timestamp workflow is running.
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var timestampWorkflowService = scope.ServiceProvider.GetRequiredService<ITimestampWorkflowService>();
+                //var timestampWorkflowService = scope.ServiceProvider.GetRequiredService<ITimestampWorkflowService>();
+                //timestampWorkflowService.EnsureTimestampScheduleWorkflow();
+                //timestampWorkflowService.CreateAndExecute(); // Make sure that there is a Timestamp engine workflow
+                var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
 
-                timestampWorkflowService.EnsureTimestampScheduleWorkflow();
-                timestampWorkflowService.CreateAndExecute(); // Make sure that there is a Timestamp engine workflow
+                workflowService.EnsureWorkflow<CreateProofWorkflow>();
+                workflowService.EnsureWorkflow<ProcessProofWorkflow>();
+
             }
         }
     }

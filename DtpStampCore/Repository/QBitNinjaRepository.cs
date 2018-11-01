@@ -15,6 +15,7 @@ using QBitNinja.Client;
 using DtpStampCore.Extensions;
 using QBitNinja.Client.Models;
 using NBitcoin.Protocol;
+using DtpCore.Extensions;
 
 namespace DtpStampCore.Repository
 {

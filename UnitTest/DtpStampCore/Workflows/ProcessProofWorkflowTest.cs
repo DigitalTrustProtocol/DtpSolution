@@ -12,20 +12,23 @@ using DtpCore.Services;
 using DtpStampCore.Interfaces;
 using DtpStampCore.Workflows;
 using DtpCore.Workflows;
+using UnitTest.DtpStampCore.Mocks;
+using QBitNinja.Client.Models;
+using System.Collections.Generic;
 
 namespace UnitTest.DtpStampCore.Workflows
 {
     [TestClass]
-    public class TimestampWorkflowTest : StartupMock
+    public class ProcessProofWorkflowTest : StartupMock
     {
         [TestMethod]
         public void Serialize()
         {
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             var firstTime = workflow.SerializeObject();
             Console.WriteLine(firstTime);
-            var wf2 = JsonConvert.DeserializeObject<TimestampWorkflow>(firstTime);
+            var wf2 = workflowService.Deserialize<ProcessProofWorkflow>(firstTime);
             var secondTime = wf2.SerializeObject();
 
             Assert.AreEqual(firstTime, secondTime);
@@ -37,7 +40,7 @@ namespace UnitTest.DtpStampCore.Workflows
         {
             var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>(); 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<TimestampWorkflow>();
+            var workflow = workflowService.Create<ProcessProofWorkflow>();
             Assert.IsNotNull(workflow);
             var id = workflowService.Save(workflow);
 
@@ -48,5 +51,6 @@ namespace UnitTest.DtpStampCore.Workflows
             var workflow2 = workflowService.Create(container);
             Assert.IsNotNull(workflow2);
         }
+
     }
 }

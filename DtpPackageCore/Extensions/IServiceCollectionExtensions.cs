@@ -11,12 +11,12 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackageCore(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(TrustPackageCommandHandler));
+            services.AddMediatR(typeof(AddNewTrustPackageCommandHandler));
 //            services.AddMediatR(typeof(TrustPackageCreatedNotificationHandler));
             
             services.AddTransient<ITrustPackageService, TrustPackageService>();
 
-            services.AddTransient<TrustPackageCommandHandler>();
+            services.AddTransient<AddNewTrustPackageCommandHandler>();
             
 
         }

@@ -29,6 +29,10 @@ namespace DtpCore.Extensions
         }
 
 
+        public static string Blockchain(this IConfiguration configuration, string defaultValue = "btctest")
+        {
+            return configuration.GetValue("blockchain", defaultValue);
+        }
 
     }
 }

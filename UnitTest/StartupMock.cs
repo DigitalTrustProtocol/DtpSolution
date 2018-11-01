@@ -36,8 +36,9 @@ namespace UnitTest
                 return config;
                 });
 
-            //Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
+            Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
             Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
+
 
             Services.AddTransient<TrustController>();
             Services.AddTransient<QueryController>();

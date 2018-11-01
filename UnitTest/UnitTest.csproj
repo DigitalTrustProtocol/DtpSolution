@@ -10,6 +10,13 @@
     <Compile Remove="DtpCore\Workflows\BlockingWorkflowStep.cs" />
     <Compile Remove="DtpCore\Workflows\IBlockingWorkflowStep.cs" />
     <Compile Remove="DtpGraphCore\Workflows\TrustTimestampWorkflowTest.cs" />
+    <Compile Remove="DtpStampCore\Services\BlockchainServiceTest.cs" />
+    <Compile Remove="DtpStampCore\Services\TimestampServiceTest.cs" />
+    <Compile Remove="DtpStampCore\Services\TimestampWorkflowServiceTest.cs" />
+    <Compile Remove="DtpStampCore\Workflows\TimestampScheduleWorkflowTest.cs" />
+    <Compile Remove="DtpStampCore\Workflows\TimestampWorkflowAddressVerifyTest.cs" />
+    <Compile Remove="DtpStampCore\Workflows\TimestampWorkflowLocalTimestampTest.cs" />
+    <Compile Remove="DtpStampCore\Workflows\TimestampWorkflowMerkleTest.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +32,7 @@
   <ItemGroup>
     <Folder Include="DtpCore\Repository\" />
     <Folder Include="DtpCore\Workflows\" />
+    <Folder Include="DtpStampCore\Services\" />
   </ItemGroup>
 
   <ItemGroup>

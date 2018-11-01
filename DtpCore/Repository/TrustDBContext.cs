@@ -8,6 +8,7 @@ namespace DtpCore.Repository
         public DbSet<Package> Packages { get; set; }
         public DbSet<Trust> Trusts { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
+        public DbSet<BlockchainProof> Proofs { get; set; }
 
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -43,7 +44,10 @@ namespace DtpCore.Repository
             //builder.Entity<Trust>().HasIndex(p => new { p.IssuerAddress, p.SubjectAddress, p.Type, p.Scope }).IsUnique(true);
             builder.Entity<Timestamp>().HasKey(p => p.DatabaseID);
             builder.Entity<Timestamp>().HasIndex(p => p.Source);
-            builder.Entity<Timestamp>().HasIndex(p => p.WorkflowID);
+            builder.Entity<Timestamp>().HasIndex(p => p.BlockchainProofDatabaseID);
+
+
+            builder.Entity<BlockchainProof>().HasKey(p => p.DatabaseID);
 
             // Workflow
             builder.Entity<WorkflowContainer>().HasKey(p => p.DatabaseID);
@@ -61,6 +65,7 @@ namespace DtpCore.Repository
             KeyValues.RemoveRange(KeyValues);
             Workflows.RemoveRange(Workflows);
             Timestamps.RemoveRange(Timestamps);
+            Proofs.RemoveRange(Proofs);
             Trusts.RemoveRange(Trusts);
             Packages.RemoveRange(Packages);
 

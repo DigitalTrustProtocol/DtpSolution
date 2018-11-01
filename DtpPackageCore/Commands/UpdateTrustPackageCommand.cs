@@ -2,7 +2,7 @@
 
 namespace DtpPackageCore.Commands
 {
-    public class UpdateTrustPackageCommand : CreateTrustPackageCommand
+    public class UpdateTrustPackageCommand : AddNewTrustPackageCommand
     {
     }
 }
