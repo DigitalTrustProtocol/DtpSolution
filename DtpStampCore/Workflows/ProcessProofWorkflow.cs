@@ -17,9 +17,12 @@ using DtpPackageCore.Notifications;
 using DtpCore.Commands;
 using DtpCore.Enumerations;
 using DtpCore.Repository;
+using System.ComponentModel;
 
 namespace DtpStampCore.Workflows
 {
+    [DisplayName("Process Proofs")]
+    [Description("Update the proofs confirmation time")]
     public class ProcessProofWorkflow : WorkflowContext, ITimestampWorkflow
     {
         private readonly IMediator _mediator;

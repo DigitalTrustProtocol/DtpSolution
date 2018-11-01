@@ -7,35 +7,32 @@
 
 <h2>Workflows</h2>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.WorkflowContainer[0].Type)
+                @Html.DisplayNameFor(model => model.WorkflowViews[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkflowContainer[0].State)
+                @Html.DisplayNameFor(model => model.WorkflowViews[0].State)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WorkflowContainer[0].Active)
+                @Html.DisplayNameFor(model => model.WorkflowViews[0].Active)
             </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.WorkflowContainer[0].Tag)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WorkflowContainer[0].Data)
-        </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.WorkflowViews[0].NextExecution)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.WorkflowContainer) {
+@foreach (var item in Model.WorkflowViews) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Type)
+                @Html.DisplayFor(modelItem => item.Title)<br />
+                <h7>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </h7>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.State)
@@ -43,14 +40,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Tag)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Data)
-        </td>*@
             <td>
-                <a asp-page="./List" asp-route-type="@item.Type">View</a>
+                @Html.DisplayFor(modelItem => item.NextExecution)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.DatabaseID">View</a>
             </td>
         </tr>
 }

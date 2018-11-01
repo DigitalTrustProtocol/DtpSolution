@@ -7,25 +7,30 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
 using DtpCore.Repository;
+using MediatR;
+using DtpCore.Commands.Workflow;
+using DtpCore.Extensions;
+using DtpCore.ViewModel;
 
 namespace DtpServer.Pages.Workflows
 {
     public class IndexModel : PageModel
     {
-        private readonly DtpCore.Repository.TrustDBContext _context;
+        private readonly IMediator _mediator;
+        private readonly TrustDBContext _context;
 
-        public IndexModel(DtpCore.Repository.TrustDBContext context)
+        public IList<WorkflowView> WorkflowViews { get; set; }
+
+        public IndexModel(IMediator mediator, TrustDBContext context)
         {
+            _mediator = mediator;
             _context = context;
         }
 
-        public IList<WorkflowContainer> WorkflowContainer { get;set; }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            var query = _context.Workflows.GroupBy(p => p.Type).Select(p => p.OrderByDescending(t=>t.DatabaseID).First());
-
-            WorkflowContainer = await query.ToListAsync();
+            WorkflowViews = _mediator.SendAndWait(new GetWorkflowsViewCommand());
         }
     }
 }

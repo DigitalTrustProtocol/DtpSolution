@@ -15,9 +15,12 @@ using DtpCore.Interfaces;
 using DtpCore.Enumerations;
 using System;
 using DtpCore.Model.Configuration;
+using System.ComponentModel;
 
 namespace DtpStampCore.Workflows
 {
+    [DisplayName("Create Proof for timestamps")]
+    [Description("Calculated the Timestamps sources into a merke tree and put the root on the blockchain")]
     public class CreateProofWorkflow : WorkflowContext
     {
         //private ITimestampWorkflowService _timestampWorkflowService;
