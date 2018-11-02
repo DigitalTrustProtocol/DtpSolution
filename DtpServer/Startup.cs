@@ -72,6 +72,7 @@ namespace DtpServer
             services.DtpGraphCore();
             services.DtpStrampCore();
             services.DtpPackageCore();
+            services.DtpServer();
 
             AddBackgroundServices(services);
 

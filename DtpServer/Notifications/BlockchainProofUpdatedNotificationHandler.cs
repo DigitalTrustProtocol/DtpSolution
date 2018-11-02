@@ -1,13 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using DtpCore.Extensions;
 using DtpCore.Repository;
-using DtpPackageCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Linq;
 using DtpPackageCore.Commands;
+using DtpCore.Notifications;
+using DtpCore.Interfaces;
 
 namespace DtpServer.Notifications
 {
@@ -15,10 +14,10 @@ namespace DtpServer.Notifications
     {
         private IMediator _mediator;
         private ILogger<BlockchainProofUpdatedNotificationHandler> _logger;
-        private PublicFileRepository _publicFileRepository;
+        private IPublicFileRepository _publicFileRepository;
         private TrustDBContext _db;
 
-        public BlockchainProofUpdatedNotificationHandler(IMediator mediator, ILogger<BlockchainProofUpdatedNotificationHandler> logger, PublicFileRepository publicFileRepository, TrustDBContext db)
+        public BlockchainProofUpdatedNotificationHandler(IMediator mediator, ILogger<BlockchainProofUpdatedNotificationHandler> logger, IPublicFileRepository publicFileRepository, TrustDBContext db)
         {
             _mediator = mediator;
             _logger = logger;

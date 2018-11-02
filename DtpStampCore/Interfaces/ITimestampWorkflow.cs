@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using DtpCore.Interfaces;
 using DtpCore.Model;
-using static DtpStampCore.Workflows.ProcessProofWorkflow;
+using static DtpStampCore.Workflows.UpdateProofWorkflow;
 
 namespace DtpStampCore.Interfaces
 {

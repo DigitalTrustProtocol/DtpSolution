@@ -1,38 +1,31 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using DtpCore.Workflows;
+﻿using DtpCore.Workflows;
 using DtpStampCore.Interfaces;
 using DtpCore.Model;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using DtpStampCore.Extensions;
 using DtpCore.Extensions;
-using DtpCore.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using DtpStampCore.Model;
 using MediatR;
-using DtpPackageCore.Notifications;
 using DtpCore.Commands;
 using DtpCore.Enumerations;
 using DtpCore.Repository;
 using System.ComponentModel;
+using DtpCore.Notifications;
 
 namespace DtpStampCore.Workflows
 {
-    [DisplayName("Process Proofs")]
+    [DisplayName("Update Proofs")]
     [Description("Update the proofs confirmation time")]
-    public class ProcessProofWorkflow : WorkflowContext, ITimestampWorkflow
+    public class UpdateProofWorkflow : WorkflowContext, ITimestampWorkflow
     {
         private readonly IMediator _mediator;
         private TrustDBContext _trustDBContext;
         private IBlockchainService _blockchainService;
         private IConfiguration _configuration;
-        private ILogger<ProcessProofWorkflow> _logger;
+        private ILogger<UpdateProofWorkflow> _logger;
 
 
-        public ProcessProofWorkflow(IMediator mediator, TrustDBContext trustDBContext, IBlockchainService blockchainService, IConfiguration configuration, ILogger<ProcessProofWorkflow> logger)
+        public UpdateProofWorkflow(IMediator mediator, TrustDBContext trustDBContext, IBlockchainService blockchainService, IConfiguration configuration, ILogger<UpdateProofWorkflow> logger)
         {
             _mediator = mediator;
             _trustDBContext = trustDBContext;

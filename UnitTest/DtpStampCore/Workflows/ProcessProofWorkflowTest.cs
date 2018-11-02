@@ -25,10 +25,10 @@ namespace UnitTest.DtpStampCore.Workflows
         public void Serialize()
         {
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<ProcessProofWorkflow>();
+            var workflow = workflowService.Create<UpdateProofWorkflow>();
             var firstTime = workflow.SerializeObject();
             Console.WriteLine(firstTime);
-            var wf2 = workflowService.Deserialize<ProcessProofWorkflow>(firstTime);
+            var wf2 = workflowService.Deserialize<UpdateProofWorkflow>(firstTime);
             var secondTime = wf2.SerializeObject();
 
             Assert.AreEqual(firstTime, secondTime);
@@ -40,7 +40,7 @@ namespace UnitTest.DtpStampCore.Workflows
         {
             var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>(); 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
-            var workflow = workflowService.Create<ProcessProofWorkflow>();
+            var workflow = workflowService.Create<UpdateProofWorkflow>();
             Assert.IsNotNull(workflow);
             var id = workflowService.Save(workflow);
 

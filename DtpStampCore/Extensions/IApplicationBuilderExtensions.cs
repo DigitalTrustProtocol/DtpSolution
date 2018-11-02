@@ -19,7 +19,7 @@ namespace DtpStampCore.Extensions
                 var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
 
                 workflowService.EnsureWorkflow<CreateProofWorkflow>();
-                workflowService.EnsureWorkflow<ProcessProofWorkflow>();
+                workflowService.EnsureWorkflow<UpdateProofWorkflow>();
 
             }
         }

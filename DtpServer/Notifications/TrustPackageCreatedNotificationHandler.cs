@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using DtpCore.Extensions;
+using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Repository;
 using DtpPackageCore.Notifications;
@@ -13,12 +14,12 @@ namespace DtpServer.Notifications
     public class TrustPackageCreatedNotificationHandler : INotificationHandler<TrustPackageCreatedNotification>
     {
         private ILogger<TrustPackageCreatedNotificationHandler> _logger;
-        private PublicFileRepository _publicFileRepository;
+        private IPublicFileRepository _publicFileRepository;
 
         public static string GetPackageName(Package package) => $"Package_{package.Id.ToHex()}.json";
 
 
-        public TrustPackageCreatedNotificationHandler(ILogger<TrustPackageCreatedNotificationHandler> logger, PublicFileRepository publicFileRepository)
+        public TrustPackageCreatedNotificationHandler(ILogger<TrustPackageCreatedNotificationHandler> logger, IPublicFileRepository publicFileRepository)
         {
             _logger = logger;
             _publicFileRepository = publicFileRepository;

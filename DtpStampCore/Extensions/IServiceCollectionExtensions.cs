@@ -22,7 +22,7 @@ namespace DtpStampCore.Extensions
             services.AddTransient<IMerkleTree, MerkleTreeSorted>();
 
             services.AddTransient<CreateProofWorkflow>();
-            services.AddTransient<ProcessProofWorkflow>();
+            services.AddTransient<UpdateProofWorkflow>();
             services.AddTransient<IBlockchainRepository, QBitNinjaRepository>();
             services.AddTransient<IBlockchainService, BitcoinService>();
 

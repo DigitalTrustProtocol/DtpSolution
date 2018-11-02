@@ -50,12 +50,12 @@ namespace DtpPackageCore.Commands
         {
 
             var trusts = GetTrusts();
-            TrustBuilder _builder = _serviceProvider.GetRequiredService<TrustBuilder>();
+            TrustBuilder _builder = new TrustBuilder(_serviceProvider); // _serviceProvider.GetRequiredService<TrustBuilder>();
             _builder.AddTrust(trusts);
             _builder.OrderTrust(); // Order trust ny ID before package ID calculation. 
             if (_builder.Package.Trusts.Count == 0)
                 // No trusts found, exit
-                return null;
+                return Task.FromCanceled<Package>(cancellationToken);
 
             SignPackage(_builder);
 
@@ -98,8 +98,8 @@ namespace DtpPackageCore.Commands
         private IQueryable<Trust> GetTrusts()
         {
             // Get all trusts from LastTrustDatabaseID to now
-            var trusts = from trust in _trustDBService.Trusts.AsNoTracking().Include(p => p.Timestamps)
-                         where trust.PackageDatabaseID == 0
+            var trusts = from trust in _trustDBService.Trusts.Include(p => p.Timestamps)
+                         where trust.PackageDatabaseID == null
                             && trust.Replaced == false // Do not include replaced trusts
                          select trust;
             return trusts;

@@ -2,6 +2,7 @@
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
 using DtpPackageCore.Services;
+using DtpPackageCore.Workflows;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,7 @@ namespace DtpPackageCore.Extensions
             services.AddTransient<ITrustPackageService, TrustPackageService>();
 
             services.AddTransient<AddNewTrustPackageCommandHandler>();
+            services.AddTransient<CreateTrustPackageWorkflow>();
             
 
         }
