@@ -7,31 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
 using DtpCore.Repository;
+using MediatR;
+using DtpCore.Extensions;
+using DtpCore.Commands.Workflow;
+using DtpCore.ViewModel;
 
 namespace DtpServer.Pages.Workflows
 {
     public class DetailsModel : PageModel
     {
-        private readonly DtpCore.Repository.TrustDBContext _context;
+        public WorkflowView View { get; set; }
 
-        public DetailsModel(DtpCore.Repository.TrustDBContext context)
+        private readonly TrustDBContext _context;
+        private readonly IMediator _mediator;
+
+        public DetailsModel(IMediator mediator, TrustDBContext context)
         {
+            _mediator = mediator;
             _context = context;
         }
 
-        public WorkflowContainer WorkflowContainer { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            
-            WorkflowContainer = await _context.Workflows.SingleOrDefaultAsync(m => m.DatabaseID == id);
+            View = _mediator.SendAndWait(new WorkflowViewQuery {  DatabaseID = id }).FirstOrDefault();
 
-            if (WorkflowContainer == null)
+            if (View == null)
             {
                 return NotFound();
             }

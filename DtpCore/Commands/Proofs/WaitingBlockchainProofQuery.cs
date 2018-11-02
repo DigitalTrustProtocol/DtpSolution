@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DtpCore.Commands
 {
-    public class GetWaitingBlockchainProofCommand : IRequest<IEnumerable<BlockchainProof>>
+    public class WaitingBlockchainProofQuery : IRequest<IEnumerable<BlockchainProof>>
     {
     }
 }

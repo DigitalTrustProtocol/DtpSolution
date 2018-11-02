@@ -17,6 +17,7 @@ using System.ComponentModel;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Commands;
 using DtpStampCore.Interfaces;
+using DtpPackageCore.Notifications;
 
 namespace DtpPackageCore.Workflows
 {
@@ -46,7 +47,9 @@ namespace DtpPackageCore.Workflows
             {
                 return;
             }
-            
+
+            _mediator.Publish(new TrustPackageCreatedNotification(package));
+
             CombineLog(_logger, $"Package ({package.Id}) created with {package.Trusts.Count} trusts.");
 
             Wait(_configuration.TrustPackageWorkflowInterval()); // Never end the workflow

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DtpCore.ViewModel
 {
@@ -9,7 +11,15 @@ namespace DtpCore.ViewModel
         public string Description { get; set; }
         public bool Active { get; set; }
         public string State { get; set; }
+        public string Tag { get; set; }
+
+        [UIHint("JSON")]
+        public string Data { get; set; }
+
+        [UIHint("UnixTime")]
         public DateTime LastExecution { get; set; }
+
+        [UIHint("UnixTime")]
         public DateTime NextExecution { get; set; }
     }
 }

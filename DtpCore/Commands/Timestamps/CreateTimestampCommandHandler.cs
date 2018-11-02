@@ -37,7 +37,7 @@ namespace DtpCore.Commands
 
         public Task<Timestamp> Handle(CreateTimestampCommand request, CancellationToken cancellationToken)
         {
-            var proof = _mediator.SendAndWait(new GetCurrentBlockchainProofCommand());
+            var proof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
 
             var timestamp = new Timestamp
             {

@@ -49,6 +49,7 @@ namespace DtpCore.Model
             Confirmations = -1;
             Status = ProofStatusType.New.ToString();
             RetryAttempts = 0;
+            Timestamps = new List<Timestamp>();
         }
 
     }

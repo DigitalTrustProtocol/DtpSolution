@@ -55,7 +55,7 @@ namespace UnitTest.DtpStampCore.Workflows
             var workflow = workflowService.Create<CreateProofWorkflow>();
             workflow.Execute();
 
-            var waitingProofs = Mediator.SendAndWait(new GetWaitingBlockchainProofCommand());
+            var waitingProofs = Mediator.SendAndWait(new WaitingBlockchainProofQuery());
             var waitingProof = waitingProofs.FirstOrDefault();
             Assert.IsNotNull(waitingProof, "Missing waiting proof, has not been created or have an invalid status value.");
             Assert.IsNotNull(waitingProof.MerkleRoot);
@@ -90,7 +90,7 @@ namespace UnitTest.DtpStampCore.Workflows
             var workflow = workflowService.Create<CreateProofWorkflow>();
             workflow.Execute();
 
-            var waitingProofs = Mediator.SendAndWait(new GetWaitingBlockchainProofCommand());
+            var waitingProofs = Mediator.SendAndWait(new WaitingBlockchainProofQuery());
             Assert.IsTrue(waitingProofs.Count() == 2);
         }
     }

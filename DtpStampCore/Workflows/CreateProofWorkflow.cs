@@ -48,7 +48,7 @@ namespace DtpStampCore.Workflows
 
         public override void Execute()
         {
-            CurrentProof = _mediator.SendAndWait(new GetCurrentBlockchainProofCommand());
+            CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
 
             var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProofDatabaseID == CurrentProof.DatabaseID).Count();
             if (count == 0)

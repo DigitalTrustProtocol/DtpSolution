@@ -13,53 +13,55 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.DatabaseID)
+            @Html.DisplayNameFor(model => model.View.DatabaseID)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.DatabaseID)
+            @Html.DisplayFor(model => model.View.DatabaseID)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.Type)
+            @Html.DisplayNameFor(model => model.View.Title)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.Type)
+            @Html.DisplayFor(model => model.View.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.State)
+            @Html.DisplayNameFor(model => model.View.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.State)
+            @Html.DisplayFor(model => model.View.Description)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.Active)
+            @Html.DisplayNameFor(model => model.View.State)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.Active)
+            @Html.DisplayFor(model => model.View.State)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.NextExecution)
+            @Html.DisplayNameFor(model => model.View.Active)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.NextExecution)
+            @Html.DisplayFor(model => model.View.Active)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.Tag)
+            @Html.DisplayNameFor(model => model.View.NextExecution)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.Tag)
+            @Html.DisplayFor(model => model.View.NextExecution)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.WorkflowContainer.Data)
+            @Html.DisplayNameFor(model => model.View.Tag)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WorkflowContainer.Data)
+            @Html.DisplayFor(model => model.View.Tag)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.View.Data)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.View.Data)
         </dd>
     </dl>
 </div>
 <div>
-    @if (HttpContext.Session.Get<bool>("isadmin"))
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.WorkflowContainer.DatabaseID">Edit</a> @Html.Encode("|")
-    }
     <a asp-page="./Index">Back to List</a>
 </div>

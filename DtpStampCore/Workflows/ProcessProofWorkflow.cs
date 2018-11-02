@@ -44,7 +44,7 @@ namespace DtpStampCore.Workflows
         public override void Execute()
         {
             // Get all waiting and process them.
-            var proofs = _mediator.SendAndWait(new GetWaitingBlockchainProofCommand());
+            var proofs = _mediator.SendAndWait(new WaitingBlockchainProofQuery());
 
             foreach (var proof in proofs)
             {

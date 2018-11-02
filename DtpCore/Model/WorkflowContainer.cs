@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DtpCore.Enumerations;
 using DtpCore.Extensions;
 
 namespace DtpCore.Model
@@ -13,7 +12,7 @@ namespace DtpCore.Model
         [JsonProperty(PropertyName = "type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
 
-        [JsonProperty(PropertyName = "Active")]
+        [JsonProperty(PropertyName = "active")]
         public bool Active { get; set; }
 
         [JsonProperty(PropertyName = "state", NullValueHandling = NullValueHandling.Ignore)]

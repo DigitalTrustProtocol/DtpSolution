@@ -3,7 +3,7 @@ using MediatR;
 
 namespace DtpCore.Commands
 {
-    public class GetCurrentBlockchainProofCommand : IRequest<BlockchainProof>
+    public class CurrentBlockchainProofQuery : IRequest<BlockchainProof>
     {
     }
 }

@@ -1,8 +1,11 @@
-﻿using DtpCore.Extensions;
+﻿using DtpCore.Collections.Generic;
+using DtpCore.Extensions;
+using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Repository;
 using DtpCore.ViewModel;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,31 +15,35 @@ using System.Threading.Tasks;
 
 namespace DtpCore.Commands.Workflow
 {
-    public class GetWorkflowsViewCommandHandler : IRequestHandler<GetWorkflowsViewCommand, IList<WorkflowView>>
+    public class WorkflowViewQueryHandler : IRequestHandler<WorkflowViewQuery, IPaginatedList<WorkflowView>>
     {
 
         private IMediator _mediator;
         private TrustDBContext _db;
-        private readonly ILogger<GetWorkflowsViewCommandHandler> _logger;
+        private readonly ILogger<WorkflowViewQueryHandler> _logger;
 
-        public GetWorkflowsViewCommandHandler(IMediator mediator, TrustDBContext db, ILogger<GetWorkflowsViewCommandHandler> logger)
+        public object PaginatedList { get; private set; }
+
+        public WorkflowViewQueryHandler(IMediator mediator, TrustDBContext db, ILogger<WorkflowViewQueryHandler> logger)
         {
             _mediator = mediator;
             _db = db;
             _logger = logger;
         }
 
-        public Task<IList<WorkflowView>> Handle(GetWorkflowsViewCommand request, CancellationToken cancellationToken)
+        public Task<IPaginatedList<WorkflowView>> Handle(WorkflowViewQuery request, CancellationToken cancellationToken)
         {
-            var views = from p in _db.Workflows
-                        select CreateView(p);
+            var query = _db.Workflows.AsNoTracking().Select(p => CreateView(p));
 
-            var list = (IList<WorkflowView>)views.ToList();
+            if(request.DatabaseID != null)
+                query = query.Where(p => p.DatabaseID == request.DatabaseID);
+
+            var list = PaginatedList<WorkflowView>.CreateAsync(query, request.PageIndex.GetValueOrDefault(), request.PageSize.GetValueOrDefault() );
 
             // There can be more of the same type.
             //var query = _context.Workflows.GroupBy(p => p.Type).Select(p => p.OrderByDescending(t => t.DatabaseID).First());
 
-            return Task.FromResult(list);
+            return Task.FromResult((IPaginatedList<WorkflowView>)list.GetAwaiter().GetResult());
         }
 
         protected WorkflowView CreateView(WorkflowContainer container)
@@ -49,6 +56,8 @@ namespace DtpCore.Commands.Workflow
                 Description = type.GetDescription(),
                 State = container.State,
                 Active = container.Active,
+                Tag = container.Tag,
+                Data = container.Data,
                 NextExecution = DatetimeExtensions.FromUnixTime(container.NextExecution)
             };
 

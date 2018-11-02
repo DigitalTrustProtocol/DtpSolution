@@ -30,7 +30,7 @@ namespace DtpServer.Pages.Workflows
 
         public void OnGet()
         {
-            WorkflowViews = _mediator.SendAndWait(new GetWorkflowsViewCommand());
+            WorkflowViews = _mediator.SendAndWait(new WorkflowViewQuery());
         }
     }
 }

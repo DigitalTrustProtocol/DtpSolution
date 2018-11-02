@@ -3,6 +3,7 @@ using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Configuration;
+using DtpCore.Notifications;
 using DtpCore.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,8 @@ namespace DtpCore.Commands
 
             _db.Proofs.Add(proof);
             _db.SaveChanges();
+
+            _mediator.Publish(new BlockchainProofCreatedNotification(proof));
 
             return Task.FromResult(proof);
         }

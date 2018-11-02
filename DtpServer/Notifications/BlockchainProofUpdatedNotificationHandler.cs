@@ -7,43 +7,56 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Linq;
+using DtpPackageCore.Commands;
 
 namespace DtpServer.Notifications
 {
     public class BlockchainProofUpdatedNotificationHandler : INotificationHandler<BlockchainProofUpdatedNotification>
     {
+        private IMediator _mediator;
         private ILogger<BlockchainProofUpdatedNotificationHandler> _logger;
         private PublicFileRepository _publicFileRepository;
-        private TrustDBContext _trustDBContext;
+        private TrustDBContext _db;
 
-        public BlockchainProofUpdatedNotificationHandler(TrustDBContext trustDBContext,  ILogger<BlockchainProofUpdatedNotificationHandler> logger, PublicFileRepository publicFileRepository)
+        public BlockchainProofUpdatedNotificationHandler(IMediator mediator, ILogger<BlockchainProofUpdatedNotificationHandler> logger, PublicFileRepository publicFileRepository, TrustDBContext db)
         {
-            _trustDBContext = trustDBContext;
+            _mediator = mediator;
             _logger = logger;
             _publicFileRepository = publicFileRepository;
+            _db = db;
         }
 
-        public Task Handle(BlockchainProofUpdatedNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(BlockchainProofUpdatedNotification notification, CancellationToken cancellationToken)
         {
             if (notification.Proof == null)
-                return null;
+                return;
 
+            var timestamp = notification.Proof.Timestamps.FirstOrDefault();
+            if(timestamp == null)
+            {
+                timestamp = _db.Timestamps.FirstOrDefault(p => p.BlockchainProofDatabaseID == notification.Proof.DatabaseID);
+            }
 
-            //if (notification.Stamp.PackageDatabaseID == 0)
-            //    return; // Not pointing to a package.
+            if (timestamp == null)
+                return;
 
-            //var package = _trustDBContext.Packages.FirstOrDefault(p => p.DatabaseID == notification.Stamp.PackageDatabaseID);
-            //if (package == null)
-            //    return;
+            if(timestamp.PackageDatabaseID > 0)
+            {
+                var package = (await _mediator.Send(new TrustPackageQuery { DatabaseID = timestamp.PackageDatabaseID })).FirstOrDefault();
+                
+                var name = TrustPackageCreatedNotificationHandler.GetPackageName(package);
+                if (!_publicFileRepository.Exist(name))
+                {
+                    _logger.LogInformation($"Package {name} do not exist on Public File Repository.");
+                    return;
+                }
 
-            //var name = TrustPackageCreatedNotificationHandler.GetPackageName(package);
-            //if (!_publicFileRepository.Exist(name))
-            //    return;
+                await _publicFileRepository.WriteFileAsync(name, package.ToString());
 
-            //await _publicFileRepository.WriteFileAsync(name, package.ToString()).ConfigureAwait(false); // Continue with same thread.
+                _logger.LogInformation($"Package {name} has been updated with Timestamp confirmation.");
+            }
 
-            //_logger.LogInformation($"Package {name} has been updated with Timestamp confirmation.");
-            return null;
+            return;
         }
     }
 }

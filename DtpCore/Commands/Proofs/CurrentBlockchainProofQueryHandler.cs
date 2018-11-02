@@ -13,21 +13,21 @@ using System.Threading.Tasks;
 
 namespace DtpCore.Commands
 {
-    public class GetCurrentBlockchainProofCommandHandler : IRequestHandler<GetCurrentBlockchainProofCommand, BlockchainProof>
+    public class CurrentBlockchainProofQueryHandler : IRequestHandler<CurrentBlockchainProofQuery, BlockchainProof>
     {
 
         private IMediator _mediator;
         private TrustDBContext _db;
-        private readonly ILogger<GetCurrentBlockchainProofCommandHandler> _logger;
+        private readonly ILogger<CurrentBlockchainProofQueryHandler> _logger;
 
-        public GetCurrentBlockchainProofCommandHandler(IMediator mediator, TrustDBContext db, ILogger<GetCurrentBlockchainProofCommandHandler> logger)
+        public CurrentBlockchainProofQueryHandler(IMediator mediator, TrustDBContext db, ILogger<CurrentBlockchainProofQueryHandler> logger)
         {
             _mediator = mediator;
             _db = db;
             _logger = logger;
         }
 
-        public Task<BlockchainProof> Handle(GetCurrentBlockchainProofCommand request, CancellationToken cancellationToken)
+        public Task<BlockchainProof> Handle(CurrentBlockchainProofQuery request, CancellationToken cancellationToken)
         {
             var proof = _db.Proofs.Where(p => p.Status == ProofStatusType.New.ToString()).OrderBy(p => p.DatabaseID).FirstOrDefault();
             if (proof == null)
