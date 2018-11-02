@@ -19,9 +19,17 @@ namespace DtpCore.Strategy.Serialization
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var token = JToken.Parse(value.ToString());
-            token.WriteTo(writer);
-            //writer.WriteValue(token. value.ToString());
+            var str = value.ToString();
+            var check = str.Trim();
+            if (check.StartsWith("{") && check.EndsWith("}"))
+            {
+                var token = JToken.Parse(str);
+                token.WriteTo(writer);
+            }
+            else
+            {
+                writer.WriteValue(value);
+            }
         }
     }
 }

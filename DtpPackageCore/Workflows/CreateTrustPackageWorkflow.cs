@@ -44,9 +44,7 @@ namespace DtpPackageCore.Workflows
         {
             var package = _mediator.SendAndWait(new AddNewTrustPackageCommand());
             if (package == null)
-            {
                 return;
-            }
 
             _mediator.Publish(new TrustPackageCreatedNotification(package));
 
