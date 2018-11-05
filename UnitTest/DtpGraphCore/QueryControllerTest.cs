@@ -12,6 +12,7 @@ using DtpGraphCore.Controllers;
 using DtpGraphCore.Enumerations;
 using DtpGraphCore.Model;
 using UnitTest.DtpCore.Extensions;
+using DtpServer.Controllers;
 
 namespace UnitTest.DtpGraphCore
 {

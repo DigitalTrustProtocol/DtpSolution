@@ -1,5 +1,6 @@
 ﻿using DtpCore.Builders;
 using DtpCore.Commands;
+using DtpCore.Commands.Trusts;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
@@ -43,22 +44,16 @@ namespace UnitTest.DtpServer.Notifications
             //Mediator.SendAndWait(new UpdateBlockchainProofCommand { Proof = proof });
 
             var builder = new TrustBuilder(ServiceProvider);
-            builder.SetServer("testserver");
-            builder.AddTrust("testissuer1", "testsubject1", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true))
-                .Build()
-                .Sign();
+            var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
 
-            var trust = builder.CurrentTrust;
-            var timestamp = Mediator.SendAndWait(new CreateTimestampCommand { Source = trust.Id });
-            trust.Timestamps = trust.Timestamps ?? new List<Timestamp>();
-            trust.Timestamps.Add(timestamp);
+            var result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust});
 
-            Assert.IsNull(builder.CurrentTrust.PackageDatabaseID);
+            //Assert.IsNull(builder.CurrentTrust.PackageDatabaseID);
 
-            var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
-            trustDBService.Add(builder.CurrentTrust);
+            //var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
+            //trustDBService.Add(builder.CurrentTrust);
 
-            trustDBService.DBContext.SaveChanges();
+            //trustDBService.DBContext.SaveChanges();
 
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();

@@ -171,10 +171,14 @@ namespace DtpCore.Services
                         ValidateTrust(trustIndex++, trust, result);
                     }
 
-
                     if (package.Id != null && package.Id.Length > 0)
                     {
+                        testBuilder.Package.Algorithm = package.Algorithm;
+                        testBuilder.Package.Created = package.Created;
+                        testBuilder.Package.Server = package.Server;
+
                         var testPackageID = testBuilder.Build().Package.Id;
+
                         if (testPackageID.Compare(package.Id) != 0)
                             result.Errors.Add("Package Id is not same as merkle tree root of all trust ID");
                     }

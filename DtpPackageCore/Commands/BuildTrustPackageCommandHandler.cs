@@ -6,6 +6,7 @@ using DtpCore.Model;
 using DtpCore.Model.Configuration;
 using DtpPackageCore.Exceptions;
 using DtpPackageCore.Interfaces;
+using DtpPackageCore.Notifications;
 using DtpStampCore.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +23,8 @@ using System.Threading.Tasks;
 
 namespace DtpPackageCore.Commands
 {
-    public class AddNewTrustPackageCommandHandler :
-        IRequestHandler<AddNewTrustPackageCommand, Package>
+    public class BuildTrustPackageCommandHandler :
+        IRequestHandler<BuildTrustPackageCommand, Package>
     {
         private IMediator _mediator;
 
@@ -31,10 +32,10 @@ namespace DtpPackageCore.Commands
         private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
         private ITrustPackageService _trustPackageService;
-        private readonly ILogger<AddNewTrustPackageCommandHandler> logger;
+        private readonly ILogger<BuildTrustPackageCommandHandler> logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public AddNewTrustPackageCommandHandler(IMediator mediator, IServiceProvider serviceProvider, IConfiguration configuration, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, ILogger<AddNewTrustPackageCommandHandler> logger)
+        public BuildTrustPackageCommandHandler(IMediator mediator, IServiceProvider serviceProvider, IConfiguration configuration, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, ILogger<BuildTrustPackageCommandHandler> logger)
         {
             _mediator = mediator;
 
@@ -46,7 +47,7 @@ namespace DtpPackageCore.Commands
             this.logger = logger;
         }
 
-        public Task<Package> Handle(AddNewTrustPackageCommand request, CancellationToken cancellationToken)
+        public Task<Package> Handle(BuildTrustPackageCommand request, CancellationToken cancellationToken)
         {
 
             var trusts = GetTrusts();
@@ -65,6 +66,8 @@ namespace DtpPackageCore.Commands
 
             _trustDBService.DBContext.Packages.Add(_builder.Package);
             _trustDBService.DBContext.SaveChanges();
+
+            _mediator.Publish(new TrustPackageBuildNotification(_builder.Package));
 
             return Task.FromResult(_builder.Package);
         }

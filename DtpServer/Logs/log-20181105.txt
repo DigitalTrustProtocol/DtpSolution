@@ -1,0 +1,4 @@
+2018-11-05T14:07:28.3905583+01:00  [INF] Getting the motors running... ()
+2018-11-05T14:07:30.6588731+01:00  [INF] Loading trust into Graph ()
+2018-11-05T14:07:31.3403937+01:00  [INF] Trust loaded: 0 ()
+2018-11-05T14:07:32.0109986+01:00  [WRN] Overriding address(es) '"https://trust.dance"'. Binding to endpoints defined in "UseKestrel()" instead. ()

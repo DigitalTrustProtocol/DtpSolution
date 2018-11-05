@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace DtpServer.Notifications
 {
-    public class TrustPackageCreatedNotificationHandler : INotificationHandler<TrustPackageCreatedNotification>
+    public class TrustPackageCreatedNotificationHandler : INotificationHandler<TrustPackageBuildNotification>
     {
         private ILogger<TrustPackageCreatedNotificationHandler> _logger;
         private IPublicFileRepository _publicFileRepository;
@@ -25,7 +25,7 @@ namespace DtpServer.Notifications
             _publicFileRepository = publicFileRepository;
         }
 
-        public async Task Handle(TrustPackageCreatedNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(TrustPackageBuildNotification notification, CancellationToken cancellationToken)
         {
             if (notification.TrustPackage == null || notification.TrustPackage.Id == null)
                 return;

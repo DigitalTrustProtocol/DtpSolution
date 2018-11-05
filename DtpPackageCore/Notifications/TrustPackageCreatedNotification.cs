@@ -3,11 +3,11 @@ using MediatR;
 
 namespace DtpPackageCore.Notifications
 {
-    public class TrustPackageCreatedNotification : INotification
+    public class TrustPackageBuildNotification : INotification
     {
         public Package TrustPackage { get; set; }
 
-        public TrustPackageCreatedNotification(Package trustPackage)
+        public TrustPackageBuildNotification(Package trustPackage)
         {
             TrustPackage = trustPackage;
         }

@@ -12,7 +12,9 @@ namespace DtpCore.Extensions
 
         public static TResponse SendAndWait<TResponse>(this IMediator mediator, IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return mediator.Send(request, cancellationToken).GetAwaiter().GetResult();
+            var task = mediator.Send(request, cancellationToken);
+            
+            return task.GetAwaiter().GetResult();
         }
     }
 }

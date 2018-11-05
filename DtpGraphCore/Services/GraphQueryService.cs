@@ -7,6 +7,7 @@ using DtpGraphCore.Extensions;
 using System.Collections.Generic;
 using DtpCore.Collections;
 using DtpGraphCore.Enumerations;
+using System.Collections.Concurrent;
 
 namespace DtpGraphCore.Services
 {
@@ -204,7 +205,7 @@ namespace DtpGraphCore.Services
             if (!result.Subjects.ContainsKey(tracker.SubjectKey))
             {   // Only subjects with unique keys
                 graphSubject = tracker.Issuer.Subjects[tracker.SubjectKey]; // GraphSubject is a value type and therefore its copied
-                graphSubject.Claims = new Dictionary<long, int>();
+                graphSubject.Claims = new ConcurrentDictionary<long, int>();
                 result.Subjects.Add(tracker.SubjectKey, graphSubject);
                 // Register the target found 
             } else

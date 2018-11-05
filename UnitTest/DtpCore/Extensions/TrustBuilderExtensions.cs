@@ -69,6 +69,18 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
+        public static Trust BuildBinaryTrust(this TrustBuilder builder, string issuerName, string subjectName, bool claim, uint created = 0)
+        {
+            builder.SetServer("testserver");
+            builder.AddTrust(issuerName, subjectName, TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(claim));
+
+            if (created > 0)
+                builder.CurrentTrust.Created = created;
+
+            builder.Build().Sign();
+            return builder.CurrentTrust;
+        }
+
         //public static TrustBuilder AddClaim(this TrustBuilder builder, JObject data, out Claim claim)
         //{
         //    claim = new Claim

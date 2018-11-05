@@ -12,15 +12,16 @@ using DtpCore.Extensions;
 using System.Collections.Generic;
 using MediatR;
 using DtpCore.Commands;
+using DtpCore.Commands.Trusts;
+using DtpCore.ViewModel;
 
-namespace DtpGraphCore.Controllers
+namespace DtpServer.Controllers
 {
     [Route("api/[controller]")]
     public class TrustController : ApiController
     {
         private IMediator _mediator;
 
-        private IGraphTrustService _graphTrustService;
         private ITrustSchemaService _trustSchemaService;
         private ITrustDBService _trustDBService;
         private IBlockchainServiceFactory _blockchainServiceFactory;
@@ -28,11 +29,10 @@ namespace DtpGraphCore.Controllers
 
 
 
-        public TrustController(IMediator mediator, IGraphTrustService graphTrustService, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IBlockchainServiceFactory blockchainServiceFactory, IServiceProvider serviceProvider)
+        public TrustController(IMediator mediator, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IBlockchainServiceFactory blockchainServiceFactory, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
 
-            _graphTrustService = graphTrustService;
             _trustSchemaService = trustSchemaService;
             _trustDBService = trustDBService;
             _blockchainServiceFactory = blockchainServiceFactory;
@@ -63,58 +63,20 @@ namespace DtpGraphCore.Controllers
             //        throw new ApplicationException("Package already exist");
             //}
 
+            var view = new PackageCommandView();
+
             foreach (var trust in package.Trusts)
             {
-                AddTrust(trust);
+                var result = _mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+
+                view.Trusts.Add(new TrustCommandView { ID = trust.Id, Message = result.LastOrDefault()?.ToString() ?? "Unknown" });
+
             }
 
             _trustDBService.DBContext.SaveChanges();
 
-            return ApiOk("Package added");
+            return ApiOk(view);
         }
-
-
-        private void AddTrust(Trust trust)
-        {
-            if (_trustDBService.TrustExist(trust.Id))
-                return; // TODO: Ignore the same trust for now.
-                //throw new ApplicationException("Trust already exist");
-
-            var dbTrust = _trustDBService.GetSimilarTrust(trust);
-            if (dbTrust != null)
-            {
-                // TODO: Needs to verfify with Timestamp if exist, for deciding action!
-                // The trick is to compare "created" in order to awoid old trust being replayed.
-                // For now, we just remove the old trust
-                if (dbTrust.Created > trust.Created)
-                    throw new ApplicationException("Cannot add old trust, newer trust exist.");
-
-                // Check if everything is the same except Created date, then what?
-                //trust.Activate 
-                //trust.Expire
-                //trust.Cost
-                //trust.Claim
-                //trust.Note
-
-                dbTrust.Replaced = true;
-                _trustDBService.Update(dbTrust);
-                _graphTrustService.Remove(trust);
-            }
-
-
-            var timestamp = _mediator.SendAndWait(new CreateTimestampCommand { Source = trust.Id });
-            trust.Timestamps = trust.Timestamps ?? new List<Timestamp>();
-            trust.Timestamps.Add(timestamp);
-
-            // Timestamp objects gets added to the Timestamp table as well!
-            _trustDBService.Add(trust);   
-
-            var time = DateTime.Now.ToUnixTime();
-            if ((trust.Expire  == 0 || trust.Expire > time) 
-                && (trust.Activate == 0 || trust.Activate <= time)) 
-                _graphTrustService.Add(trust);    // Add to Graph
-        }
-
 
         /// <summary>
         /// Create a trust, that is not added but returned for signing.

@@ -142,6 +142,11 @@ namespace DtpCore.Model
         [JsonIgnore]
         [Description("Current Trust has been replaced by a new Trust.")]
         public bool Replaced { get; set; }
+
+        public Trust()
+        {
+            Timestamps = new List<Timestamp>();
+        }
     }
 
     [JsonObject(MemberSerialization.OptIn)]

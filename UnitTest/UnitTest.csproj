@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="DtpCore\Repository\" />
     <Folder Include="DtpCore\Workflows\" />
+    <Folder Include="DtpPackage\Commands\" />
     <Folder Include="DtpStampCore\Services\" />
   </ItemGroup>
 

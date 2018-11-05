@@ -11,6 +11,7 @@ using DtpCore.Workflows;
 using DtpCore.Repository;
 using DtpCore.Strategy.Serialization;
 using DtpCore.Builders;
+using DtpCore.Notifications;
 
 namespace DtpCore.Extensions
 {
@@ -49,6 +50,8 @@ namespace DtpCore.Extensions
 
             services.AddTransient<TrustBuilder>();
 
+            services.AddTransient<NotificationsResult>();
+            
 
             // ---------------------------------------------------------------------------------------------------------------
         }

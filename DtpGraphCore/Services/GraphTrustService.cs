@@ -8,6 +8,7 @@ using DtpGraphCore.Enumerations;
 using System.Linq;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
+using System.Collections.Concurrent;
 
 namespace DtpGraphCore.Services
 {
@@ -131,7 +132,7 @@ namespace DtpGraphCore.Services
                 TargetIssuer =  EnsureGraphIssuer(subjectAddress),
                 //IssuerType = Graph.SubjectTypes.Ensure(trustSubject.Type),
                 //AliasIndex = Graph.Alias.Ensure(trustSubject.Alias),
-                Claims = new Dictionary<long, int>()
+                Claims = new ConcurrentDictionary<long, int>()
             };
 
             return graphSubject;

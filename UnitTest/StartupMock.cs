@@ -12,6 +12,7 @@ using DtpGraphCore.Controllers;
 using DtpCore.Interfaces;
 using UnitTest.DtpPackage.Mocks;
 using MediatR;
+using DtpServer.Controllers;
 
 namespace UnitTest
 {
@@ -22,6 +23,8 @@ namespace UnitTest
         public IServiceCollection Services { get; set; }
         public ILoggerFactory LoggerFactory { get; set; }
         public IMediator Mediator { get; set; }
+        public TrustDBContext DB { get; set; }
+
 
         [TestInitialize]
         public virtual void Init()
@@ -49,6 +52,7 @@ namespace UnitTest
             LoggerFactory.AddConsole();
 
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
+            DB = ServiceProvider.GetRequiredService<TrustDBContext>();
 
         }
 

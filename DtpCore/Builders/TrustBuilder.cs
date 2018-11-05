@@ -51,7 +51,8 @@ namespace DtpCore.Builders
             Package = new Package
             {
                 Created = (uint)DateTime.UtcNow.ToUnixTime(),
-                Trusts = new List<Trust>()
+                Trusts = new List<Trust>(),
+                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1
             };
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
@@ -127,7 +128,7 @@ namespace DtpCore.Builders
 
         public TrustBuilder AddTrust()
         {
-            return AddTrust(new Trust());
+            return AddTrust(new Trust { Created = (uint)DateTime.Now.ToUnixTime() });
         }
         //public TrustBuilder AddTrust(string issuerName, string script = CryptoStrategyFactory.BTC_PKH)
         //{
@@ -169,9 +170,10 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public void OrderTrust()
+        public TrustBuilder OrderTrust()
         {
             Package.Trusts = Package.Trusts.OrderBy(p => p.Id, ByteComparer.Compare).ToList();
+            return this;
         }
 
         public void OrderTrustDescending()
@@ -291,12 +293,13 @@ namespace DtpCore.Builders
         {
             IMerkleTree merkleTree = CreateMerkleTree();
 
-            var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(Package.Algorithm);
+            //var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm();
 
-            if (string.IsNullOrEmpty(Package.Algorithm))
-                Package.Algorithm = _hashAlgorithm.AlgorithmName;
+            //if (string.IsNullOrEmpty(Package.Algorithm))
+            //    Package.Algorithm = _hashAlgorithm.AlgorithmName;
 
-            Package.Id = _hashAlgorithm.HashOf(_trustBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
+            
+            Package.Id = merkleTree.HashAlgorithm.HashOf(_trustBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
 
             return this;
         }

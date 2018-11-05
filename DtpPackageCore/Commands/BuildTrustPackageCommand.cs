@@ -3,7 +3,7 @@ using MediatR;
 
 namespace DtpPackageCore.Commands
 {
-    public class AddNewTrustPackageCommand : IRequest<Package>
+    public class BuildTrustPackageCommand : IRequest<Package>
     {
         // Some filtering data, to narrow down the package.
     }

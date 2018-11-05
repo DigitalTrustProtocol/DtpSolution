@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using DtpGraphCore.Enumerations;
+using System.Collections.Concurrent;
 
 namespace DtpGraphCore.Model
 {
@@ -12,7 +13,7 @@ namespace DtpGraphCore.Model
         public GraphIssuer TargetIssuer; // The type of the subject
         public SubjectFlags Flags; // Containes metadata about the GraphSubject object
         public int AliasIndex; // The name of the issuer for this subject
-        public Dictionary<long, int> Claims;  // Int is scope index
+        public ConcurrentDictionary<long, int> Claims;  // Int is scope index
 
         [JsonIgnore]
         public object ClaimsData;

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using DtpCore.Extensions;
 using DtpGraphCore.Model;
 
 namespace DtpGraphCore.Extensions
@@ -41,5 +43,36 @@ namespace DtpGraphCore.Extensions
             return -1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Exist(this ConcurrentDictionary<long, int> claims, int scope, int type)
+        {
+            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            return claims.ContainsKey(subjectClaimIndex.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool GetIndex(this ConcurrentDictionary<long, int> claims, int scope, int type, out int index)
+        {
+            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            return claims.TryGetValue(subjectClaimIndex.Value, out index);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Ensure(this ConcurrentDictionary<long, int> claims, int scope, int type, int claimIndex)
+        {
+            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            claims.Add(subjectClaimIndex.Value, claimIndex);
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Remove(this ConcurrentDictionary<long, int> claims, int scope, int type)
+        {
+            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            if (claims.Remove(subjectClaimIndex.Value, out int claimIndex))
+                return claimIndex;
+            return -1;
+        }
     }
 }
