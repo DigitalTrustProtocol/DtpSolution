@@ -120,42 +120,42 @@ namespace DtpCore.Services
             DBContext.Trusts.Add(trust);
         }
 
-        public bool Add(Package package)
-        {
-            //if(package.Id == null || package.Id.Length == 0)
-            //{
-            //    //var builder = new TrustBuilder()
-            //}
+        //public bool Add(Package package)
+        //{
+        //    //if(package.Id == null || package.Id.Length == 0)
+        //    //{
+        //    //    //var builder = new TrustBuilder()
+        //    //}
 
-            if (DBContext.Packages.Any(f => f.Id == package.Id))
-                throw new ApplicationException("Package already exist");
+        //    if (DBContext.Packages.Any(f => f.Id == package.Id))
+        //        throw new ApplicationException("Package already exist");
 
-            foreach (var trust in package.Trusts.ToArray())
-            {
-                var dbTrust = DBContext.Trusts.FirstOrDefault(p => p.Id == trust.Id);
-                if (dbTrust == null)
-                    continue;
+        //    foreach (var trust in package.Trusts.ToArray())
+        //    {
+        //        var dbTrust = DBContext.Trusts.FirstOrDefault(p => p.Id == trust.Id);
+        //        if (dbTrust == null)
+        //            continue;
 
 
-                //if (package.Timestamps == null && trust.Timestamp == null)
-                //{
-                //    package.Trusts.Remove(trust);
-                //    continue;
-                //}
+        //        //if (package.Timestamps == null && trust.Timestamp == null)
+        //        //{
+        //        //    package.Trusts.Remove(trust);
+        //        //    continue;
+        //        //}
 
-                //if (dbTrust.Timestamp == null)
-                //{
-                //    DBContext.Trusts.Remove(dbTrust);
-                //    continue;
-                //}
+        //        //if (dbTrust.Timestamp == null)
+        //        //{
+        //        //    DBContext.Trusts.Remove(dbTrust);
+        //        //    continue;
+        //        //}
 
-                // Check timestamp
-            }
+        //        // Check timestamp
+        //    }
 
-            DBContext.Packages.Add(package);
-            DBContext.SaveChanges();
-            return true;
-        }
+        //    DBContext.Packages.Add(package);
+        //    DBContext.SaveChanges();
+        //    return true;
+        //}
 
         public void Update(Trust trust)
         {

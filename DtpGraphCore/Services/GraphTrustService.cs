@@ -68,7 +68,7 @@ namespace DtpGraphCore.Services
                 return; // Scope was not found !
 
             int scopeIndex = -1;
-            if (trust.Scope != null && !Graph.Scopes.TryGetKey(trust.Scope.Value, out scopeIndex))
+            if (!Graph.Scopes.TryGetKey(trust.Scope.GetValue(), out scopeIndex))
                 return; // Scope was not found !
 
             //var graphClaim = CreateGraphClaim(trust);

@@ -35,6 +35,9 @@ namespace DtpCore.Extensions
 
         public static int Compare(this byte[] source, byte[] target)
         {
+            if (source == null && target == null)
+                return 0;
+
             if (source.Length != target.Length)
                 throw new ApplicationException("Byte arrays has to have the same length");
 

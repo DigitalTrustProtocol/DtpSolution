@@ -23,7 +23,7 @@ namespace DtpCore.Interfaces
         Trust GetSimilarTrust(Trust trust);
 
         void Add(Trust trust);
-        bool Add(Package package);
+        //bool Add(Package package);
         void Update(Trust trust);
         
         Package GetPackage(byte[] packageId);

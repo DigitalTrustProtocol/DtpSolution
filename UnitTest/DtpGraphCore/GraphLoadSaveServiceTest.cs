@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DtpCore.Commands.Trusts;
+using DtpCore.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 
@@ -14,11 +16,7 @@ namespace UnitTest.DtpGraphCore
             BuildTestGraph();
             var package = _trustBuilder.Package;
 
-            // Add to db
-            var addResult = _trustDBService.Add(package);
-
-            Assert.IsTrue(addResult, "Error adding package to Graph");
-            Assert.AreEqual(package.Trusts.Count(), _trustDBService.Trusts.Count(), $"Should be {package.Trusts.Count()} Trusts");
+            var result = Mediator.SendAndWait(new AddPackageCommand { Package = _trustBuilder.Package });
 
             // Load into Graph
             _graphLoadSaveService.LoadFromDatabase();

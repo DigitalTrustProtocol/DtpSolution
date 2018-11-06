@@ -92,8 +92,7 @@ namespace UnitTest.DtpGraphCore
         {
             // Setup
             EnsureTestGraph();
-            Console.WriteLine(JsonConvert.SerializeObject(_trustBuilder.Package, Formatting.Indented));
-
+            Console.WriteLine(_trustBuilder.Package.ToString());
             // Test Add and schema validation
             var result = (OkObjectResult)_trustController.Add(_trustBuilder.Package);
             var httpResult = (HttpResult)result.Value;

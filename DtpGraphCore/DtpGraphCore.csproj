@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Facade\**" />
+    <EmbeddedResource Remove="Facade\**" />
+    <None Remove="Facade\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Interfaces\ITrustPackageWorkflow.cs" />
     <Compile Remove="Model\ClaimModel.cs" />
     <Compile Remove="Model\ClaimQuery.cs" />
@@ -15,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Facade\" />
     <Folder Include="Commands\" />
     <Folder Include="Workflows\" />
   </ItemGroup>
