@@ -22,7 +22,7 @@ namespace DtpGraphCore.Interfaces
         //GraphClaim EnsureSubjectClaim(GraphSubject graphSubject, Claim trustClaim);
         GraphClaim EnsureGraphClaim(Trust trust);
         GraphClaim CreateGraphClaim(Trust trust);
-        GraphClaim CreateGraphClaim(string type, string scope, string attributes, short cost = 100);
+        GraphClaim CreateGraphClaim(string type, string scope, string attributes);
         int GetClaimDataIndex(Trust trust);
         GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectAddress);
         void BuildPackage(QueryContext context);

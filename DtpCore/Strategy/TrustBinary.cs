@@ -37,7 +37,6 @@ namespace DtpCore.Strategy
                 }
 
                 ms.WriteInteger(trust.Created);
-                ms.WriteInteger(trust.Cost);
                 ms.WriteInteger(trust.Activate);
                 ms.WriteInteger(trust.Expire);
 

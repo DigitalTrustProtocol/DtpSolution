@@ -231,17 +231,17 @@ namespace DtpCore.Services
                             result.Errors.Add(location + "Invalid trust id");
 
                         // Make sure that subject has been validated before checking for Cost.
-
-                        if (trust.Cost < COST_LIMIT)
-                        {
-                            // When cost is 0, then its default 100
-                            if (trust.Cost > 0)
-                            {
-                                // Cost is less than 100, check that the subject signature exist, and has previously been checked.
-                                if(trust.Subject.Signature == null || trust.Subject.Signature.Length == 0)
-                                    result.Errors.Add(string.Format("{0}Missing Subject Signature for Cost to be lower than {1}", location, COST_LIMIT));
-                            }
-                        }
+                        // Only Binarytrust has Cost property
+                        //if (trust.Cost < COST_LIMIT)
+                        //{
+                        //    // When cost is 0, then its default 100
+                        //    if (trust.Cost > 0)
+                        //    {
+                        //        // Cost is less than 100, check that the subject signature exist, and has previously been checked.
+                        //        if(trust.Subject.Signature == null || trust.Subject.Signature.Length == 0)
+                        //            result.Errors.Add(string.Format("{0}Missing Subject Signature for Cost to be lower than {1}", location, COST_LIMIT));
+                        //    }
+                        //}
                     }
                 }
             }

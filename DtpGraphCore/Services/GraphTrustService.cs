@@ -162,16 +162,15 @@ namespace DtpGraphCore.Services
         public GraphClaim CreateGraphClaim(Trust trust)
         {
             var trustTypeString = TrustSchema.GetTrustTypeString(trust);
-            return CreateGraphClaim(trustTypeString, trust.Scope.GetValue(), trust.Claim, 100);
+            return CreateGraphClaim(trustTypeString, trust.Scope.GetValue(), trust.Claim);
         }
 
-        public GraphClaim CreateGraphClaim(string type, string scope, string attributes, short cost = 100)
+        public GraphClaim CreateGraphClaim(string type, string scope, string attributes)
         {
             var gclaim = new GraphClaim
             {
                 Type = Graph.ClaimType.Ensure(type),
                 Scope = Graph.Scopes.Ensure(scope),
-                Cost = cost,
                 Attributes = Graph.ClaimAttributes.Ensure(attributes),
                 Flags = 0
             };
@@ -237,7 +236,6 @@ namespace DtpGraphCore.Services
                             if (Graph.Scopes.TryGetValue(trackerClaim.Scope, out string scope))
                                 trust.Scope = new Scope { Value = scope };
 
-                            trust.Cost = trackerClaim.Cost;
                             trust.Expire = 0;
                             trust.Activate = 0;
 

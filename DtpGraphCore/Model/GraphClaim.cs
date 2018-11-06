@@ -11,7 +11,7 @@ namespace DtpGraphCore.Model
     public struct GraphClaim //: IGraphClaim
     {
         public int Index;
-        public short Cost;  // cost of following the trust, lower the better
+        //public short Cost;  // cost of following the trust, lower the better
         public int Scope; // scope of the trust
         public int Type; // Type of the trust
         public int Attributes; // Claims 

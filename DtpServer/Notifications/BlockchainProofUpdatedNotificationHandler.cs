@@ -41,7 +41,7 @@ namespace DtpServer.Notifications
 
             if(timestamp.PackageDatabaseID > 0)
             {
-                var package = (await _mediator.Send(new TrustPackageQuery { DatabaseID = timestamp.PackageDatabaseID })).FirstOrDefault();
+                var package = (await _mediator.Send(new TrustPackageQuery(timestamp.PackageDatabaseID))).FirstOrDefault();
                 
                 var name = TrustPackageCreatedNotificationHandler.GetPackageName(package);
                 if (!_publicFileRepository.Exist(name))

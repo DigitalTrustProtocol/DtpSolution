@@ -106,8 +106,6 @@ namespace DtpServer.Pages.Trusts
             query = query.Where(s => s.Issuer.Address == searchString || s.Subject.Address == searchString);
 
             Expression<Func<Trust, bool>> q = null;
-            if (short.TryParse(searchString, out short cost))
-                q = p => p.Cost == cost;
 
             var likeSearch = $"%{searchString}%";
             Expression<Func<Trust, bool>> search = s => EF.Functions.Like(s.Type, likeSearch)

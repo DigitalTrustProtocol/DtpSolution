@@ -48,6 +48,11 @@ namespace DtpCore.Model
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() => Timestamps != null && Timestamps.Count > 0;
 
+        public Package()
+        {
+            Timestamps = new List<Timestamp>();
+        }
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
@@ -108,9 +113,9 @@ namespace DtpCore.Model
         public Scope Scope { get; set; }
         public bool ShouldSerializeScope() { return Scope!= null; }
 
-        [JsonProperty(PropertyName = "cost")]
-        public short Cost { get; set; }
-        public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
+        //[JsonProperty(PropertyName = "cost")]
+        //public short Cost { get; set; }
+        //public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
 
         [UIHint("UnixTimeUint")]
         [JsonProperty(PropertyName = "activate")]

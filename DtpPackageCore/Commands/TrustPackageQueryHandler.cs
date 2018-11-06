@@ -31,6 +31,9 @@ namespace DtpPackageCore.Commands
         {
             var query = _db.Packages.AsNoTracking();
 
+            if (request.IncludeTrusts)
+                query = query.Include(p => p.Trusts);
+
             if (request.DatabaseID != null)
                 query = query.Where(p => p.DatabaseID == request.DatabaseID);
 
