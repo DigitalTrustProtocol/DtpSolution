@@ -4,8 +4,8 @@ using DtpCore.Model;
 
 namespace DtpCore.Commands.Trusts
 {
-    public class AddTrustCommand : IRequest<NotificationSegment>
+    public class AddPackageCommand : IRequest<NotificationSegment>
     {
-        public Trust Trust { get; set; }
+        public Package Package { get; set; }
     }
 }

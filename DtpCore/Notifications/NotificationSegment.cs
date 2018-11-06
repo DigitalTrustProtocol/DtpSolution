@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DtpCore.Notifications
 {
-    public class NotificationsResult : List<INotification>
+    public class NotificationSegment : List<INotification>
     {
         private IMediator _mediator;
 
-        public NotificationsResult(IMediator mediator)
+        public NotificationSegment(IMediator mediator)
         {
             _mediator = mediator;
         }

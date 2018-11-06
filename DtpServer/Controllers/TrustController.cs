@@ -14,6 +14,7 @@ using MediatR;
 using DtpCore.Commands;
 using DtpCore.Commands.Trusts;
 using DtpCore.ViewModel;
+using DtpCore.Notifications;
 
 namespace DtpServer.Controllers
 {
@@ -24,22 +25,20 @@ namespace DtpServer.Controllers
 
         private ITrustSchemaService _trustSchemaService;
         private ITrustDBService _trustDBService;
-        private IBlockchainServiceFactory _blockchainServiceFactory;
         private IServiceProvider _serviceProvider;
 
-
-
-        public TrustController(IMediator mediator, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IBlockchainServiceFactory blockchainServiceFactory, IServiceProvider serviceProvider)
+        public TrustController(IMediator mediator, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
-
             _trustSchemaService = trustSchemaService;
             _trustDBService = trustDBService;
-            _blockchainServiceFactory = blockchainServiceFactory;
             _serviceProvider = serviceProvider;
         }
 
-  
+
+
+
+
         /// <summary>
         /// Add a package to the Graph and database.
         /// If the package is not timestamped, then it will be at a time interval.
@@ -56,26 +55,9 @@ namespace DtpServer.Controllers
                 return ApiError(validationResult, null, "Validation failed");
             // Timestamp validation service disabled for the moment
 
-            // Do not add external packages, as this system do not support this in data structure.
-            //if ((package.Id != null && package.Id.Length > 0))
-            //{
-            //    if (_trustDBService.DBContext.Packages.Any(f => f.Id == package.Id))
-            //        throw new ApplicationException("Package already exist");
-            //}
+            var result = _mediator.SendAndWait(new AddPackageCommand { Package = package });
 
-            var view = new PackageCommandView();
-
-            foreach (var trust in package.Trusts)
-            {
-                var result = _mediator.SendAndWait(new AddTrustCommand { Trust = trust });
-
-                view.Trusts.Add(new TrustCommandView { ID = trust.Id, Message = result.LastOrDefault()?.ToString() ?? "Unknown" });
-
-            }
-
-            _trustDBService.DBContext.SaveChanges();
-
-            return ApiOk(view);
+            return ApiOk(result.LastOrDefault());
         }
 
         /// <summary>

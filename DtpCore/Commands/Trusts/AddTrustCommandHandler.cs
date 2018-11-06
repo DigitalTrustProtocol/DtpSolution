@@ -14,16 +14,16 @@ using System.Threading.Tasks;
 
 namespace DtpCore.Commands.Trusts
 {
-    public class AddTrustCommandHandler : IRequestHandler<AddTrustCommand, NotificationsResult>
+    public class AddTrustCommandHandler : IRequestHandler<AddTrustCommand, NotificationSegment>
     {
 
         private IMediator _mediator;
         private ITrustDBService _trustDBService;
         private TrustDBContext _db;
-        private NotificationsResult _notifications;
+        private NotificationSegment _notifications;
         private readonly ILogger<AddTrustCommandHandler> _logger;
 
-        public AddTrustCommandHandler(IMediator mediator, ITrustDBService trustDBService, TrustDBContext db, NotificationsResult notifications, ILogger<AddTrustCommandHandler> logger)
+        public AddTrustCommandHandler(IMediator mediator, ITrustDBService trustDBService, TrustDBContext db, NotificationSegment notifications, ILogger<AddTrustCommandHandler> logger)
         {
             _mediator = mediator;
             _trustDBService = trustDBService;
@@ -32,7 +32,7 @@ namespace DtpCore.Commands.Trusts
             _logger = logger;
         }
 
-        public Task<NotificationsResult> Handle(AddTrustCommand request, CancellationToken cancellationToken)
+        public Task<NotificationSegment> Handle(AddTrustCommand request, CancellationToken cancellationToken)
         {
             if (_trustDBService.TrustExist(request.Trust.Id))
             {

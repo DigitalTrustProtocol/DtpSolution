@@ -25,7 +25,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var builder = new TrustBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
-            NotificationsResult result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
             DB.SaveChanges();
             return trust;
         }
@@ -35,7 +35,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var builder = new TrustBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
-            NotificationsResult result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
             Assert.AreEqual(1, result.Count);
             var last = result.Last();
             Assert.IsTrue(last is TrustAddedNotification);
@@ -49,7 +49,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             var builder = new TrustBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", false);
 
-            NotificationsResult result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
 
             Assert.AreEqual(2, result.Count);
 
@@ -65,7 +65,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var trust = CreateTrust();
 
-            NotificationsResult result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
 
             Assert.AreEqual(1, result.Count);
 
@@ -80,7 +80,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             var builder = new TrustBuilder(ServiceProvider);
             var oldtrust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true, 1); 
 
-            NotificationsResult result = Mediator.SendAndWait(new AddTrustCommand { Trust = oldtrust });
+            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = oldtrust });
 
             Assert.AreEqual(1, result.Count);
 

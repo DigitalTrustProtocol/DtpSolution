@@ -50,7 +50,7 @@ namespace DtpCore.Extensions
 
             services.AddTransient<TrustBuilder>();
 
-            services.AddTransient<NotificationsResult>();
+            services.AddTransient<NotificationSegment>();
             
 
             // ---------------------------------------------------------------------------------------------------------------
