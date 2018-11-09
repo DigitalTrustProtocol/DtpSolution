@@ -86,9 +86,13 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Blockchain");
 
-                    b.Property<int>("BlockchainProofDatabaseID");
+                    b.Property<int?>("BlockchainProofDatabaseID");
 
-                    b.Property<int>("PackageDatabaseID");
+                    b.Property<int>("BlockchainProof_db_ID");
+
+                    b.Property<int?>("PackageDatabaseID");
+
+                    b.Property<int>("PackageDatabase_db_ID");
 
                     b.Property<byte[]>("Receipt");
 
@@ -98,11 +102,15 @@ namespace DtpCore.Migrations
 
                     b.Property<byte[]>("Source");
 
-                    b.Property<int>("TrustDatabaseID");
+                    b.Property<int?>("TrustDatabaseID");
+
+                    b.Property<int>("TrustDatabase_db_ID");
 
                     b.HasKey("DatabaseID");
 
                     b.HasIndex("BlockchainProofDatabaseID");
+
+                    b.HasIndex("BlockchainProof_db_ID");
 
                     b.HasIndex("PackageDatabaseID");
 
@@ -124,8 +132,6 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Claim");
 
-                    b.Property<short>("Cost");
-
                     b.Property<uint>("Created");
 
                     b.Property<uint>("Expire");
@@ -137,6 +143,8 @@ namespace DtpCore.Migrations
                     b.Property<int?>("PackageDatabaseID");
 
                     b.Property<bool>("Replaced");
+
+                    b.Property<string>("Scope");
 
                     b.Property<string>("Type");
 
@@ -201,18 +209,15 @@ namespace DtpCore.Migrations
                 {
                     b.HasOne("DtpCore.Model.BlockchainProof")
                         .WithMany("Timestamps")
-                        .HasForeignKey("BlockchainProofDatabaseID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BlockchainProofDatabaseID");
 
                     b.HasOne("DtpCore.Model.Package")
                         .WithMany("Timestamps")
-                        .HasForeignKey("PackageDatabaseID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PackageDatabaseID");
 
                     b.HasOne("DtpCore.Model.Trust")
                         .WithMany("Timestamps")
-                        .HasForeignKey("TrustDatabaseID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TrustDatabaseID");
                 });
 
             modelBuilder.Entity("DtpCore.Model.Trust", b =>
@@ -238,22 +243,6 @@ namespace DtpCore.Migrations
                             b1.HasOne("DtpCore.Model.Trust")
                                 .WithOne("Issuer")
                                 .HasForeignKey("DtpCore.Model.IssuerIdentity", "TrustDatabaseID")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    b.OwnsOne("DtpCore.Model.Scope", "Scope", b1 =>
-                        {
-                            b1.Property<int?>("TrustDatabaseID");
-
-                            b1.Property<string>("Type");
-
-                            b1.Property<string>("Value");
-
-                            b1.ToTable("Trust");
-
-                            b1.HasOne("DtpCore.Model.Trust")
-                                .WithOne("Scope")
-                                .HasForeignKey("DtpCore.Model.Scope", "TrustDatabaseID")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 

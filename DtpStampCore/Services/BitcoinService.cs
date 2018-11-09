@@ -26,7 +26,7 @@ namespace DtpStampCore.Services
             _derivationStrategyFactory = derivationStrategyFactory;
 
             DerivationStrategy = _derivationStrategyFactory.GetService("btc-pkh");
-            Network = Network.Main;
+            Network = Network.TestNet;
             DerivationStrategy.NetworkName = Network.NetworkType.ToString();
         }
 
@@ -67,9 +67,11 @@ namespace DtpStampCore.Services
             if (balance == null || balance.Operations == null)
                 return result;
 
-            var operation = balance.Operations.OrderBy(p => p.BlockId).FirstOrDefault();
+            var operation = balance.Operations.FirstOrDefault();
             if (operation == null)
                 return result;
+
+            //var operation = operations.ToList()[0];
 
             result.Time = operation.FirstSeen.ToUniversalTime().ToUnixTimeSeconds();
             result.Confirmations = operation.Confirmations;

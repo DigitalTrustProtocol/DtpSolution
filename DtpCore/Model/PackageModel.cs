@@ -108,9 +108,9 @@ namespace DtpCore.Model
         [JsonConverter(typeof(ObjectToStringConverter))]
         public virtual string Claim { get; set; }
 
-        [UIHint("Serialize")]
+        //[UIHint("Serialize")]
         [JsonProperty(PropertyName = "scope")]
-        public Scope Scope { get; set; }
+        public string Scope { get; set; }
         public bool ShouldSerializeScope() { return Scope!= null; }
 
         //[JsonProperty(PropertyName = "cost")]
@@ -151,6 +151,7 @@ namespace DtpCore.Model
         public Trust()
         {
             Timestamps = new List<Timestamp>();
+            Scope = string.Empty;
         }
     }
 
@@ -218,17 +219,17 @@ namespace DtpCore.Model
         public SignDelegate Sign { get; set; }
     }
 
-    [JsonObject(MemberSerialization.OptIn)]
-    public class Scope
-    {
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
-        public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
+    //[JsonObject(MemberSerialization.OptIn)]
+    //public class Scope
+    //{
+    //    [JsonProperty(PropertyName = "type")]
+    //    public string Type { get; set; }
+    //    public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
 
-        [JsonProperty(PropertyName = "value")]
-        public string Value { get; set; }
-        public bool ShouldSerializeValue() { return !string.IsNullOrWhiteSpace(Value); }
-    }
+    //    [JsonProperty(PropertyName = "value")]
+    //    public string Value { get; set; }
+    //    public bool ShouldSerializeValue() { return !string.IsNullOrWhiteSpace(Value); }
+    //}
 
 
     [Table("Timestamp")]
@@ -265,13 +266,13 @@ namespace DtpCore.Model
         //[JsonIgnore]
         //public int WorkflowID { get; set; }
         [JsonIgnore]
-        public int BlockchainProofDatabaseID { get; set; }
+        public int BlockchainProof_db_ID { get; set; }
 
         [JsonIgnore]
-        public int PackageDatabaseID { get; set; }
+        public int PackageDatabase_db_ID { get; set; }
 
         [JsonIgnore]
-        public int TrustDatabaseID { get; set; }
+        public int TrustDatabase_db_ID { get; set; }
 
     }
 

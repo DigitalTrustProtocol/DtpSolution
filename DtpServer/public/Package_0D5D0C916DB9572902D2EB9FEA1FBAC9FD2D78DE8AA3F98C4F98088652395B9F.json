@@ -1,0 +1,116 @@
+{
+  "algorithm": "double256.merkle.dtp1",
+  "id": "DV0MkW25VykC0uuf6h+6yf0teN6Ko/mMT5gIhlI5W58=",
+  "created": 1541774565,
+  "trusts": [
+    {
+      "id": "NMYRpa4ffg7OPu70tX8F4TZ5qVWFl0HpJlgLigGfC9A=",
+      "created": 1541771779,
+      "issuer": {
+        "type": "btc-pkh",
+        "address": "1DtvxY539FfkDNY1RKEtZ4gsQkRiCqMAQp",
+        "signature": "H06+9DhcFmECIuz3nMVJEN6LWuufyMyJjIR5PKwlzg1kXOxst85zh8oxxJwFwg4SFotD7EQyl+86QwUvvvvDSYs="
+      },
+      "subject": {
+        "address": "DSL61dUqsWnDueC9L85ih3iFJjXkMBzFG7"
+      },
+      "type": "binary.trust.dtp1",
+      "claim": true,
+      "scope": "twitter.com",
+      "timestamps": [
+        {
+          "blockchain": "btctest",
+          "algorithm": "double256.merkle.dtp1",
+          "source": "NMYRpa4ffg7OPu70tX8F4TZ5qVWFl0HpJlgLigGfC9A=",
+          "receipt": "+SOOGBZ6zK/eu8Nl2Zcq2/RxfcghX/iU6HIDto2aAtNyUFiBntG4bhBr9zdZ0Oc38hEn59We+d6C+V0L3nHuB5rE1skvex8DvXmT7Z2nuiRMh5BjROHJ4LMCiy3RQcVl",
+          "registered": 1541771783
+        }
+      ]
+    },
+    {
+      "id": "itn4FUsTdR1UVyuoJ6dpo4twS73+UnVkDOBPYSVn7Bk=",
+      "created": 1541772254,
+      "issuer": {
+        "type": "btc-pkh",
+        "address": "1DtvxY539FfkDNY1RKEtZ4gsQkRiCqMAQp",
+        "signature": "IINvKZgBGnnrdwe21bM5j40hXXOFUJLeFS0PS6O2knOpTSF1S59RCvpY5GFAOoIbcx3VSjSZkEmPQxjSKJExtco="
+      },
+      "subject": {
+        "address": "DPe1aUsA1Qg3o7TasQSdhM2WAVALAo4xh6"
+      },
+      "type": "binary.trust.dtp1",
+      "claim": true,
+      "scope": "twitter.com",
+      "timestamps": [
+        {
+          "blockchain": "btctest",
+          "algorithm": "double256.merkle.dtp1",
+          "source": "itn4FUsTdR1UVyuoJ6dpo4twS73+UnVkDOBPYSVn7Bk=",
+          "receipt": "Fl8n5BXj5aRu5e/4FCKGogmHcJihd2Q+LLbFF6Qz1Geo84SippZprOFlmbCoLLdSkLiqkAiRglENzEOj0oMno5rE1skvex8DvXmT7Z2nuiRMh5BjROHJ4LMCiy3RQcVl",
+          "registered": 1541772254
+        }
+      ]
+    },
+    {
+      "id": "5/UGchsVayJGiMU3DbOmHFzln12iWDqw/ig3UMH/nds=",
+      "created": 1541772293,
+      "issuer": {
+        "type": "btc-pkh",
+        "address": "1DtvxY539FfkDNY1RKEtZ4gsQkRiCqMAQp",
+        "signature": "IForWv2pe1/gk9kxSrmAx5CNhS/kAGb3pb85si/V29wOcx+Gud4pFAeeOv542Mb25fCKtZvo+dqJCYf57vdbF3c="
+      },
+      "subject": {
+        "address": "DUNxBENjq45sXc1oefDn2yAJaZkYGmRuBJ"
+      },
+      "type": "binary.trust.dtp1",
+      "claim": true,
+      "scope": "twitter.com",
+      "timestamps": [
+        {
+          "blockchain": "btctest",
+          "algorithm": "double256.merkle.dtp1",
+          "source": "5/UGchsVayJGiMU3DbOmHFzln12iWDqw/ig3UMH/nds=",
+          "receipt": "nM7rwiaAslg+8b0PEA8eHPWNORSOXtuSGeN+OynfmpJFE+lFxDyEmnhZvacL6ecidSJ0t4kIbou/IpoSiagXXQ==",
+          "registered": 1541772293
+        }
+      ]
+    },
+    {
+      "id": "8SDwJVxs5RvgWvb97PgLs1veg3i2h1sC1Ewj13GuAx8=",
+      "created": 1541771960,
+      "issuer": {
+        "type": "btc-pkh",
+        "address": "1DtvxY539FfkDNY1RKEtZ4gsQkRiCqMAQp",
+        "signature": "IIFwIVjB7PuC0G6tF/IPe2LMUjpUAL5QW8rXH1wTWYm4RAQ5SvcPxReCaVzfs2ZmQ7tY10nP3YYnsg4qvrL0vq4="
+      },
+      "subject": {
+        "address": "DR5TpGA1wZz7EdMUzfwnaCesKWsfDM2FSb"
+      },
+      "type": "binary.trust.dtp1",
+      "claim": true,
+      "scope": "twitter.com",
+      "timestamps": [
+        {
+          "blockchain": "btctest",
+          "algorithm": "double256.merkle.dtp1",
+          "source": "8SDwJVxs5RvgWvb97PgLs1veg3i2h1sC1Ewj13GuAx8=",
+          "receipt": "ojOl8it5n5wUQo8XKxUDKUYzEeQ8NUxeP4cozNc+20dyUFiBntG4bhBr9zdZ0Oc38hEn59We+d6C+V0L3nHuB5rE1skvex8DvXmT7Z2nuiRMh5BjROHJ4LMCiy3RQcVl",
+          "registered": 1541771964
+        }
+      ]
+    }
+  ],
+  "server": {
+    "type": "btc-pkh",
+    "address": "1LCGKp8zkmU3jBSdsRNfLzqsJH3qSzSxyk",
+    "signature": "IFHVAedHFjrdqwX/OXa5SSoAjgBSHvocjCHNG/h6NWU5WA0pbxFMNajCf9An/eya4+jy3PpiVx/0py2Hn25nifE="
+  },
+  "timestamps": [
+    {
+      "blockchain": "btctest",
+      "algorithm": "double256.merkle.dtp1",
+      "source": "DV0MkW25VykC0uuf6h+6yf0teN6Ko/mMT5gIhlI5W58=",
+      "registered": 1541774565
+    }
+  ]
+}

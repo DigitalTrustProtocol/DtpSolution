@@ -32,8 +32,7 @@ namespace DtpCore.Strategy
 
                 if (trust.Scope != null)
                 {
-                    ms.WriteString(trust.Scope.Type.ToLowerSafe());
-                    ms.WriteString(trust.Scope.Value);
+                    ms.WriteString(trust.Scope);
                 }
 
                 ms.WriteInteger(trust.Created);

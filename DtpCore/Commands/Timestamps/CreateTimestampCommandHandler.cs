@@ -41,7 +41,7 @@ namespace DtpCore.Commands
 
             var timestamp = new Timestamp
             {
-                BlockchainProofDatabaseID = proof.DatabaseID,
+                BlockchainProof_db_ID = proof.DatabaseID,
                 Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1,
                 Blockchain = _configuration.Blockchain(),
                 Source = request.Source,

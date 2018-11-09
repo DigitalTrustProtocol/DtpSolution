@@ -133,7 +133,7 @@ namespace DtpServer.Controllers
                 Issuer = new IssuerIdentity { Address = issuer },
                 Subject = new SubjectIdentity { Address = subject },
                 Type = type,
-                Scope = new Scope { Value = scopevalue }
+                Scope = scopevalue
             };
 
             var trust = _trustDBService.GetSimilarTrust(query);

@@ -58,7 +58,7 @@ namespace DtpServer.Pages.Trusts
                 query = query.Where(p => p.Subject.Address == subjectAddress);
 
             if (scopeValue != null)
-                query = query.Where(p => p.Scope.Value == scopeValue);
+                query = query.Where(p => p.Scope == scopeValue);
 
             switch (CurrentSortField + CurrentSortOrder)
             {
@@ -110,8 +110,7 @@ namespace DtpServer.Pages.Trusts
             var likeSearch = $"%{searchString}%";
             Expression<Func<Trust, bool>> search = s => EF.Functions.Like(s.Type, likeSearch)
                 || EF.Functions.Like(s.Claim, likeSearch)
-                || EF.Functions.Like(s.Scope.Type, likeSearch)
-                || EF.Functions.Like(s.Scope.Value, likeSearch);
+                || EF.Functions.Like(s.Scope, likeSearch);
 
             q = q.Or(search);
 

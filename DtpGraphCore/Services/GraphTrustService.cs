@@ -68,7 +68,7 @@ namespace DtpGraphCore.Services
                 return; // Scope was not found !
 
             int scopeIndex = -1;
-            if (!Graph.Scopes.TryGetKey(trust.Scope.GetValue(), out scopeIndex))
+            if (!Graph.Scopes.TryGetKey(trust.Scope, out scopeIndex))
                 return; // Scope was not found !
 
             //var graphClaim = CreateGraphClaim(trust);
@@ -162,7 +162,7 @@ namespace DtpGraphCore.Services
         public GraphClaim CreateGraphClaim(Trust trust)
         {
             var trustTypeString = TrustSchema.GetTrustTypeString(trust);
-            return CreateGraphClaim(trustTypeString, trust.Scope.GetValue(), trust.Claim);
+            return CreateGraphClaim(trustTypeString, trust.Scope, trust.Claim);
         }
 
         public GraphClaim CreateGraphClaim(string type, string scope, string attributes)
@@ -234,7 +234,7 @@ namespace DtpGraphCore.Services
                                 trust.Claim = attributes;
 
                             if (Graph.Scopes.TryGetValue(trackerClaim.Scope, out string scope))
-                                trust.Scope = new Scope { Value = scope };
+                                trust.Scope = scope;
 
                             trust.Expire = 0;
                             trust.Activate = 0;

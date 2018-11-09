@@ -75,7 +75,7 @@ namespace DtpCore.Services
                         select p;
 
             if (scopeValue != null)
-                query = query.Where(p => p.Scope.Value == scopeValue);
+                query = query.Where(p => p.Scope == scopeValue);
 
             return query;
         }
@@ -102,11 +102,11 @@ namespace DtpCore.Services
 
             if (trust.Scope != null)
             {
-                query = query.Where(p => p.Scope.Value == trust.Scope.Value);
+                query = query.Where(p => p.Scope == trust.Scope);
             }
             else
             {
-                query = query.Where(p => p.Scope.Value == null);
+                query = query.Where(p => p.Scope == null);
             }
 
             var dbTrust = query.FirstOrDefault();

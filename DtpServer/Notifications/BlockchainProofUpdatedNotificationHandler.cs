@@ -33,15 +33,15 @@ namespace DtpServer.Notifications
             var timestamp = notification.Proof.Timestamps.FirstOrDefault();
             if(timestamp == null)
             {
-                timestamp = _db.Timestamps.FirstOrDefault(p => p.BlockchainProofDatabaseID == notification.Proof.DatabaseID);
+                timestamp = _db.Timestamps.FirstOrDefault(p => p.BlockchainProof_db_ID == notification.Proof.DatabaseID);
             }
 
             if (timestamp == null)
                 return;
 
-            if(timestamp.PackageDatabaseID > 0)
+            if(timestamp.PackageDatabase_db_ID > 0)
             {
-                var package = (await _mediator.Send(new TrustPackageQuery(timestamp.PackageDatabaseID))).FirstOrDefault();
+                var package = (await _mediator.Send(new TrustPackageQuery(timestamp.PackageDatabase_db_ID))).FirstOrDefault();
                 
                 var name = TrustPackageCreatedNotificationHandler.GetPackageName(package);
                 if (!_publicFileRepository.Exist(name))

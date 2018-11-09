@@ -323,8 +323,7 @@ namespace DtpCore.Services
                 if (trust.Scope == null)
                     return;
 
-                MaxRangeCheck("trust.Scope.Type", trust.Scope.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("trust.Scope.Value", trust.Scope.Value, location, SCOPE_MAX_LENGTH);
+                MaxRangeCheck("trust.Scope", trust.Scope, location, SCOPE_MAX_LENGTH);
             }
 
 

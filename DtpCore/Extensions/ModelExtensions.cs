@@ -7,13 +7,13 @@ namespace DtpCore.Extensions
 {
     public static class ModelExtensions
     {
-        public static string GetValue(this Scope scope)
-        {
-            if (scope == null)
-                return string.Empty;
+        //public static string GetValue(this Scope scope)
+        //{
+        //    if (scope == null)
+        //        return string.Empty;
 
-            return scope.Value;
-        }
+        //    return scope.Value;
+        //}
 
         public static void SetSignature(this Package package, byte[] signature)
         {

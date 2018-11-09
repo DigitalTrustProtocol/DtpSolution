@@ -50,7 +50,7 @@ namespace DtpServer.Pages.Timestamps
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)
                 return Page();
 
-            var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProofDatabaseID);
+            var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProof_db_ID);
             if (proof == null)
                 return Page();
             

@@ -50,7 +50,7 @@ namespace DtpStampCore.Workflows
         {
             CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
 
-            var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProofDatabaseID == CurrentProof.DatabaseID).Count();
+            var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProof_db_ID == CurrentProof.DatabaseID).Count();
             if (count == 0)
             {
                 CombineLog(_logger, $"No proofs found");
@@ -83,7 +83,7 @@ namespace DtpStampCore.Workflows
         public void Merkle()
         {
             var timestamps = (from p in _trustDBContext.Timestamps
-                              where p.BlockchainProofDatabaseID == CurrentProof.DatabaseID
+                              where p.BlockchainProof_db_ID == CurrentProof.DatabaseID
                               select p).ToList();
 
             foreach (var proof in timestamps)

@@ -32,7 +32,6 @@ namespace DtpCore.Repository
             builder.Entity<Trust>().HasKey(p => p.DatabaseID);
             builder.Entity<Trust>().OwnsOne(p => p.Issuer).HasIndex(i => i.Address);
             builder.Entity<Trust>().OwnsOne(p => p.Subject).HasIndex(i => i.Address);
-            builder.Entity<Trust>().OwnsOne(p => p.Scope);
 
             builder.Entity<Trust>().HasIndex(p => p.Id).IsUnique(true);
 
@@ -44,7 +43,7 @@ namespace DtpCore.Repository
             //builder.Entity<Trust>().HasIndex(p => new { p.IssuerAddress, p.SubjectAddress, p.Type, p.Scope }).IsUnique(true);
             builder.Entity<Timestamp>().HasKey(p => p.DatabaseID);
             builder.Entity<Timestamp>().HasIndex(p => p.Source);
-            builder.Entity<Timestamp>().HasIndex(p => p.BlockchainProofDatabaseID);
+            builder.Entity<Timestamp>().HasIndex(p => p.BlockchainProof_db_ID);
 
 
             builder.Entity<BlockchainProof>().HasKey(p => p.DatabaseID);
