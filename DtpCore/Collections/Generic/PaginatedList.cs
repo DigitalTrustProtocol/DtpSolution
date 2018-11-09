@@ -7,26 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DtpCore.Collections.Generic
 {
-    public class PaginatedList<T> : List<T>, IPaginatedList<T>
+    public class PaginatedList<TView> : List<TView>, IPaginatedList<TView>
     {
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
-
-        private PaginatedList(IQueryable<T> query)
-        {
-            foreach (var item in query)
-            {
-                Add(item);
-            }
-        }
-
-        private PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
-        {
-            PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            this.AddRange(items);
-        }
 
         public bool HasPreviousPage
         {
@@ -44,20 +28,53 @@ namespace DtpCore.Collections.Generic
             }
         }
 
-        public static async Task<PaginatedList<T>> CreateAsync(
-            IQueryable<T> source, int pageIndex, int pageSize)
+        /// <summary>
+        /// Ignores the item if it is null.
+        /// </summary>
+        /// <param name="item"></param>
+        public void AddOrIgnore(TView item)
+        {
+            if (item == null)
+                return;
+            Add(item);
+        }
+
+
+        public static async Task<PaginatedList<TView>> CreateAsync<TSource>(IQueryable<TSource> query, int pageIndex, int pageSize) where TSource : TView
+        {
+            return await CreateAsync(query, (p) => p, pageIndex, pageSize);
+        }
+
+        public static async Task<PaginatedList<TView>> CreateAsync<TSource>(IQueryable<TSource> query, Func<TSource, TView> converter, int pageIndex, int pageSize)
         {
             if (pageSize > 0)
             {
-                var count = await source.CountAsync();
-                var items = await source.Skip(
+                var count = await query.CountAsync();
+                var items = await query.Skip(
                     (pageIndex - 1) * pageSize)
                     .Take(pageSize).ToListAsync();
-                return new PaginatedList<T>(items, count, pageIndex, pageSize);
+
+                var list = new PaginatedList<TView>
+                {
+                    PageIndex = pageIndex,
+                    TotalPages = (int)Math.Ceiling(count / (double)pageSize)
+                };
+
+                foreach (var item in items)
+                {
+                    list.AddOrIgnore(converter.Invoke(item));
+                }
+                return list;
+
             }
             else
             {
-                return new PaginatedList<T>(source);
+                var list = new PaginatedList<TView>();
+                foreach (var item in query)
+                {
+                    list.AddOrIgnore(converter.Invoke(item));
+                }
+                return list;
             }
         }
     }

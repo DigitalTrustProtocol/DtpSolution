@@ -31,24 +31,30 @@ namespace DtpCore.Commands.Workflow
             _logger = logger;
         }
 
-        public Task<IPaginatedList<WorkflowView>> Handle(WorkflowViewQuery request, CancellationToken cancellationToken)
+        public async Task<IPaginatedList<WorkflowView>> Handle(WorkflowViewQuery request, CancellationToken cancellationToken)
         {
-            var query = _db.Workflows.AsNoTracking().Select(p => CreateView(p));
+            var query = _db.Workflows.AsNoTracking();
 
             if(request.DatabaseID != null)
                 query = query.Where(p => p.DatabaseID == request.DatabaseID);
 
-            var list = PaginatedList<WorkflowView>.CreateAsync(query, request.PageIndex.GetValueOrDefault(), request.PageSize.GetValueOrDefault() );
-
+            var list = PaginatedList<WorkflowView>.CreateAsync(query, 
+                (p) => CreateView(p),
+                request.PageIndex.GetValueOrDefault(), 
+                request.PageSize.GetValueOrDefault());
+        
             // There can be more of the same type.
             //var query = _context.Workflows.GroupBy(p => p.Type).Select(p => p.OrderByDescending(t => t.DatabaseID).First());
-
-            return Task.FromResult((IPaginatedList<WorkflowView>)list.GetAwaiter().GetResult());
+            //var result = list.GetAwaiter().GetResult();
+            return await list; // Task.FromResult((IPaginatedList<WorkflowView>)result);
         }
 
         protected WorkflowView CreateView(WorkflowContainer container)
         {
             var type = Type.GetType(container.Type);
+            if (type == null)
+                return null;
+
             var view = new WorkflowView
             {
                 DatabaseID = container.DatabaseID,

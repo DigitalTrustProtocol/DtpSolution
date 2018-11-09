@@ -27,7 +27,7 @@ namespace DtpPackageCore.Commands
             _logger = logger;
         }
 
-        public Task<IPaginatedList<Package>> Handle(TrustPackageQuery request, CancellationToken cancellationToken)
+        public async Task<IPaginatedList<Package>> Handle(TrustPackageQuery request, CancellationToken cancellationToken)
         {
             var query = _db.Packages.AsNoTracking();
 
@@ -38,8 +38,7 @@ namespace DtpPackageCore.Commands
                 query = query.Where(p => p.DatabaseID == request.DatabaseID);
 
             var list = PaginatedList<Package>.CreateAsync(query, request.PageIndex.GetValueOrDefault(), request.PageSize.GetValueOrDefault());
-
-            return Task.FromResult((IPaginatedList<Package>)list.GetAwaiter().GetResult());
+            return await list;
         }
     }
 }

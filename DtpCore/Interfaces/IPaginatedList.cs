@@ -2,7 +2,7 @@
 
 namespace DtpCore.Interfaces
 {
-    public interface IPaginatedList<T> : IList<T>
+    public interface IPaginatedList<TView> : IList<TView>
     {
         bool HasNextPage { get; }
         bool HasPreviousPage { get; }

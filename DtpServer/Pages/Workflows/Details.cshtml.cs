@@ -28,14 +28,15 @@ namespace DtpServer.Pages.Workflows
         }
 
 
-        public IActionResult OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            View = _mediator.SendAndWait(new WorkflowViewQuery {  DatabaseID = id }).FirstOrDefault();
+            var result = await _mediator.Send(new WorkflowViewQuery {  DatabaseID = id });
+            View = result.FirstOrDefault();
 
             if (View == null)
             {

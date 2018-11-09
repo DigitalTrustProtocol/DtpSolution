@@ -1,4 +1,5 @@
 ﻿using DtpCore.Interfaces;
+using DtpCore.Model;
 using DtpCore.ViewModel;
 using MediatR;
 
