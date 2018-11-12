@@ -1,0 +1,73 @@
+﻿@page
+@model DtpServer.Pages.Proofs.IndexModel
+
+@{
+    ViewData["Title"] = "Proofs";
+}
+
+<h2>Proofs</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].Blockchain)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].MerkleRoot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].Receipt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].Confirmations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].BlockTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlockchainProof[0].RetryAttempts)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BlockchainProof) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Blockchain)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MerkleRoot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Receipt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Confirmations)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BlockTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetryAttempts)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -37,7 +37,7 @@
             </th>
             <th>
                 <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSortOrder!" asp-route-sortField="WorkflowID" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@Model.List.PageIndex">
-                    @Html.DisplayNameFor(model => model.List[0].BlockchainProofDatabaseID)
+                    @Html.DisplayNameFor(model => model.List[0].BlockchainProof_db_ID)
                 </a>
             </th>
         </tr>
@@ -62,7 +62,7 @@
                     @Html.DisplayFor(modelItem => item.Service)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.BlockchainProofDatabaseID)
+                    @Html.DisplayFor(modelItem => item.BlockchainProof_db_ID)
                 </td>
             </tr>
         }

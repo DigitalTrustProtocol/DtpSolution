@@ -1,0 +1,66 @@
+﻿@page
+@model DtpServer.Pages.Proofs.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Proof Details</h2>
+
+<div>
+    <h4>Proof</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.Blockchain)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.Blockchain)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.MerkleRoot)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.MerkleRoot)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.Receipt)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.Receipt)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.Confirmations)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.Confirmations)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.BlockTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.BlockTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockchainProof.RetryAttempts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlockchainProof.RetryAttempts)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>

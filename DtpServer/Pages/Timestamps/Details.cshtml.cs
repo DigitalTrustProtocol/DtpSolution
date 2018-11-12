@@ -13,6 +13,8 @@ using DtpStampCore.Interfaces;
 using DtpCore.Services;
 using DtpCore.Extensions;
 using DtpStampCore.Workflows;
+using DtpCore.Factories;
+using Microsoft.Extensions.Configuration;
 
 namespace DtpServer.Pages.Timestamps
 {
@@ -22,14 +24,15 @@ namespace DtpServer.Pages.Timestamps
         private readonly IMerkleTree _merkleTree;
         private readonly IBlockchainServiceFactory _blockchainServiceFactory;
         private readonly IWorkflowService _workflowService;
+        private readonly IConfiguration _configuration;
 
-
-        public DetailsModel(TrustDBContext context, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IWorkflowService workflowService)
+        public DetailsModel(TrustDBContext context, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IWorkflowService workflowService, IConfiguration configuration)
         {
             _context = context;
             _merkleTree = merkleTree;
             _blockchainServiceFactory = blockchainServiceFactory;
             _workflowService = workflowService;
+            _configuration = configuration;
         }
 
         public Timestamp Timestamp { get; set; }
@@ -45,7 +48,7 @@ namespace DtpServer.Pages.Timestamps
                 return NotFound();
 
             if (string.IsNullOrEmpty(Timestamp.Algorithm))
-                Timestamp.Algorithm = "double256.merkle.dtp1";
+                Timestamp.Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1;
 
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)
                 return Page();
@@ -53,7 +56,10 @@ namespace DtpServer.Pages.Timestamps
             var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProof_db_ID);
             if (proof == null)
                 return Page();
-            
+
+            if (proof.Blockchain == null)
+                proof.Blockchain = _configuration.Blockchain();
+
             var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
             var root = _merkleTree.ComputeRoot(hash, Timestamp.Receipt);
 
