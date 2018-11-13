@@ -35,6 +35,7 @@ namespace DtpCore.Commands.Trusts
         public async Task<NotificationSegment> Handle(AddPackageCommand request, CancellationToken cancellationToken)
         {
             var package = request.Package;
+            var trusts = package.Trusts;
 
             // Check for existing packages
             if ((package.Id != null && package.Id.Length > 0))
@@ -44,16 +45,30 @@ namespace DtpCore.Commands.Trusts
                     _notifications.Add(new PackageExistNotification { Package = package });
                     return _notifications;
                 }
+
+                package.Trusts = null; // Do not update the chilren yet. Special cases for them.
+                _db.Packages.Add(package); // Get a DatabaseID for the package.
+                _db.SaveChanges();
             }
 
             var packageResult = new PackageAddedResult();
 
-            foreach (var trust in package.Trusts)
+            foreach (var trust in trusts)
             {
+                if (package.DatabaseID > 0) // Create the relation between the package and trust
+                    trust.TrustPackages.Add(new TrustPackage { PackageID = package.DatabaseID });
+
                 var trustResult = await _mediator.Send(new AddTrustCommand { Trust = trust });
 
-                packageResult.Trusts.Add(new TrustAddedResult { ID = trust.Id, Message = trustResult.LastOrDefault()?.ToString() ?? "Unknown" });
+                if(package.DatabaseID > 0 && trustResult.LastOrDefault() is TrustObsoleteNotification)
+                {
+                    // Make sure to update old trust even that its not active any more. The package history of a trust is still relevant.
+                    var notification = (TrustObsoleteNotification)trustResult.LastOrDefault();
+                    notification.OldTrust.TrustPackages.Add(new TrustPackage { PackageID = package.DatabaseID });
+                    _db.Update(notification.OldTrust);
+                }
 
+                packageResult.Trusts.Add(new TrustAddedResult { ID = trust.Id, Message = trustResult.LastOrDefault()?.ToString() ?? "Unknown" });
             }
 
             _db.SaveChanges();

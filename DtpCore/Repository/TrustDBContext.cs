@@ -9,6 +9,7 @@ namespace DtpCore.Repository
         public DbSet<Trust> Trusts { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
         public DbSet<BlockchainProof> Proofs { get; set; }
+        public DbSet<TrustPackage> TrustPackages { get; set; }
 
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -35,10 +36,7 @@ namespace DtpCore.Repository
 
             builder.Entity<Trust>().HasIndex(p => p.Id).IsUnique(true);
 
-            //builder.Entity<Trust>().HasIndex(p => p.Issuer.Address );
-            //builder.Entity<Trust>().HasIndex(p => p.Subject.Address );
-
- //           builder.Entity<Trust>().HasMany(b => b.Timestamps).WithOne().HasForeignKey(p=>p.ParentID);
+//           builder.Entity<Trust>().HasMany(b => b.Timestamps).WithOne().HasForeignKey(p=>p.ParentID);
 
             //builder.Entity<Trust>().HasIndex(p => new { p.IssuerAddress, p.SubjectAddress, p.Type, p.Scope }).IsUnique(true);
             builder.Entity<Timestamp>().HasKey(p => p.DatabaseID);
@@ -53,8 +51,20 @@ namespace DtpCore.Repository
             builder.Entity<WorkflowContainer>().HasIndex(p => p.Type);
             builder.Entity<WorkflowContainer>().HasIndex(p => p.State);
 
-
             builder.Entity<KeyValue>().HasIndex(p => p.Key);
+
+            builder.Entity<TrustPackage>()
+                .HasKey(bc => new { bc.TrustID, bc.PackageID });
+
+            builder.Entity<TrustPackage>()
+                .HasOne(p => p.Trust)
+                .WithMany(x => x.TrustPackages)
+                .HasForeignKey(y => y.TrustID);
+
+            builder.Entity<TrustPackage>()
+                .HasOne(p => p.Package)
+                .WithMany(x => x.TrustPackages)
+                .HasForeignKey(y => y.PackageID);
 
             base.OnModelCreating(builder);
         }

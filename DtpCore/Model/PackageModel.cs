@@ -48,9 +48,14 @@ namespace DtpCore.Model
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() => Timestamps != null && Timestamps.Count > 0;
 
+        [JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<TrustPackage> TrustPackages { get; set; }
+        public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;
+
         public Package()
         {
             Timestamps = new List<Timestamp>();
+            TrustPackages = new List<TrustPackage>();
         }
 
         public override string ToString()
@@ -82,7 +87,7 @@ namespace DtpCore.Model
         public IssuerIdentity Issuer { get; set; }
 
         /// <summary>
-        /// Internal property for holding the private key to sign with
+        /// Internal property for holding the private key to sign with, need to be removed as its business logic.
         /// </summary>
         [JsonIgnore]
         [NotMapped]
@@ -92,7 +97,7 @@ namespace DtpCore.Model
         public SubjectIdentity Subject { get; set; }
 
         /// <summary>
-        /// Internal property for holding the private key to sign with
+        /// Internal property for holding the private key to sign with, need to be removed as its business logic.
         /// </summary>
         [JsonIgnore]
         [NotMapped]
@@ -113,6 +118,7 @@ namespace DtpCore.Model
         public string Scope { get; set; }
         public bool ShouldSerializeScope() { return Scope!= null; }
 
+        // Only relevant for the Binary trust type.
         //[JsonProperty(PropertyName = "cost")]
         //public short Cost { get; set; }
         //public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
@@ -141,8 +147,19 @@ namespace DtpCore.Model
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() { return Timestamps != null && Timestamps.Count > 0; }
 
+        /// <summary>
+        /// Used for direct reference to a package created by the local server. Enables to identify trusts not packaged by the local server yet.
+        /// </summary>
         [JsonIgnore]
         public int? PackageDatabaseID { get; set; }
+
+        /// <summary>
+        /// A trust can belong to multiple packages created by other servers. 
+        /// </summary>
+        [JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<TrustPackage> TrustPackages { get; set; }
+        public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;
+
 
         [JsonIgnore]
         [Description("Current Trust has been replaced by a new Trust.")]
@@ -151,6 +168,7 @@ namespace DtpCore.Model
         public Trust()
         {
             Timestamps = new List<Timestamp>();
+            TrustPackages = new List<TrustPackage>();
             Scope = string.Empty;
         }
     }

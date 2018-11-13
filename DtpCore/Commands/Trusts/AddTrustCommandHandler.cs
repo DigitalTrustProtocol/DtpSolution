@@ -32,12 +32,12 @@ namespace DtpCore.Commands.Trusts
             _logger = logger;
         }
 
-        public Task<NotificationSegment> Handle(AddTrustCommand request, CancellationToken cancellationToken)
+        public async Task<NotificationSegment> Handle(AddTrustCommand request, CancellationToken cancellationToken)
         {
             if (_trustDBService.TrustExist(request.Trust.Id))
             {
                 _notifications.Add(new TrustExistNotification { Trust = request.Trust });
-                return Task.FromResult(_notifications);
+                return _notifications;
             }
 
             var dbTrust = _trustDBService.GetSimilarTrust(request.Trust);
@@ -52,7 +52,7 @@ namespace DtpCore.Commands.Trusts
                     //_db.Trusts.Add(request.Trust); // Do not add for now
 
                     _notifications.Add(new TrustObsoleteNotification { OldTrust = request.Trust, ExistingTrust = dbTrust });
-                    return Task.FromResult(_notifications);
+                    return _notifications;
                 }
 
                 // Check if everything is the same except Created date, then what?
@@ -73,9 +73,9 @@ namespace DtpCore.Commands.Trusts
             // Timestamp objects gets added to the Timestamp table as well!
             _db.Trusts.Add(request.Trust);
 
-            _notifications.PublishAndWait(new TrustAddedNotification { Trust = request.Trust });
+            await _notifications.Publish(new TrustAddedNotification { Trust = request.Trust });
 
-            return Task.FromResult(_notifications);
+            return _notifications;
         }
 
     }

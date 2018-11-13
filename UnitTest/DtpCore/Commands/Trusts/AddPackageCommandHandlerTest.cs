@@ -43,6 +43,11 @@ namespace UnitTest.DtpCore.Commands.Trusts
             Assert.AreEqual(1, result.Count);
             var last = result.Last();
             Assert.IsTrue(last is PackageAddedNotification);
+            Assert.IsTrue(DB.Packages.Count() == 1);
+            Assert.IsTrue(DB.Trusts.Count() == 1);
+            Assert.IsTrue(DB.TrustPackages.Count() == 1);
+            Assert.IsTrue(DB.Trusts.FirstOrDefault().PackageDatabaseID == null); // Should be 0
+
         }
 
         //[TestMethod]
