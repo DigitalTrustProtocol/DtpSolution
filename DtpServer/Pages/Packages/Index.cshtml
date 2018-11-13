@@ -1,0 +1,43 @@
+﻿@page
+@model DtpServer.Pages.Packages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Package[0].Algorithm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Package[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Package[0].Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Package) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Algorithm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
