@@ -62,7 +62,10 @@ namespace DtpCore.Services
 
         public Trust GetTrustById(byte[] id)
         {
-            var dbTrust = DBContext.Trusts.AsNoTracking().Include(p => p.Timestamps).FirstOrDefault(p => p.Id == id);
+            var dbTrust = DBContext.Trusts.AsNoTracking()
+                .Include(p => p.Timestamps)
+                .Include(p => p.TrustPackages)
+                .FirstOrDefault(p => p.Id == id);
             return dbTrust;
         }
 

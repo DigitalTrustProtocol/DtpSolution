@@ -156,6 +156,7 @@ namespace DtpCore.Model
         /// <summary>
         /// A trust can belong to multiple packages created by other servers. 
         /// </summary>
+        [DisplayName("Packages")]
         [JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
         public IList<TrustPackage> TrustPackages { get; set; }
         public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;

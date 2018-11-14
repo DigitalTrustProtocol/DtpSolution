@@ -5,9 +5,9 @@ using MediatR;
 
 namespace DtpPackageCore.Commands
 {
-    public class TrustPackageQuery : QueryCommand, IRequest<IPaginatedList<Package>>
+    public class PackageQuery : QueryCommand, IRequest<IPaginatedList<Package>>
     {
-        public TrustPackageQuery(int? databaseID = null, bool includeTrusts = false)
+        public PackageQuery(int? databaseID = null, bool includeTrusts = false)
         {
             DatabaseID = databaseID;
             IncludeTrusts = includeTrusts;

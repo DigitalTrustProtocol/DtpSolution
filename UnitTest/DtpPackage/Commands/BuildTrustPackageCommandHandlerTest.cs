@@ -31,10 +31,10 @@ namespace UnitTest.DtpPackage.Commands
         [TestMethod]
         public void Empty()
         {
-            var notifications = Mediator.SendAndWait(new BuildTrustPackageCommand());
+            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is TrustPackageNoTrustNotification);
+            Assert.IsTrue(notifications[0] is PackageNoTrustNotification);
         }
 
         [TestMethod]
@@ -42,20 +42,22 @@ namespace UnitTest.DtpPackage.Commands
         {
             CreateTrust("A", "B");
 
-            var notifications = Mediator.SendAndWait(new BuildTrustPackageCommand());
+            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is TrustPackageBuildNotification);
-            Assert.AreEqual(1, ((TrustPackageBuildNotification)notifications[0]).TrustPackage.Trusts.Count);
+            Assert.IsTrue(notifications[0] is PackageBuildNotification);
+            Assert.AreEqual(1, ((PackageBuildNotification)notifications[0]).TrustPackage.Trusts.Count);
 
             var packageID = DB.Packages.First().DatabaseID; 
             var packageIds = DB.Trusts.Select(p => p.PackageDatabaseID);
             foreach (var id in packageIds)
-            {
                 Assert.AreEqual(packageID, id);
-            }
 
-
+            foreach (var tp in DB.TrustPackages)
+            {
+                Assert.IsTrue(tp.PackageID == packageID);
+                Assert.IsTrue(tp.TrustID > 0);
+            } 
         }
 
         [TestMethod]
@@ -64,17 +66,23 @@ namespace UnitTest.DtpPackage.Commands
             CreateTrust("A", "B");
             CreateTrust("B", "C");
 
-            var notifications = Mediator.SendAndWait(new BuildTrustPackageCommand());
+            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is TrustPackageBuildNotification);
-            Assert.AreEqual(2, ((TrustPackageBuildNotification)notifications[0]).TrustPackage.Trusts.Count);
+            Assert.IsTrue(notifications[0] is PackageBuildNotification);
+            Assert.AreEqual(2, ((PackageBuildNotification)notifications[0]).TrustPackage.Trusts.Count);
 
             var packageID = DB.Packages.First().DatabaseID;
             var trusts = DB.Trusts.Select(p => p);
             foreach (var trust in trusts)
             {
                 Assert.AreEqual(packageID, trust.PackageDatabaseID);
+            }
+
+            foreach (var tp in DB.TrustPackages)
+            {
+                Assert.IsTrue(tp.PackageID == packageID);
+                Assert.IsTrue(tp.TrustID > 0);
             }
         }
     }

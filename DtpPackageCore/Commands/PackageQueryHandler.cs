@@ -5,29 +5,26 @@ using DtpCore.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DtpPackageCore.Commands
 {
-    public class TrustPackageQueryHandler : IRequestHandler<TrustPackageQuery, IPaginatedList<Package>>
+    public class PackageQueryHandler : IRequestHandler<PackageQuery, IPaginatedList<Package>>
     {
         private IMediator _mediator;
         private TrustDBContext _db;
-        private readonly ILogger<TrustPackageQueryHandler> _logger;
+        private readonly ILogger<PackageQueryHandler> _logger;
 
-        public TrustPackageQueryHandler(IMediator mediator, TrustDBContext db, ILogger<TrustPackageQueryHandler> logger)
+        public PackageQueryHandler(IMediator mediator, TrustDBContext db, ILogger<PackageQueryHandler> logger)
         {
             _mediator = mediator;
             _db = db;
             _logger = logger;
         }
 
-        public async Task<IPaginatedList<Package>> Handle(TrustPackageQuery request, CancellationToken cancellationToken)
+        public async Task<IPaginatedList<Package>> Handle(PackageQuery request, CancellationToken cancellationToken)
         {
             var query = _db.Packages.AsNoTracking();
 

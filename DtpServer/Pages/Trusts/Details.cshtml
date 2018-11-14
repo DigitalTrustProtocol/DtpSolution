@@ -189,6 +189,32 @@
                 </table>
             </td>
         </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Trust.TrustPackages)
+            </td>
+            <td>
+                <table class="table">
+                    <tbody>
+                        @foreach (var trustPackage in Model.Trust.TrustPackages)
+                        {
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => trustPackage.PackageID):</td>
+                                <td><a asp-page="/Packages/Details" asp-route-source="@trustPackage.PackageID">@Html.DisplayFor(t => trustPackage.PackageID)</a></td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Created):</td>
+                                <td>@Html.DisplayFor(t => trustPackage.Package.Created)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Address):</td>
+                                <td>@Html.DisplayFor(t => trustPackage.Package.Server.Address)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
     </tbody>
 </table>
 <div>

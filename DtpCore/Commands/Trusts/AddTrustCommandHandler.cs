@@ -65,7 +65,7 @@ namespace DtpCore.Commands.Trusts
                 dbTrust.Replaced = true;
                 _trustDBService.Update(dbTrust);
 
-                _notifications.PublishAndWait(new TrustReplacedNotification { Trust = dbTrust });
+                await _notifications.Publish(new TrustReplacedNotification { Trust = dbTrust });
             }
 
             request.Trust.Timestamps.Add(_mediator.SendAndWait(new CreateTimestampCommand { Source = request.Trust.Id }));

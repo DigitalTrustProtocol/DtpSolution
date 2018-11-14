@@ -3,7 +3,7 @@ using MediatR;
 
 namespace DtpPackageCore.Notifications
 {
-    public class TrustPackageNoTrustNotification : INotification
+    public class PackageNoTrustNotification : INotification
     {
     }
 }

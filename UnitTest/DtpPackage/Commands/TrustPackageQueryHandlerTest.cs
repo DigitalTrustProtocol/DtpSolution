@@ -31,7 +31,7 @@ namespace UnitTest.DtpPackage.Commands
         [TestMethod]
         public void Empty()
         {
-            var result = Mediator.SendAndWait(new TrustPackageQuery());
+            var result = Mediator.SendAndWait(new PackageQuery());
             
             Assert.AreEqual(0, result.Count);
         }
@@ -41,10 +41,10 @@ namespace UnitTest.DtpPackage.Commands
         {
             CreateTrust("A", "B");
 
-            var notifications = Mediator.SendAndWait(new BuildTrustPackageCommand());
-            var addedPackage = ((TrustPackageBuildNotification)notifications[0]).TrustPackage;
+            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
+            var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
 
-            var result = Mediator.SendAndWait(new TrustPackageQuery(addedPackage.DatabaseID, true));
+            var result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
             Assert.AreEqual(addedPackage.Trusts.Count, result[0].Trusts.Count);
@@ -55,17 +55,17 @@ namespace UnitTest.DtpPackage.Commands
         {
             // Create first package
             CreateTrust("A", "B");
-            Mediator.SendAndWait(new BuildTrustPackageCommand());
+            Mediator.SendAndWait(new BuildPackageCommand());
 
             // Create second package
             CreateTrust("B", "C");
-            var notifications = Mediator.SendAndWait(new BuildTrustPackageCommand());
-            var addedPackage = ((TrustPackageBuildNotification)notifications[0]).TrustPackage;
+            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
+            var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
 
-            var result = Mediator.SendAndWait(new TrustPackageQuery());
+            var result = Mediator.SendAndWait(new PackageQuery());
             Assert.AreEqual(2, result.Count);
 
-            result = Mediator.SendAndWait(new TrustPackageQuery(addedPackage.DatabaseID, true));
+            result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
             Assert.AreEqual(addedPackage.Trusts.Count, result[0].Trusts.Count);

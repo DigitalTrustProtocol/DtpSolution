@@ -42,11 +42,11 @@ namespace DtpPackageCore.Workflows
 
         public override void Execute()
         {
-            var notification = _mediator.SendAndWait(new BuildTrustPackageCommand()).FirstOrDefault();
-            if (notification == null || notification is TrustPackageNoTrustNotification)
+            var notification = _mediator.SendAndWait(new BuildPackageCommand()).FirstOrDefault();
+            if (notification == null || notification is PackageNoTrustNotification)
                 return;
 
-            var package = ((TrustPackageBuildNotification)notification).TrustPackage;
+            var package = ((PackageBuildNotification)notification).TrustPackage;
             CombineLog(_logger, $"Package ({package.Id}) created with {package.Trusts.Count} trusts.");
 
             Wait(_configuration.TrustPackageWorkflowInterval()); // Never end the workflow

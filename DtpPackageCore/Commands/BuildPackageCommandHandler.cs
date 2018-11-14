@@ -25,8 +25,8 @@ using System.Threading.Tasks;
 
 namespace DtpPackageCore.Commands
 {
-    public class BuildTrustPackageCommandHandler :
-        IRequestHandler<BuildTrustPackageCommand, NotificationSegment>
+    public class BuildPackageCommandHandler :
+        IRequestHandler<BuildPackageCommand, NotificationSegment>
     {
         private IMediator _mediator;
 
@@ -35,10 +35,10 @@ namespace DtpPackageCore.Commands
         private ITrustPackageService _trustPackageService;
         private NotificationSegment _notifications;
         private IConfiguration _configuration;
-        private readonly ILogger<BuildTrustPackageCommandHandler> logger;
+        private readonly ILogger<BuildPackageCommandHandler> logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public BuildTrustPackageCommandHandler(IMediator mediator, TrustDBContext db, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildTrustPackageCommandHandler> logger, IServiceProvider serviceProvider)
+        public BuildPackageCommandHandler(IMediator mediator, TrustDBContext db, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
             _dbContext = db;
@@ -50,16 +50,17 @@ namespace DtpPackageCore.Commands
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<NotificationSegment> Handle(BuildTrustPackageCommand request, CancellationToken cancellationToken)
+        public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
         {
             var trusts = GetTrusts();
             TrustBuilder _builder = new TrustBuilder(_serviceProvider); // _serviceProvider.GetRequiredService<TrustBuilder>();
             _builder.AddTrust(trusts);
             _builder.OrderTrust(); // Order trust ny ID before package ID calculation. 
+
             if (_builder.Package.Trusts.Count == 0)
             {
                 // No trusts found, exit
-                _notifications.Add(new TrustPackageNoTrustNotification());
+                _notifications.Add(new PackageNoTrustNotification());
                 return _notifications;
             }
 
@@ -67,10 +68,16 @@ namespace DtpPackageCore.Commands
 
             _builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = _builder.Package.Id }));
 
+            // Build many to many relation
+            foreach (var trust in trusts)
+            {
+                trust.TrustPackages.Add(new TrustPackage { Package = _builder.Package });
+            }
+
             _dbContext.Packages.Add(_builder.Package);
             _dbContext.SaveChanges();
 
-            await _notifications.Publish(new TrustPackageBuildNotification(_builder.Package));
+            await _notifications.Publish(new PackageBuildNotification(_builder.Package));
 
             return _notifications;
         }
@@ -91,7 +98,7 @@ namespace DtpPackageCore.Commands
         private IQueryable<Trust> GetTrusts()
         {
             // Get all trusts from LastTrustDatabaseID to now
-            var trusts = from trust in _dbContext.Trusts.Include(p => p.Timestamps)
+            var trusts = from trust in _dbContext.Trusts
                          where trust.PackageDatabaseID == null
                             && trust.Replaced == false // Do not include replaced trusts
                          select trust;
