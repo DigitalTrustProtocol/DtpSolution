@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DtpServer</name>
+    </assembly>
+    <members>
+        <member name="T:DtpServer.Controllers.PackagesController">
+            <summary>
+            Handles packages 
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.PackagesController.GetPackages">
+            <summary>
+            List all packages
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DtpServer.Controllers.PackagesController.GetPackage(System.Int32)">
+            <summary>
+            Get a package by ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DtpServer.Controllers.PackagesController.PostPackage(DtpCore.Model.Package)">
+            <summary>
+            Add a package to the server
+            </summary>
+            <param name="package"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DtpServer.Controllers.TrustController">
+            <summary>
+            Handles trust related stuff.
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.TrustController.Add(DtpCore.Model.Package)">
+            <summary>
+            Add a package to the Graph and database.
+            </summary>
+            <param name="package"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DtpServer.Controllers.TrustController.BuildTrust(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Create a trust, that is not added but returned for signing.
+            </summary>
+            <returns>A newly created trust object</returns>
+        </member>
+        <member name="M:DtpServer.Controllers.TrustController.BuildTrust(DtpCore.Model.Package)">
+            <summary>
+            Build a package for the client to sign.
+            </summary>
+            <remarks>
+            A client can add the trusts to a package and this function will build the package.
+            The client however still needs to sign the package.
+            </remarks>
+            <param name="package"></param>
+            <returns>A package with calculated id</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the package do not validate</response>    
+        </member>
+        <member name="M:DtpServer.Pages.StatisticsModel.AutoSize(System.Int64)">
+            <summary>
+            Formats from bytes to KB,MB,GB,TB 
+            </summary>
+            <param name="number">Bytes to format</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

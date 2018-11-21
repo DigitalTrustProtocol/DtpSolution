@@ -9,6 +9,8 @@ using Serilog.Formatting;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Display;
 using Serilog.Events;
+using Microsoft.AspNetCore.Server.Kestrel.Https.Internal;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DtpServer
 {
@@ -77,13 +79,16 @@ namespace DtpServer
                 .UseKestrel(options =>
                 {
                     options.AddServerHeader = false;
-                    options.Limits.MaxRequestBodySize = 10*1024*1024; // 10Mb, 
-                    options.Listen(IPAddress.Any, 80);
-                    options.Listen(IPAddress.Any, 443, listenOptions =>
+                    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
+                    options.Listen(IPAddress.Loopback, 443, listenOptions =>
                     {
-                        var password = File.ReadAllText(@"C:\tmp\trust.dance.txt");
-                        listenOptions.UseHttps(@"C:\tmp\trust.dance.pfx", password);
+                        listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("trust.dance", "My", StoreLocation.CurrentUser, allowInvalid: false));
                     });
+                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    {
+                        listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true));
+                    });
+
                 })
                 .UseSerilog()
                 .Build();

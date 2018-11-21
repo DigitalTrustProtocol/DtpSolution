@@ -20,6 +20,7 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using DtpPackageCore.Extensions;
 using MediatR;
+using System.Reflection;
 
 namespace DtpServer
 {
@@ -62,8 +63,14 @@ namespace DtpServer
                 c.SwaggerDoc("v1", new Info
                 {
                     Title = "DTP API",
-                    Version = "v1",
+                    Version = "v1"
                 });
+
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddMediatR();

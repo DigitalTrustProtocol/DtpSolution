@@ -18,6 +18,10 @@ using DtpCore.Notifications;
 
 namespace DtpServer.Controllers
 {
+    /// <summary>
+    /// Handles trust related stuff.
+    /// </summary>
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class TrustController : ApiController
     {
@@ -41,7 +45,6 @@ namespace DtpServer.Controllers
 
         /// <summary>
         /// Add a package to the Graph and database.
-        /// If the package is not timestamped, then it will be at a time interval.
         /// </summary>
         /// <param name="package"></param>
         /// <returns></returns>
@@ -63,10 +66,10 @@ namespace DtpServer.Controllers
         /// <summary>
         /// Create a trust, that is not added but returned for signing.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A newly created trust object</returns>
         [HttpGet]
         [Route("build")]
-        public ActionResult BuildTrust(string issuer, string subject, string issuerScript = "", string type = TrustBuilder.BINARY_TRUST_DTP1, string attributes = "", string scope = "", string alias = "")
+        public ActionResult<Trust> BuildTrust(string issuer, string subject, string issuerScript = "", string type = TrustBuilder.BINARY_TRUST_DTP1, string attributes = "", string scope = "", string alias = "")
         {
             if (issuer == null || issuer.Length < 1)
                 throw new ApplicationException("Missing issuer");
@@ -85,19 +88,26 @@ namespace DtpServer.Controllers
                 .AddSubject(subject)
                 .BuildTrustID();
 
-            return ApiOk(trustBuilder.CurrentTrust);
+            return trustBuilder.CurrentTrust;
         }
 
 
         /// <summary>
-        /// Build a trust for the client to sign.
+        /// Build a package for the client to sign.
         /// </summary>
-        /// <param name="trust"></param>
-        /// <returns>trust</returns>
-        [Produces("application/json")]
+        /// <remarks>
+        /// A client can add the trusts to a package and this function will build the package.
+        /// The client however still needs to sign the package.
+        /// </remarks>
+        /// <param name="package"></param>
+        /// <returns>A package with calculated id</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the package do not validate</response>    
         [HttpPost]
         [Route("build")]
-        public ActionResult BuildTrust([FromBody]Package package)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public ActionResult<Package> BuildTrust([FromBody]Package package)
         {
             var validationResult = _trustSchemaService.Validate(package, TrustSchemaValidationOptions.Basic);
             if (validationResult.ErrorsFound > 0)
