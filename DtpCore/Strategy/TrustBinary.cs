@@ -18,13 +18,13 @@ namespace DtpCore.Strategy
                 if (trust.Issuer != null)
                 {
                     ms.WriteString(trust.Issuer.Type.ToLowerSafe());
-                    ms.WriteString(trust.Issuer.Address);
+                    ms.WriteString(trust.Issuer.Id);
                 }
 
                 if (trust.Subject != null)
                 {
                     ms.WriteString(trust.Subject.Type.ToLowerSafe());
-                    ms.WriteString(trust.Subject.Address);
+                    ms.WriteString(trust.Subject.Id);
                 }
 
                 ms.WriteString(trust.Type.ToLowerSafe());
@@ -64,7 +64,7 @@ namespace DtpCore.Strategy
                 if(package.Server != null)
                 {
                     ms.WriteString(package.Server.Type.ToLowerSafe());
-                    ms.WriteString(package.Server.Address);
+                    ms.WriteString(package.Server.Id);
                 }
                 
                 return ms.ToArray();

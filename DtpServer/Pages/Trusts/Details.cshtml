@@ -48,10 +48,10 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Address):
+                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Id):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Address)
+                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Id)
                         </td>
                     </tr>
                     <tr>
@@ -81,10 +81,10 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Subject.Address):
+                            @Html.DisplayNameFor(model => Model.Trust.Subject.Id):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Address)
+                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Id)
                         </td>
                     </tr>
                     <tr>
@@ -207,8 +207,8 @@
                                 <td>@Html.DisplayFor(t => trustPackage.Package.Created)</td>
                             </tr>
                             <tr>
-                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Address):</td>
-                                <td>@Html.DisplayFor(t => trustPackage.Package.Server.Address)</td>
+                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Id):</td>
+                                <td>@Html.DisplayFor(t => trustPackage.Package.Server.Id)</td>
                             </tr>
                         }
                     </tbody>

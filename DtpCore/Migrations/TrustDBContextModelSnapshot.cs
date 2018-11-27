@@ -164,8 +164,6 @@ namespace DtpCore.Migrations
 
                     b.Property<int>("PackageID");
 
-                    b.Property<int>("DatabaseID");
-
                     b.HasKey("TrustID", "PackageID");
 
                     b.HasIndex("PackageID");
@@ -205,7 +203,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("PackageDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
@@ -245,13 +243,13 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
                             b1.Property<string>("Type");
 
-                            b1.HasIndex("Address");
+                            b1.HasIndex("Id");
 
                             b1.ToTable("Trust");
 
@@ -265,13 +263,13 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
                             b1.Property<string>("Type");
 
-                            b1.HasIndex("Address");
+                            b1.HasIndex("Id");
 
                             b1.ToTable("Trust");
 

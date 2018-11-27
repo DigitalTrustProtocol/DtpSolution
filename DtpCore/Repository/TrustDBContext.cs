@@ -31,8 +31,8 @@ namespace DtpCore.Repository
 
 
             builder.Entity<Trust>().HasKey(p => p.DatabaseID);
-            builder.Entity<Trust>().OwnsOne(p => p.Issuer).HasIndex(i => i.Address);
-            builder.Entity<Trust>().OwnsOne(p => p.Subject).HasIndex(i => i.Address);
+            builder.Entity<Trust>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
+            builder.Entity<Trust>().OwnsOne(p => p.Subject).HasIndex(i => i.Id);
 
             builder.Entity<Trust>().HasIndex(p => p.Id).IsUnique(true);
 

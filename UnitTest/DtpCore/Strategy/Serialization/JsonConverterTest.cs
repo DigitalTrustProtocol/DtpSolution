@@ -69,11 +69,11 @@ namespace UnitTest.DtpCore.Strategy
             Assert.AreEqual(trust2.Type, trust.Type, "Type");
             Assert.AreEqual(trust2.Algorithm, trust.Algorithm);
             Assert.AreEqual(trust2.Issuer.Type, trust.Issuer.Type, "Issuer Type");
-            Assert.AreEqual(trust2.Issuer.Address, trust.Issuer.Address, "Issuer Address");
+            Assert.AreEqual(trust2.Issuer.Id, trust.Issuer.Id, "Issuer Address");
             Assert.IsTrue(trust2.Issuer.Signature.Compare(trust.Issuer.Signature) == 0, "Issuer Signature");
 
             Assert.AreEqual(trust2.Subject.Type, trust.Subject.Type, "Subject Type");
-            Assert.AreEqual(trust2.Subject.Address, trust.Subject.Address, "Subject Address");
+            Assert.AreEqual(trust2.Subject.Id, trust.Subject.Id, "Subject Address");
             Assert.IsTrue(trust2.Subject.Signature.Compare(trust.Subject.Signature) == 0, "Subject Signature");
 
             Assert.AreEqual(trust2.Expire, trust.Expire);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Rev3 : Migration
+    public partial class ID : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,7 +51,7 @@ namespace DtpCore.Migrations
                     Id = table.Column<byte[]>(nullable: false),
                     Created = table.Column<uint>(nullable: false),
                     Server_Type = table.Column<string>(nullable: true),
-                    Server_Address = table.Column<string>(nullable: true),
+                    Server_Id = table.Column<string>(nullable: true),
                     Server_Signature = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
@@ -88,10 +88,10 @@ namespace DtpCore.Migrations
                     Id = table.Column<byte[]>(nullable: true),
                     Created = table.Column<uint>(nullable: false),
                     Issuer_Type = table.Column<string>(nullable: true),
-                    Issuer_Address = table.Column<string>(nullable: true),
+                    Issuer_Id = table.Column<string>(nullable: true),
                     Issuer_Signature = table.Column<byte[]>(nullable: true),
                     Subject_Type = table.Column<string>(nullable: true),
-                    Subject_Address = table.Column<string>(nullable: true),
+                    Subject_Id = table.Column<string>(nullable: true),
                     Subject_Signature = table.Column<byte[]>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Claim = table.Column<string>(nullable: true),
@@ -155,6 +155,30 @@ namespace DtpCore.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TrustPackage",
+                columns: table => new
+                {
+                    TrustID = table.Column<int>(nullable: false),
+                    PackageID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrustPackage", x => new { x.TrustID, x.PackageID });
+                    table.ForeignKey(
+                        name: "FK_TrustPackage_Package_PackageID",
+                        column: x => x.PackageID,
+                        principalTable: "Package",
+                        principalColumn: "DatabaseID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TrustPackage_Trust_TrustID",
+                        column: x => x.TrustID,
+                        principalTable: "Trust",
+                        principalColumn: "DatabaseID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_KeyValues_Key",
                 table: "KeyValues",
@@ -186,14 +210,14 @@ namespace DtpCore.Migrations
                 column: "TrustDatabaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Trust_Issuer_Address",
+                name: "IX_Trust_Issuer_Id",
                 table: "Trust",
-                column: "Issuer_Address");
+                column: "Issuer_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Trust_Subject_Address",
+                name: "IX_Trust_Subject_Id",
                 table: "Trust",
-                column: "Subject_Address");
+                column: "Subject_Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trust_Id",
@@ -205,6 +229,11 @@ namespace DtpCore.Migrations
                 name: "IX_Trust_PackageDatabaseID",
                 table: "Trust",
                 column: "PackageDatabaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrustPackage_PackageID",
+                table: "TrustPackage",
+                column: "PackageID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workflow_State",
@@ -224,6 +253,9 @@ namespace DtpCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Timestamp");
+
+            migrationBuilder.DropTable(
+                name: "TrustPackage");
 
             migrationBuilder.DropTable(
                 name: "Workflow");

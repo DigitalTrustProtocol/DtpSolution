@@ -11,7 +11,7 @@ using DtpCore.Strategy.Serialization;
 namespace DtpCore.Model
 {
     /// <summary>
-    /// Signing of an address with data
+    /// Signing of an Id with data
     /// </summary>
     /// <param name="identity"></param>
     /// <param name="data">The data that is signed</param>
@@ -218,9 +218,9 @@ namespace DtpCore.Model
         public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
 
         //[UIHint("ByteToAddress")]
-        [JsonProperty(PropertyName = "address")]
-        public string Address { get; set; }
-        public bool ShouldSerializeAddress() { return !string.IsNullOrWhiteSpace(Address); }
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+        public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
 
         //[UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "signature")]

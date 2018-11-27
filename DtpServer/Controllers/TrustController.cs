@@ -140,8 +140,8 @@ namespace DtpServer.Controllers
         {
             var query = new Trust
             {
-                Issuer = new IssuerIdentity { Address = issuer },
-                Subject = new SubjectIdentity { Address = subject },
+                Issuer = new IssuerIdentity { Id = issuer },
+                Subject = new SubjectIdentity { Id = subject },
                 Type = type,
                 Scope = scopevalue
             };

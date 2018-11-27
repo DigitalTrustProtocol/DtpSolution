@@ -102,7 +102,7 @@ namespace DtpCore.Services
         {
             public const int ALGORITHM_MAX_LENGTH = 50;
             public const int ID_MAX_LENGTH = 100;
-            public const int ADDRESS_MAX_LENGTH = 100;
+            public const int IDENTITY_ID_MAX_LENGTH = 100;
             public const int SIGNATURE_MAX_LENGTH = 100;
             public const int NOTE_MAX_LENGTH = 100;
             public const int CLAIM_MAX_LENGTH = 1024;
@@ -199,7 +199,7 @@ namespace DtpCore.Services
                     return;
 
                 MaxRangeCheck("Package Server Type", package.Server.Type, "", TYPE_MAX_LENGTH);
-                MaxRangeCheck("Package Server Address", package.Server.Address, "", ADDRESS_MAX_LENGTH);
+                MaxRangeCheck("Package Server Id", package.Server.Id, "", IDENTITY_ID_MAX_LENGTH);
                 MaxRangeCheck("Package Server Signature", package.Server.Signature, "", SIGNATURE_MAX_LENGTH);
             }
 
@@ -273,17 +273,17 @@ namespace DtpCore.Services
                 if (!MissingCheck("Trust Issuer", trust.Issuer, location))
                     return; 
 
-                MissingCheck("Issuer Address", trust.Issuer.Address, location);
+                MissingCheck("Issuer Id", trust.Issuer.Id, location);
 
                 MaxRangeCheck("trust.Issuer.Type", trust.Issuer.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("trust.Issuer.Address", trust.Issuer.Address, location, ADDRESS_MAX_LENGTH);
+                MaxRangeCheck("trust.Issuer.Id", trust.Issuer.Id, location, IDENTITY_ID_MAX_LENGTH);
                 MaxRangeCheck("trust.Issuer.Signature", trust.Issuer.Signature, location, SIGNATURE_MAX_LENGTH);
 
                 if (_options == TrustSchemaValidationOptions.Full)
                 {
                     var scriptService = _derivationStrategyFactory.GetService(trust.Issuer.Type);
 
-                    if (!scriptService.VerifySignatureMessage(trust.Id, trust.Issuer.Signature, trust.Issuer.Address))
+                    if (!scriptService.VerifySignatureMessage(trust.Id, trust.Issuer.Signature, trust.Issuer.Id))
                     {
                         result.Errors.Add(location + "Invalid issuer signature");
                     }
@@ -297,10 +297,10 @@ namespace DtpCore.Services
                 if (!MissingCheck("Trust Subject", trust.Subject, location))
                     return;
 
-                MissingCheck("trust.Subject.Address", trust.Subject.Address, location);
+                MissingCheck("trust.Subject.Id", trust.Subject.Id, location);
 
                 MaxRangeCheck("trust.Subject.Type", trust.Subject.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("trust.Subject.Address", trust.Subject.Address, location, ADDRESS_MAX_LENGTH);
+                MaxRangeCheck("trust.Subject.Id", trust.Subject.Id, location, IDENTITY_ID_MAX_LENGTH);
                 MaxRangeCheck("trust.Subject.Signature", trust.Subject.Signature, location, SIGNATURE_MAX_LENGTH);
 
 
@@ -310,7 +310,7 @@ namespace DtpCore.Services
                     {
                         var scriptService = _derivationStrategyFactory.GetService(trust.Subject.Type);
 
-                        if (!scriptService.VerifySignatureMessage(trust.Id, trust.Subject.Signature, trust.Subject.Address))
+                        if (!scriptService.VerifySignatureMessage(trust.Id, trust.Subject.Signature, trust.Subject.Id))
                         {
                             result.Errors.Add(location + "Invalid subject signature");
                         }

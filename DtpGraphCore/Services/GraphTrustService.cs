@@ -41,9 +41,9 @@ namespace DtpGraphCore.Services
 
         public void Add(Trust trust)
         {
-            var issuer = EnsureGraphIssuer(trust.Issuer.Address);
+            var issuer = EnsureGraphIssuer(trust.Issuer.Id);
 
-            var graphSubject = EnsureGraphSubject(issuer, trust.Subject.Address);
+            var graphSubject = EnsureGraphSubject(issuer, trust.Subject.Id);
 
             var graphClaim = EnsureGraphClaim(trust);
             graphSubject.Claims.Ensure(graphClaim.Scope, graphClaim.Type, graphClaim.Index);
@@ -51,10 +51,10 @@ namespace DtpGraphCore.Services
 
         public void Remove(Trust trust)
         {
-            if (!Graph.IssuerIndex.TryGetValue(trust.Issuer.Address, out int issuerIndex))
+            if (!Graph.IssuerIndex.TryGetValue(trust.Issuer.Id, out int issuerIndex))
                 return; // No issuer, then no trust!
 
-            if (!Graph.IssuerIndex.TryGetValue(trust.Subject.Address, out int subjectIndex))
+            if (!Graph.IssuerIndex.TryGetValue(trust.Subject.Id, out int subjectIndex))
                 return; // No subject, then no trust!
 
             var graphIssuer = Graph.Issuers[issuerIndex];
@@ -99,39 +99,37 @@ namespace DtpGraphCore.Services
             // There is no backpointer, so this would be a DB query.
         }
 
-        public GraphIssuer EnsureGraphIssuer(string address)
+        public GraphIssuer EnsureGraphIssuer(string issuerId)
         {
 
-            if (!Graph.IssuerIndex.TryGetValue(address, out int index))
+            if (!Graph.IssuerIndex.TryGetValue(issuerId, out int index))
             {
                 index = Graph.Issuers.Count;
-                var issuer = new GraphIssuer { Address = address, Index = index };
+                var issuer = new GraphIssuer { Id = issuerId, Index = index };
                 Graph.Issuers.Add(issuer);
-                Graph.IssuerIndex.Add(address, index);
+                Graph.IssuerIndex.Add(issuerId, index);
                 return issuer;
             }
 
             return Graph.Issuers[index];
         }
 
-        public GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectAddress)
+        public GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectId)
         {
-            var index = EnsureGraphIssuer(subjectAddress).Index;
+            var index = EnsureGraphIssuer(subjectId).Index;
             if (!graphIssuer.Subjects.ContainsKey(index))
             {
-                var graphSubject = CreateGraphSubject(subjectAddress);
+                var graphSubject = CreateGraphSubject(subjectId);
                 graphIssuer.Subjects.Add(index, graphSubject);
             }
             return graphIssuer.Subjects[index];
         }
 
-        public GraphSubject CreateGraphSubject(string subjectAddress)
+        public GraphSubject CreateGraphSubject(string subjectId)
         {
             var graphSubject = new GraphSubject
             {
-                TargetIssuer =  EnsureGraphIssuer(subjectAddress),
-                //IssuerType = Graph.SubjectTypes.Ensure(trustSubject.Type),
-                //AliasIndex = Graph.Alias.Ensure(trustSubject.Alias),
+                TargetIssuer =  EnsureGraphIssuer(subjectId),
                 Claims = new ConcurrentDictionary<long, int>()
             };
 
@@ -205,8 +203,8 @@ namespace DtpGraphCore.Services
                     {
                         var trust = new Trust
                         {
-                            Issuer = new IssuerIdentity { Address = tracker.Issuer.Address },
-                            Subject = new SubjectIdentity { Address = ts.TargetIssuer.Address }
+                            Issuer = new IssuerIdentity { Id = tracker.Issuer.Id },
+                            Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
                         };
 
                         trust.Type = TrustBuilder.BINARY_TRUST_DTP1;
@@ -220,8 +218,8 @@ namespace DtpGraphCore.Services
                         {
                             var trust = new Trust
                             {
-                                Issuer = new IssuerIdentity { Address = tracker.Issuer.Address },
-                                Subject = new SubjectIdentity { Address = ts.TargetIssuer.Address }
+                                Issuer = new IssuerIdentity { Id = tracker.Issuer.Id },
+                                Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
                             };
 
                             var claimIndex = claimEntry.Value;

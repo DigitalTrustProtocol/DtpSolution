@@ -68,9 +68,9 @@ namespace UnitTest.DtpGraphCore
             var sourceAddress = TrustBuilderExtensions.GetAddress(source);
             var subject = new Identity
             {
-                Address = TrustBuilderExtensions.GetAddress(target)
+                Id = TrustBuilderExtensions.GetAddress(target)
             };
-            queryBuilder.Add(sourceAddress, subject.Address);
+            queryBuilder.Add(sourceAddress, subject.Id);
 
             return queryBuilder.Query;
         }

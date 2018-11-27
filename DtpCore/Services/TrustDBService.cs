@@ -70,11 +70,11 @@ namespace DtpCore.Services
         }
 
 
-        public IQueryable<Trust> GetTrusts(string issuerAddress, string subjectAddress, string scopeValue)
+        public IQueryable<Trust> GetTrusts(string issuerId, string subjectId, string scopeValue)
         {
             var query = from p in DBContext.Trusts
-                        where p.Issuer.Address == issuerAddress
-                              && p.Subject.Address == subjectAddress
+                        where p.Issuer.Id == issuerId
+                              && p.Subject.Id == subjectId
                         select p;
 
             if (scopeValue != null)
@@ -98,8 +98,8 @@ namespace DtpCore.Services
         {
             var query = from p in DBContext.Trusts select p;
 
-            query = query.Where(p => p.Issuer.Address == trust.Issuer.Address
-                              && p.Subject.Address == trust.Subject.Address
+            query = query.Where(p => p.Issuer.Id == trust.Issuer.Id
+                              && p.Subject.Id == trust.Subject.Id
                               && p.Type == trust.Type
                               && p.Replaced == false);
 

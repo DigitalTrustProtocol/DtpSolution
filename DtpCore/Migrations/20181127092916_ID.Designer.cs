@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20181109135519_Rev3")]
-    partial class Rev3
+    [Migration("20181127092916_ID")]
+    partial class ID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -160,6 +160,19 @@ namespace DtpCore.Migrations
                     b.ToTable("Trust");
                 });
 
+            modelBuilder.Entity("DtpCore.Model.TrustPackage", b =>
+                {
+                    b.Property<int>("TrustID");
+
+                    b.Property<int>("PackageID");
+
+                    b.HasKey("TrustID", "PackageID");
+
+                    b.HasIndex("PackageID");
+
+                    b.ToTable("TrustPackage");
+                });
+
             modelBuilder.Entity("DtpCore.Model.WorkflowContainer", b =>
                 {
                     b.Property<int>("DatabaseID")
@@ -192,7 +205,7 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("PackageDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
@@ -232,13 +245,13 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
                             b1.Property<string>("Type");
 
-                            b1.HasIndex("Address");
+                            b1.HasIndex("Id");
 
                             b1.ToTable("Trust");
 
@@ -252,13 +265,13 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int?>("TrustDatabaseID");
 
-                            b1.Property<string>("Address");
+                            b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Signature");
 
                             b1.Property<string>("Type");
 
-                            b1.HasIndex("Address");
+                            b1.HasIndex("Id");
 
                             b1.ToTable("Trust");
 
@@ -267,6 +280,19 @@ namespace DtpCore.Migrations
                                 .HasForeignKey("DtpCore.Model.SubjectIdentity", "TrustDatabaseID")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
+                });
+
+            modelBuilder.Entity("DtpCore.Model.TrustPackage", b =>
+                {
+                    b.HasOne("DtpCore.Model.Package", "Package")
+                        .WithMany("TrustPackages")
+                        .HasForeignKey("PackageID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DtpCore.Model.Trust", "Trust")
+                        .WithMany("TrustPackages")
+                        .HasForeignKey("TrustID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

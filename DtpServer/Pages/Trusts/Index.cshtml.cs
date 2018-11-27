@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
-using DtpCore.Repository;
 using DtpCore.Interfaces;
 using DtpCore.Extensions;
-using System.Collections;
 using DtpCore.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -33,7 +29,7 @@ namespace DtpServer.Pages.Trusts
         }
 
 
-        public async Task OnGetAsync(string sortOrder, string sortField, string currentFilter, string searchString, string issuerAddress, string subjectAddress, string scopeValue, int? pageIndex)
+        public async Task OnGetAsync(string sortOrder, string sortField, string currentFilter, string searchString, string issuerId, string subjectId, string scopeValue, int? pageIndex)
         {
             if (sortOrder.EndsWithIgnoreCase("!"))
                 sortOrder = sortOrder == "!" ? "_desc" : "";
@@ -51,11 +47,11 @@ namespace DtpServer.Pages.Trusts
 
             var query = BuildQuery(searchString);
 
-            if (issuerAddress != null)
-                query = query.Where(p => p.Issuer.Address == issuerAddress);
+            if (issuerId != null)
+                query = query.Where(p => p.Issuer.Id == issuerId);
 
-            if (subjectAddress != null)
-                query = query.Where(p => p.Subject.Address == subjectAddress);
+            if (subjectId != null)
+                query = query.Where(p => p.Subject.Id == subjectId);
 
             if (scopeValue != null)
                 query = query.Where(p => p.Scope == scopeValue);
@@ -103,7 +99,7 @@ namespace DtpServer.Pages.Trusts
                 return query;
             }
 
-            query = query.Where(s => s.Issuer.Address == searchString || s.Subject.Address == searchString);
+            query = query.Where(s => s.Issuer.Id == searchString || s.Subject.Id == searchString);
 
             Expression<Func<Trust, bool>> q = null;
 

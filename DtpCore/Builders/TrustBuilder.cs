@@ -182,7 +182,7 @@ namespace DtpCore.Builders
         }
 
 
-        public TrustBuilder SetIssuer(string address, string type = "", SignDelegate sign = null)
+        public TrustBuilder SetIssuer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
@@ -191,13 +191,13 @@ namespace DtpCore.Builders
                 CurrentTrust.Issuer = new IssuerIdentity();
 
             CurrentTrust.Issuer.Type = type;
-            CurrentTrust.Issuer.Address = address;
+            CurrentTrust.Issuer.Id = id;
             CurrentTrust.IssuerSign = sign;
 
             return this;
         }
 
-        public TrustBuilder SetServer(string address, string type = "", SignDelegate sign = null)
+        public TrustBuilder SetServer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
@@ -205,7 +205,7 @@ namespace DtpCore.Builders
             if (Package.Server == null)
                 Package.Server = new ServerIdentity();
 
-            Package.Server.Address = address;
+            Package.Server.Id = id;
             Package.Server.Type = type;
             Package.Server.Sign = sign;
 
@@ -270,12 +270,12 @@ namespace DtpCore.Builders
         }
 
 
-        public TrustBuilder AddSubject(string address)
+        public TrustBuilder AddSubject(string id)
         {
             if (CurrentTrust.Subject == null)
                 CurrentTrust.Subject = new SubjectIdentity();
 
-            _currentTrust.Subject.Address = address;
+            _currentTrust.Subject.Id = id;
 
             return this;
         }

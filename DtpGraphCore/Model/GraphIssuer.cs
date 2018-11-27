@@ -9,8 +9,8 @@ namespace DtpGraphCore.Model
     //[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class GraphIssuer
     {
-        [JsonProperty(PropertyName = "address", Order = 10)]
-        public string Address;
+        [JsonProperty(PropertyName = "id", Order = 10)]
+        public string Id;
 
         [JsonProperty(PropertyName = "index", Order = 10)]
         public int Index;
