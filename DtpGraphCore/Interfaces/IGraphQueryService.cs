@@ -5,7 +5,7 @@ namespace DtpGraphCore.Interfaces
 {
     public interface IGraphQueryService
     {
-        IGraphTrustService TrustService { get; }
+        IGraphClaimService TrustService { get; }
 
         QueryContext Execute(QueryRequest query);
     }

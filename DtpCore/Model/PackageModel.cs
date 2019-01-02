@@ -33,21 +33,26 @@ namespace DtpCore.Model
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() => Id != null && Id.Length > 0;
 
+        [UIHint("ByteToHex")]
+        [JsonProperty(PropertyName = "root")]
+        public byte[] Root { get; set; }
+        public bool ShouldSerializeRoot() { return Root != null; }
+
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created")]
         public uint Created { get; set; }
         public bool ShouldSerializeCreated() => Created > 0;
 
-        [JsonProperty(PropertyName = "trusts", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<Trust> Trusts { get; set; }
-        public bool ShouldSerializeTrusts() => Trusts != null && Trusts.Count > 0;
+        [JsonProperty(PropertyName = "claims", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<Claim> Claims { get; set; }
+        public bool ShouldSerializeTrusts() => Claims != null && Claims.Count > 0;
 
         /// <summary>
         /// Acts as a default template for trusts in the package. If a trust is missing vital information, the template is assumed.
         /// </summary>
-        [JsonProperty(PropertyName = "template", NullValueHandling = NullValueHandling.Ignore)]
-        public Trust Template { get; set; }
-        public bool ShouldSerializeTemplate() => Template != null;
+        [JsonProperty(PropertyName = "templates", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<Claim> Templates { get; set; }
+        public bool ShouldSerializeTemplate() => Templates != null && Templates.Count > 0;
 
         /// <summary>
         /// Contains multiple packages. 
@@ -67,13 +72,15 @@ namespace DtpCore.Model
 
         //[JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
         [JsonIgnore]
-        public IList<TrustPackage> TrustPackages { get; set; }
-        public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;
+        public IList<ClaimPackage> ClaimPackages { get; set; }
+        public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
 
         public Package()
         {
+            Claims = new List<Claim>();
+            Templates = new List<Claim>();
             Timestamps = new List<Timestamp>();
-            TrustPackages = new List<TrustPackage>();
+            ClaimPackages = new List<ClaimPackage>();
         }
 
         public override string ToString()
@@ -82,14 +89,13 @@ namespace DtpCore.Model
         }
     }
 
-    
 
-
-    [Table("Trust")]
+    [Table("Claim")]
     [JsonConverter(typeof(JsonSubtypes))]
-    [JsonSubtypes.KnownSubTypeWithProperty(typeof(BinaryTrust), "Cost")]
+    [JsonSubtypes.KnownSubType(typeof(BinaryClaim), "Cost")]
+    [JsonSubtypes.KnownSubTypeWithProperty(typeof(BinaryClaim), "Cost")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Trust : DatabaseEntity
+    public class Claim : DatabaseEntity
     {
         [JsonProperty(PropertyName = "algorithm")]
         public string Algorithm { get; set; }
@@ -100,6 +106,10 @@ namespace DtpCore.Model
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() { return Id != null; }
 
+        [UIHint("ByteToHex")]
+        [JsonProperty(PropertyName = "root")]
+        public byte[] Root { get; set; }
+        public bool ShouldSerializeRoot() { return Root != null; }
 
         /// <summary>
         /// Defines a partial id for the trust, enables for single signing of many trusts.
@@ -139,9 +149,9 @@ namespace DtpCore.Model
         public string Type { get; set; }
 
         [UIHint("JSON")]
-        [JsonProperty(PropertyName = "claim")]
+        [JsonProperty(PropertyName = "value")]
         [JsonConverter(typeof(ObjectToStringConverter))]
-        public virtual string Claim { get; set; }
+        public virtual string Value { get; set; }
 
         //[UIHint("Serialize")]
         [JsonProperty(PropertyName = "scope")]
@@ -162,7 +172,7 @@ namespace DtpCore.Model
         /// A short comment on the reason for the trust. Very limit in size. Single word is optimal.
         /// </summary>
         [JsonProperty(PropertyName = "note")]
-        [Description("Issuers comment on the trust.")]
+        [Description("Issuers comment on the claim.")]
         public string Note { get; set; }
         public bool ShouldSerializeNote() { return Note != null; }
 
@@ -183,7 +193,7 @@ namespace DtpCore.Model
         /// </summary>
         [DisplayName("Packages")]
         [JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<TrustPackage> TrustPackages { get; set; }
+        public IList<ClaimPackage> TrustPackages { get; set; }
         public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;
 
 
@@ -191,16 +201,16 @@ namespace DtpCore.Model
         [Description("Current Trust has been replaced by a new Trust.")]
         public bool Replaced { get; set; }
 
-        public Trust()
+        public Claim()
         {
             Timestamps = new List<Timestamp>();
-            TrustPackages = new List<TrustPackage>();
+            TrustPackages = new List<ClaimPackage>();
             Scope = string.Empty;
         }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class BinaryTrust : Trust
+    public class BinaryClaim : Claim
     {
         //Only relevant for the Binary trust type.
         [JsonProperty(PropertyName = "cost")]
@@ -322,9 +332,9 @@ namespace DtpCore.Model
         public bool ShouldSerializeSource() { return Source != null && Source.Length > 0; }
 
         [UIHint("ByteToHexLong")]
-        [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
-        public byte[] Receipt { get; set; }
-        public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
+        [JsonProperty(PropertyName = "value", NullValueHandling = NullValueHandling.Ignore)]
+        public byte[] Value { get; set; }
+        public bool ShouldSerializeValue() { return Value != null && Value.Length > 0; }
 
         [UIHint("UnixTimeLong")]
         [JsonProperty(PropertyName = "registered")]

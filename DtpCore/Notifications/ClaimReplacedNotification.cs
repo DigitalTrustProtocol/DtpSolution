@@ -4,13 +4,13 @@ using MediatR;
 
 namespace DtpCore.Notifications
 {
-    public class TrustReplacedNotification : INotification
+    public class ClaimReplacedNotification : INotification
     {
-        public Trust Trust { get; set; }
+        public Claim Claim { get; set; }
 
         public override string ToString()
         {
-            return $"Trust {Trust?.Id.ToHex()} is replaced";
+            return $"Trust {Claim?.Id.ToHex()} is replaced";
         }
     }
 }

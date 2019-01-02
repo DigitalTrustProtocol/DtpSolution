@@ -34,7 +34,7 @@ namespace UnitTest.DtpCore.Strategy
         [TestMethod]
         public void ObjectToStringConverter()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             builder.AddTrustTrue("A", "B");
             var json = builder.Serialize(Formatting.Indented);
             Assert.IsTrue(json.Contains("\"claim\": true"));
@@ -42,8 +42,8 @@ namespace UnitTest.DtpCore.Strategy
 
             // Test claim string 
             var package = JsonConvert.DeserializeObject<Package>(json);
-            var trust = package.Trusts[0];
-            Assert.IsTrue(trust.Claim == builder.CurrentTrust.Claim);
+            var trust = package.Claims[0];
+            Assert.IsTrue(trust.Value == builder.CurrentClaim.Value);
 
 
         }
@@ -53,18 +53,18 @@ namespace UnitTest.DtpCore.Strategy
         {
             // Test claim string 
             var package = JsonConvert.DeserializeObject<Package>(JSONdata);
-            var trust = package.Trusts[0];
+            var trust = package.Claims[0];
             Assert.IsTrue(trust.Type.Length > 0);
         }
 
         [TestMethod]
         public void SerializeDeserialize()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
             var data = JsonConvert.SerializeObject(trust, Formatting.Indented);
             Console.WriteLine(data);
-            var trust2 = JsonConvert.DeserializeObject<Trust>(data);
+            var trust2 = JsonConvert.DeserializeObject<Claim>(data);
 
             Assert.AreEqual(trust2.Type, trust.Type, "Type");
             Assert.AreEqual(trust2.Algorithm, trust.Algorithm);
@@ -81,7 +81,7 @@ namespace UnitTest.DtpCore.Strategy
             Assert.AreEqual(trust2.Created, trust.Created);
             Assert.AreEqual(trust2.Note, trust.Note);
             Assert.AreEqual(trust2.Timestamps.Count, trust.Timestamps.Count);
-            Assert.AreEqual(trust2.Claim, trust.Claim, "Claim");
+            Assert.AreEqual(trust2.Value, trust.Value, "Claim");
             Assert.AreEqual(trust2.Scope, trust.Scope, "Scope");
         }
 

@@ -9,7 +9,7 @@ namespace DtpCore.Interfaces
     {
         
         IQueryable<Package> Packages { get; }
-        IQueryable<Trust> Trusts { get; }
+        IQueryable<Claim> Trusts { get; }
         IQueryable<Timestamp> Timestamps { get; }
         IQueryable<WorkflowContainer> Workflows { get; }
 
@@ -17,14 +17,14 @@ namespace DtpCore.Interfaces
         long ID { get; set; }
 
         bool TrustExist(byte[] id);
-        Trust GetTrustById(byte[] id);
-        IQueryable<Trust> GetTrusts(string issuerId, string subjectId, string scopeValue);
-        IQueryable<Trust> GetActiveTrust();
-        Trust GetSimilarTrust(Trust trust);
+        Claim GetTrustById(byte[] id);
+        IQueryable<Claim> GetTrusts(string issuerId, string subjectId, string scopeValue);
+        IQueryable<Claim> GetActiveTrust();
+        Claim GetSimilarTrust(Claim trust);
 
-        void Add(Trust trust);
+        void Add(Claim trust);
         //bool Add(Package package);
-        void Update(Trust trust);
+        void Update(Claim trust);
         
         Package GetPackage(byte[] packageId);
 

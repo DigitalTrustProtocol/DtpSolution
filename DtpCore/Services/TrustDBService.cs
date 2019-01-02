@@ -20,15 +20,15 @@ namespace DtpCore.Services
             {
                 return DBContext.Packages
                 .Include(c => c.Timestamps)
-                .Include(c => c.Trusts);
+                .Include(c => c.Claims);
             }
         }
 
-        public IQueryable<Trust> Trusts
+        public IQueryable<Claim> Trusts
         {
             get
             {
-                return DBContext.Trusts;
+                return DBContext.Claims;
             }
         }
 
@@ -60,9 +60,9 @@ namespace DtpCore.Services
             return (dbTrust != null);
         }
 
-        public Trust GetTrustById(byte[] id)
+        public Claim GetTrustById(byte[] id)
         {
-            var dbTrust = DBContext.Trusts.AsNoTracking()
+            var dbTrust = DBContext.Claims.AsNoTracking()
                 .Include(p => p.Timestamps)
                 .Include(p => p.TrustPackages)
                 .FirstOrDefault(p => p.Id == id);
@@ -70,9 +70,9 @@ namespace DtpCore.Services
         }
 
 
-        public IQueryable<Trust> GetTrusts(string issuerId, string subjectId, string scopeValue)
+        public IQueryable<Claim> GetTrusts(string issuerId, string subjectId, string scopeValue)
         {
-            var query = from p in DBContext.Trusts
+            var query = from p in DBContext.Claims
                         where p.Issuer.Id == issuerId
                               && p.Subject.Id == subjectId
                         select p;
@@ -83,20 +83,20 @@ namespace DtpCore.Services
             return query;
         }
 
-        public IQueryable<Trust> GetActiveTrust()
+        public IQueryable<Claim> GetActiveTrust()
         {
             var time = DateTime.Now.ToUnixTime();
 
-            var trusts = from trust in DBContext.Trusts
+            var trusts = from trust in DBContext.Claims
                          where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0) && !trust.Replaced
                          select trust;
 
             return trusts;
         }
 
-        public Trust GetSimilarTrust(Trust trust)
+        public Claim GetSimilarTrust(Claim trust)
         {
-            var query = from p in DBContext.Trusts select p;
+            var query = from p in DBContext.Claims select p;
 
             query = query.Where(p => p.Issuer.Id == trust.Issuer.Id
                               && p.Subject.Id == trust.Subject.Id
@@ -118,9 +118,9 @@ namespace DtpCore.Services
         }
 
 
-        public void Add(Trust trust)
+        public void Add(Claim trust)
         {
-            DBContext.Trusts.Add(trust);
+            DBContext.Claims.Add(trust);
         }
 
         //public bool Add(Package package)
@@ -160,9 +160,9 @@ namespace DtpCore.Services
         //    return true;
         //}
 
-        public void Update(Trust trust)
+        public void Update(Claim trust)
         {
-            DBContext.Trusts.Update(trust);
+            DBContext.Claims.Update(trust);
         }
 
         public Package GetPackage(byte[] packageId)

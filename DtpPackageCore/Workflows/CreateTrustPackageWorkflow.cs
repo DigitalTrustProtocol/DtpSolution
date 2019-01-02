@@ -47,7 +47,7 @@ namespace DtpPackageCore.Workflows
                 return;
 
             var package = ((PackageBuildNotification)notification).TrustPackage;
-            CombineLog(_logger, $"Package ({package.Id}) created with {package.Trusts.Count} trusts.");
+            CombineLog(_logger, $"Package ({package.Id}) created with {package.Claims.Count} trusts.");
 
             Wait(_configuration.TrustPackageWorkflowInterval()); // Never end the workflow
         }

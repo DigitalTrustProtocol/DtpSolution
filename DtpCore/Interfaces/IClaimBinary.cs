@@ -2,9 +2,9 @@
 
 namespace DtpCore.Interfaces
 {
-    public interface ITrustBinary
+    public interface IClaimBinary
     {
-        byte[] GetIssuerBinary(Trust trust);
+        byte[] GetIssuerBinary(Claim trust);
         byte[] GetPackageBinary(Package package, byte[] merkleRoot);
     }
 }

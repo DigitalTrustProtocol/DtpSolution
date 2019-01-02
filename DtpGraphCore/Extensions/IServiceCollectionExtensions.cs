@@ -14,7 +14,7 @@ namespace DtpGraphCore.Extensions
             services.AddSingleton(new GraphModel());
             services.AddScoped<IDerivationStrategy, DerivationBTCPKH>();
             services.AddScoped<IGraphLoadSaveService, GraphLoadSaveService>();
-            services.AddScoped<IGraphTrustService, GraphTrustService>();
+            services.AddScoped<IGraphClaimService, GraphClaimService>();
 
             services.AddTransient<IGraphQueryService, GraphQueryService>();
             services.AddTransient<IQueryRequestService, QueryRequestService>();

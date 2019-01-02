@@ -5,14 +5,13 @@ using MediatR;
 
 namespace DtpCore.Notifications
 {
-    public class TrustExistNotification : INotification
+    public class ClaimAddedNotification : INotification
     {
-        public Trust Trust { get; set; }
+        public Claim Claim { get; set; }
 
         public override string ToString()
         {
-            return $"Trust {Trust?.Id.ToHex()} already exist";
+            return $"Trust {Claim?.Id.ToHex()} added";
         }
-
     }
 }

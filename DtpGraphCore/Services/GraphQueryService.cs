@@ -13,10 +13,10 @@ namespace DtpGraphCore.Services
 {
     public class GraphQueryService : IGraphQueryService
     {
-        public IGraphTrustService TrustService { get; private set; }
+        public IGraphClaimService TrustService { get; private set; }
         public long UnixTime { get; set; }
 
-        public GraphQueryService(IGraphTrustService trustService)
+        public GraphQueryService(IGraphClaimService trustService)
         {
             TrustService = trustService;
             UnixTime = DateTime.Now.ToUnixTime();
@@ -114,7 +114,7 @@ namespace DtpGraphCore.Services
                 return true;
 
             var follow = false;
-            if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryTrustTypeIndex, out int index))
+            if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex, out int index))
                 follow = (TrustService.Graph.Claims[index].Flags == ClaimFlags.Trust);
 
             //if (!follow) // Check Global scope disable for now. Need more expirence.
@@ -141,8 +141,8 @@ namespace DtpGraphCore.Services
                 return;
 
             if(context.Flags == QueryFlags.IncludeClaimTrust)
-                if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryTrustTypeIndex, out index)) // Check local scope for claims
-                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, TrustService.BinaryTrustTypeIndex).Value, index));
+                if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex, out index)) // Check local scope for claims
+                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex).Value, index));
                 //else // Check Global scope disable for now. Need more expirence.
                 //    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryTrustTypeIndex, out index)) // Check global scope for claims
                 //        claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, TrustService.BinaryTrustTypeIndex).Value, index));

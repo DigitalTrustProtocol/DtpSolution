@@ -53,11 +53,11 @@ namespace DtpPackageCore.Commands
         public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
         {
             var trusts = GetTrusts();
-            TrustBuilder _builder = new TrustBuilder(_serviceProvider); // _serviceProvider.GetRequiredService<TrustBuilder>();
-            _builder.AddTrust(trusts);
-            _builder.OrderTrust(); // Order trust ny ID before package ID calculation. 
+            PackageBuilder _builder = new PackageBuilder(_serviceProvider); // _serviceProvider.GetRequiredService<TrustBuilder>();
+            _builder.AddClaim(trusts);
+            _builder.OrderClaims(); // Order trust ny ID before package ID calculation. 
 
-            if (_builder.Package.Trusts.Count == 0)
+            if (_builder.Package.Claims.Count == 0)
             {
                 // No trusts found, exit
                 _notifications.Add(new PackageNoTrustNotification());
@@ -71,7 +71,7 @@ namespace DtpPackageCore.Commands
             // Build many to many relation
             foreach (var trust in trusts)
             {
-                trust.TrustPackages.Add(new TrustPackage { Package = _builder.Package });
+                trust.TrustPackages.Add(new ClaimPackage { Package = _builder.Package });
             }
 
             _dbContext.Packages.Add(_builder.Package);
@@ -82,7 +82,7 @@ namespace DtpPackageCore.Commands
             return _notifications;
         }
 
-        private void SignPackage(TrustBuilder builder)
+        private void SignPackage(PackageBuilder builder)
         {
             var serverSection = _configuration.GetModel(new ServerSection());
             var scriptService = _derivationStrategyFactory.GetService(serverSection.Type);
@@ -95,10 +95,10 @@ namespace DtpPackageCore.Commands
             builder.Package.SetSignature(scriptService.SignMessage(key, builder.Package.Id));
         }
 
-        private IQueryable<Trust> GetTrusts()
+        private IQueryable<Claim> GetTrusts()
         {
             // Get all trusts from LastTrustDatabaseID to now
-            var trusts = from trust in _dbContext.Trusts
+            var trusts = from trust in _dbContext.Claims
                          where trust.PackageDatabaseID == null
                             && trust.Replaced == false // Do not include replaced trusts
                          select trust;

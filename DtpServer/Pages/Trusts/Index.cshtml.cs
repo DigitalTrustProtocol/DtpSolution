@@ -17,7 +17,7 @@ namespace DtpServer.Pages.Trusts
 
         private readonly ITrustDBService _trustDBService;
 
-        public PaginatedList<Trust> Trusts { get; set; }
+        public PaginatedList<Claim> Trusts { get; set; }
 
         public string CurrentFilter { get; set; }
         public string CurrentSortField { get; set; }
@@ -69,12 +69,12 @@ namespace DtpServer.Pages.Trusts
                     break;
             }
 
-            Trusts = await PaginatedList<Trust>.CreateAsync(query, pageIndex ?? 1, PageSize);
+            Trusts = await PaginatedList<Claim>.CreateAsync(query, pageIndex ?? 1, PageSize);
         }
 
-        private IQueryable<Trust> BuildQuery(string searchString)
+        private IQueryable<Claim> BuildQuery(string searchString)
         {
-            var query = from s in _trustDBService.DBContext.Trusts.AsNoTracking()
+            var query = from s in _trustDBService.DBContext.Claims.AsNoTracking()
                         select s;
 
             if (String.IsNullOrEmpty(searchString))
@@ -101,11 +101,11 @@ namespace DtpServer.Pages.Trusts
 
             query = query.Where(s => s.Issuer.Id == searchString || s.Subject.Id == searchString);
 
-            Expression<Func<Trust, bool>> q = null;
+            Expression<Func<Claim, bool>> q = null;
 
             var likeSearch = $"%{searchString}%";
-            Expression<Func<Trust, bool>> search = s => EF.Functions.Like(s.Type, likeSearch)
-                || EF.Functions.Like(s.Claim, likeSearch)
+            Expression<Func<Claim, bool>> search = s => EF.Functions.Like(s.Type, likeSearch)
+                || EF.Functions.Like(s.Value, likeSearch)
                 || EF.Functions.Like(s.Scope, likeSearch);
 
             q = q.Or(search);

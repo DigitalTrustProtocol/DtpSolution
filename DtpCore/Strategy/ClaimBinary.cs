@@ -5,39 +5,39 @@ using DtpCore.Interfaces;
 
 namespace DtpCore.Strategy
 {
-    public class TrustBinary : ITrustBinary
+    public class ClaimBinary : IClaimBinary
     {
-        public TrustBinary()
+        public ClaimBinary()
         {
         }
 
-        public byte[] GetIssuerBinary(Trust trust)
+        public byte[] GetIssuerBinary(Claim claim)
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                if (trust.Issuer != null)
+                if (claim.Issuer != null)
                 {
-                    ms.WriteString(trust.Issuer.Type.ToLowerSafe());
-                    ms.WriteString(trust.Issuer.Id);
+                    ms.WriteString(claim.Issuer.Type.ToLowerSafe());
+                    ms.WriteString(claim.Issuer.Id);
                 }
 
-                if (trust.Subject != null)
+                if (claim.Subject != null)
                 {
-                    ms.WriteString(trust.Subject.Type.ToLowerSafe());
-                    ms.WriteString(trust.Subject.Id);
+                    ms.WriteString(claim.Subject.Type.ToLowerSafe());
+                    ms.WriteString(claim.Subject.Id);
                 }
 
-                ms.WriteString(trust.Type.ToLowerSafe());
-                ms.WriteString(trust.Claim);
+                ms.WriteString(claim.Type.ToLowerSafe());
+                ms.WriteString(claim.Value);
 
-                if (trust.Scope != null)
+                if (claim.Scope != null)
                 {
-                    ms.WriteString(trust.Scope);
+                    ms.WriteString(claim.Scope);
                 }
 
-                ms.WriteInteger(trust.Created);
-                ms.WriteInteger(trust.Activate);
-                ms.WriteInteger(trust.Expire);
+                ms.WriteInteger(claim.Created);
+                ms.WriteInteger(claim.Activate);
+                ms.WriteInteger(claim.Expire);
 
                 return ms.ToArray();
             }

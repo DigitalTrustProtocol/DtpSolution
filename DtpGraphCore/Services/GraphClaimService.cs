@@ -12,15 +12,15 @@ using System.Collections.Concurrent;
 
 namespace DtpGraphCore.Services
 {
-    public class GraphTrustService : IGraphTrustService
+    public class GraphClaimService : IGraphClaimService
     {
         public GraphModel Graph { get; set;}
         public ITrustSchemaService TrustSchema { get; }
 
         public int GlobalScopeIndex { get; set; }
-        public int BinaryTrustTypeIndex { get; set; }
+        public int BinaryClaimTypeIndex { get; set; }
 
-        public GraphTrustService(GraphModel graph, ITrustSchemaService trustSchemaService)
+        public GraphClaimService(GraphModel graph, ITrustSchemaService trustSchemaService)
         {
             Graph = graph;
             TrustSchema = trustSchemaService;
@@ -28,33 +28,33 @@ namespace DtpGraphCore.Services
 
         public void Add(Package package)
         {
-            Add(package.Trusts);
+            Add(package.Claims);
         }
 
-        public void Add(IEnumerable<Trust> trusts)
+        public void Add(IEnumerable<Claim> claims)
         {
-            foreach (var trust in trusts)
+            foreach (var claim in claims)
             {
-                Add(trust);
+                Add(claim);
             }
         }
 
-        public void Add(Trust trust)
+        public void Add(Claim claim)
         {
-            var issuer = EnsureGraphIssuer(trust.Issuer.Id);
+            var issuer = EnsureGraphIssuer(claim.Issuer.Id);
 
-            var graphSubject = EnsureGraphSubject(issuer, trust.Subject.Id);
+            var graphSubject = EnsureGraphSubject(issuer, claim.Subject.Id);
 
-            var graphClaim = EnsureGraphClaim(trust);
+            var graphClaim = EnsureGraphClaim(claim);
             graphSubject.Claims.Ensure(graphClaim.Scope, graphClaim.Type, graphClaim.Index);
         }
 
-        public void Remove(Trust trust)
+        public void Remove(Claim claim)
         {
-            if (!Graph.IssuerIndex.TryGetValue(trust.Issuer.Id, out int issuerIndex))
+            if (!Graph.IssuerIndex.TryGetValue(claim.Issuer.Id, out int issuerIndex))
                 return; // No issuer, then no trust!
 
-            if (!Graph.IssuerIndex.TryGetValue(trust.Subject.Id, out int subjectIndex))
+            if (!Graph.IssuerIndex.TryGetValue(claim.Subject.Id, out int subjectIndex))
                 return; // No subject, then no trust!
 
             var graphIssuer = Graph.Issuers[issuerIndex];
@@ -64,11 +64,11 @@ namespace DtpGraphCore.Services
             var subject = graphIssuer.Subjects[subjectIndex];
 
 
-            if (!Graph.ClaimType.TryGetKey(trust.Type, out int claimTypeIndex))
+            if (!Graph.ClaimType.TryGetKey(claim.Type, out int claimTypeIndex))
                 return; // Scope was not found !
 
             int scopeIndex = -1;
-            if (!Graph.Scopes.TryGetKey(trust.Scope, out scopeIndex))
+            if (!Graph.Scopes.TryGetKey(claim.Scope, out scopeIndex))
                 return; // Scope was not found !
 
             //var graphClaim = CreateGraphClaim(trust);
@@ -136,7 +136,7 @@ namespace DtpGraphCore.Services
             return graphSubject;
         }
 
-        public GraphClaim EnsureGraphClaim(Trust trust)
+        public GraphClaim EnsureGraphClaim(Claim trust)
         {
             var graphClaim = CreateGraphClaim(trust);
 
@@ -145,7 +145,7 @@ namespace DtpGraphCore.Services
             {
                 graphClaim.Index = Graph.Claims.Count;
 
-                if (TrustBuilder.IsTrustTrue(trust.Type, trust.Claim))
+                if (PackageBuilder.IsTrustTrue(trust.Type, trust.Value))
                     graphClaim.Flags |= ClaimFlags.Trust;
 
                 Graph.Claims.Add(graphClaim);
@@ -157,10 +157,10 @@ namespace DtpGraphCore.Services
             return Graph.Claims[index];
 
         }
-        public GraphClaim CreateGraphClaim(Trust trust)
+        public GraphClaim CreateGraphClaim(Claim trust)
         {
             var trustTypeString = TrustSchema.GetTrustTypeString(trust);
-            return CreateGraphClaim(trustTypeString, trust.Scope, trust.Claim);
+            return CreateGraphClaim(trustTypeString, trust.Scope, trust.Value);
         }
 
         public GraphClaim CreateGraphClaim(string type, string scope, string attributes)
@@ -175,7 +175,7 @@ namespace DtpGraphCore.Services
             return gclaim;
         }
 
-        public int GetClaimDataIndex(Trust trust)
+        public int GetClaimDataIndex(Claim trust)
         {
             var graphClaim = CreateGraphClaim(trust);
             var index = Graph.ClaimIndex.GetValueOrDefault(graphClaim.ID());
@@ -192,7 +192,7 @@ namespace DtpGraphCore.Services
 
             context.Results = new Package
             {
-                Trusts = new List<Trust>(context.TrackerResults.Count)
+                Claims = new List<Claim>(context.TrackerResults.Count)
             };
 
             foreach (var tracker in context.TrackerResults.Values)
@@ -201,22 +201,22 @@ namespace DtpGraphCore.Services
                 {
                     if(ts.Claims.Count() == 0)
                     {
-                        var trust = new Trust
+                        var claim = new Claim
                         {
                             Issuer = new IssuerIdentity { Id = tracker.Issuer.Id },
                             Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
                         };
 
-                        trust.Type = TrustBuilder.BINARY_TRUST_DTP1;
-                        trust.Claim = TrustBuilder.CreateBinaryTrustAttributes(true);
+                        claim.Type = PackageBuilder.BINARY_TRUST_DTP1;
+                        claim.Value = PackageBuilder.CreateBinaryTrustAttributes(true);
 
-                        context.Results.Trusts.Add(trust);
+                        context.Results.Claims.Add(claim);
                     }
                     else
                     {
                         foreach (var claimEntry in ts.Claims)
                         {
-                            var trust = new Trust
+                            var claim = new Claim
                             {
                                 Issuer = new IssuerIdentity { Id = tracker.Issuer.Id },
                                 Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
@@ -226,18 +226,18 @@ namespace DtpGraphCore.Services
                             var trackerClaim = Graph.Claims[claimIndex];
 
                             if (Graph.ClaimType.TryGetValue(trackerClaim.Type, out string type))
-                                trust.Type = type;
+                                claim.Type = type;
 
                             if (Graph.ClaimAttributes.TryGetValue(trackerClaim.Attributes, out string attributes))
-                                trust.Claim = attributes;
+                                claim.Value = attributes;
 
                             if (Graph.Scopes.TryGetValue(trackerClaim.Scope, out string scope))
-                                trust.Scope = scope;
+                                claim.Scope = scope;
 
-                            trust.Expire = 0;
-                            trust.Activate = 0;
+                            claim.Expire = 0;
+                            claim.Activate = 0;
 
-                            context.Results.Trusts.Add(trust);
+                            context.Results.Claims.Add(claim);
                         }
                     }
                 }

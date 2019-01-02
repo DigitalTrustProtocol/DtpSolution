@@ -23,7 +23,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
 
         public Package CreatePackage()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
             var package = builder.Package;
             NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
@@ -34,7 +34,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         [TestMethod]
         public void Add()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
             var package = builder.Package;
             NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
@@ -44,9 +44,9 @@ namespace UnitTest.DtpCore.Commands.Trusts
             var last = result.Last();
             Assert.IsTrue(last is PackageAddedNotification);
             Assert.IsTrue(DB.Packages.Count() == 1);
-            Assert.IsTrue(DB.Trusts.Count() == 1);
+            Assert.IsTrue(DB.Claims.Count() == 1);
             Assert.IsTrue(DB.TrustPackages.Count() == 1);
-            Assert.IsTrue(DB.Trusts.FirstOrDefault().PackageDatabaseID == null); // Should be 0
+            Assert.IsTrue(DB.Claims.FirstOrDefault().PackageDatabaseID == null); // Should be 0
 
         }
 

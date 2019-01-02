@@ -18,9 +18,9 @@ namespace UnitTest.DtpGraphCore
 {
     public class TrustGraphMock : StartupMock
     {
-        protected IGraphTrustService _graphTrustService { get; set; }
+        protected IGraphClaimService _graphTrustService { get; set; }
 
-        protected TrustBuilder _trustBuilder { get; set; } 
+        protected PackageBuilder _trustBuilder { get; set; } 
 
         protected ITrustDBService _trustDBService { get; set; } 
 
@@ -42,18 +42,18 @@ namespace UnitTest.DtpGraphCore
         public override void Init()
         {
             base.Init();
-            _graphTrustService = ServiceProvider.GetRequiredService<IGraphTrustService>();
-            _trustBuilder = new TrustBuilder(ServiceProvider);
+            _graphTrustService = ServiceProvider.GetRequiredService<IGraphClaimService>();
+            _trustBuilder = new PackageBuilder(ServiceProvider);
             _trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
             //_graphQueryService = new GraphQueryService(_graphTrustService);
             _graphQueryService = ServiceProvider.GetRequiredService<IGraphQueryService>();
             _trustController = ServiceProvider.GetRequiredService<TrustController>();
             _graphLoadSaveService = ServiceProvider.GetRequiredService<IGraphLoadSaveService>();
 
-            BinaryTrustTrueAttributes = TrustBuilder.CreateBinaryTrustAttributes(true);
-            BinaryTrustFalseAttributes = TrustBuilder.CreateBinaryTrustAttributes(false);
-            ConfirmAttributes = TrustBuilder.CreateConfirmAttributes();
-            RatingAtrributes = TrustBuilder.CreateRatingAttributes(100);
+            BinaryTrustTrueAttributes = PackageBuilder.CreateBinaryTrustAttributes(true);
+            BinaryTrustFalseAttributes = PackageBuilder.CreateBinaryTrustAttributes(false);
+            ConfirmAttributes = PackageBuilder.CreateConfirmAttributes();
+            RatingAtrributes = PackageBuilder.CreateRatingAttributes(100);
         }
 
 
@@ -77,7 +77,7 @@ namespace UnitTest.DtpGraphCore
         protected void VerfifyContext(QueryContext context, int exspectedResults, int exspcetedErrors = 0)
         {
             Assert.AreEqual(exspcetedErrors, context.Errors.Count, $"{string.Join("\r\n", context.Errors.ToArray())}");
-            Assert.AreEqual(exspectedResults, context.Results.Trusts.Count, $"Should be {exspectedResults} results!");
+            Assert.AreEqual(exspectedResults, context.Results.Claims.Count, $"Should be {exspectedResults} results!");
 
         }
 
@@ -106,30 +106,30 @@ namespace UnitTest.DtpGraphCore
         {
             _trustBuilder.SetServer("testserver");
 
-            _trustBuilder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("B", "C", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("C", "D", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("B", "E", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("E", "D", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("B", "F", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("F", "G", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("G", "D", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
-            _trustBuilder.AddTrust("G", "Unreach", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
+            _trustBuilder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("B", "C", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("C", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("B", "E", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("E", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("B", "F", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("F", "G", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("G", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
+            _trustBuilder.AddTrust("G", "Unreach", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
 
-            _trustBuilder.AddTrust("A", "B", TrustBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
-            _trustBuilder.AddTrust("C", "D", TrustBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
-            _trustBuilder.AddTrust("G", "D", TrustBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
+            _trustBuilder.AddTrust("A", "B", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
+            _trustBuilder.AddTrust("C", "D", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
+            _trustBuilder.AddTrust("G", "D", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
 
-            _trustBuilder.AddTrust("A", "B", TrustBuilder.RATING_TRUST_DTP1, RatingAtrributes);
-            _trustBuilder.AddTrust("C", "D", TrustBuilder.RATING_TRUST_DTP1, RatingAtrributes);
-            _trustBuilder.AddTrust("G", "D", TrustBuilder.RATING_TRUST_DTP1, RatingAtrributes);
+            _trustBuilder.AddTrust("A", "B", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
+            _trustBuilder.AddTrust("C", "D", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
+            _trustBuilder.AddTrust("G", "D", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
 
-            _trustBuilder.AddTrust("A", "NoTrustB", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
-            _trustBuilder.AddTrust("B", "NoTrustC", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
-            _trustBuilder.AddTrust("C", "NoTrustD", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddTrust("A", "NoTrustB", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddTrust("B", "NoTrustC", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddTrust("C", "NoTrustD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
 
-            _trustBuilder.AddTrust("C", "MixD", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddTrust("E", "MixD", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddTrust("C", "MixD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddTrust("E", "MixD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
 
             _trustBuilder.Build().Sign();
         }

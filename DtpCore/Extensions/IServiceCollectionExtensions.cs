@@ -20,13 +20,13 @@ namespace DtpCore.Extensions
         public static void DtpCore(this IServiceCollection services)
         {
             services.AddSingleton<IExecutionSynchronizationService, ExecutionSynchronizationService>();
-            services.AddScoped<ITrustBinary, TrustBinary>();
+            services.AddScoped<IClaimBinary, ClaimBinary>();
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IKeyValueService, KeyValueService>();
 
 
-            services.AddTransient<TrustBuilder>();
+            services.AddTransient<PackageBuilder>();
             services.AddTransient<ITrustSchemaService, TrustSchemaService>();
 
             services.AddTransient<IHashAlgorithmFactory, HashAlgorithmFactory>();
@@ -48,7 +48,7 @@ namespace DtpCore.Extensions
 
             services.AddTransient<WorkflowContainer>();
 
-            services.AddTransient<TrustBuilder>();
+            services.AddTransient<PackageBuilder>();
 
             services.AddTransient<NotificationSegment>();
             

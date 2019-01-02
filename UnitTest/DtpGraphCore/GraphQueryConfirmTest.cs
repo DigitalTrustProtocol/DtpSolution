@@ -25,7 +25,7 @@ namespace UnitTest.DtpGraphCore
     [TestClass]
     public class GraphQueryConfirmTest : TrustGraphMock
     {
-        private const string ConfirmClaimType = TrustBuilder.CONFIRM_TRUST_DTP1;
+        private const string ConfirmClaimType = PackageBuilder.CONFIRM_TRUST_DTP1;
 
 
         /// <summary>
@@ -36,10 +36,10 @@ namespace UnitTest.DtpGraphCore
         {
             // Build up
             //BuildGraph();
-            _trustBuilder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true));
-            _trustBuilder.AddTrust("B", "C", TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(true));
+            _trustBuilder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true));
+            _trustBuilder.AddTrust("B", "C", PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true));
 
-            _trustBuilder.AddTrust("B", "C", TrustBuilder.CONFIRM_TRUST_DTP1, TrustBuilder.CreateConfirmAttributes(true));
+            _trustBuilder.AddTrust("B", "C", PackageBuilder.CONFIRM_TRUST_DTP1, PackageBuilder.CreateConfirmAttributes(true));
 
 
             _graphTrustService.Add(_trustBuilder.Package);

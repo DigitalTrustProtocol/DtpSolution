@@ -9,12 +9,12 @@ namespace DtpGraphCore.Services
 {
     public class GraphLoadSaveService : IGraphLoadSaveService
     {
-        private IGraphTrustService _graphTrustService;
+        private IGraphClaimService _graphTrustService;
 
         private ITrustDBService _trustDBService;
         private ILogger _logger;
 
-        public GraphLoadSaveService(IGraphTrustService graphTrustService, ITrustDBService trustDBService, ILoggerFactory loggerFactory)
+        public GraphLoadSaveService(IGraphClaimService graphTrustService, ITrustDBService trustDBService, ILoggerFactory loggerFactory)
         {
             _graphTrustService = graphTrustService;
             _trustDBService = trustDBService;

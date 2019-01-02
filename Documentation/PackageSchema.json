@@ -1,107 +1,189 @@
 /* Basic trust package*/
-
+// Open version
 {
-  "algorithm": "double256",
-  "format" : "base64",
-  "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-  "rootId": {
-    "type": "merkle.dtp1",
-    "algorithm": "rmd160",
-    "format": "base64",
-    "value": ""
-  },
-
-  "claims": [
-    { // Claim
-      "templateIndex": 0, // Always default to index 0 if templates are available.
-      "type": "binary.trust.dtp1",
-      "algorithm": "double256", // Default double256
-      "format": "base64",
-      "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // Id is always calculateable from the claim itself.
-
-      "rootId": {
-        "type": "merkle.dtp1",
-        "algorithm": "rmd160",
+  [
+    {
+      "type": "dtp1",
+      "id": {
+        "type": "dtp1",
+        "algorithm": "double256",
         "format": "base64",
-        "value": ""
+        "value": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+        "root": {
+          "type": "merkle.dtp1",
+          "algorithm": "rmd160",
+          "format": "base64",
+          "value": ""
+        }
       },
 
-      "issuer": {
+      "claims": [
+        {
+          "templateIndex": 0,
+          "type": "binary.claim.dtp1",
+          "id": {
+            "type": "dtp1",
+            "algorithm": "double256",
+            "format": "base64",
+            "value": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+            "root": {
+              "type": "merkle.dtp1",
+              "algorithm": "rmd160",
+              "format": "base64",
+              "value": ""
+            }
+          },
+
+          "issuer": {
+            "type": "pkh",
+            "algorithm": "secp256k1",
+            "format": "base58check",
+            "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+            "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+          },
+
+          "subject": {
+            "type": "pkh",
+            "algorithm": "secp256k1",
+            "format": "base58check",
+            "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+            "signature": ""
+          },
+
+          "value": true,
+          "scope": {
+            "type": "uri",
+            "value": "www.reddit.com"
+          },
+
+          "created": 1524569738,
+          "cost": 100,
+          "activate": 1231006505,
+          "expire": 2231006505,
+
+          "timestamps": [
+            {
+              "type": "merkle.dtp1",
+              "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+              "blockchain": "btc",
+              "algorithm": "double256",
+              "format": "hex",
+              "service": "",
+              "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
+              "registered": 1524569739
+            }
+          ]
+        }
+      ],
+
+
+      "templates": [
+        {
+        }
+      ],
+
+      "packages": [],
+
+      "server": {
         "type": "pkh",
         "algorithm": "secp256k1",
         "format": "base58check",
         "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk=" // always base64
+        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
       },
-
-      "subject": {
-        "type": "pkh",
-        "algorithm": "secp256k1",
-        "format": "base58check",
-        "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
-        "signature": ""
-      },
-
-      "value": true,
-      "scope": {
-        "type": "uri",
-        "value": "www.reddit.com"
-      },
-
-      "created": 1524569738,
-      "cost": 100, // Only for binary.trust.dtp1
-      "activate": 1231006505,
-      "expire": 2231006505,
 
       "timestamps": [
         {
           "type": "merkle.dtp1",
-          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // if id type is a merkle tree then the root id is source! Always base64. Optional.
+          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
           "blockchain": "btc",
-          "algorithm": "double256",
-          "format": "hex",
-          "service": "", // Optional, the url or name of the service provided the timestamp
-          "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
-          "registered": 1524569739
+          "algorithm": "double256.merkle.dtp1",
+          "value": "",
+          "service": "",
+          "registered": 1231006505
+        }
+      ]
+    },
+    // close version
+    {
+      "type": "dtp1",
+      "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+      "root": "",
+      "claims": [
+        {
+          "templateIndex": 0,
+          "type": "binary.claim.dtp1",
+          "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+          "root": "",
+
+          "issuer": {
+            "type": "identity",
+            "algorithm": "pkh",
+            "deviation": "secp256k1",
+            "format": "base58check",
+            "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+            "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+          },
+
+          "subject": {
+            "type": "name",
+            "value": "MrClaim"
+          },
+
+          "value": "true",
+          "scope": {
+            "type": "uri",
+            "value": "reddit.com"
+          },
+
+          "created": 1524569738,
+          "cost": 100,
+          "activate": 1231006505,
+          "expire": 2231006505,
+
+          "timestamps": [
+            {
+              "type": "merkle.dtp1",
+              "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+              "blockchain": "btc",
+              "service": "",
+              "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
+              "registered": 1524569739
+            }
+          ]
+        }
+      ],
+
+
+      "templates": [
+        {
+        }
+      ],
+
+      "packages": [],
+
+      "server": {
+        "type": "pkh",
+        "algorithm": "secp256k1",
+        "format": "base58check",
+        "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+      },
+
+      "timestamps": [
+        {
+          "type": "merkle.dtp1",
+          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
+          "blockchain": "btc",
+          "value": "",
+          "service": "",
+          "registered": 1231006505
         }
       ]
     }
-  ],
 
-
-  "template": [
-    {
-      // claim
-    }
-  ],
-
-  "packages": [],
-
-  // The server that creates the package
-  "server": {
-    "type": "pkh",
-    "algorithm": "secp256k1",
-    "format": "base58check",
-    "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-    "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk=" // always base64
-  },
-
-  // Timestamps of the package
-  "timestamps": [ // Array of timestamps, then fast and slow timestamps are possible
-    {
-      "type": "merkle.dtp1",
-      "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // if id type is a merkle tree then the root id is source! Always base64. Optional.
-      "blockchain": "btc", // The blockchain used for the timestamp
-      "algorithm": "double256.merkle.dtp1", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
-      "value": "", // Merkletree path or description text, used for recreating the merkle root value.
-      "service": "", // Optional, the url or name of the service provided the timestamp
-      "registered": 1231006505 // Transaction time used for the timestamp
-    }
   ]
 }
-
-
-
 
   // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
   // Transaction time used for the timestamp

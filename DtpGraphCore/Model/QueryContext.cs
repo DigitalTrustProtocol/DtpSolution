@@ -18,7 +18,7 @@ namespace DtpGraphCore.Model
     public class QueryContext
     {
         [JsonIgnore]
-        public IGraphTrustService GraphTrustService = null;
+        public IGraphClaimService GraphTrustService = null;
 
         [JsonIgnore]
         public GraphIssuer Issuer = null;
@@ -91,7 +91,7 @@ namespace DtpGraphCore.Model
             MaxLevel = 3; // About 3 levels down max!
         }
 
-        public QueryContext(IGraphTrustService graphService, QueryRequest query) : this()
+        public QueryContext(IGraphClaimService graphService, QueryRequest query) : this()
         {
             GraphTrustService = graphService;
 
@@ -145,7 +145,7 @@ namespace DtpGraphCore.Model
 
             if (query.Types == null || query.Types.Count == 0)
             {
-                var graphClaim = GraphTrustService.CreateGraphClaim(TrustBuilder.BINARY_TRUST_DTP1, "", TrustBuilder.CreateBinaryTrustAttributes(true));
+                var graphClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.BINARY_TRUST_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
                 ClaimTypes.Add(graphClaim.Index);
             }
             else
@@ -158,7 +158,7 @@ namespace DtpGraphCore.Model
                         ClaimTypes.Add(GraphTrustService.Graph.ClaimType.GetIndex(type));
                 }
 
-                if (!ClaimTypes.Contains(GraphTrustService.BinaryTrustTypeIndex))
+                if (!ClaimTypes.Contains(GraphTrustService.BinaryClaimTypeIndex))
                     Flags |= QueryFlags.IncludeClaimTrust;
             }
         }

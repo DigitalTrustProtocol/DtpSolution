@@ -26,7 +26,7 @@ namespace UnitTest.DtpGraphCore
     [TestClass]
     public class GraphQueryTrustTest : TrustGraphMock
     {
-        private const string ClaimType = TrustBuilder.BINARY_TRUST_DTP1;
+        private const string ClaimType = PackageBuilder.BINARY_TRUST_DTP1;
 
         //[TestMethod]
         //public void Search1()
@@ -116,7 +116,7 @@ namespace UnitTest.DtpGraphCore
             var context = _graphQueryService.Execute(query);
 
             // Verify
-            Assert.AreEqual(2, context.Results.Trusts.Count, $"Should be {2} results!");
+            Assert.AreEqual(2, context.Results.Claims.Count, $"Should be {2} results!");
 
             VerfifyResult(context, "C", "D");
             VerfifyResult(context, "E", "D");
@@ -141,7 +141,7 @@ namespace UnitTest.DtpGraphCore
 
             PrintJson(context.Results);
             // Verify
-            Assert.AreEqual(context.Results.Trusts.Count, 6, $"Should be {6} results!");
+            Assert.AreEqual(context.Results.Claims.Count, 6, $"Should be {6} results!");
 
 
             VerfifyResult(context, "A", "B");
@@ -198,7 +198,7 @@ namespace UnitTest.DtpGraphCore
             var context = _graphQueryService.Execute(queryBuilder.Query);
 
             // Verify
-            Assert.AreEqual(context.Results.Trusts.Count, 0, $"Should be {0} results!");
+            Assert.AreEqual(context.Results.Claims.Count, 0, $"Should be {0} results!");
         }
 
 

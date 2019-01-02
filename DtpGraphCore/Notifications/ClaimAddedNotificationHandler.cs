@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace DtpGraphCore.Notifications
 {
-    public class TrustAddedNotificationHandler : INotificationHandler<TrustAddedNotification>
+    public class ClaimAddedNotificationHandler : INotificationHandler<ClaimAddedNotification>
     {
-        private IGraphTrustService _graphTrustService;
-        private ILogger<TrustAddedNotificationHandler> _logger;
+        private IGraphClaimService _graphTrustService;
+        private ILogger<ClaimAddedNotificationHandler> _logger;
 
-        public TrustAddedNotificationHandler(IGraphTrustService graphTrustService, ILogger<TrustAddedNotificationHandler> logger)
+        public ClaimAddedNotificationHandler(IGraphClaimService graphTrustService, ILogger<ClaimAddedNotificationHandler> logger)
         {
             _graphTrustService = graphTrustService;
             _logger = logger;
         }
 
-        public Task Handle(TrustAddedNotification notification, CancellationToken cancellationToken)
+        public Task Handle(ClaimAddedNotification notification, CancellationToken cancellationToken)
         {
             return Task.Run(() => {
-                var trust = notification.Trust;
+                var trust = notification.Claim;
                 var time = DateTime.Now.ToUnixTime();
                 if ((trust.Expire == 0 || trust.Expire > time)
                     && (trust.Activate == 0 || trust.Activate <= time))

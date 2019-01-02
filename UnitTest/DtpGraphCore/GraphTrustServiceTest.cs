@@ -24,7 +24,7 @@ namespace UnitTest.DtpGraphCore
         public void NodeIndex()
         {
             var trustDerivationService = new TrustDerivationService();
-            var graphModelService = ServiceProvider.GetRequiredService<IGraphTrustService>();
+            var graphModelService = ServiceProvider.GetRequiredService<IGraphClaimService>();
 
             var keyA = trustDerivationService.GetAddressFromPassword("A");
             var keyB = trustDerivationService.GetAddressFromPassword("B");

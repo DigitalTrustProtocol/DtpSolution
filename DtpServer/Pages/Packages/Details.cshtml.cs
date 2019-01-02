@@ -21,7 +21,7 @@ namespace DtpServer.Pages.Packages
         }
 
         public Package Package { get; set; }
-        public PaginatedList<Trust> Trusts { get; set; }
+        public PaginatedList<Claim> Trusts { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -38,8 +38,8 @@ namespace DtpServer.Pages.Packages
                 return NotFound();
             }
 
-            var query = _context.Trusts.Where(p => p.PackageDatabaseID == id).OrderBy(p=> p.Created);
-            Trusts = await PaginatedList<Trust>.CreateAsync(query, 1, 0); // PageSize = 0 is unlimited
+            var query = _context.Claims.Where(p => p.PackageDatabaseID == id).OrderBy(p=> p.Created);
+            Trusts = await PaginatedList<Claim>.CreateAsync(query, 1, 0); // PageSize = 0 is unlimited
 
 
             return Page();

@@ -5,10 +5,10 @@ namespace DtpCore.Interfaces
 {
     public interface ITrustSchemaService
     {
-        string GetTrustTypeString(Trust trust);
-        TrustType GetTrustTypeObject(Trust trust);
+        string GetTrustTypeString(Claim trust);
+        TrustType GetTrustTypeObject(Claim trust);
 
-        SchemaValidationResult Validate(Trust trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full);
+        SchemaValidationResult Validate(Claim trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full);
         SchemaValidationResult Validate(Package package, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full);
     }
 }

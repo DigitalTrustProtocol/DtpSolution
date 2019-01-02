@@ -69,7 +69,7 @@ namespace DtpServer.Controllers
         /// <returns>A newly created trust object</returns>
         [HttpGet]
         [Route("build")]
-        public ActionResult<Trust> BuildTrust(string issuer, string subject, string issuerScript = "", string type = TrustBuilder.BINARY_TRUST_DTP1, string attributes = "", string scope = "", string alias = "")
+        public ActionResult<Claim> BuildTrust(string issuer, string subject, string issuerScript = "", string type = PackageBuilder.BINARY_TRUST_DTP1, string attributes = "", string scope = "", string alias = "")
         {
             if (issuer == null || issuer.Length < 1)
                 throw new ApplicationException("Missing issuer");
@@ -78,17 +78,17 @@ namespace DtpServer.Controllers
                 throw new ApplicationException("Missing subject");
 
             if (string.IsNullOrEmpty(attributes))
-                if (type == TrustBuilder.BINARY_TRUST_DTP1)
-                    attributes = TrustBuilder.CreateBinaryTrustAttributes();
+                if (type == PackageBuilder.BINARY_TRUST_DTP1)
+                    attributes = PackageBuilder.CreateBinaryTrustAttributes();
 
-            var trustBuilder = new TrustBuilder(_serviceProvider);
-            trustBuilder.AddTrust()
+            var trustBuilder = new PackageBuilder(_serviceProvider);
+            trustBuilder.AddClaim()
                 .SetIssuer(issuer, issuerScript)
                 .AddType(type, attributes)
                 .AddSubject(subject)
-                .BuildTrustID();
+                .BuildClaimID();
 
-            return trustBuilder.CurrentTrust;
+            return trustBuilder.CurrentClaim;
         }
 
 
@@ -113,7 +113,7 @@ namespace DtpServer.Controllers
             if (validationResult.ErrorsFound > 0)
                 return ApiError(validationResult, null, "Validation failed");
 
-            var trustBuilder = new TrustBuilder(_serviceProvider)
+            var trustBuilder = new PackageBuilder(_serviceProvider)
             {
                 Package = package
             };
@@ -138,7 +138,7 @@ namespace DtpServer.Controllers
         [Route("get")]
         public ActionResult Get([FromQuery]string issuer, [FromQuery]string subject, [FromQuery]string type, [FromQuery]string scopevalue)
         {
-            var query = new Trust
+            var query = new Claim
             {
                 Issuer = new IssuerIdentity { Id = issuer },
                 Subject = new SubjectIdentity { Id = subject },

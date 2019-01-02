@@ -18,11 +18,11 @@ namespace UnitTest.DtpPackage.Commands
     public class TrustPackageQueryHandlerTest : StartupMock
     {
 
-        private Trust CreateTrust(string issuer, string subject)
+        private Claim CreateTrust(string issuer, string subject)
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
             DB.SaveChanges();
             return trust;
         }
@@ -47,7 +47,7 @@ namespace UnitTest.DtpPackage.Commands
             var result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
-            Assert.AreEqual(addedPackage.Trusts.Count, result[0].Trusts.Count);
+            Assert.AreEqual(addedPackage.Claims.Count, result[0].Claims.Count);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace UnitTest.DtpPackage.Commands
             result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
-            Assert.AreEqual(addedPackage.Trusts.Count, result[0].Trusts.Count);
+            Assert.AreEqual(addedPackage.Claims.Count, result[0].Claims.Count);
         }
     }
 }

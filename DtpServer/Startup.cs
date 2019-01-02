@@ -54,7 +54,9 @@ namespace DtpServer
                     options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
 
                 options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddHealthChecks();
 
             services.AddRateLimits(); // Add Rate limits for against DDOS attacks
 

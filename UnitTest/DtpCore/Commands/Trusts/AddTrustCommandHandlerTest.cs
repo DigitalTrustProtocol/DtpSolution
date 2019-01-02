@@ -21,11 +21,11 @@ namespace UnitTest.DtpCore.Commands.Trusts
     public class AddTrustCommandHandlerTest : StartupMock
     {
 
-        private Trust CreateTrust()
+        private Claim CreateTrust()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
             DB.SaveChanges();
             return trust;
         }
@@ -33,12 +33,12 @@ namespace UnitTest.DtpCore.Commands.Trusts
         [TestMethod]
         public void Add()
         {
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
             Assert.AreEqual(1, result.Count);
             var last = result.Last();
-            Assert.IsTrue(last is TrustAddedNotification);
+            Assert.IsTrue(last is ClaimAddedNotification);
         }
 
         [TestMethod]
@@ -46,18 +46,18 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var oldtrust = CreateTrust();
 
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", false);
 
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
 
             Assert.AreEqual(2, result.Count);
 
-            Assert.IsTrue(result[0] is TrustReplacedNotification);
-            Assert.IsTrue(((TrustReplacedNotification)result[0]).Trust.Id == oldtrust.Id);
+            Assert.IsTrue(result[0] is ClaimReplacedNotification);
+            Assert.IsTrue(((ClaimReplacedNotification)result[0]).Claim.Id == oldtrust.Id);
 
-            Assert.IsTrue(result[1] is TrustAddedNotification);
-            Assert.IsTrue(((TrustAddedNotification)result[1]).Trust.Id == trust.Id);
+            Assert.IsTrue(result[1] is ClaimAddedNotification);
+            Assert.IsTrue(((ClaimAddedNotification)result[1]).Claim.Id == trust.Id);
         }
 
         [TestMethod]
@@ -65,11 +65,11 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var trust = CreateTrust();
 
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
 
             Assert.AreEqual(1, result.Count);
 
-            Assert.IsTrue(result[0] is TrustExistNotification);
+            Assert.IsTrue(result[0] is ClaimExistNotification);
         }
 
         [TestMethod]
@@ -77,14 +77,14 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var newtrust = CreateTrust();
 
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             var oldtrust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true, 1); 
 
-            NotificationSegment result = Mediator.SendAndWait(new AddTrustCommand { Trust = oldtrust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = oldtrust });
 
             Assert.AreEqual(1, result.Count);
 
-            Assert.IsTrue(result[0] is TrustObsoleteNotification);
+            Assert.IsTrue(result[0] is ClaimObsoleteNotification);
         }
 
 

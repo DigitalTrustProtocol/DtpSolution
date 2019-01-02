@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DtpCore.Enumerations
 {
-    public enum AddTrustStatusType : int
+    public enum AddClaimStatusType : int
     {
         AlreadyExists,
         Added,

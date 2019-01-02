@@ -65,9 +65,9 @@ namespace UnitTest.DtpGraphCore
             var httpResult = (HttpResult)result.Value;
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            builder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.Build().Sign();
 
             result = (OkObjectResult)_trustController.Add(builder.Package);
@@ -75,16 +75,16 @@ namespace UnitTest.DtpGraphCore
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
             // Test Graph
-            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARY_TRUST_DTP1);
+            var queryBuilder = new QueryRequestBuilder(PackageBuilder.BINARY_TRUST_DTP1);
             BuildQuery(queryBuilder, "A", "B");
 
             // Execute
             var context = _graphQueryService.Execute(queryBuilder.Query);
 
-            var trust = context.Results.Trusts[0];
+            var trust = context.Results.Claims[0];
 
             VerfifyResult(context, "A", "B");
-            Assert.AreEqual(BinaryTrustFalseAttributes, trust.Claim, $"Attributes are wrong!");
+            Assert.AreEqual(BinaryTrustFalseAttributes, trust.Value, $"Attributes are wrong!");
         }
 
         [TestMethod]
@@ -98,10 +98,10 @@ namespace UnitTest.DtpGraphCore
             var httpResult = (HttpResult)result.Value;
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
-            var builder = new TrustBuilder(ServiceProvider);
+            var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", TrustBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
-            builder.CurrentTrust.Expire = 1; // Remove the trust from Graph!
+            builder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            builder.CurrentClaim.Expire = 1; // Remove the trust from Graph!
             builder.Build().Sign();
 
             result = (OkObjectResult)_trustController.Add(builder.Package);
@@ -109,13 +109,13 @@ namespace UnitTest.DtpGraphCore
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
             // Test Graph
-            var queryBuilder = new QueryRequestBuilder(TrustBuilder.BINARY_TRUST_DTP1);
+            var queryBuilder = new QueryRequestBuilder(PackageBuilder.BINARY_TRUST_DTP1);
             BuildQuery(queryBuilder, "A", "B");
 
             // Execute
             var context = _graphQueryService.Execute(queryBuilder.Query);
 
-            Assert.AreEqual(0, context.Results.Trusts.Count(), $"Should be no trusts!");
+            Assert.AreEqual(0, context.Results.Claims.Count(), $"Should be no trusts!");
         }
 
         [TestMethod]
@@ -129,8 +129,8 @@ namespace UnitTest.DtpGraphCore
             var httpResult = (HttpResult)result.Value;
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
-            var okResult = (OkObjectResult)_trustController.Get(_trustBuilder.CurrentTrust.Id);
-            var trust = (Trust)((HttpResult)okResult.Value).Data;
+            var okResult = (OkObjectResult)_trustController.Get(_trustBuilder.CurrentClaim.Id);
+            var trust = (Claim)((HttpResult)okResult.Value).Data;
             Assert.IsTrue(trust.Timestamps.Count > 0, "Missing timestamp entry in trust");
 
         }

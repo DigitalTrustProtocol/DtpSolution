@@ -6,9 +6,9 @@ namespace DtpGraphCore.Services
 {
     public class GraphExportService : IGraphExportService
     {
-        public IGraphTrustService ModelService { get; }
+        public IGraphClaimService ModelService { get; }
 
-        public GraphExportService(IGraphTrustService modelService)
+        public GraphExportService(IGraphClaimService modelService)
         {
             ModelService = modelService;
         }

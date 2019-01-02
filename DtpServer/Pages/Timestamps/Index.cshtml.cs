@@ -58,7 +58,7 @@ namespace DtpServer.Pages.Timestamps
             if (searchString.IsHex() && searchString.Length > 7)
             {
                 var searchBytes = searchString.FromHexToBytes();
-                query = query.Where(s => s.Source == searchBytes || s.Receipt == searchBytes);
+                query = query.Where(s => s.Source == searchBytes || s.Value == searchBytes);
                 
                 return query;
             }

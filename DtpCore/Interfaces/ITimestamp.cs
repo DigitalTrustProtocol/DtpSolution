@@ -7,7 +7,7 @@ namespace DtpCore.Interfaces
     public interface ITimestamp
     {
         byte[] Source { get; set; }
-        byte[] Receipt { get; set; }
+        byte[] Value { get; set; }
         long Registered { get; set; }
     }
 }

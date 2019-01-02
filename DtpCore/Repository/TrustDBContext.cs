@@ -6,10 +6,10 @@ namespace DtpCore.Repository
     public class TrustDBContext : DbContext
     {
         public DbSet<Package> Packages { get; set; }
-        public DbSet<Trust> Trusts { get; set; }
+        public DbSet<Claim> Claims { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
         public DbSet<BlockchainProof> Proofs { get; set; }
-        public DbSet<TrustPackage> TrustPackages { get; set; }
+        public DbSet<ClaimPackage> TrustPackages { get; set; }
 
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -30,11 +30,11 @@ namespace DtpCore.Repository
             builder.Entity<Package>().OwnsOne(p => p.Server);
 
 
-            builder.Entity<Trust>().HasKey(p => p.DatabaseID);
-            builder.Entity<Trust>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
-            builder.Entity<Trust>().OwnsOne(p => p.Subject).HasIndex(i => i.Id);
+            builder.Entity<Claim>().HasKey(p => p.DatabaseID);
+            builder.Entity<Claim>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
+            builder.Entity<Claim>().OwnsOne(p => p.Subject).HasIndex(i => i.Id);
 
-            builder.Entity<Trust>().HasIndex(p => p.Id).IsUnique(true);
+            builder.Entity<Claim>().HasIndex(p => p.Id).IsUnique(true);
 
 //           builder.Entity<Trust>().HasMany(b => b.Timestamps).WithOne().HasForeignKey(p=>p.ParentID);
 
@@ -53,17 +53,17 @@ namespace DtpCore.Repository
 
             builder.Entity<KeyValue>().HasIndex(p => p.Key);
 
-            builder.Entity<TrustPackage>()
-                .HasKey(bc => new { bc.TrustID, bc.PackageID });
+            builder.Entity<ClaimPackage>()
+                .HasKey(bc => new { bc.ClaimID, bc.PackageID });
 
-            builder.Entity<TrustPackage>()
-                .HasOne(p => p.Trust)
+            builder.Entity<ClaimPackage>()
+                .HasOne(p => p.Claim)
                 .WithMany(x => x.TrustPackages)
-                .HasForeignKey(y => y.TrustID);
+                .HasForeignKey(y => y.ClaimID);
 
-            builder.Entity<TrustPackage>()
+            builder.Entity<ClaimPackage>()
                 .HasOne(p => p.Package)
-                .WithMany(x => x.TrustPackages)
+                .WithMany(x => x.ClaimPackages)
                 .HasForeignKey(y => y.PackageID);
 
             base.OnModelCreating(builder);
@@ -75,7 +75,7 @@ namespace DtpCore.Repository
             Workflows.RemoveRange(Workflows);
             Timestamps.RemoveRange(Timestamps);
             Proofs.RemoveRange(Proofs);
-            Trusts.RemoveRange(Trusts);
+            Claims.RemoveRange(Claims);
             Packages.RemoveRange(Packages);
 
             SaveChanges();

@@ -21,12 +21,12 @@ namespace UnitTest.DtpCore.Extensions
             return address;
         }
 
-        public static TrustBuilder AddTrust(this TrustBuilder builder, string name)
+        public static PackageBuilder AddTrust(this PackageBuilder builder, string name)
         {
             var issuerKey = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
             var address = ScriptService.GetAddress(issuerKey);
 
-            builder.AddTrust().SetIssuer(address, ScriptService.ScriptName, (byte[] data) =>
+            builder.AddClaim().SetIssuer(address, ScriptService.ScriptName, (byte[] data) =>
             {
                 return ScriptService.SignMessage(issuerKey, data);
             });
@@ -34,19 +34,19 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
-        public static TrustBuilder AddTrust(this TrustBuilder builder, string issuerName, string subjectName, string type, string attributes)
+        public static PackageBuilder AddTrust(this PackageBuilder builder, string issuerName, string subjectName, string type, string attributes)
         {
             builder.AddTrust(issuerName).AddSubject(subjectName, type, attributes);
             return builder;
         }
 
-        public static TrustBuilder AddTrustTrue(this TrustBuilder builder, string issuerName, string subjectName)
+        public static PackageBuilder AddTrustTrue(this PackageBuilder builder, string issuerName, string subjectName)
         {
-            builder.AddTrust(issuerName, subjectName, TrustBuilder.BINARY_TRUST_DTP1,  TrustBuilder.CreateBinaryTrustAttributes());
+            builder.AddTrust(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
             return builder;
         }
 
-        public static TrustBuilder AddSubject(this TrustBuilder builder, string subjectName, string type, string attributes)
+        public static PackageBuilder AddSubject(this PackageBuilder builder, string subjectName, string type, string attributes)
         {
             var key = ScriptService.GetKey(Encoding.UTF8.GetBytes(subjectName));
             var address = ScriptService.GetAddress(key);
@@ -56,7 +56,7 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
-        public static TrustBuilder SetServer(this TrustBuilder builder, string name)
+        public static PackageBuilder SetServer(this PackageBuilder builder, string name)
         {
             var key = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
             var address = ScriptService.GetAddress(key);
@@ -69,16 +69,16 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
-        public static Trust BuildBinaryTrust(this TrustBuilder builder, string issuerName, string subjectName, bool claim, uint created = 0)
+        public static Claim BuildBinaryTrust(this PackageBuilder builder, string issuerName, string subjectName, bool claim, uint created = 0)
         {
             builder.SetServer("testserver");
-            builder.AddTrust(issuerName, subjectName, TrustBuilder.BINARY_TRUST_DTP1, TrustBuilder.CreateBinaryTrustAttributes(claim));
+            builder.AddTrust(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(claim));
 
             if (created > 0)
-                builder.CurrentTrust.Created = created;
+                builder.CurrentClaim.Created = created;
 
             builder.Build().Sign();
-            return builder.CurrentTrust;
+            return builder.CurrentClaim;
         }
 
         //public static TrustBuilder AddClaim(this TrustBuilder builder, JObject data, out Claim claim)

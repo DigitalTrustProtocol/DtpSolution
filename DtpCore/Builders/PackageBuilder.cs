@@ -12,7 +12,7 @@ using DtpCore.Collections.Generic;
 
 namespace DtpCore.Builders
 {
-    public class TrustBuilder
+    public class PackageBuilder
     {
         public const string BINARY_TRUST_DTP1 = "binary.trust.dtp1";
         public const string BINARY_TRUST_DTP1_SHORTFORM = "bt1";
@@ -24,14 +24,14 @@ namespace DtpCore.Builders
         public const string RATING_TRUST_DTP1_SHORTFORM = "rt1";
 
         public Package Package { get; set; }
-        private ITrustBinary _trustBinary;
+        private IClaimBinary _claimBinary;
 
-        private Trust _currentTrust;
-        public Trust CurrentTrust
+        private Claim _currentClaim;
+        public Claim CurrentClaim
         {
             get
             {
-                return _currentTrust;
+                return _currentClaim;
             }
         }
 
@@ -41,26 +41,26 @@ namespace DtpCore.Builders
         private IHashAlgorithmFactory _hashAlgorithmFactory;
 
 
-        public TrustBuilder(IServiceProvider serviceProvider) : this(new DerivationStrategyFactory(serviceProvider), new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new TrustBinary())
+        public PackageBuilder(IServiceProvider serviceProvider) : this(new DerivationStrategyFactory(serviceProvider), new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new ClaimBinary())
         {
             
         }
 
-        public TrustBuilder(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, ITrustBinary trustBinary)
+        public PackageBuilder(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
         {
             Package = new Package
             {
                 Created = (uint)DateTime.UtcNow.ToUnixTime(),
-                Trusts = new List<Trust>(),
+                Claims = new List<Claim>(),
                 Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1
             };
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
             _hashAlgorithmFactory = hashAlgorithmFactory;
-            _trustBinary = trustBinary;
+            _claimBinary = trustBinary;
         }
 
-        public TrustBuilder Load(string content)
+        public PackageBuilder Load(string content)
         {
             Package = JsonConvert.DeserializeObject<Package>(content);
             return this;
@@ -108,7 +108,7 @@ namespace DtpCore.Builders
             return Serialize(Formatting.Indented);
         }
 
-        public TrustBuilder Verify()
+        public PackageBuilder Verify()
         {
             //var schema = new PackageSchema(Package);
             //if (!schema.Validate())
@@ -126,9 +126,9 @@ namespace DtpCore.Builders
         }
 
 
-        public TrustBuilder AddTrust()
+        public PackageBuilder AddClaim()
         {
-            return AddTrust(new Trust { Created = (uint)DateTime.Now.ToUnixTime() });
+            return AddClaim(new Claim { Created = (uint)DateTime.Now.ToUnixTime() });
         }
         //public TrustBuilder AddTrust(string issuerName, string script = CryptoStrategyFactory.BTC_PKH)
         //{
@@ -152,52 +152,52 @@ namespace DtpCore.Builders
         //    return this;
         //}
 
-        public TrustBuilder AddTrust(IEnumerable<Trust> trusts)
+        public PackageBuilder AddClaim(IEnumerable<Claim> claims)
         {
-            foreach (var trust in trusts)
+            foreach (var claim in claims)
             {
-                _currentTrust = trust;
-                Package.Trusts.Add(trust);
+                _currentClaim = claim;
+                Package.Claims.Add(claim);
             }
 
             return this;
         }
 
-        public TrustBuilder AddTrust(Trust trust)
+        public PackageBuilder AddClaim(Claim claim)
         {
-            _currentTrust = trust;
-            Package.Trusts.Add(_currentTrust);
+            _currentClaim = claim;
+            Package.Claims.Add(_currentClaim);
             return this;
         }
 
-        public TrustBuilder OrderTrust()
+        public PackageBuilder OrderClaims()
         {
-            Package.Trusts = Package.Trusts.OrderBy(p => p.Id, ByteComparer.Compare).ToList();
+            Package.Claims = Package.Claims.OrderBy(p => p.Id, ByteComparer.Compare).ToList();
             return this;
         }
 
-        public void OrderTrustDescending()
+        public void OrderClaimDescending()
         {
-            Package.Trusts = Package.Trusts.OrderByDescending(p => p.Id, ByteComparer.Compare).ToList();
+            Package.Claims = Package.Claims.OrderByDescending(p => p.Id, ByteComparer.Compare).ToList();
         }
 
 
-        public TrustBuilder SetIssuer(string id, string type = "", SignDelegate sign = null)
+        public PackageBuilder SetIssuer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
 
-            if (CurrentTrust.Issuer == null)
-                CurrentTrust.Issuer = new IssuerIdentity();
+            if (CurrentClaim.Issuer == null)
+                CurrentClaim.Issuer = new IssuerIdentity();
 
-            CurrentTrust.Issuer.Type = type;
-            CurrentTrust.Issuer.Id = id;
-            CurrentTrust.IssuerSign = sign;
+            CurrentClaim.Issuer.Type = type;
+            CurrentClaim.Issuer.Id = id;
+            CurrentClaim.IssuerSign = sign;
 
             return this;
         }
 
-        public TrustBuilder SetServer(string id, string type = "", SignDelegate sign = null)
+        public PackageBuilder SetServer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
                 type = DerivationStrategyFactory.BTC_PKH;
@@ -212,10 +212,10 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public TrustBuilder SignIssuer(Trust trust = null, SignDelegate sign = null)
+        public PackageBuilder SignIssuer(Claim trust = null, SignDelegate sign = null)
         {
             if (trust == null)
-                trust = CurrentTrust;
+                trust = CurrentClaim;
 
             if (sign != null)
             {
@@ -229,7 +229,7 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public TrustBuilder SignServer(Package package = null, SignDelegate sign = null)
+        public PackageBuilder SignServer(Package package = null, SignDelegate sign = null)
         {
             if (package == null)
                 package = Package;
@@ -243,53 +243,53 @@ namespace DtpCore.Builders
         }
 
 
-        public TrustBuilder BuildTrustID(Trust trust = null)
+        public PackageBuilder BuildClaimID(Claim claim = null)
         {
-            if (trust == null)
-                trust = _currentTrust;
+            if (claim == null)
+                claim = _currentClaim;
 
-            var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(trust.Algorithm);
+            var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(claim.Algorithm);
 
-            if (String.IsNullOrEmpty(trust.Algorithm))
-                trust.Algorithm = _hashAlgorithm.AlgorithmName;
+            if (String.IsNullOrEmpty(claim.Algorithm))
+                claim.Algorithm = _hashAlgorithm.AlgorithmName;
 
-            trust.Id = _hashAlgorithm.HashOf(_trustBinary.GetIssuerBinary(trust));
+            claim.Id = _hashAlgorithm.HashOf(_claimBinary.GetIssuerBinary(claim));
 
             return this;
         }
 
-        public TrustBuilder SignTrust(Trust trust = null)
+        public PackageBuilder SignClaim(Claim claim = null)
         {
-            if (trust == null)
-                trust = _currentTrust;
+            if (claim == null)
+                claim = _currentClaim;
 
-            BuildTrustID(trust);
-            SignIssuer(trust);
-
-            return this;
-        }
-
-
-        public TrustBuilder AddSubject(string id)
-        {
-            if (CurrentTrust.Subject == null)
-                CurrentTrust.Subject = new SubjectIdentity();
-
-            _currentTrust.Subject.Id = id;
-
-            return this;
-        }
-
-        public TrustBuilder AddType(string type, string claim)
-        {
-            _currentTrust.Type = type;
-            _currentTrust.Claim = claim;
+            BuildClaimID(claim);
+            SignIssuer(claim);
 
             return this;
         }
 
 
-        public TrustBuilder Build()
+        public PackageBuilder AddSubject(string id)
+        {
+            if (CurrentClaim.Subject == null)
+                CurrentClaim.Subject = new SubjectIdentity();
+
+            _currentClaim.Subject.Id = id;
+
+            return this;
+        }
+
+        public PackageBuilder AddType(string type, string claim)
+        {
+            _currentClaim.Type = type;
+            _currentClaim.Value = claim;
+
+            return this;
+        }
+
+
+        public PackageBuilder Build()
         {
             IMerkleTree merkleTree = CreateMerkleTree();
 
@@ -299,7 +299,7 @@ namespace DtpCore.Builders
             //    Package.Algorithm = _hashAlgorithm.AlgorithmName;
 
             
-            Package.Id = merkleTree.HashAlgorithm.HashOf(_trustBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
+            Package.Id = merkleTree.HashAlgorithm.HashOf(_claimBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
 
             return this;
         }
@@ -308,12 +308,12 @@ namespace DtpCore.Builders
         {
             var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
 
-            foreach (var trust in Package.Trusts)
+            foreach (var claim in Package.Claims)
             {
-                if (trust.Id == null)
-                    BuildTrustID(trust);
+                if (claim.Id == null)
+                    BuildClaimID(claim);
 
-                merkleTree.Add(new Timestamp { Source = trust.Id });
+                merkleTree.Add(new Timestamp { Source = claim.Id });
             }
 
             return merkleTree;
@@ -321,9 +321,9 @@ namespace DtpCore.Builders
 
         public Package Sign()
         {
-            foreach (var trust in Package.Trusts)
+            foreach (var claim in Package.Claims)
             {
-                SignTrust(trust);
+                SignClaim(claim);
             }
 
             SignServer(Package);

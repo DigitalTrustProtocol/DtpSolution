@@ -4,24 +4,24 @@ using DtpGraphCore.Model;
 
 namespace DtpGraphCore.Interfaces
 {
-    public interface IGraphTrustService
+    public interface IGraphClaimService
     {
         GraphModel Graph { get; set; }
 
         int GlobalScopeIndex { get; set; }
-        int BinaryTrustTypeIndex { get; set; }
+        int BinaryClaimTypeIndex { get; set; }
 
         void Add(Package package);
-        void Add(IEnumerable<Trust> trusts);
-        void Add(Trust trust);
-        void Remove(Trust trust);
+        void Add(IEnumerable<Claim> trusts);
+        void Add(Claim trust);
+        void Remove(Claim trust);
 
         GraphSubject CreateGraphSubject(string subjectId);
         GraphIssuer EnsureGraphIssuer(string address);
-        GraphClaim EnsureGraphClaim(Trust trust);
-        GraphClaim CreateGraphClaim(Trust trust);
+        GraphClaim EnsureGraphClaim(Claim trust);
+        GraphClaim CreateGraphClaim(Claim trust);
         GraphClaim CreateGraphClaim(string type, string scope, string attributes);
-        int GetClaimDataIndex(Trust trust);
+        int GetClaimDataIndex(Claim trust);
         GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectId);
         void BuildPackage(QueryContext context);
 

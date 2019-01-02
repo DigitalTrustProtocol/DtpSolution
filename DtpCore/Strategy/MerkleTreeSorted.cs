@@ -97,7 +97,7 @@ namespace DtpCore.Strategy
                 foreach (var v in merkle)
                     tree.AddRange(v);
 
-                node.Proof.Receipt = tree.ToArray();
+                node.Proof.Value = tree.ToArray();
             }
 
             if (node.Left != null)

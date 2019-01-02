@@ -19,10 +19,10 @@ namespace DtpCore.Services
         private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
         private IHashAlgorithmFactory _hashAlgorithmFactory;
-        private ITrustBinary _trustBinary;
+        private IClaimBinary _trustBinary;
 
 
-        public TrustSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, ITrustBinary trustBinary)
+        public TrustSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
         {
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
@@ -35,7 +35,7 @@ namespace DtpCore.Services
         /// </summary>
         /// <param name="trust"></param>
         /// <returns></returns>
-        public string GetTrustTypeString(Trust trust)
+        public string GetTrustTypeString(Claim trust)
         {
             if (IsTrustTypeAnObject(trust))
             {
@@ -45,15 +45,15 @@ namespace DtpCore.Services
 
             switch (trust.Type.ToLower())
             {
-                case TrustBuilder.BINARY_TRUST_DTP1_SHORTFORM : return TrustBuilder.BINARY_TRUST_DTP1;
-                case TrustBuilder.CONFIRM_TRUST_DTP1_SHORTFORM: return TrustBuilder.CONFIRM_TRUST_DTP1;
-                case TrustBuilder.RATING_TRUST_DTP1_SHORTFORM : return TrustBuilder.RATING_TRUST_DTP1;
+                case PackageBuilder.BINARY_TRUST_DTP1_SHORTFORM : return PackageBuilder.BINARY_TRUST_DTP1;
+                case PackageBuilder.CONFIRM_TRUST_DTP1_SHORTFORM: return PackageBuilder.CONFIRM_TRUST_DTP1;
+                case PackageBuilder.RATING_TRUST_DTP1_SHORTFORM : return PackageBuilder.RATING_TRUST_DTP1;
             }
             
             return trust.Type.ToLower();
         }
 
-        public TrustType GetTrustTypeObject(Trust trust)
+        public TrustType GetTrustTypeObject(Claim trust)
         {
             TrustType result;
             if (!IsTrustTypeAnObject(trust))
@@ -72,7 +72,7 @@ namespace DtpCore.Services
             return result;
         }
 
-        public bool IsTrustTypeAnObject(Trust trust)
+        public bool IsTrustTypeAnObject(Claim trust)
         {
             if (trust.Type == null)
                 return false;
@@ -85,7 +85,7 @@ namespace DtpCore.Services
         }
 
 
-        public SchemaValidationResult Validate(Trust trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
+        public SchemaValidationResult Validate(Claim trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
             var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary, options);
             return engine.Validate(trust);
@@ -118,7 +118,7 @@ namespace DtpCore.Services
 
 
             private SchemaValidationResult result = new SchemaValidationResult();
-            private ITrustBinary _trustBinary;
+            private IClaimBinary _trustBinary;
 
             private IDerivationStrategyFactory _derivationStrategyFactory;
             private IMerkleStrategyFactory _merkleStrategyFactory;
@@ -127,7 +127,7 @@ namespace DtpCore.Services
             private TrustSchemaValidationOptions _options; 
 
 
-            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, ITrustBinary trustBinary, TrustSchemaValidationOptions options)
+            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary, TrustSchemaValidationOptions options)
             {
                 _derivationStrategyFactory = derivationStrategyFactory;
                 _merkleStrategyFactory = merkleStrategyFactory;
@@ -136,13 +136,13 @@ namespace DtpCore.Services
                 _options = options;
             }
 
-            public SchemaValidationResult Validate(Trust trust)
+            public SchemaValidationResult Validate(Claim trust)
             {
                 try
                 {
-                    var testBuilder = new TrustBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
+                    var testBuilder = new PackageBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
                     var trustIndex = 0;
-                    testBuilder.AddTrust(trust);
+                    testBuilder.AddClaim(trust);
                     ValidateTrust(trustIndex++, trust, result);
                 }
                 catch (Exception ex)
@@ -163,11 +163,11 @@ namespace DtpCore.Services
                 {
                     var script = _merkleStrategyFactory.GetStrategy(package.Algorithm);
                 
-                    var testBuilder = new TrustBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
+                    var testBuilder = new PackageBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
                     var trustIndex = 0;
-                    foreach (var trust in package.Trusts)
+                    foreach (var trust in package.Claims)
                     {
-                        testBuilder.AddTrust(trust);
+                        testBuilder.AddClaim(trust);
                         ValidateTrust(trustIndex++, trust, result);
                     }
 
@@ -203,14 +203,14 @@ namespace DtpCore.Services
                 MaxRangeCheck("Package Server Signature", package.Server.Signature, "", SIGNATURE_MAX_LENGTH);
             }
 
-            private void ValidateTrust(int trustIndex, Trust trust, SchemaValidationResult result)
+            private void ValidateTrust(int trustIndex, Claim trust, SchemaValidationResult result)
             {
                 var location = $"Trust Index: {trustIndex} - ";
 
                 MaxRangeCheck("Algorithm", trust.Algorithm, location, ALGORITHM_MAX_LENGTH);
                 MaxRangeCheck("Id", trust.Id, location, ID_MAX_LENGTH);
                 MaxRangeCheck("Type", trust.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("Claim", trust.Claim, location, CLAIM_MAX_LENGTH);
+                MaxRangeCheck("Claim", trust.Value, location, CLAIM_MAX_LENGTH);
                 MaxRangeCheck("Note", trust.Note, location, NOTE_MAX_LENGTH);
 
                 ValidateIssuer(trust, location, result);
@@ -261,14 +261,14 @@ namespace DtpCore.Services
                 {
                     MaxRangeCheck("Timestamp Algorithm", timestamp.Algorithm, location, ALGORITHM_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Blockchain", timestamp.Blockchain, location, TEXT50_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Receipt", timestamp.Receipt, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
+                    MaxRangeCheck("Timestamp Receipt", timestamp.Value, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Service", timestamp.Service, location, TEXT200_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Source", timestamp.Source, location, ID_MAX_LENGTH);
                 }
             }
 
 
-            private void ValidateIssuer(Trust trust, string location, SchemaValidationResult result)
+            private void ValidateIssuer(Claim trust, string location, SchemaValidationResult result)
             {
                 if (!MissingCheck("Trust Issuer", trust.Issuer, location))
                     return; 
@@ -292,7 +292,7 @@ namespace DtpCore.Services
 
 
 
-            private void ValidateSubject(Trust trust, string location, SchemaValidationResult result)
+            private void ValidateSubject(Claim trust, string location, SchemaValidationResult result)
             {
                 if (!MissingCheck("Trust Subject", trust.Subject, location))
                     return;
@@ -318,7 +318,7 @@ namespace DtpCore.Services
                 }
             }
 
-            private void ValidateScope(Trust trust, string location, SchemaValidationResult result)
+            private void ValidateScope(Claim trust, string location, SchemaValidationResult result)
             {
                 if (trust.Scope == null)
                     return;

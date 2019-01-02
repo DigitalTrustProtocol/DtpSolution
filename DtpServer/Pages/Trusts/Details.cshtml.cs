@@ -20,7 +20,7 @@ namespace DtpServer.Pages.Trusts
             _trustDBService = trustDBService;
         }
 
-        public Trust Trust { get;set; }
+        public Claim Trust { get;set; }
 
         public void OnGet(byte[] id)
         {
