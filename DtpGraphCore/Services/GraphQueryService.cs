@@ -49,7 +49,6 @@ namespace DtpGraphCore.Services
             TrustService.BuildPackage(context);
         }
 
-        
 
         /// <summary>
         /// Remove the targets that have been found in the last run.

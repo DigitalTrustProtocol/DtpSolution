@@ -1,41 +1,113 @@
-/* Basic trust */
+/* Basic trust package*/
+
 {
   "algorithm": "double256",
+  "format" : "base64",
   "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-  "issuer": {
-    "type": "secp256k1.pkh",
-    "address": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-    "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+  "rootId": {
+    "type": "merkle.dtp1",
+    "algorithm": "rmd160",
+    "format": "base64",
+    "value": ""
   },
-  "subject": {
-    "type": "sha160.base58check.dtp1",
-    "address": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
-    "signature": ""
-  },
-  "type": "binary.trust.dtp1",
-  "claim": "{\"trust\":true}",
-  "scope": {
-    "type": "uri",
-    "value": "www.reddit.com"
-  },
-  "created": 1524569738,
-  "cost": 100,
-  "activate": 1231006505,
-  "expire": 2231006505,
-  "timestamp": [
+
+  "claims": [
+    { // Claim
+      "templateIndex": 0, // Always default to index 0 if templates are available.
+      "type": "binary.trust.dtp1",
+      "algorithm": "double256", // Default double256
+      "format": "base64",
+      "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // Id is always calculateable from the claim itself.
+
+      "rootId": {
+        "type": "merkle.dtp1",
+        "algorithm": "rmd160",
+        "format": "base64",
+        "value": ""
+      },
+
+      "issuer": {
+        "type": "pkh",
+        "algorithm": "secp256k1",
+        "format": "base58check",
+        "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk=" // always base64
+      },
+
+      "subject": {
+        "type": "pkh",
+        "algorithm": "secp256k1",
+        "format": "base58check",
+        "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+        "signature": ""
+      },
+
+      "value": true,
+      "scope": {
+        "type": "uri",
+        "value": "www.reddit.com"
+      },
+
+      "created": 1524569738,
+      "cost": 100, // Only for binary.trust.dtp1
+      "activate": 1231006505,
+      "expire": 2231006505,
+
+      "timestamps": [
+        {
+          "type": "merkle.dtp1",
+          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // if id type is a merkle tree then the root id is source! Always base64. Optional.
+          "blockchain": "btc",
+          "algorithm": "double256",
+          "format": "hex",
+          "service": "", // Optional, the url or name of the service provided the timestamp
+          "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
+          "registered": 1524569739
+        }
+      ]
+    }
+  ],
+
+
+  "template": [
     {
-      "blockchain": "btc",
-      "algorithm": "double256.merkle.dtp1",
-      "registered": 1524569739,
-      "recipt": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3"
+      // claim
+    }
+  ],
+
+  "packages": [],
+
+  // The server that creates the package
+  "server": {
+    "type": "pkh",
+    "algorithm": "secp256k1",
+    "format": "base58check",
+    "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+    "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk=" // always base64
+  },
+
+  // Timestamps of the package
+  "timestamps": [ // Array of timestamps, then fast and slow timestamps are possible
+    {
+      "type": "merkle.dtp1",
+      "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=", // if id type is a merkle tree then the root id is source! Always base64. Optional.
+      "blockchain": "btc", // The blockchain used for the timestamp
+      "algorithm": "double256.merkle.dtp1", // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+      "value": "", // Merkletree path or description text, used for recreating the merkle root value.
+      "service": "", // Optional, the url or name of the service provided the timestamp
+      "registered": 1231006505 // Transaction time used for the timestamp
     }
   ]
 }
-// Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
-// Transaction time used for the timestamp
-// Merkletree path or description text, used for recreating the merkle root value.
 
-/*
+
+
+
+  // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+  // Transaction time used for the timestamp
+  // Merkletree path or description text, used for recreating the merkle root value.
+
+  /*
 A package of Trust
 Its a way for sharing trust between servers.
 

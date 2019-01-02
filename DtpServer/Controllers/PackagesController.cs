@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
 using DtpCore.Repository;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace DtpServer.Controllers
 {
@@ -30,9 +32,11 @@ namespace DtpServer.Controllers
         /// <returns></returns>
         // GET: api/Packages
         [HttpGet]
-        public IEnumerable<Package> GetPackages()
+        public IEnumerable<Package> GetPackages([FromServices]SieveProcessor sieveProcessor, SieveModel sieveModel)
         {
-            return _context.Packages;
+            var packages = _context.Packages.AsNoTracking(); // Makes read-only queries faster
+            packages = sieveProcessor.Apply(sieveModel, packages); // Returns `result` after applying the sort/filter/page query in `SieveModel` to it
+            return packages;
         }
 
         /// <summary>
