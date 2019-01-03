@@ -4,23 +4,27 @@
         <name>DtpServer</name>
     </assembly>
     <members>
+        <member name="T:DtpServer.AspNetCore.MVC.Filters.ValidatePackageAttribute">
+            <summary>
+            Validate the package
+            </summary>
+        </member>
+        <member name="M:DtpServer.AspNetCore.MVC.Filters.ValidatePackageAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Validate data
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:DtpServer.Controllers.PackagesController">
             <summary>
             Handles packages 
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.PackagesController.GetPackages">
+        <member name="M:DtpServer.Controllers.PackagesController.#ctor(DtpCore.Repository.TrustDBContext)">
             <summary>
-            List all packages
+            Constructor
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DtpServer.Controllers.PackagesController.GetPackage(System.Int32)">
-            <summary>
-            Get a package by ID
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
+            <param name="context"></param>
         </member>
         <member name="M:DtpServer.Controllers.PackagesController.PostPackage(DtpCore.Model.Package)">
             <summary>
@@ -66,6 +70,16 @@
             </summary>
             <param name="number">Bytes to format</param>
             <returns></returns>
+        </member>
+        <member name="T:DtpServer.Program">
+            <summary>
+            Startup class
+            </summary>
+        </member>
+        <member name="P:DtpServer.Program.Configuration">
+            <summary>
+            Static configuration 
+            </summary>
         </member>
     </members>
 </doc>

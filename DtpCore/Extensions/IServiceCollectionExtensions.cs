@@ -27,7 +27,7 @@ namespace DtpCore.Extensions
 
 
             services.AddTransient<PackageBuilder>();
-            services.AddTransient<ITrustSchemaService, TrustSchemaService>();
+            services.AddTransient<IPackageSchemaService, PackageSchemaService>();
 
             services.AddTransient<IHashAlgorithmFactory, HashAlgorithmFactory>();
             services.AddTransient<IMerkleStrategyFactory, MerkleStrategyFactory>();

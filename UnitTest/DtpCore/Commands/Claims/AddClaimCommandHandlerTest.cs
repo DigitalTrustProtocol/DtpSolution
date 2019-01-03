@@ -18,7 +18,7 @@ using UnitTest.DtpPackage.Mocks;
 namespace UnitTest.DtpCore.Commands.Trusts
 {
     [TestClass]
-    public class AddTrustCommandHandlerTest : StartupMock
+    public class AddClaimCommandHandlerTest : StartupMock
     {
 
         private Claim CreateClaim()

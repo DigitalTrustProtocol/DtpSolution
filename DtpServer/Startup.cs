@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
 using DtpCore.Extensions;
 using DtpGraphCore.Extensions;
 using DtpStampCore.Extensions;
@@ -17,10 +16,11 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using NicolasDorier.RateLimits;
 using DtpServer.Extensions;
 using Microsoft.Extensions.FileProviders;
-using System.IO;
 using DtpPackageCore.Extensions;
 using MediatR;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
+using System.IO;
 
 namespace DtpServer
 {
@@ -54,26 +54,27 @@ namespace DtpServer
                     options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
 
                 options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddDbContextCheck<TrustDBContext>();
 
             services.AddRateLimits(); // Add Rate limits for against DDOS attacks
 
             services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Title = "DTP API",
-                    Version = "v1"
-                });
+             {
+                 c.SwaggerDoc("v1", new Info
+                 {
+                     Title = "DTP API",
+                     Version = "v1"
+                 });
 
 
-                // Set the comments path for the Swagger JSON and UI.
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //c.IncludeXmlComments(xmlPath);
-            });
+                 // Set the comments path for the Swagger JSON and UI.
+                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                 c.IncludeXmlComments(xmlPath);
+             });
 
             services.AddMediatR();
 
@@ -163,13 +164,14 @@ namespace DtpServer
 
 
             app.UseCookiePolicy();
+            app.UseHealthChecks("/ready");
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
+            app.UseSwagger();
+            app.UseSwaggerUI(c => 
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
 
             app.UseSession();

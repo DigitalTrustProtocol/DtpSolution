@@ -14,7 +14,7 @@ namespace DtpCore.Services
 {
 
 
-    public class TrustSchemaService : ITrustSchemaService
+    public class PackageSchemaService : IPackageSchemaService
     {
         private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
@@ -22,7 +22,7 @@ namespace DtpCore.Services
         private IClaimBinary _trustBinary;
 
 
-        public TrustSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
+        public PackageSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
         {
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
@@ -33,24 +33,24 @@ namespace DtpCore.Services
         /// <summary>
         /// Gets the trust type string in a sanitized form, always in lowercase.
         /// </summary>
-        /// <param name="trust"></param>
+        /// <param name="claim"></param>
         /// <returns></returns>
-        public string GetTrustTypeString(Claim trust)
+        public string GetTrustTypeString(Claim claim)
         {
-            if (IsTrustTypeAnObject(trust))
+            if (IsTrustTypeAnObject(claim))
             {
-                var trustType = GetTrustTypeObject(trust);
+                var trustType = GetTrustTypeObject(claim);
                 return trustType.ToString().ToLower();
             }
 
-            switch (trust.Type.ToLower())
+            switch (claim.Type.ToLower())
             {
                 case PackageBuilder.BINARY_TRUST_DTP1_SHORTFORM : return PackageBuilder.BINARY_TRUST_DTP1;
                 case PackageBuilder.CONFIRM_TRUST_DTP1_SHORTFORM: return PackageBuilder.CONFIRM_TRUST_DTP1;
                 case PackageBuilder.RATING_TRUST_DTP1_SHORTFORM : return PackageBuilder.RATING_TRUST_DTP1;
             }
             
-            return trust.Type.ToLower();
+            return claim.Type.ToLower();
         }
 
         public TrustType GetTrustTypeObject(Claim trust)
@@ -72,12 +72,12 @@ namespace DtpCore.Services
             return result;
         }
 
-        public bool IsTrustTypeAnObject(Claim trust)
+        public bool IsTrustTypeAnObject(Claim claim)
         {
-            if (trust.Type == null)
+            if (claim.Type == null)
                 return false;
 
-            var data = trust.Type.Trim();
+            var data = claim.Type.Trim();
             if (data.StartsWith("{") && data.EndsWith("}"))
                 return true;
 
@@ -85,10 +85,10 @@ namespace DtpCore.Services
         }
 
 
-        public SchemaValidationResult Validate(Claim trust, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
+        public SchemaValidationResult Validate(Claim claim, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
             var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary, options);
-            return engine.Validate(trust);
+            return engine.Validate(claim);
         }
 
         public SchemaValidationResult Validate(Package package, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
@@ -165,10 +165,15 @@ namespace DtpCore.Services
                 
                     var testBuilder = new PackageBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
                     var trustIndex = 0;
-                    foreach (var trust in package.Claims)
+                    if(package.Claims.Count == 0)
                     {
-                        testBuilder.AddClaim(trust);
-                        ValidateTrust(trustIndex++, trust, result);
+                        MissingCheck("Package claims", "", "");
+                    }
+
+                    foreach (var claim in package.Claims)
+                    {
+                        testBuilder.AddClaim(claim);
+                        ValidateTrust(trustIndex++, claim, result);
                     }
 
                     if (package.Id != null && package.Id.Length > 0)
@@ -203,32 +208,32 @@ namespace DtpCore.Services
                 MaxRangeCheck("Package Server Signature", package.Server.Signature, "", SIGNATURE_MAX_LENGTH);
             }
 
-            private void ValidateTrust(int trustIndex, Claim trust, SchemaValidationResult result)
+            private void ValidateTrust(int trustIndex, Claim claim, SchemaValidationResult result)
             {
                 var location = $"Trust Index: {trustIndex} - ";
 
-                MaxRangeCheck("Algorithm", trust.Algorithm, location, ALGORITHM_MAX_LENGTH);
-                MaxRangeCheck("Id", trust.Id, location, ID_MAX_LENGTH);
-                MaxRangeCheck("Type", trust.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("Claim", trust.Value, location, CLAIM_MAX_LENGTH);
-                MaxRangeCheck("Note", trust.Note, location, NOTE_MAX_LENGTH);
+                MaxRangeCheck("Algorithm", claim.Algorithm, location, ALGORITHM_MAX_LENGTH);
+                MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
+                MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
+                MaxRangeCheck("Claim", claim.Value, location, CLAIM_MAX_LENGTH);
+                MaxRangeCheck("Note", claim.Note, location, NOTE_MAX_LENGTH);
 
-                ValidateIssuer(trust, location, result);
-                ValidateSubject(trust, location, result);
-                ValidateScope(trust, location, result);
-                ValidateTimestamps(trust.Timestamps, location, result);
+                ValidateIssuer(claim, location, result);
+                ValidateSubject(claim, location, result);
+                ValidateScope(claim, location, result);
+                ValidateTimestamps(claim.Timestamps, location, result);
 
                 if (_options == TrustSchemaValidationOptions.Full)
                 {
-                    MissingCheck("Trust Id", trust.Id, location);
+                    MissingCheck("Claim Id", claim.Id, location);
 
                     // Avoid an attack vector, calculating hash on very large invalid trust
                     if (result.ErrorsFound == 0) 
                     {
-                        var hashService = _hashAlgorithmFactory.GetAlgorithm(trust.Algorithm);
-                        var trustID = hashService.HashOf(_trustBinary.GetIssuerBinary(trust));
-                        if (trustID.Compare(trust.Id) != 0)
-                            result.Errors.Add(location + "Invalid trust id");
+                        var hashService = _hashAlgorithmFactory.GetAlgorithm(claim.Algorithm);
+                        var trustID = hashService.HashOf(_trustBinary.GetIssuerBinary(claim));
+                        if (trustID.Compare(claim.Id) != 0)
+                            result.Errors.Add(location + "Invalid claim id");
 
                         // Make sure that subject has been validated before checking for Cost.
                         // Only Binarytrust has Cost property

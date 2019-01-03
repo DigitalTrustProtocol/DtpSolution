@@ -11,11 +11,20 @@ using Serilog.Formatting.Display;
 using Serilog.Events;
 using Microsoft.AspNetCore.Server.Kestrel.Https.Internal;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Mvc;
+
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
 namespace DtpServer
 {
+    /// <summary>
+    /// Startup class
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Static configuration 
+        /// </summary>
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

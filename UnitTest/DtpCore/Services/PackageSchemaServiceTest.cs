@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace UnitTest.DtpCore.Services
 {
     [TestClass]
-    public class TrustSchemaServiceTest : StartupMock
+    public class PackageSchemaServiceTest : StartupMock
     {
         [TestMethod]
         public void GetTrustTypeString()
@@ -21,14 +21,14 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
 
-            var schemaService = ServiceProvider.GetRequiredService<ITrustSchemaService>();
-            var trust = builder.Package.Claims[0];
-            Assert.IsTrue(trust.Type == schemaService.GetTrustTypeString(trust));
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
+            var claim = builder.Package.Claims[0];
+            Assert.IsTrue(claim.Type == schemaService.GetTrustTypeString(claim));
 
-            var trustType = schemaService.GetTrustTypeObject(trust);
-            trust.Type = JsonConvert.SerializeObject(trustType);
+            var trustType = schemaService.GetTrustTypeObject(claim);
+            claim.Type = JsonConvert.SerializeObject(trustType);
 
-            var result = schemaService.GetTrustTypeString(trust);
+            var result = schemaService.GetTrustTypeString(claim);
             Assert.IsTrue(result == PackageBuilder.BINARY_TRUST_DTP1);
         }
 
@@ -43,7 +43,7 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
 
-            var schemaService = ServiceProvider.GetRequiredService<ITrustSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
 
             var result = schemaService.Validate(builder.Package);
 
@@ -63,7 +63,7 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
             
-            var schemaService = ServiceProvider.GetRequiredService<ITrustSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
             var result = schemaService.Validate(builder.CurrentClaim);
 
             Console.WriteLine(result.ToString());

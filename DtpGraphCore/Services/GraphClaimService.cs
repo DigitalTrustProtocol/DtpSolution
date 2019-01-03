@@ -15,12 +15,12 @@ namespace DtpGraphCore.Services
     public class GraphClaimService : IGraphClaimService
     {
         public GraphModel Graph { get; set;}
-        public ITrustSchemaService TrustSchema { get; }
+        public IPackageSchemaService TrustSchema { get; }
 
         public int GlobalScopeIndex { get; set; }
         public int BinaryClaimTypeIndex { get; set; }
 
-        public GraphClaimService(GraphModel graph, ITrustSchemaService trustSchemaService)
+        public GraphClaimService(GraphModel graph, IPackageSchemaService trustSchemaService)
         {
             Graph = graph;
             TrustSchema = trustSchemaService;

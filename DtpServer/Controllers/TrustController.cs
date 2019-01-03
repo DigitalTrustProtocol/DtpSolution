@@ -27,11 +27,11 @@ namespace DtpServer.Controllers
     {
         private IMediator _mediator;
 
-        private ITrustSchemaService _trustSchemaService;
+        private IPackageSchemaService _trustSchemaService;
         private ITrustDBService _trustDBService;
         private IServiceProvider _serviceProvider;
 
-        public TrustController(IMediator mediator, ITrustSchemaService trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
+        public TrustController(IMediator mediator, IPackageSchemaService trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
             _trustSchemaService = trustSchemaService;
