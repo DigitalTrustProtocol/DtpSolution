@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DtpCore.Model
 {
-    [Table("ClaimPackage")]
+    [Table("ClaimPackageRelationship")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class ClaimPackage
+    public class ClaimPackageRelationship
     {
         [JsonProperty(PropertyName = "claimID")]
         public int ClaimID { get; set; }

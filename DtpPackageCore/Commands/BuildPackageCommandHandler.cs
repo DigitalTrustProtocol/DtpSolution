@@ -71,7 +71,7 @@ namespace DtpPackageCore.Commands
             // Build many to many relation
             foreach (var trust in trusts)
             {
-                trust.TrustPackages.Add(new ClaimPackage { Package = _builder.Package });
+                trust.ClaimPackages.Add(new ClaimPackageRelationship { Package = _builder.Package });
             }
 
             _dbContext.Packages.Add(_builder.Package);

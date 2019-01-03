@@ -9,7 +9,7 @@ using DtpCore.Model;
 using DtpCore.Repository;
 using DtpCore.Interfaces;
 
-namespace DtpServer.Pages.Trusts
+namespace DtpServer.Pages.Claims
 {
     public class DetailsModel : PageModel
     {
@@ -20,11 +20,11 @@ namespace DtpServer.Pages.Trusts
             _trustDBService = trustDBService;
         }
 
-        public Claim Trust { get;set; }
+        public Claim Claim { get;set; }
 
         public void OnGet(byte[] id)
         {
-            Trust = _trustDBService.GetTrustById(id);
+            Claim = _trustDBService.GetTrustById(id);
         }
     }
 }

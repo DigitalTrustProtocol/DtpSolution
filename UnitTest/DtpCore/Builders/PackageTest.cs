@@ -10,38 +10,40 @@ using DtpCore.Interfaces;
 using DtpCore.Services;
 using DtpCore.Strategy;
 using UnitTest.DtpCore.Extensions;
+using DtpCore.Model;
 
 namespace UnitTest.DtpCore.Builders
 {
     [TestClass]
     public class PackageTest : StartupMock
     {
-        //[TestMethod]
-        //public void Build()
-        //{
-        //    var builder = new TrustBuilder(ServiceProvider);
-        //    builder.SetServer("testserver");
-        //    builder.AddTrust("testissuer1")
-        //        .AddSubject("testsubject1", TrustBuilder.CreateFollowClaim())
-        //        .AddSubject("testsubject2", TrustBuilder.CreateFollowClaim());
-        //    builder.AddTrust("testissuer2", "testsubject1", TrustBuilder.CreateFollowClaim());
-        //    builder.Build();
-        //    builder.Sign();
+        [TestMethod]
+        public void Build()
+        {
+            var builder = new PackageBuilder(ServiceProvider);
+            builder.SetServer("testserver");
+            var claim = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
 
-        //    var schemaService = ServiceProvider.GetRequiredService<ITrustSchemaService>();
+            builder.Build();
+            builder.Sign();
 
-        //    //schemaService = new TrustSchemaService(ServiceProvider);
+            var package = builder.Package;
+            //var schemaService = ServiceProvider.GetRequiredService<ITrustSchemaService>();
 
-        //    var result = schemaService.Validate(builder.Package);
+            //schemaService = new TrustSchemaService(ServiceProvider);
 
-        //    Console.WriteLine(result.ToString());
+            //var result = schemaService.Validate(builder.Package);
 
-        //    Assert.IsTrue(builder.Package.Trusts.Count > 0);
-        //    Assert.AreEqual(0, result.Errors.Count);
-        //    Assert.AreEqual(0, result.Warnings.Count);
+            //Console.WriteLine(result.ToString());
 
-        //    var content = JsonConvert.SerializeObject(builder.Package, Formatting.Indented);
-        //    Console.WriteLine(content);
-        //}
+            //Assert.IsTrue(builder.Package.Trusts.Count > 0);
+            //Assert.AreEqual(0, result.Errors.Count);
+            //Assert.AreEqual(0, result.Warnings.Count);
+
+            var content = JsonConvert.SerializeObject(builder.Package, Formatting.Indented);
+            Console.WriteLine(content);
+            var dePackage = JsonConvert.DeserializeObject<Package>(content);
+            Assert.AreEqual(package.Claims.Count, dePackage.Claims.Count);
+        }
     }
 }

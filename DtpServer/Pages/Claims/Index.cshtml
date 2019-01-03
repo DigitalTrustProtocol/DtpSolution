@@ -1,5 +1,5 @@
 ﻿@page
-@model DtpServer.Pages.Trusts.IndexModel
+@model DtpServer.Pages.Claims.IndexModel
 
 @{
     ViewData["Title"] = "Trust";
@@ -21,33 +21,33 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Id)
+                @Html.DisplayNameFor(model => model.Claims[0].Id)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSortOrder!" asp-route-sortField="Created" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@Model.Trusts.PageIndex">
-                    @Html.DisplayNameFor(model => model.Trusts[0].Created)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.CurrentSortOrder!" asp-route-sortField="Created" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@Model.Claims.PageIndex">
+                    @Html.DisplayNameFor(model => model.Claims[0].Created)
                 </a>
 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Type)
+                @Html.DisplayNameFor(model => model.Claims[0].Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Claim)
+                @Html.DisplayNameFor(model => model.Claims[0].Value)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Activate)
+                @Html.DisplayNameFor(model => model.Claims[0].Activate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Expire)
+                @Html.DisplayNameFor(model => model.Claims[0].Expire)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Replaced)
+                @Html.DisplayNameFor(model => model.Claims[0].Replaced)
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Trusts)
+        @foreach (var item in Model.Claims)
         {
         <tr>
             <td>
@@ -60,7 +60,7 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Claim)
+                @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Activate)
@@ -77,14 +77,14 @@
 </table>
 
 @{
-    var prevDisabled = !Model.Trusts.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Trusts.HasNextPage ? "disabled" : "";
+    var prevDisabled = !Model.Claims.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Claims.HasNextPage ? "disabled" : "";
 }
 
 <a asp-page="./Index"
     asp-route-sortOrder="@Model.CurrentSortOrder"
     asp-route-sortField="@Model.CurrentSortField"
-    asp-route-pageIndex="@(Model.Trusts.PageIndex - 1)"
+    asp-route-pageIndex="@(Model.Claims.PageIndex - 1)"
     asp-route-currentFilter="@Model.CurrentFilter"
     class="btn btn-default @prevDisabled">
     Previous
@@ -92,7 +92,7 @@
 <a asp-page="./Index"
     asp-route-sortOrder="@Model.CurrentSortOrder"
     asp-route-sortField="@Model.CurrentSortField"
-    asp-route-pageIndex="@(Model.Trusts.PageIndex + 1)"
+    asp-route-pageIndex="@(Model.Claims.PageIndex + 1)"
     asp-route-currentFilter="@Model.CurrentFilter"
     class="btn btn-default @nextDisabled">
     Next

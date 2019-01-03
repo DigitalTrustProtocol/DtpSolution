@@ -9,7 +9,7 @@ using DtpCore.Extensions;
 using DtpCore.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace DtpServer.Pages.Trusts
+namespace DtpServer.Pages.Claims
 {
     public class IndexModel : PageModel
     {
@@ -17,7 +17,7 @@ namespace DtpServer.Pages.Trusts
 
         private readonly ITrustDBService _trustDBService;
 
-        public PaginatedList<Claim> Trusts { get; set; }
+        public PaginatedList<Claim> Claims { get; set; }
 
         public string CurrentFilter { get; set; }
         public string CurrentSortField { get; set; }
@@ -69,7 +69,7 @@ namespace DtpServer.Pages.Trusts
                     break;
             }
 
-            Trusts = await PaginatedList<Claim>.CreateAsync(query, pageIndex ?? 1, PageSize);
+            Claims = await PaginatedList<Claim>.CreateAsync(query, pageIndex ?? 1, PageSize);
         }
 
         private IQueryable<Claim> BuildQuery(string searchString)

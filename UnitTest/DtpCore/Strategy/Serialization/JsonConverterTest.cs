@@ -61,7 +61,7 @@ namespace UnitTest.DtpCore.Strategy
         public void SerializeDeserialize()
         {
             var builder = new PackageBuilder(ServiceProvider);
-            var trust = builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
+            var trust = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var data = JsonConvert.SerializeObject(trust, Formatting.Indented);
             Console.WriteLine(data);
             var trust2 = JsonConvert.DeserializeObject<Claim>(data);

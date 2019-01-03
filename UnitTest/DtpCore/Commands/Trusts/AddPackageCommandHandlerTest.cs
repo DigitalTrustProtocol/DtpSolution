@@ -24,7 +24,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         public Package CreatePackage()
         {
             var builder = new PackageBuilder(ServiceProvider);
-            builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
+            builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var package = builder.Package;
             NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
             DB.SaveChanges();
@@ -35,7 +35,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         public void Add()
         {
             var builder = new PackageBuilder(ServiceProvider);
-            builder.BuildBinaryTrust("testissuer1", "testsubject1", true);
+            builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var package = builder.Package;
             NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
             DB.SaveChanges();

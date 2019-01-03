@@ -64,7 +64,7 @@ namespace DtpCore.Services
         {
             var dbTrust = DBContext.Claims.AsNoTracking()
                 .Include(p => p.Timestamps)
-                .Include(p => p.TrustPackages)
+                .Include(p => p.ClaimPackages)
                 .FirstOrDefault(p => p.Id == id);
             return dbTrust;
         }

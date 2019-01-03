@@ -1,5 +1,5 @@
 ﻿@page
-@model DtpServer.Pages.Trusts.DetailsModel
+@model DtpServer.Pages.Claims.DetailsModel
 
 @{
     ViewData["Title"] = "Trust";
@@ -10,56 +10,56 @@
     <tbody>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Id)
+                @Html.DisplayNameFor(model => Model.Claim.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Id)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => Model.Trust.Algorithm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Algorithm)
+                @Html.DisplayFor(modelItem => Model.Claim.Id)
             </td>
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Created)
+                @Html.DisplayNameFor(model => Model.Claim.Algorithm)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Created)
+                @Html.DisplayFor(modelItem => Model.Claim.Algorithm)
             </td>
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Issuer)
+                @Html.DisplayNameFor(model => Model.Claim.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Claim.Created)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Claim.Issuer)
             </td>
             <td>
                 <table>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Type):
+                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Type):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Type)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Id):
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Id)
+                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Type)
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Issuer.Signature):
+                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Id):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Issuer.Signature)
+                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Signature):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Signature)
                         </td>
                     </tr>
                 </table>
@@ -67,32 +67,32 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Subject)
+                @Html.DisplayNameFor(model => Model.Claim.Subject)
             </td>
             <td>
                 <table>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Subject.Type):
+                            @Html.DisplayNameFor(model => Model.Claim.Subject.Type):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Type)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Subject.Id):
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Id)
+                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Type)
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Trust.Subject.Signature):
+                            @Html.DisplayNameFor(model => Model.Claim.Subject.Id):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Trust.Subject.Signature)
+                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Id)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => Model.Claim.Subject.Signature):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Signature)
                         </td>
                     </tr>
                 </table>
@@ -100,60 +100,60 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Type)
+                @Html.DisplayNameFor(model => Model.Claim.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Type)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => Model.Trust.Claim)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Claim)
+                @Html.DisplayFor(modelItem => Model.Claim.Type)
             </td>
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Scope)
+                @Html.DisplayNameFor(model => Model.Claim.Value)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Scope)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => Model.Trust.Activate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Activate)
+                @Html.DisplayFor(modelItem => Model.Claim.Value)
             </td>
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Expire)
+                @Html.DisplayNameFor(model => Model.Claim.Scope)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Expire)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => Model.Trust.Replaced)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Trust.Replaced)
+                @Html.DisplayFor(modelItem => Model.Claim.Scope)
             </td>
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.Timestamps)
+                @Html.DisplayNameFor(model => Model.Claim.Activate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Claim.Activate)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Claim.Expire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Claim.Expire)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Claim.Replaced)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Claim.Replaced)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => Model.Claim.Timestamps)
             </td>
             <td>
                 <table class="table">
                     <tbody>
-                        @foreach (var timestamp in Model.Trust.Timestamps)
+                        @foreach (var timestamp in Model.Claim.Timestamps)
                         {
                             <tr>
                                 <td>@Html.DisplayNameFor(t => timestamp.Source):</td>
@@ -176,8 +176,8 @@
                             </tr>
 
                             <tr>
-                                <td>@Html.DisplayNameFor(t => timestamp.Receipt):</td>
-                                <td>@Html.DisplayFor(t => timestamp.Receipt)</td>
+                                <td>@Html.DisplayNameFor(t => timestamp.Value):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Value)</td>
                             </tr>
 
                             <tr>
@@ -191,12 +191,12 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Trust.TrustPackages)
+                @Html.DisplayNameFor(model => Model.Claim.ClaimPackages)
             </td>
             <td>
                 <table class="table">
                     <tbody>
-                        @foreach (var trustPackage in Model.Trust.TrustPackages)
+                        @foreach (var trustPackage in Model.Claim.ClaimPackages)
                         {
                             <tr>
                                 <td>@Html.DisplayNameFor(t => trustPackage.PackageID):</td>
@@ -218,5 +218,5 @@
     </tbody>
 </table>
 <div>
-    <pre><code>@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Trust, Newtonsoft.Json.Formatting.Indented)</code></pre>
+    <pre><code>@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Claim, Newtonsoft.Json.Formatting.Indented)</code></pre>
 </div>

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DtpCore.Attributes;
 using DtpCore.Interfaces;
 using DtpCore.Strategy.Serialization;
 using JsonSubTypes;
@@ -22,6 +21,7 @@ namespace DtpCore.Model
 
     [Table("Package")]
     [JsonObject(MemberSerialization.OptIn)]
+    //[JsonConverter(typeof(PackageConverter))] // logic for handling the template features has not been implemented.
     public class Package : DatabaseEntity
     {
         [JsonProperty(PropertyName = "algorithm")]
@@ -48,11 +48,14 @@ namespace DtpCore.Model
         public bool ShouldSerializeTrusts() => Claims != null && Claims.Count > 0;
 
         /// <summary>
-        /// Acts as a default template for trusts in the package. If a trust is missing vital information, the template is assumed.
+        /// Acts as a default template for trusts in the package. If a claim is missing vital information, the template is assumed.
+        /// Currently not used and implemented!
         /// </summary>
-        [JsonProperty(PropertyName = "templates", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonProperty(PropertyName = "templates", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore]
+        [NotMapped]
         public IList<Claim> Templates { get; set; }
-        public bool ShouldSerializeTemplate() => Templates != null && Templates.Count > 0;
+        public bool ShouldSerializeTemplates() => Templates != null && Templates.Count > 0;
 
         /// <summary>
         /// Contains multiple packages. 
@@ -72,7 +75,7 @@ namespace DtpCore.Model
 
         //[JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
         [JsonIgnore]
-        public IList<ClaimPackage> ClaimPackages { get; set; }
+        public IList<ClaimPackageRelationship> ClaimPackages { get; set; }
         public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
 
         public Package()
@@ -80,7 +83,7 @@ namespace DtpCore.Model
             Claims = new List<Claim>();
             Templates = new List<Claim>();
             Timestamps = new List<Timestamp>();
-            ClaimPackages = new List<ClaimPackage>();
+            ClaimPackages = new List<ClaimPackageRelationship>();
         }
 
         public override string ToString()
@@ -106,17 +109,13 @@ namespace DtpCore.Model
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() { return Id != null; }
 
+        /// <summary>
+        /// Defines a root id for the claim, enables for single signing of many claims.
+        /// </summary>
         [UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "root")]
         public byte[] Root { get; set; }
         public bool ShouldSerializeRoot() { return Root != null; }
-
-        /// <summary>
-        /// Defines a partial id for the trust, enables for single signing of many trusts.
-        /// </summary>
-        [JsonProperty(PropertyName = "partialId", NullValueHandling = NullValueHandling.Ignore)]
-        public PartId PartialId { get; set; }
-        public bool ShouldSerializePartId() { return PartialId != null; }
 
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created")]
@@ -192,10 +191,9 @@ namespace DtpCore.Model
         /// A trust can belong to multiple packages created by other servers. 
         /// </summary>
         [DisplayName("Packages")]
-        [JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<ClaimPackage> TrustPackages { get; set; }
-        public bool ShouldSerializeTrustPackages() => TrustPackages != null && TrustPackages.Count > 0;
-
+        [JsonIgnore]
+        public IList<ClaimPackageRelationship> ClaimPackages { get; set; }
+        public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
 
         [JsonIgnore]
         [Description("Current Trust has been replaced by a new Trust.")]
@@ -204,7 +202,7 @@ namespace DtpCore.Model
         public Claim()
         {
             Timestamps = new List<Timestamp>();
-            TrustPackages = new List<ClaimPackage>();
+            ClaimPackages = new List<ClaimPackageRelationship>();
             Scope = string.Empty;
         }
     }

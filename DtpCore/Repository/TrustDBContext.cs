@@ -9,7 +9,7 @@ namespace DtpCore.Repository
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
         public DbSet<BlockchainProof> Proofs { get; set; }
-        public DbSet<ClaimPackage> TrustPackages { get; set; }
+        public DbSet<ClaimPackageRelationship> TrustPackages { get; set; }
 
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -28,7 +28,12 @@ namespace DtpCore.Repository
             builder.Entity<Package>().HasKey(p => p.DatabaseID);
             builder.Entity<Package>().HasAlternateKey(p => p.Id);
             builder.Entity<Package>().OwnsOne(p => p.Server);
+            builder.Entity<Package>()
+                .HasMany(p => p.Claims)
+                .WithOne()
+                .HasForeignKey(c => c.PackageDatabaseID);
 
+            builder.Entity<Package>().Ignore(p => p.Templates);
 
             builder.Entity<Claim>().HasKey(p => p.DatabaseID);
             builder.Entity<Claim>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
@@ -53,19 +58,20 @@ namespace DtpCore.Repository
 
             builder.Entity<KeyValue>().HasIndex(p => p.Key);
 
-            builder.Entity<ClaimPackage>()
-                .HasKey(bc => new { bc.ClaimID, bc.PackageID });
+            builder.Entity<ClaimPackageRelationship>(relationship => {
+                relationship.HasKey(bc => new { bc.ClaimID, bc.PackageID });
 
-            builder.Entity<ClaimPackage>()
-                .HasOne(p => p.Claim)
-                .WithMany(x => x.TrustPackages)
-                .HasForeignKey(y => y.ClaimID);
+                relationship.HasOne(p => p.Claim)
+                    .WithMany(x => x.ClaimPackages)
+                    .HasForeignKey(y => y.ClaimID);
 
-            builder.Entity<ClaimPackage>()
-                .HasOne(p => p.Package)
-                .WithMany(x => x.ClaimPackages)
-                .HasForeignKey(y => y.PackageID);
+                relationship.HasOne(p => p.Package)
+                    .WithMany(x => x.ClaimPackages)
+                    .HasForeignKey(y => y.PackageID);
+            });
 
+
+            
             base.OnModelCreating(builder);
         }
 

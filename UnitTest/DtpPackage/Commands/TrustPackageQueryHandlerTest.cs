@@ -18,13 +18,13 @@ namespace UnitTest.DtpPackage.Commands
     public class TrustPackageQueryHandlerTest : StartupMock
     {
 
-        private Claim CreateTrust(string issuer, string subject)
+        private Claim CreateClaim(string issuer, string subject)
         {
             var builder = new PackageBuilder(ServiceProvider);
-            var trust = builder.BuildBinaryTrust(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Trust = trust });
+            var claim = builder.BuildBinaryClaim(issuer, subject, true);
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
             DB.SaveChanges();
-            return trust;
+            return claim;
         }
 
 
@@ -39,7 +39,7 @@ namespace UnitTest.DtpPackage.Commands
         [TestMethod]
         public void One()
         {
-            CreateTrust("A", "B");
+            CreateClaim("A", "B");
 
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
             var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
@@ -54,11 +54,11 @@ namespace UnitTest.DtpPackage.Commands
         public void Two()
         {
             // Create first package
-            CreateTrust("A", "B");
+            CreateClaim("A", "B");
             Mediator.SendAndWait(new BuildPackageCommand());
 
             // Create second package
-            CreateTrust("B", "C");
+            CreateClaim("B", "C");
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
             var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
 
