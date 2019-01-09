@@ -15,54 +15,75 @@
             </summary>
             <param name="context"></param>
         </member>
-        <member name="T:DtpServer.Controllers.PackagesController">
+        <member name="T:DtpServer.Attributes.ValidateModelStateAttribute">
+            <summary>
+            From Swagger Codegen Contributors
+            https://github.com/swagger-api/swagger-codegen
+            Model state validation attribute
+            </summary>
+        </member>
+        <member name="M:DtpServer.Attributes.ValidateModelStateAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Called before the action method is invoked
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:DtpServer.Controllers.PackageController">
             <summary>
             Handles packages 
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.PackagesController.#ctor(DtpCore.Repository.TrustDBContext)">
+        <member name="M:DtpServer.Controllers.PackageController.#ctor(MediatR.IMediator,DtpCore.Interfaces.IPackageSchemaService,DtpCore.Interfaces.ITrustDBService,System.IServiceProvider)">
             <summary>
             Constructor
             </summary>
             <param name="context"></param>
         </member>
-        <member name="M:DtpServer.Controllers.PackagesController.PostPackage(DtpCore.Model.Package)">
+        <member name="M:DtpServer.Controllers.PackageController.PostPackage(DtpCore.Model.Package)">
             <summary>
             Add a package to the server
             </summary>
             <param name="package"></param>
             <returns></returns>
         </member>
-        <member name="T:DtpServer.Controllers.TrustController">
+        <member name="T:DtpServer.Controllers.ThrowController">
             <summary>
-            Handles trust related stuff.
+            Test the exception handling in API
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.TrustController.Add(DtpCore.Model.Package)">
+        <member name="T:DtpServer.Controllers.PingController">
             <summary>
-            Add a package to the Graph and database.
+            Test for heartbeat
             </summary>
-            <param name="package"></param>
+        </member>
+        <member name="T:DtpServer.Controllers.QueryController">
+            <summary>
+            Query the Graph
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.QueryController.#ctor(DtpGraphCore.Interfaces.IGraphQueryService,DtpGraphCore.Interfaces.IQueryRequestService,System.IServiceProvider)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="service"></param>
+            <param name="queryRequestService"></param>
+            <param name="serviceProvider"></param>
+        </member>
+        <member name="M:DtpServer.Controllers.QueryController.Get(System.String,System.String,DtpGraphCore.Enumerations.QueryFlags)">
+            <summary>
+            Query the graph on a single subject
+            </summary>
+            <param name="issuer"></param>
+            <param name="subject"></param>
+            <param name="flags"></param>
             <returns></returns>
         </member>
-        <member name="M:DtpServer.Controllers.TrustController.BuildTrust(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:DtpServer.Controllers.QueryController.ResolvePost(DtpGraphCore.Model.QueryRequest)">
             <summary>
-            Create a trust, that is not added but returned for signing.
+            Query the graph on multiple subject
             </summary>
-            <returns>A newly created trust object</returns>
-        </member>
-        <member name="M:DtpServer.Controllers.TrustController.BuildTrust(DtpCore.Model.Package)">
-            <summary>
-            Build a package for the client to sign.
-            </summary>
-            <remarks>
-            A client can add the trusts to a package and this function will build the package.
-            The client however still needs to sign the package.
-            </remarks>
-            <param name="package"></param>
-            <returns>A package with calculated id</returns>
-            <response code="201">Returns the newly created item</response>
-            <response code="400">If the package do not validate</response>    
+            <param name="query"></param>
+            <returns></returns>
         </member>
         <member name="M:DtpServer.Pages.StatisticsModel.AutoSize(System.Int64)">
             <summary>

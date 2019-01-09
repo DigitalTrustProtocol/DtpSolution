@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using DtpGraphCore.Model;
 using DtpCore.Model;
 using DtpGraphCore.Extensions;
-using DtpGraphCore.Controllers;
 using DtpServer.Controllers;
 
 namespace UnitTest.DtpGraphCore
@@ -26,7 +25,8 @@ namespace UnitTest.DtpGraphCore
 
         protected IGraphQueryService _graphQueryService { get; set; } 
 
-        protected TrustController _trustController { get; set; } 
+        //protected TrustController _trustController { get; set; } 
+        protected PackageController _packageController { get; set; }
 
         protected IGraphLoadSaveService _graphLoadSaveService { get; set; } 
 
@@ -47,7 +47,8 @@ namespace UnitTest.DtpGraphCore
             _trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
             //_graphQueryService = new GraphQueryService(_graphTrustService);
             _graphQueryService = ServiceProvider.GetRequiredService<IGraphQueryService>();
-            _trustController = ServiceProvider.GetRequiredService<TrustController>();
+            //_trustController = ServiceProvider.GetRequiredService<TrustController>();
+            _packageController = ServiceProvider.GetRequiredService<PackageController>();
             _graphLoadSaveService = ServiceProvider.GetRequiredService<IGraphLoadSaveService>();
 
             BinaryTrustTrueAttributes = PackageBuilder.CreateBinaryTrustAttributes(true);

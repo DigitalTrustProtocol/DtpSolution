@@ -59,15 +59,20 @@ namespace DtpCore.Repository
             builder.Entity<KeyValue>().HasIndex(p => p.Key);
 
             builder.Entity<ClaimPackageRelationship>(relationship => {
-                relationship.HasKey(bc => new { bc.ClaimID, bc.PackageID });
+                //relationship.HasKey(bc => new { bc.ClaimID, bc.PackageID });
+                //relationship.HasIndex(p => p.ClaimID);
+                //relationship.HasIndex(p => p.PackageID);
+                relationship.HasKey(p => p.DatabaseID);
 
                 relationship.HasOne(p => p.Claim)
                     .WithMany(x => x.ClaimPackages)
-                    .HasForeignKey(y => y.ClaimID);
+                    .HasForeignKey(y => y.ClaimID)
+                    .IsRequired(false);
 
                 relationship.HasOne(p => p.Package)
                     .WithMany(x => x.ClaimPackages)
-                    .HasForeignKey(y => y.PackageID);
+                    .HasForeignKey(y => y.PackageID)
+                    .IsRequired(false); 
             });
 
 

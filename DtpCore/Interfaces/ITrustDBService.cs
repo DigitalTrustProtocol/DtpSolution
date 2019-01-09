@@ -17,10 +17,10 @@ namespace DtpCore.Interfaces
         long ID { get; set; }
 
         bool TrustExist(byte[] id);
-        Claim GetTrustById(byte[] id);
+        Claim GetClaimById(byte[] id);
         IQueryable<Claim> GetTrusts(string issuerId, string subjectId, string scopeValue);
         IQueryable<Claim> GetActiveTrust();
-        Claim GetSimilarTrust(Claim trust);
+        Claim GetSimilarClaim(Claim trust);
 
         void Add(Claim trust);
         //bool Add(Package package);

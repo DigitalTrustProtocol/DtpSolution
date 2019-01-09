@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DtpCore.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace DtpCore.Controllers
+namespace DtpServer.Controllers
 {
+    /// <summary>
+    /// Test the exception handling in API
+    /// </summary>
     [Route("api/[controller]")]
     public class ThrowController : ApiController
     {
@@ -13,6 +17,9 @@ namespace DtpCore.Controllers
         }
     }
 
+    /// <summary>
+    /// Test for heartbeat
+    /// </summary>
     [Route("api/[controller]")]
     public class PingController : ApiController
     {

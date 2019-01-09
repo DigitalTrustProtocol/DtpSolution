@@ -8,6 +8,7 @@
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <OutputType>Exe</OutputType>
     <StartupObject>DtpServer.Program</StartupObject>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +43,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.0.0.3" />
     <!--<PackageReference Include="NSwag.Core" Version="12.0.10" />-->
@@ -60,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />
+    <Folder Include="Attributes\" />
     <Folder Include="wwwroot\lib\NewFolder\" />
   </ItemGroup>
   <ItemGroup>
@@ -75,5 +78,10 @@
     <Content Update="wwwroot\resources\Proof.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="trust.dance.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

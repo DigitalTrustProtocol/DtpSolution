@@ -4,15 +4,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using DtpCore.Builders;
 using DtpCore.Enumerations;
 using DtpCore.Model;
-using DtpGraphCore.Builders;
-using DtpGraphCore.Controllers;
 using DtpGraphCore.Enumerations;
 using DtpGraphCore.Model;
 using UnitTest.DtpCore.Extensions;
 using DtpServer.Controllers;
+using DtpCore.Controllers;
 
 namespace UnitTest.DtpGraphCore
 {
@@ -32,9 +30,9 @@ namespace UnitTest.DtpGraphCore
 
             Console.WriteLine(JsonConvert.SerializeObject(_trustBuilder.Package, Formatting.Indented));
 
-            var _trustController = ServiceProvider.GetRequiredService<TrustController>();
+            var _packageController = ServiceProvider.GetRequiredService<PackageController>();
             // Test Add and schema validation
-            var result = (OkObjectResult)_trustController.Add(_trustBuilder.Package);
+            var result = (OkObjectResult)_packageController.PostPackage(_trustBuilder.Package).GetAwaiter().GetResult();
             Assert.IsNotNull(result);
 
             var httpResult = (HttpResult)result.Value;

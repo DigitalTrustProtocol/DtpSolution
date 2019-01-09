@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Claim : Migration
+    public partial class IsRequired : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -126,24 +126,26 @@ namespace DtpCore.Migrations
                 name: "ClaimPackageRelationship",
                 columns: table => new
                 {
-                    ClaimID = table.Column<int>(nullable: false),
-                    PackageID = table.Column<int>(nullable: false)
+                    DatabaseID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClaimID = table.Column<int>(nullable: true),
+                    PackageID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClaimPackageRelationship", x => new { x.ClaimID, x.PackageID });
+                    table.PrimaryKey("PK_ClaimPackageRelationship", x => x.DatabaseID);
                     table.ForeignKey(
                         name: "FK_ClaimPackageRelationship_Claim_ClaimID",
                         column: x => x.ClaimID,
                         principalTable: "Claim",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ClaimPackageRelationship_Package_PackageID",
                         column: x => x.PackageID,
                         principalTable: "Package",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,6 +210,11 @@ namespace DtpCore.Migrations
                 name: "IX_Claim_Subject_Id",
                 table: "Claim",
                 column: "Subject_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClaimPackageRelationship_ClaimID",
+                table: "ClaimPackageRelationship",
+                column: "ClaimID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClaimPackageRelationship_PackageID",

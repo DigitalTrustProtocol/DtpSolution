@@ -1,15 +1,12 @@
 ﻿using DtpCore.Builders;
-using DtpCore.Commands.Trusts;
+using DtpCore.Commands.Packages;
 using DtpCore.Extensions;
 using DtpCore.Model;
 using DtpCore.Notifications;
 using DtpPackageCore.Commands;
 using DtpPackageCore.Notifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnitTest.DtpCore.Extensions;
 
 namespace UnitTest.DtpPackage.Commands

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DtpCore.ViewModel
 {
-    public class TrustAddedResult
+    public class ClaimAddedResult
     {
         public byte[] ID { get; set; }
         public string Message { get; set; }
@@ -13,11 +13,11 @@ namespace DtpCore.ViewModel
 
     public class PackageAddedResult
     {
-        public List<TrustAddedResult> Trusts { get; set; }
+        public List<ClaimAddedResult> Claims { get; set; }
 
         public PackageAddedResult()
         {
-            Trusts = new List<TrustAddedResult>();
+            Claims = new List<ClaimAddedResult>();
 
         }
     }

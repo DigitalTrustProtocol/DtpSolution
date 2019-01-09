@@ -21,15 +21,19 @@ using MediatR;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.IO;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DtpServer
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _hostingEnv;
         private IServiceCollection _services;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
+            _hostingEnv = env;
             Configuration = configuration;
         }
 
@@ -54,6 +58,13 @@ namespace DtpServer
                     options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
 
                 options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
+            }).AddJsonOptions(opts =>
+            {
+                opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter
+                {
+                    CamelCaseText = true
+                });
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddHealthChecks()
@@ -61,20 +72,33 @@ namespace DtpServer
 
             services.AddRateLimits(); // Add Rate limits for against DDOS attacks
 
-            services.AddSwaggerGen(c =>
-             {
-                 c.SwaggerDoc("v1", new Info
-                 {
-                     Title = "DTP API",
-                     Version = "v1"
-                 });
+            services
+                .AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info
+                    {
+                        Version = "v1",
+                        Title = "DTP API",
+                        Description = "DTP API (ASP.NET Core 2.0)",
+                        Contact = new Contact()
+                        {
+                            Name = "DTP",
+                            Url = "https://trust.dance",
+                            Email = ""
+                        },
+                        TermsOfService = "MIT"
+                    });
+                    c.CustomSchemaIds(type => type.FriendlyId(true));
+                    c.DescribeAllEnumsAsStrings();
+                    //if(_hostingEnv != null)
+                    //    c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{_hostingEnv.ApplicationName}.xml");
+
+                    // Include DataAnnotation attributes on Controller Action parameters as Swagger validation rules (e.g required, pattern, ..)
+                    // Use [ValidateModelState] on Actions to actually validate it in C# as well!
+                    //c.OperationFilter<GeneratePathParamsValidationFilter>();
+                });
 
 
-                 // Set the comments path for the Swagger JSON and UI.
-                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                 c.IncludeXmlComments(xmlPath);
-             });
 
             services.AddMediatR();
 

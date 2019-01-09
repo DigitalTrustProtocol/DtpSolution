@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
-using DtpCore.Repository;
-using Sieve.Models;
-using Sieve.Services;
 using DtpCore.Controllers;
-using System.Net;
 using DtpServer.AspNetCore.MVC.Filters;
+using DtpCore.Interfaces;
+using MediatR;
+using DtpCore.Extensions;
+using DtpCore.Commands.Packages;
 
 namespace DtpServer.Controllers
 {
@@ -20,18 +16,47 @@ namespace DtpServer.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PackagesController : ApiController
+    public class PackageController : ApiController
     {
-        private readonly TrustDBContext _context;
+        private IMediator _mediator;
+
+        private IPackageSchemaService _trustSchemaService;
+        private ITrustDBService _trustDBService;
+        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="context"></param>
-        public PackagesController(TrustDBContext context)
+        public PackageController(IMediator mediator, IPackageSchemaService trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
         {
-            _context = context;
+            _mediator = mediator;
+            _trustSchemaService = trustSchemaService;
+            _trustDBService = trustDBService;
+            _serviceProvider = serviceProvider;
         }
+
+
+        /// <summary>
+        /// Add a package to the server
+        /// </summary>
+        /// <param name="package"></param>
+        /// <returns></returns>
+        // POST: api/Packages
+        [ValidatePackage]
+        [HttpPost]
+        public async Task<IActionResult> PostPackage([FromBody] Package package)
+        {
+            //_context.Packages.Add(package);
+            //await _context.SaveChangesAsync();
+
+            var result = await _mediator.Send(new AddPackageCommand { Package = package });
+
+            return StatusCode(201, result);
+            //return Created();
+            //return CreatedAtAction("GetPackage", new { id = package.DatabaseID }, package);
+        }
+
 
         ///// <summary>
         ///// List all packages
@@ -69,24 +94,6 @@ namespace DtpServer.Controllers
 
         //    return Ok(package);
         //}
-
-        /// <summary>
-        /// Add a package to the server
-        /// </summary>
-        /// <param name="package"></param>
-        /// <returns></returns>
-        // POST: api/Packages
-        [ValidatePackage]
-        [HttpPost]
-        public async Task<IActionResult> PostPackage([FromBody] Package package)
-        {
-            _context.Packages.Add(package);
-            await _context.SaveChangesAsync();
-
-            return StatusCode(201);
-            //return Created();
-            //return CreatedAtAction("GetPackage", new { id = package.DatabaseID }, package);
-        }
 
         //private bool PackageExists(int id)
         //{

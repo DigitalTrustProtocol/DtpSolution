@@ -56,11 +56,11 @@ namespace DtpCore.Services
 
         public bool TrustExist(byte[] id)
         {
-            var dbTrust = GetTrustById(id);
+            var dbTrust = GetClaimById(id);
             return (dbTrust != null);
         }
 
-        public Claim GetTrustById(byte[] id)
+        public Claim GetClaimById(byte[] id)
         {
             var dbTrust = DBContext.Claims.AsNoTracking()
                 .Include(p => p.Timestamps)
@@ -94,7 +94,7 @@ namespace DtpCore.Services
             return trusts;
         }
 
-        public Claim GetSimilarTrust(Claim trust)
+        public Claim GetSimilarClaim(Claim trust)
         {
             var query = from p in DBContext.Claims select p;
 

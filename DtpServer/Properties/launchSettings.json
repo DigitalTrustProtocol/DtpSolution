@@ -27,6 +27,11 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "https://trust.dance"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}"
     }
   }
 }

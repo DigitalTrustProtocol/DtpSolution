@@ -1,4 +1,4 @@
-﻿using DtpCore.Commands.Trusts;
+﻿using DtpCore.Commands.Packages;
 using DtpCore.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;

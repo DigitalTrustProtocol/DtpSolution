@@ -89,13 +89,22 @@ namespace DtpServer
                 {
                     options.AddServerHeader = false;
                     options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
-                    options.Listen(IPAddress.Loopback, 443, listenOptions =>
+
+                    //options.Listen(IPAddress.Loopback, 443, listenOptions =>
+                    //{
+                    //    listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("trust.dance", "My", StoreLocation.CurrentUser, allowInvalid: false));
+                    //});
+                    //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    //{
+                    //    listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true));
+                    //});
+
+                    //var file = "/root/.aspnet/https/" + "trust.dance.pfx";
+                    var file = "trust.dance.pfx";
+
+                    options.Listen(IPAddress.Any, 443, listenOptions =>
                     {
-                        listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("trust.dance", "My", StoreLocation.CurrentUser, allowInvalid: false));
-                    });
-                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                    {
-                        listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true));
+                        listenOptions.UseHttps(file, "123");
                     });
 
                 })

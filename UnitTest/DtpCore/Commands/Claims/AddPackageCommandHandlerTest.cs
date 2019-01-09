@@ -1,19 +1,11 @@
 ﻿using DtpCore.Builders;
-using DtpCore.Commands;
-using DtpCore.Commands.Trusts;
+using DtpCore.Commands.Packages;
 using DtpCore.Extensions;
-using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Notifications;
-using DtpPackageCore.Commands;
-using DtpPackageCore.Exceptions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnitTest.DtpCore.Extensions;
-using UnitTest.DtpPackage.Mocks;
 
 namespace UnitTest.DtpCore.Commands.Trusts
 {

@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Logging;
 using DtpStampCore.Interfaces;
 using UnitTest.DtpStampCore.Mocks;
-using DtpGraphCore.Controllers;
 using DtpCore.Interfaces;
 using UnitTest.DtpPackage.Mocks;
 using MediatR;
 using DtpServer.Controllers;
+using DtpCore.Controllers;
 
 namespace UnitTest
 {
@@ -43,7 +43,7 @@ namespace UnitTest
             Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
 
 
-            Services.AddTransient<TrustController>();
+            Services.AddTransient<PackageController>();
             Services.AddTransient<QueryController>();
 
             ServiceScope = Services.BuildServiceProvider(false).CreateScope();
@@ -62,11 +62,11 @@ namespace UnitTest
             ServiceScope.Dispose();
         }
 
-        public StartupMock() : base(null)
+        public StartupMock() : base(null, null)
         {
         }
 
-        public StartupMock(IConfiguration configuration) : base(configuration)
+        public StartupMock(IConfiguration configuration) : base(null, configuration)
         {
         }
 

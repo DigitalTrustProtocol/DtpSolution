@@ -24,7 +24,7 @@ namespace DtpServer.Pages.Claims
 
         public void OnGet(byte[] id)
         {
-            Claim = _trustDBService.GetTrustById(id);
+            Claim = _trustDBService.GetClaimById(id);
         }
     }
 }

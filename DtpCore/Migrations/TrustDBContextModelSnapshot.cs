@@ -83,11 +83,16 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.ClaimPackageRelationship", b =>
                 {
-                    b.Property<int>("ClaimID");
+                    b.Property<int>("DatabaseID")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("PackageID");
+                    b.Property<int?>("ClaimID");
 
-                    b.HasKey("ClaimID", "PackageID");
+                    b.Property<int?>("PackageID");
+
+                    b.HasKey("DatabaseID");
+
+                    b.HasIndex("ClaimID");
 
                     b.HasIndex("PackageID");
 
@@ -260,13 +265,11 @@ namespace DtpCore.Migrations
                 {
                     b.HasOne("DtpCore.Model.Claim", "Claim")
                         .WithMany("ClaimPackages")
-                        .HasForeignKey("ClaimID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClaimID");
 
                     b.HasOne("DtpCore.Model.Package", "Package")
                         .WithMany("ClaimPackages")
-                        .HasForeignKey("PackageID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PackageID");
                 });
 
             modelBuilder.Entity("DtpCore.Model.Package", b =>

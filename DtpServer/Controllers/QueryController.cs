@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using DtpCore.Builders;
 using DtpGraphCore.Model;
 using DtpGraphCore.Interfaces;
 using DtpCore.Controllers;
 using DtpGraphCore.Builders;
-using DtpCore.Model;
 using DtpGraphCore.Enumerations;
-using DtpCore.Interfaces;
-using System.Text;
-using DtpCore.Strategy;
 
-namespace DtpGraphCore.Controllers
+namespace DtpServer.Controllers
 {
+    /// <summary>
+    /// Query the Graph
+    /// </summary>
     [Route("api/graph/[controller]")]
     public class QueryController : ApiController
     {
@@ -22,7 +20,12 @@ namespace DtpGraphCore.Controllers
         private IQueryRequestService _queryRequestService;
         public IServiceProvider ServiceProvider { get; set; }
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="queryRequestService"></param>
+        /// <param name="serviceProvider"></param>
         public QueryController(IGraphQueryService service, IQueryRequestService queryRequestService, IServiceProvider serviceProvider)
         {
             SearchService = service;
@@ -49,6 +52,13 @@ namespace DtpGraphCore.Controllers
         //    return ResolvePost(builder.Query);
         //}
 
+        /// <summary>
+        /// Query the graph on a single subject
+        /// </summary>
+        /// <param name="issuer"></param>
+        /// <param name="subject"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
         {
@@ -61,7 +71,11 @@ namespace DtpGraphCore.Controllers
             return ResolvePost(builder.Query);
         }
 
-        // Post api/
+        /// <summary>
+        /// Query the graph on multiple subject
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ResolvePost([FromBody]QueryRequest query)
         {
@@ -69,7 +83,7 @@ namespace DtpGraphCore.Controllers
 
             var result = SearchService.Execute(query);
 
-            return ApiOk(result);
+            return Ok(result);
         }
     }
 }

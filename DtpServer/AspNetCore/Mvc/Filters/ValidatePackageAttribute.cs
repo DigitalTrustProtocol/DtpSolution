@@ -42,7 +42,13 @@ namespace DtpServer.AspNetCore.MVC.Filters
 
             if(result.Errors.Count > 0)
             {
-                context.Result = new BadRequestObjectResult(result.ToString());
+                
+                foreach (var item in result.Errors)
+                {
+                    context.ModelState.AddModelError("Package", item);
+                }
+                
+                context.Result = new BadRequestObjectResult(context.ModelState);
                 return;
             }
         }
