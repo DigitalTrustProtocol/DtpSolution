@@ -4,6 +4,7 @@ using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Configuration;
+using DtpCore.Model.Database;
 using DtpCore.Notifications;
 using DtpCore.Repository;
 using DtpPackageCore.Exceptions;
@@ -97,10 +98,11 @@ namespace DtpPackageCore.Commands
 
         private IQueryable<Claim> GetTrusts()
         {
+            var exclude = ClaimState.Replaced;
             // Get all trusts from LastTrustDatabaseID to now
             var trusts = from trust in _dbContext.Claims
                          where trust.PackageDatabaseID == null
-                            && trust.Replaced == false // Do not include replaced trusts
+                            && (trust.State & exclude) == 0 // Do not include replaced claims
                          select trust;
             return trusts;
         }

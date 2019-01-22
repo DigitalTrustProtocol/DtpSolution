@@ -196,13 +196,13 @@ namespace DtpCore.Model
         public IList<ClaimPackageRelationship> ClaimPackages { get; set; }
         public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
 
-        [JsonIgnore]
-        [Description("Current Trust has been replaced by a new Trust.")]
-        public bool Replaced { get; set; }
-
         //[JsonIgnore]
-        //[Description("The system state of the claim.")]
-        //public ClaimState State { get; set; }
+        //[Description("Current Trust has been replaced by a new Trust.")]
+        //public bool Replaced { get; set; }
+
+        [JsonIgnore]
+        [Description("The system state of the claim.")]
+        public ClaimState State { get; set; }
 
 
         public Claim()

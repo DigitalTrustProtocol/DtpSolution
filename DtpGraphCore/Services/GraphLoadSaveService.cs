@@ -27,7 +27,7 @@ namespace DtpGraphCore.Services
             var count = 0;
 
             // No need to load packages, just load trusts directly.
-            var trusts = _trustDBService.GetActiveTrust();
+            var trusts = _trustDBService.GetActiveClaims();
 
             foreach (var trust in trusts)
             {

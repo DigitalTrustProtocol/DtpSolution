@@ -128,6 +128,9 @@ namespace DtpGraphCore.Services
                 graphIssuer.Subjects = null; // Clear out all subjects with claims.
                 // Do not need to remove graphIssuer as it containes no identifying data.
                 // Would be created automatically on next reload of graph model anyways if referenced by others.
+                // The claims from the issuer will still be in memory until next reboot. 
+                // Its not possible to identify the uniqe claims belonging to the removed issuer and therefore they will stay there until next reboot.
+                // However it is not possible to get the data from the claims anymore unless issued by other issuers.
             }
 
             // Is it possble to remove the issuer?, as we do not know if any other is referencing to it.

@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using System.Collections;
 using DtpCore.Extensions;
+using DtpCore.Model.Database;
 
 namespace DtpCore.Services
 {
@@ -24,7 +25,7 @@ namespace DtpCore.Services
             }
         }
 
-        public IQueryable<Claim> Trusts
+        public IQueryable<Claim> Claims
         {
             get
             {
@@ -54,9 +55,10 @@ namespace DtpCore.Services
             DBContext = trustDBContext;
         }
 
-        public bool TrustExist(byte[] id)
+        public bool DoTrustExist(byte[] id)
         {
-            var dbTrust = GetClaimById(id);
+            // GetClaimById is slower because of includes of relative tables.
+            var dbTrust = DBContext.Claims.AsNoTracking().FirstOrDefault(p => p.Id == id);
             return (dbTrust != null);
         }
 
@@ -70,7 +72,7 @@ namespace DtpCore.Services
         }
 
 
-        public IQueryable<Claim> GetTrusts(string issuerId, string subjectId, string scopeValue)
+        public IQueryable<Claim> GetClaims(string issuerId, string subjectId, string scopeValue)
         {
             var query = from p in DBContext.Claims
                         where p.Issuer.Id == issuerId
@@ -83,25 +85,28 @@ namespace DtpCore.Services
             return query;
         }
 
-        public IQueryable<Claim> GetActiveTrust()
+        public IQueryable<Claim> GetActiveClaims(ClaimState exclude = ClaimState.Replaced)
         {
             var time = DateTime.Now.ToUnixTime();
 
             var trusts = from trust in DBContext.Claims
-                         where (trust.Activate <= time || trust.Activate == 0) && (trust.Expire > time || trust.Expire == 0) && !trust.Replaced
+                         where (trust.Activate <= time || trust.Activate == 0) 
+                         && (trust.Expire > time || trust.Expire == 0) 
+                         && (trust.State & exclude) == 0
                          select trust;
 
             return trusts;
         }
 
-        public Claim GetSimilarClaim(Claim trust)
+        public Claim GetSimilarClaim(Claim trust, ClaimState exclude = ClaimState.Replaced)
         {
             var query = from p in DBContext.Claims select p;
 
             query = query.Where(p => p.Issuer.Id == trust.Issuer.Id
                               && p.Subject.Id == trust.Subject.Id
                               && p.Type == trust.Type
-                              && p.Replaced == false);
+                              && (p.State & exclude) == 0);
+
 
             if (trust.Scope != null)
             {

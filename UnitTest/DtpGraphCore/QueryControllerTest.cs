@@ -39,7 +39,7 @@ namespace UnitTest.DtpGraphCore
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : "+ httpResult.Data);
 
             // Check db
-            Assert.AreEqual(3, _trustDBService.Trusts.Count(), $"Should be {3} Trusts");
+            Assert.AreEqual(3, _trustDBService.Claims.Count(), $"Should be {3} Trusts");
 
             // Test Graph
             var _queryController = ServiceProvider.GetRequiredService<QueryController>();

@@ -24,7 +24,7 @@ namespace DtpCore.Extensions
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IKeyValueService, KeyValueService>();
-
+            services.AddScoped<IClaimBanListService, ClaimBanListService>();
 
             services.AddTransient<PackageBuilder>();
             services.AddTransient<IPackageSchemaService, PackageSchemaService>();
