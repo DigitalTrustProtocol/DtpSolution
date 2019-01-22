@@ -37,7 +37,7 @@
             Server address
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Package.Server.Address)
+            @Html.DisplayFor(model => model.Package.Server.Id)
         </dd>
         <dt>
             Server signature
@@ -60,7 +60,7 @@
                 @Html.DisplayNameFor(model => model.Trusts[0].Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Claim)
+                @Html.DisplayNameFor(model => model.Trusts[0].Value)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Trusts[0].Activate)
@@ -87,7 +87,7 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Claim)
+                    @Html.DisplayFor(modelItem => item.Value)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Activate)

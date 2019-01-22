@@ -1,4 +1,5 @@
-﻿using DtpCore.Extensions;
+﻿using DtpCore.Builders;
+using DtpCore.Extensions;
 using DtpCore.Notifications;
 using DtpGraphCore.Interfaces;
 using MediatR;
@@ -23,11 +24,13 @@ namespace DtpGraphCore.Notifications
         public Task Handle(ClaimAddedNotification notification, CancellationToken cancellationToken)
         {
             return Task.Run(() => {
-                var trust = notification.Claim;
+                var claim = notification.Claim;
+
+
                 var time = DateTime.Now.ToUnixTime();
-                if ((trust.Expire == 0 || trust.Expire > time)
-                    && (trust.Activate == 0 || trust.Activate <= time))
-                    _graphTrustService.Add(trust);    // Add to Graph
+                if ((claim.Expire == 0 || claim.Expire > time)
+                    && (claim.Activate == 0 || claim.Activate <= time))
+                    _graphTrustService.Add(claim);    // Add to Graph
             });
         }
     }

@@ -65,7 +65,7 @@ namespace DtpGraphCore.Services
 
 
             if (!Graph.ClaimType.TryGetKey(claim.Type, out int claimTypeIndex))
-                return; // Scope was not found !
+                return; // Type was not found !
 
             int scopeIndex = -1;
             if (!Graph.Scopes.TryGetKey(claim.Scope, out scopeIndex))
@@ -94,6 +94,41 @@ namespace DtpGraphCore.Services
             graphIssuer.Subjects.Remove(subjectIndex);
             if (graphIssuer.Subjects.Count > 0)
                 return; // There are more subjects, therefore do not remove issuer.
+
+            // Is it possble to remove the issuer?, as we do not know if any other is referencing to it.
+            // There is no backpointer, so this would be a DB query.
+        }
+
+        public void RemoveByIssuer(Claim claim)
+        {
+            if (!Graph.IssuerIndex.TryGetValue(claim.Issuer.Id, out int issuerIndex))
+                return; // No issuer, then no trust!
+
+            var graphIssuer = Graph.Issuers[issuerIndex];
+
+            if(!string.IsNullOrEmpty(claim.Scope))
+            {
+                int scopeIndex = -1;
+                if (!Graph.Scopes.TryGetKey(claim.Scope, out scopeIndex))
+                    return; // Scope was not found !
+
+                foreach (var subject in graphIssuer.Subjects.Values)
+                {
+                    var list = subject.Claims.Keys.ToList();
+                    foreach (var key in list)
+                    {
+                        var subjectClaimIndex = new SubjectClaimIndex(key);
+                        if (subjectClaimIndex.Scope == scopeIndex)
+                            subject.Claims.Remove(subjectClaimIndex.Scope, subjectClaimIndex.Type);
+                    }
+                }
+            }
+            else
+            {
+                graphIssuer.Subjects = null; // Clear out all subjects with claims.
+                // Do not need to remove graphIssuer as it containes no identifying data.
+                // Would be created automatically on next reload of graph model anyways if referenced by others.
+            }
 
             // Is it possble to remove the issuer?, as we do not know if any other is referencing to it.
             // There is no backpointer, so this would be a DB query.

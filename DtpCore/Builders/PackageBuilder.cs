@@ -23,6 +23,14 @@ namespace DtpCore.Builders
         public const string RATING_TRUST_DTP1 = "rating.trust.dtp1";
         public const string RATING_TRUST_DTP1_SHORTFORM = "rt1";
 
+
+        public const string ALIAS_IDENTITY_DTP1 = "alias.identity.dtp1";
+        public const string ALIAS_IDENTITY_DTP1_SHORTFORM = "aid1";
+
+        public const string REMOVE_CLAIMS_DTP1 = "remove.claims.dtp1";
+        public const string REMOVE_CLAIMS_DTP1_SHORTFORM = "rc1";
+
+
         public Package Package { get; set; }
         private IClaimBinary _claimBinary;
 

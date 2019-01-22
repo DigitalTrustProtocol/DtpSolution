@@ -60,7 +60,7 @@ namespace DtpServer.Controllers
         /// <param name="flags"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
+        public QueryContext Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
         {
             var builder = new QueryRequestBuilder(null, PackageBuilder.BINARY_TRUST_DTP1);
             builder.Query.Flags = flags;
@@ -77,13 +77,13 @@ namespace DtpServer.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult ResolvePost([FromBody]QueryRequest query)
+        public QueryContext ResolvePost([FromBody]QueryRequest query)
         {
             _queryRequestService.Verify(query);
 
             var result = SearchService.Execute(query);
 
-            return Ok(result);
+            return result;
         }
     }
 }

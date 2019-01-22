@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DtpCore.Interfaces;
 using DtpCore.Strategy.Serialization;
 using JsonSubTypes;
+using DtpCore.Model.Database;
 
 namespace DtpCore.Model
 {
@@ -94,9 +95,9 @@ namespace DtpCore.Model
 
 
     [Table("Claim")]
-    [JsonConverter(typeof(JsonSubtypes))]
-    [JsonSubtypes.KnownSubType(typeof(BinaryClaim), "Cost")]
-    [JsonSubtypes.KnownSubTypeWithProperty(typeof(BinaryClaim), "Cost")]
+    //[JsonConverter(typeof(JsonSubtypes))]
+    //[JsonSubtypes.KnownSubType(typeof(BinaryClaim), "Cost")]
+    //[JsonSubtypes.KnownSubTypeWithProperty(typeof(BinaryClaim), "Cost")]
     [JsonObject(MemberSerialization.OptIn)]
     public class Claim : DatabaseEntity
     {
@@ -199,6 +200,11 @@ namespace DtpCore.Model
         [Description("Current Trust has been replaced by a new Trust.")]
         public bool Replaced { get; set; }
 
+        //[JsonIgnore]
+        //[Description("The system state of the claim.")]
+        //public ClaimState State { get; set; }
+
+
         public Claim()
         {
             Timestamps = new List<Timestamp>();
@@ -207,14 +213,16 @@ namespace DtpCore.Model
         }
     }
 
-    [JsonObject(MemberSerialization.OptIn)]
-    public class BinaryClaim : Claim
-    {
-        //Only relevant for the Binary trust type.
-        [JsonProperty(PropertyName = "cost")]
-        public short Cost { get; set; }
-        public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
-    }
+
+
+    //[JsonObject(MemberSerialization.OptIn)]
+    //public class BinaryClaim : Claim
+    //{
+    //    //Only relevant for the Binary trust type.
+    //    [JsonProperty(PropertyName = "cost")]
+    //    public short Cost { get; set; }
+    //    public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
+    //}
 
 
 

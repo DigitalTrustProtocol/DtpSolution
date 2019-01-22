@@ -12,16 +12,22 @@ namespace DtpGraphCore.Interfaces
         int BinaryClaimTypeIndex { get; set; }
 
         void Add(Package package);
-        void Add(IEnumerable<Claim> trusts);
-        void Add(Claim trust);
-        void Remove(Claim trust);
+        void Add(IEnumerable<Claim> claims);
+        void Add(Claim claim);
+        void Remove(Claim claim);
+
+        /// <summary>
+        /// Removes all claims in the graph belonging to the provided issuer.
+        /// </summary>
+        /// <param name="claim"></param>
+        void RemoveByIssuer(Claim claim);
 
         GraphSubject CreateGraphSubject(string subjectId);
         GraphIssuer EnsureGraphIssuer(string address);
-        GraphClaim EnsureGraphClaim(Claim trust);
-        GraphClaim CreateGraphClaim(Claim trust);
+        GraphClaim EnsureGraphClaim(Claim claim);
+        GraphClaim CreateGraphClaim(Claim claim);
         GraphClaim CreateGraphClaim(string type, string scope, string attributes);
-        int GetClaimDataIndex(Claim trust);
+        int GetClaimDataIndex(Claim claim);
         GraphSubject EnsureGraphSubject(GraphIssuer graphIssuer, string subjectId);
         void BuildPackage(QueryContext context);
 
