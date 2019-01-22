@@ -16,14 +16,16 @@ namespace DtpGraphCore.Services
     {
         public GraphModel Graph { get; set;}
         public IPackageSchemaService TrustSchema { get; }
+        private IClaimBanListService _claimBanListService;
 
         public int GlobalScopeIndex { get; set; }
         public int BinaryClaimTypeIndex { get; set; }
 
-        public GraphClaimService(GraphModel graph, IPackageSchemaService trustSchemaService)
+        public GraphClaimService(GraphModel graph, IPackageSchemaService trustSchema, IClaimBanListService claimBanListService)
         {
             Graph = graph;
-            TrustSchema = trustSchemaService;
+            TrustSchema = trustSchema;
+            _claimBanListService = claimBanListService;
         }
 
         public void Add(Package package)
@@ -41,6 +43,12 @@ namespace DtpGraphCore.Services
 
         public void Add(Claim claim)
         {
+            if (_claimBanListService.IsBanClaim(claim))
+                return;
+
+            if (_claimBanListService.IsBanned(claim))
+                return;
+
             var issuer = EnsureGraphIssuer(claim.Issuer.Id);
 
             var graphSubject = EnsureGraphSubject(issuer, claim.Subject.Id);

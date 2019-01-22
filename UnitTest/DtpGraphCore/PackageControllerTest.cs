@@ -63,7 +63,7 @@ namespace UnitTest.DtpGraphCore
 
             var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            builder.AddClaim("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.Build().Sign();
 
             result = (OkObjectResult)_packageController.PostPackage(builder.Package).GetAwaiter().GetResult();
@@ -96,7 +96,7 @@ namespace UnitTest.DtpGraphCore
 
             var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver");
-            builder.AddTrust("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            builder.AddClaim("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.CurrentClaim.Expire = 1; // Remove the trust from Graph!
             builder.Build().Sign();
 

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190109144945_IsRequired")]
-    partial class IsRequired
+    [Migration("20190122132600_State")]
+    partial class State
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,11 +63,11 @@ namespace DtpCore.Migrations
 
                     b.Property<int?>("PackageDatabaseID");
 
-                    b.Property<bool>("Replaced");
-
                     b.Property<byte[]>("Root");
 
                     b.Property<string>("Scope");
+
+                    b.Property<long>("State");
 
                     b.Property<string>("Type");
 

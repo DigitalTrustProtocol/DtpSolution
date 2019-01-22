@@ -3,6 +3,7 @@ using DtpCore.Commands.Packages;
 using DtpCore.Extensions;
 using DtpCore.Model;
 using DtpCore.Notifications;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using UnitTest.DtpCore.Extensions;
@@ -13,12 +14,19 @@ namespace UnitTest.DtpCore.Commands.Trusts
     public class AddClaimCommandHandlerTest : StartupMock
     {
 
-        private Claim CreateClaim()
+        private Claim CreateAndAddClaim()
         {
             var builder = new PackageBuilder(ServiceProvider);
             var claim = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
             DB.SaveChanges();
+            return claim;
+        }
+
+        private Claim CreateBanClaim()
+        {
+            var builder = new PackageBuilder(ServiceProvider);
+            var claim = builder.BuildClaim(PackageBuilder.REMOVE_CLAIMS_DTP1, "testissuer1", "", true);
             return claim;
         }
 
@@ -36,7 +44,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
         [TestMethod]
         public void Replace()
         {
-            var oldtrust = CreateClaim();
+            var oldtrust = CreateAndAddClaim();
 
             var builder = new PackageBuilder(ServiceProvider);
             var trust = builder.BuildBinaryClaim("testissuer1", "testsubject1", false);
@@ -55,19 +63,39 @@ namespace UnitTest.DtpCore.Commands.Trusts
         [TestMethod]
         public void Exist()
         {
-            var trust = CreateClaim();
+            var claim = CreateAndAddClaim();
 
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
 
             Assert.AreEqual(1, result.Count);
 
             Assert.IsTrue(result[0] is ClaimExistNotification);
         }
 
+
+        [TestMethod]
+        public void Ban()
+        {
+            var claim = CreateAndAddClaim(); // Create and add to DB
+
+            var ban = CreateBanClaim();
+
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = ban });
+
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(result[0] is ClaimsRemovedNotification);
+            Assert.IsTrue(result[1] is ClaimAddedNotification);
+
+            var claimCount = DB.Claims.Count();
+            Assert.AreEqual(1, claimCount);
+        }
+
+
+
         [TestMethod]
         public void Old()
         {
-            var newtrust = CreateClaim();
+            var newtrust = CreateAndAddClaim();
 
             var builder = new PackageBuilder(ServiceProvider);
             var oldtrust = builder.BuildBinaryClaim("testissuer1", "testsubject1", true, 1); 

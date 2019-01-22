@@ -35,7 +35,7 @@ namespace UnitTest.DtpCore.Strategy
         public void ObjectToStringConverter()
         {
             var builder = new PackageBuilder(ServiceProvider);
-            builder.AddTrustTrue("A", "B");
+            builder.AddClaimTrue("A", "B");
             var json = builder.Serialize(Formatting.Indented);
             Assert.IsTrue(json.Contains("\"claim\": true"));
             Console.WriteLine(json);

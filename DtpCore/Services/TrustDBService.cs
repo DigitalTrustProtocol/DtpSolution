@@ -55,16 +55,17 @@ namespace DtpCore.Services
             DBContext = trustDBContext;
         }
 
-        public bool DoTrustExist(byte[] id)
+        public bool DoClaimExist(byte[] id)
         {
             // GetClaimById is slower because of includes of relative tables.
-            var dbTrust = DBContext.Claims.AsNoTracking().FirstOrDefault(p => p.Id == id);
+            var dbTrust = DBContext.Claims.FirstOrDefault(p => p.Id == id);
+            //var dbTrust = GetClaimById(id);
             return (dbTrust != null);
         }
 
         public Claim GetClaimById(byte[] id)
         {
-            var dbTrust = DBContext.Claims.AsNoTracking()
+            var dbTrust = DBContext.Claims
                 .Include(p => p.Timestamps)
                 .Include(p => p.ClaimPackages)
                 .FirstOrDefault(p => p.Id == id);

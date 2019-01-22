@@ -21,7 +21,7 @@ namespace UnitTest.DtpCore.Extensions
             return address;
         }
 
-        public static PackageBuilder AddTrust(this PackageBuilder builder, string name)
+        public static PackageBuilder AddClaim(this PackageBuilder builder, string name)
         {
             var issuerKey = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
             var address = ScriptService.GetAddress(issuerKey);
@@ -34,15 +34,15 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
-        public static PackageBuilder AddTrust(this PackageBuilder builder, string issuerName, string subjectName, string type, string attributes)
+        public static PackageBuilder AddClaim(this PackageBuilder builder, string issuerName, string subjectName, string type, string attributes)
         {
-            builder.AddTrust(issuerName).AddSubject(subjectName, type, attributes);
+            builder.AddClaim(issuerName).AddSubject(subjectName, type, attributes);
             return builder;
         }
 
-        public static PackageBuilder AddTrustTrue(this PackageBuilder builder, string issuerName, string subjectName)
+        public static PackageBuilder AddClaimTrue(this PackageBuilder builder, string issuerName, string subjectName)
         {
-            builder.AddTrust(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
             return builder;
         }
 
@@ -72,7 +72,19 @@ namespace UnitTest.DtpCore.Extensions
         public static Claim BuildBinaryClaim(this PackageBuilder builder, string issuerName, string subjectName, bool claim, uint created = 0)
         {
             builder.SetServer("testserver");
-            builder.AddTrust(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(claim));
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(claim));
+
+            if (created > 0)
+                builder.CurrentClaim.Created = created;
+
+            builder.Build().Sign();
+            return builder.CurrentClaim;
+        }
+
+        public static Claim BuildClaim(this PackageBuilder builder, string type, string issuerName, string subjectName, bool claim, uint created = 0)
+        {
+            builder.SetServer("testserver");
+            builder.AddClaim(issuerName, subjectName, type, PackageBuilder.CreateBinaryTrustAttributes(claim));
 
             if (created > 0)
                 builder.CurrentClaim.Created = created;

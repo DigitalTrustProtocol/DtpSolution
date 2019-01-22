@@ -16,8 +16,8 @@ namespace UnitTest.DtpCore.Services
         {
             var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver")
-                .AddTrustTrue("testissuer1", "testsubject1")
-                .AddTrustTrue("testissuer2", "testsubject1")
+                .AddClaimTrue("testissuer1", "testsubject1")
+                .AddClaimTrue("testissuer2", "testsubject1")
                 .Build()
                 .Sign();
 
@@ -38,8 +38,8 @@ namespace UnitTest.DtpCore.Services
         {
             var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver")
-                .AddTrustTrue("testissuer1", "testsubject1")
-                .AddTrustTrue("testissuer2", "testsubject1")
+                .AddClaimTrue("testissuer1", "testsubject1")
+                .AddClaimTrue("testissuer2", "testsubject1")
                 .Build()
                 .Sign();
 
@@ -59,7 +59,7 @@ namespace UnitTest.DtpCore.Services
         {
             var builder = new PackageBuilder(ServiceProvider);
             builder.SetServer("testserver")
-                .AddTrustTrue("testissuer1", "testsubject1")
+                .AddClaimTrue("testissuer1", "testsubject1")
                 .Build()
                 .Sign();
             

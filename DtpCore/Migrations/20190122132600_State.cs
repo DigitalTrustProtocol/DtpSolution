@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class IsRequired : Migration
+    public partial class State : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -109,7 +109,7 @@ namespace DtpCore.Migrations
                     Expire = table.Column<uint>(nullable: false),
                     Note = table.Column<string>(nullable: true),
                     PackageDatabaseID = table.Column<int>(nullable: true),
-                    Replaced = table.Column<bool>(nullable: false)
+                    State = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -17,7 +17,7 @@ namespace DtpCore.Interfaces
         TrustDBContext DBContext { get; }
         long ID { get; set; }
 
-        bool DoTrustExist(byte[] id);
+        bool DoClaimExist(byte[] id);
         Claim GetClaimById(byte[] id);
         IQueryable<Claim> GetClaims(string issuerId, string subjectId, string scopeValue);
         IQueryable<Claim> GetActiveClaims(ClaimState exclude = ClaimState.Replaced);

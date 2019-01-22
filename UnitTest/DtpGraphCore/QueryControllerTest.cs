@@ -23,9 +23,9 @@ namespace UnitTest.DtpGraphCore
             // Setup
 
             _trustBuilder.SetServer("testserver")
-                .AddTrustTrue("A", "B")
-                .AddTrustTrue("B", "C")
-                .AddTrustTrue("C", "D")
+                .AddClaimTrue("A", "B")
+                .AddClaimTrue("B", "C")
+                .AddClaimTrue("C", "D")
                 .Build().Sign();
 
             Console.WriteLine(JsonConvert.SerializeObject(_trustBuilder.Package, Formatting.Indented));
