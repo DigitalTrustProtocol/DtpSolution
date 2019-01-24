@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpStampCore.Model;
+using DtpCore.Strategy;
 
 namespace DtpStampCore.Services
 {
@@ -25,7 +26,7 @@ namespace DtpStampCore.Services
             Repository = repository;
             _derivationStrategyFactory = derivationStrategyFactory;
 
-            DerivationStrategy = _derivationStrategyFactory.GetService("btc-pkh");
+            DerivationStrategy = _derivationStrategyFactory.GetService(DerivationSecp256k1PKH.NAME);
             Network = Network.TestNet;
             DerivationStrategy.NetworkName = Network.NetworkType.ToString();
         }

@@ -83,16 +83,11 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.ClaimPackageRelationship", b =>
                 {
-                    b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ClaimID");
 
-                    b.Property<int?>("ClaimID");
+                    b.Property<int>("PackageID");
 
-                    b.Property<int?>("PackageID");
-
-                    b.HasKey("DatabaseID");
-
-                    b.HasIndex("ClaimID");
+                    b.HasKey("ClaimID", "PackageID");
 
                     b.HasIndex("PackageID");
 
@@ -124,18 +119,24 @@ namespace DtpCore.Migrations
 
                     b.Property<uint>("Created");
 
+                    b.Property<string>("File");
+
                     b.Property<byte[]>("Id")
                         .IsRequired();
 
-                    b.Property<int?>("PackageDatabaseID");
+                    b.Property<string>("Obsoletes");
 
                     b.Property<byte[]>("Root");
+
+                    b.Property<string>("Scopes");
+
+                    b.Property<long>("State");
+
+                    b.Property<string>("Types");
 
                     b.HasKey("DatabaseID");
 
                     b.HasAlternateKey("Id");
-
-                    b.HasIndex("PackageDatabaseID");
 
                     b.ToTable("Package");
                 });
@@ -265,19 +266,17 @@ namespace DtpCore.Migrations
                 {
                     b.HasOne("DtpCore.Model.Claim", "Claim")
                         .WithMany("ClaimPackages")
-                        .HasForeignKey("ClaimID");
+                        .HasForeignKey("ClaimID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DtpCore.Model.Package", "Package")
                         .WithMany("ClaimPackages")
-                        .HasForeignKey("PackageID");
+                        .HasForeignKey("PackageID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DtpCore.Model.Package", b =>
                 {
-                    b.HasOne("DtpCore.Model.Package")
-                        .WithMany("Packages")
-                        .HasForeignKey("PackageDatabaseID");
-
                     b.OwnsOne("DtpCore.Model.ServerIdentity", "Server", b1 =>
                         {
                             b1.Property<int>("PackageDatabaseID");

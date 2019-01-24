@@ -11,7 +11,7 @@ namespace UnitTest.DtpCore.Strategy
         [TestMethod]
         public void GetAddress()
         {
-            var derivationBtcPkh = new DerivationBTCPKH();
+            var derivationBtcPkh = new DerivationSecp256k1PKH();
 
             var seed = Encoding.UTF8.GetBytes("Hello");
             var key = derivationBtcPkh.GetKey(seed);

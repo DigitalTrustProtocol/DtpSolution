@@ -81,19 +81,6 @@ namespace DtpCore.Builders
         //    return builder;
         //}
 
-        //public static PackageModel EnsureHead(PackageModel package, string version = "standard 0.1.0", string script = "btc-pkh")
-        //{
-        //    if(package.Head == null)
-        //    {
-        //        package.Head = new HeadModel
-        //        {
-        //            Version = version,
-        //            Script = script
-        //        };
-        //    }
-        //    return package;
-        //}
-
         public string Serialize(Formatting format)
         {
             return JsonConvert.SerializeObject(Package, format);
@@ -193,7 +180,7 @@ namespace DtpCore.Builders
         public PackageBuilder SetIssuer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
-                type = DerivationStrategyFactory.BTC_PKH;
+                type = DerivationSecp256k1PKH.NAME;
 
             if (CurrentClaim.Issuer == null)
                 CurrentClaim.Issuer = new IssuerIdentity();
@@ -208,7 +195,7 @@ namespace DtpCore.Builders
         public PackageBuilder SetServer(string id, string type = "", SignDelegate sign = null)
         {
             if (string.IsNullOrEmpty(type))
-                type = DerivationStrategyFactory.BTC_PKH;
+                type = DerivationSecp256k1PKH.NAME;
 
             if (Package.Server == null)
                 Package.Server = new ServerIdentity();

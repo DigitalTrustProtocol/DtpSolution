@@ -19,20 +19,32 @@ namespace DtpCore.Model
     /// <returns>Signature</returns>
     public delegate byte[] SignDelegate(byte[] data);
 
-
-    [Table("Package")]
-    [JsonObject(MemberSerialization.OptIn)]
-    //[JsonConverter(typeof(PackageConverter))] // logic for handling the template features has not been implemented.
-    public class Package : DatabaseEntity
+    [NotMapped]
+    public class PackageReference
     {
-        [JsonProperty(PropertyName = "algorithm")]
-        public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
-
+        /// <summary>
+        /// The Id of the package. 
+        /// If a root property exist, then this is used with the Id to calculate the final value based on the merkle tree defined in the algorithm property.
+        /// </summary>
         [UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "id")]
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() => Id != null && Id.Length > 0;
+
+        [JsonProperty(PropertyName = "file")]
+        public string File { get; set; }
+        public bool ShouldSerializeFile() => !string.IsNullOrWhiteSpace(File);
+    }
+
+    [NotMapped]
+    public class PackageInformation : PackageReference
+    {
+        /// <summary>
+        /// The algorithm used to calculate the Id.
+        /// </summary>
+        [JsonProperty(PropertyName = "algorithm")]
+        public string Algorithm { get; set; }
+        public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
 
         [UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "root")]
@@ -44,6 +56,32 @@ namespace DtpCore.Model
         public uint Created { get; set; }
         public bool ShouldSerializeCreated() => Created > 0;
 
+        /// <summary>
+        /// The types of claims that the packages contains.
+        /// </summary>
+        [JsonProperty(PropertyName = "types")]
+        public IList<string> Types { get; set; }
+        public bool ShouldSerializeTypes() => Types != null && Types.Count > 0;
+
+        /// <summary>
+        /// The scopes of claims that the package contains.
+        /// </summary>
+        [JsonProperty(PropertyName = "scopes")]
+        public IList<string> Scopes { get; set; }
+        public bool ShouldSerializeScopes() => Scopes != null && Scopes.Count > 0;
+
+        [JsonProperty(PropertyName = "server", NullValueHandling = NullValueHandling.Ignore)]
+        public ServerIdentity Server { get; set; }
+    }
+
+    [Table("Package")]
+    [JsonObject(MemberSerialization.OptIn)]
+    //[JsonConverter(typeof(PackageConverter))] // logic for handling the template features has not been implemented.
+    public class Package : PackageInformation
+    {
+        [JsonIgnore]
+        public int DatabaseID { get; set; } // Database row key
+
         [JsonProperty(PropertyName = "claims", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Claim> Claims { get; set; }
         public bool ShouldSerializeTrusts() => Claims != null && Claims.Count > 0;
@@ -53,28 +91,37 @@ namespace DtpCore.Model
         /// Currently not used and implemented!
         /// </summary>
         //[JsonProperty(PropertyName = "templates", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonIgnore]
-        [NotMapped]
-        public IList<Claim> Templates { get; set; }
-        public bool ShouldSerializeTemplates() => Templates != null && Templates.Count > 0;
+        //[NotMapped] // When 
+        //public IList<Claim> Templates { get; set; }
+        //public bool ShouldSerializeTemplates() => Templates != null && Templates.Count > 0;
+
+        // Not used for the moment
+        ///// <summary>
+        ///// Contains multiple packages. 
+        ///// </summary>
+        //[JsonProperty(PropertyName = "packages", NullValueHandling = NullValueHandling.Ignore)]
+        //public IList<Package> Packages { get; set; }
+        //public bool ShouldSerializePackages() => Packages != null && Packages.Count > 0;
 
         /// <summary>
-        /// Contains multiple packages. 
+        /// List of packages that are replaced by this package. 
         /// </summary>
-        [JsonProperty(PropertyName = "packages", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<Package> Packages { get; set; }
-        public bool ShouldSerializePackages() => Packages != null && Packages.Count > 0;
-
-
-        [JsonProperty(PropertyName = "server", NullValueHandling = NullValueHandling.Ignore)]
-        public ServerIdentity Server { get; set; }
+        [JsonProperty(PropertyName = "obsoletes", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<PackageReference> Obsoletes { get; set; }
+        public bool ShouldSerializeReplacing() => Obsoletes != null && Obsoletes.Count > 0;
 
         [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() => Timestamps != null && Timestamps.Count > 0;
 
+        [JsonIgnore]
+        [Description("The system state of the package.")]
+        public PackageStateType State { get; set; }
 
-        //[JsonProperty(PropertyName = "trustPackage", NullValueHandling = NullValueHandling.Ignore)]
+
+        /// <summary>
+        /// Used for internal database relationship.
+        /// </summary>
         [JsonIgnore]
         public IList<ClaimPackageRelationship> ClaimPackages { get; set; }
         public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
@@ -82,8 +129,10 @@ namespace DtpCore.Model
         public Package()
         {
             Claims = new List<Claim>();
-            Templates = new List<Claim>();
+            //Templates = new List<Claim>();
+            //Packages = new List<Package>();
             Timestamps = new List<Timestamp>();
+            Obsoletes = new List<PackageReference>();
             ClaimPackages = new List<ClaimPackageRelationship>();
         }
 
@@ -145,12 +194,10 @@ namespace DtpCore.Model
 
 
         [JsonProperty(PropertyName = "type")]
-        [JsonConverter(typeof(ObjectToStringConverter))]
         public string Type { get; set; }
 
-        [UIHint("JSON")]
+        //[UIHint("JSON")]
         [JsonProperty(PropertyName = "value")]
-        [JsonConverter(typeof(ObjectToStringConverter))]
         public virtual string Value { get; set; }
 
         //[UIHint("Serialize")]
@@ -186,6 +233,7 @@ namespace DtpCore.Model
         /// Used for direct reference to a package created by the local server. Enables to identify trusts not packaged by the local server yet.
         /// </summary>
         [JsonIgnore]
+        [Obsolete("Remove as other solutions has been found.")]
         public int? PackageDatabaseID { get; set; }
 
         /// <summary>
@@ -196,13 +244,10 @@ namespace DtpCore.Model
         public IList<ClaimPackageRelationship> ClaimPackages { get; set; }
         public bool ShouldSerializeClaimPackages() => ClaimPackages != null && ClaimPackages.Count > 0;
 
-        //[JsonIgnore]
-        //[Description("Current Trust has been replaced by a new Trust.")]
-        //public bool Replaced { get; set; }
-
         [JsonIgnore]
+        [UIHint("ClaimStateType")]
         [Description("The system state of the claim.")]
-        public ClaimState State { get; set; }
+        public ClaimStateType State { get; set; }
 
 
         public Claim()

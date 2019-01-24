@@ -98,7 +98,7 @@ namespace DtpPackageCore.Commands
 
         private IQueryable<Claim> GetTrusts()
         {
-            var exclude = ClaimState.Replaced;
+            var exclude = ClaimStateType.Replaced;
             // Get all trusts from LastTrustDatabaseID to now
             var trusts = from trust in _dbContext.Claims
                          where trust.PackageDatabaseID == null

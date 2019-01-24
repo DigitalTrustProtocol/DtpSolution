@@ -12,7 +12,7 @@ namespace DtpGraphCore.Extensions
         public static void DtpGraphCore(this IServiceCollection services)
         {
             services.AddSingleton(new GraphModel());
-            services.AddScoped<IDerivationStrategy, DerivationBTCPKH>();
+            services.AddScoped<IDerivationStrategy, DerivationSecp256k1PKH>();
             services.AddScoped<IGraphLoadSaveService, GraphLoadSaveService>();
             services.AddScoped<IGraphClaimService, GraphClaimService>();
 

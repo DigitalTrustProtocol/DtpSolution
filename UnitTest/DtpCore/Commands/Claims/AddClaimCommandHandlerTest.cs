@@ -18,16 +18,17 @@ namespace UnitTest.DtpCore.Commands.Trusts
         {
             var builder = new PackageBuilder(ServiceProvider);
             var claim = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
+            //NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = builder.Package });
             DB.SaveChanges();
             return claim;
         }
 
-        private Claim CreateBanClaim()
+        private Package CreateBanPackage()
         {
             var builder = new PackageBuilder(ServiceProvider);
             var claim = builder.BuildClaim(PackageBuilder.REMOVE_CLAIMS_DTP1, "testissuer1", "", true);
-            return claim;
+            return builder.Package;
         }
 
         [TestMethod]
@@ -69,7 +70,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
 
             Assert.AreEqual(1, result.Count);
 
-            Assert.IsTrue(result[0] is ClaimExistNotification);
+            Assert.IsTrue(result[0] is ClaimExistNotification, "Wrong type: " + result[0].GetType().Name);
         }
 
 
@@ -77,17 +78,23 @@ namespace UnitTest.DtpCore.Commands.Trusts
         public void Ban()
         {
             var claim = CreateAndAddClaim(); // Create and add to DB
+            Assert.AreEqual(1, DB.Claims.Count());
+            Assert.AreEqual(1, DB.Packages.Count());
+            Assert.AreEqual(1, DB.ClaimPackageRelationships.Count());
 
-            var ban = CreateBanClaim();
+            var ban = CreateBanPackage();
 
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = ban });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = ban });
 
-            Assert.AreEqual(2, result.Count);
+
+            Assert.AreEqual(3, result.Count);
             Assert.IsTrue(result[0] is ClaimsRemovedNotification);
             Assert.IsTrue(result[1] is ClaimAddedNotification);
+            Assert.IsTrue(result[2] is PackageAddedNotification);
 
-            var claimCount = DB.Claims.Count();
-            Assert.AreEqual(1, claimCount);
+            Assert.AreEqual(1, DB.Claims.Count());
+            Assert.AreEqual(2, DB.Packages.Count(), "There should be packages for deleted claims remaining."); 
+            Assert.AreEqual(1, DB.ClaimPackageRelationships.Count(),"There should not be old references remaining."); 
         }
 
 
@@ -95,6 +102,11 @@ namespace UnitTest.DtpCore.Commands.Trusts
         [TestMethod]
         public void Old()
         {
+            Assert.AreEqual(0, DB.Claims.Count());
+            Assert.AreEqual(0, DB.Packages.Count());
+            Assert.AreEqual(0, DB.ClaimPackageRelationships.Count());
+
+
             var newtrust = CreateAndAddClaim();
 
             var builder = new PackageBuilder(ServiceProvider);
@@ -104,7 +116,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
 
             Assert.AreEqual(1, result.Count);
 
-            Assert.IsTrue(result[0] is ClaimObsoleteNotification);
+            Assert.IsTrue(result[0] is ClaimObsoleteNotification, "Wrong type: "+ result[0].GetType().Name);
         }
 
 

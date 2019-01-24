@@ -11,7 +11,7 @@ namespace UnitTest.DtpCore.Extensions
 {
     public static class TrustBuilderExtensions
     {
-        public static IDerivationStrategy ScriptService { get; set; } = new DerivationBTCPKH();
+        public static IDerivationStrategy ScriptService { get; set; } = new DerivationSecp256k1PKH();
 
         public static string GetAddress(string name)
         {

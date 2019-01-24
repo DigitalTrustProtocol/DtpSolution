@@ -1,0 +1,11 @@
+﻿@using DtpCore.Model.Database;
+@model ClaimStateType
+<div>To be done!</div>
+@*@foreach (NotificationDeliveryType item in Enum.GetValues(typeof(ClaimStateType)))
+{
+<label for="@ViewData.TemplateInfo.GetFullHtmlFieldId(item.ToString())">@item</label>
+<input type="checkbox" id="@ViewData.TemplateInfo.GetFullHtmlFieldId(item.ToString())" name="@(ViewData.TemplateInfo.GetFullHtmlFieldName(""))" value="@item" @Html.Raw((Model & item) == item ? "checked=\"checked\"" : "") />
+}
+@{
+    <div class="monospace">@((Model != null && Model.Length == 20) ? (new KeyId(Model)).GetAddress(Network.Main).ToString() : (Model != null) ? BitConverter.ToString(Model).Replace("-", "") : "")</div>
+}*@

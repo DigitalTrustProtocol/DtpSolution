@@ -24,6 +24,8 @@ namespace UnitTest
         public ILoggerFactory LoggerFactory { get; set; }
         public IMediator Mediator { get; set; }
         public TrustDBContext DB { get; set; }
+        public ITrustDBService TrustDBService { get; set; }
+        public IClaimBanListService ClaimBanListService { get; set; }
 
 
         [TestInitialize]
@@ -52,13 +54,17 @@ namespace UnitTest
             LoggerFactory.AddConsole();
 
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
-            DB = ServiceProvider.GetRequiredService<TrustDBContext>();
+            //DB = ServiceProvider.GetRequiredService<TrustDBContext>();
+            TrustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
+            DB = TrustDBService.DBContext;
 
+            ClaimBanListService = ServiceProvider.GetRequiredService<IClaimBanListService>();
         }
 
         [TestCleanup]
         public virtual void Cleanup()
         {
+            ClaimBanListService.Clean();
             ServiceScope.Dispose();
         }
 

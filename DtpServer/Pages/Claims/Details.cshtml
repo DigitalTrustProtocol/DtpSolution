@@ -2,7 +2,7 @@
 @model DtpServer.Pages.Claims.DetailsModel
 
 @{
-    ViewData["Title"] = "Trust";
+    ViewData["Title"] = "Claim";
     Layout = "~/Pages/_Layout.cshtml";
 }
 <h2>Trust</h2>
@@ -140,10 +140,10 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Claim.Replaced)
+                @Html.DisplayNameFor(model => Model.Claim.State)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => Model.Claim.Replaced)
+                @Html.DisplayFor(modelItem => Model.Claim.State)
             </td>
         </tr>
         <tr>

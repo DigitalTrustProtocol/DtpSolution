@@ -6,7 +6,7 @@ namespace DtpCore.Services
 {
     public class TrustDerivationService
     {
-        public static IDerivationStrategy DerivationStrategy = new DerivationBTCPKH();
+        public static IDerivationStrategy DerivationStrategy = new DerivationSecp256k1PKH();
 
         public IDerivationStrategy Derivation { get; }
 

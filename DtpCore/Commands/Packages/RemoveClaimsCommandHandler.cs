@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DtpCore.Model.Database;
 
 namespace DtpCore.Commands.Packages
 {
@@ -34,22 +36,28 @@ namespace DtpCore.Commands.Packages
 
         public async Task<NotificationSegment> Handle(RemoveClaimsCommand request, CancellationToken cancellationToken)
         {
-            var claim = request.Claim;
-
-            var claims = from p in _db.Claims
+            var claims = from p in _db.Claims.Include(cp => cp.ClaimPackages).ThenInclude(p=>p.Package)
                          where p.Issuer.Id == request.Claim.Issuer.Id
                          && p.Created <= request.Claim.Created
                          && p.Id != request.Claim.Id
                          select p;
 
-            if (!string.IsNullOrEmpty(claim.Scope))
+            if (!string.IsNullOrEmpty(request.Claim.Scope))
             {
-                claims = claims.Where(p => p.Scope == claim.Scope);
+                claims = claims.Where(p => p.Scope == request.Claim.Scope);
+            }
+
+            // Mark all packages as obsolete as they contain claims for removal.
+            foreach (var claim in claims)
+            {
+                foreach (var relationship in claim.ClaimPackages)
+                {
+                    relationship.Package.State |= PackageStateType.Obsolete;
+                }
             }
 
             // Load all claims that have same issuer and is older than current and is not the same as current.
             _db.Claims.RemoveRange(claims);
-
 
             await _notifications.Publish(new ClaimsRemovedNotification { Claim = request.Claim });
             return _notifications;

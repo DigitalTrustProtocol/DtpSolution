@@ -37,7 +37,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             Assert.IsTrue(last is PackageAddedNotification);
             Assert.IsTrue(DB.Packages.Count() == 1);
             Assert.IsTrue(DB.Claims.Count() == 1);
-            Assert.IsTrue(DB.TrustPackages.Count() == 1);
+            Assert.IsTrue(DB.ClaimPackageRelationships.Count() == 1);
             Assert.IsTrue(DB.Claims.FirstOrDefault().PackageDatabaseID == null); // Should be 0
 
         }

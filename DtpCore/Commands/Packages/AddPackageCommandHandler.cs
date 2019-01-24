@@ -57,6 +57,7 @@ namespace DtpCore.Commands.Packages
             {
                 var claimNotifications = await _mediator.Send(new AddClaimCommand { Claim = claim });
 
+                // Add a relationship to a package
                 if(addPackage)
                 {
                     if (claimNotifications.LastOrDefault() is ClaimObsoleteNotification)
@@ -72,6 +73,8 @@ namespace DtpCore.Commands.Packages
                         claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = package });
                     }
                 }
+
+                _notifications.AddRange(claimNotifications);
 
                 packageResult.Claims.Add(new ClaimAddedResult { ID = claim.Id, Message = claimNotifications.LastOrDefault()?.ToString() ?? "Unknown" });
             }

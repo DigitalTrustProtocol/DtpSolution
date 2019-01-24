@@ -15,7 +15,7 @@ namespace UnitTest.DtpCore.Strategy
   ""trusts"": [
     {
       ""issuer"": {
-        ""type"": ""btc-pkh"",
+        ""type"": ""secp256k1-pkh-pkh"",
         ""address"": ""19wbhSA47bXB9sxWWH2xt8eS7612tW1QbB""
       },
       ""subject"": {

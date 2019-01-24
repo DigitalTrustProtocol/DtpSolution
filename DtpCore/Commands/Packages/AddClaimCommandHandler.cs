@@ -62,7 +62,7 @@ namespace DtpCore.Commands.Packages
                 //trust.Claim
                 //trust.Note
 
-                dbClaim.State |= ClaimState.Replaced; 
+                dbClaim.State |= ClaimStateType.Replaced; 
                 _trustDBService.Update(dbClaim);
 
                 await _notifications.Publish(new ClaimReplacedNotification { Claim = dbClaim });
@@ -70,7 +70,7 @@ namespace DtpCore.Commands.Packages
 
             if (_claimBanListService.IsBanClaim(request.Claim))
             {
-                request.Claim.State |= ClaimState.Functional | ClaimState.Ban; // Make the claim as a functional and a Ban claim.
+                request.Claim.State |= ClaimStateType.Functional | ClaimStateType.Ban; // Make the claim as a functional and a Ban claim.
 
                 // Add the claim to the ban list, but only if its is newer. 
                 // Should however have been stopped up by the database check.

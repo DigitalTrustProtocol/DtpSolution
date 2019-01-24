@@ -7,5 +7,6 @@ namespace DtpCore.Interfaces
         bool Ensure(Claim claim);
         bool IsBanned(Claim claim);
         bool IsBanClaim(Claim claim);
+        void Clean();
     }
 }

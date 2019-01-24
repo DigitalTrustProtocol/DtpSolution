@@ -7,7 +7,6 @@ namespace DtpCore.Factories
 {
     public class DerivationStrategyFactory : IDerivationStrategyFactory
     {
-        public const string BTC_PKH = "btc-pkh";
 
         private IServiceProvider _serviceProvider;
 
@@ -16,16 +15,15 @@ namespace DtpCore.Factories
             _serviceProvider = serviceProvider;
         }
 
-        public IDerivationStrategy GetService(string name = BTC_PKH)
+        public IDerivationStrategy GetService(string name = DerivationSecp256k1PKH.NAME)
         {
             if (String.IsNullOrWhiteSpace(name))
-                name = BTC_PKH;
+                name = DerivationSecp256k1PKH.NAME;
 
             Type type = null;
             switch(name.ToLower())
             {
-                case "btcpkh": type = typeof(DerivationBTCPKH); break;
-                case "btc-pkh": type = typeof(DerivationBTCPKH); break;
+                case DerivationSecp256k1PKH.NAME: type = typeof(DerivationSecp256k1PKH); break;
             }
             if (_serviceProvider == null)
                 return (IDerivationStrategy)Activator.CreateInstance(type);

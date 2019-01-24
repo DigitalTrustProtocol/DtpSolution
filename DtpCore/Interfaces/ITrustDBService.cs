@@ -20,8 +20,8 @@ namespace DtpCore.Interfaces
         bool DoClaimExist(byte[] id);
         Claim GetClaimById(byte[] id);
         IQueryable<Claim> GetClaims(string issuerId, string subjectId, string scopeValue);
-        IQueryable<Claim> GetActiveClaims(ClaimState exclude = ClaimState.Replaced);
-        Claim GetSimilarClaim(Claim trust, ClaimState exclude = ClaimState.Replaced);
+        IQueryable<Claim> GetActiveClaims(ClaimStateType exclude = ClaimStateType.Replaced);
+        Claim GetSimilarClaim(Claim trust, ClaimStateType exclude = ClaimStateType.Replaced);
 
         void Add(Claim claim);
         //bool Add(Package package);

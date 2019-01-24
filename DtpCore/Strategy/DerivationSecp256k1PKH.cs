@@ -7,11 +7,13 @@ using DtpCore.Interfaces;
 
 namespace DtpCore.Strategy
 {
-    public class DerivationBTCPKH : IDerivationStrategy
+    public class DerivationSecp256k1PKH : IDerivationStrategy
     {
         public int Length { get; }
         public int AddressLength { get; }
         public string ScriptName { get; }
+        public const string NAME = "secp256k1-pkh";
+
 
         public string NetworkName
         {
@@ -28,11 +30,14 @@ namespace DtpCore.Strategy
         
         private Network network;
 
-        public DerivationBTCPKH()
+        public DerivationSecp256k1PKH()
         {
             Length = 32; // SHA 256 = 32 bytes
             AddressLength = 40; // Temp setting, need reajustment
-            ScriptName = "btc-pkh";
+
+            // pkh = public key hash, alternative would be sh = script hash.
+            ScriptName = NAME;
+
             network = Network.Main;
         }
 

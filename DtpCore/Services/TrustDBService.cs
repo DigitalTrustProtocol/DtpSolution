@@ -86,7 +86,7 @@ namespace DtpCore.Services
             return query;
         }
 
-        public IQueryable<Claim> GetActiveClaims(ClaimState exclude = ClaimState.Replaced)
+        public IQueryable<Claim> GetActiveClaims(ClaimStateType exclude = ClaimStateType.Replaced)
         {
             var time = DateTime.Now.ToUnixTime();
 
@@ -99,7 +99,7 @@ namespace DtpCore.Services
             return trusts;
         }
 
-        public Claim GetSimilarClaim(Claim trust, ClaimState exclude = ClaimState.Replaced)
+        public Claim GetSimilarClaim(Claim trust, ClaimStateType exclude = ClaimStateType.Replaced)
         {
             var query = from p in DBContext.Claims select p;
 

@@ -58,5 +58,13 @@ namespace DtpCore.Services
             return true;
         }
 
+        public void Clean()
+        {
+            lock (lockObj)
+            {
+                BanList.Clear();
+            }
+        }
+
     }
 }

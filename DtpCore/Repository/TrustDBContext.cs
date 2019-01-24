@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
+using System;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace DtpCore.Repository
 {
@@ -9,7 +13,7 @@ namespace DtpCore.Repository
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
         public DbSet<BlockchainProof> Proofs { get; set; }
-        public DbSet<ClaimPackageRelationship> TrustPackages { get; set; }
+        public DbSet<ClaimPackageRelationship> ClaimPackageRelationships { get; set; }
 
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
@@ -33,7 +37,34 @@ namespace DtpCore.Repository
                 .WithOne()
                 .HasForeignKey(c => c.PackageDatabaseID);
 
-            builder.Entity<Package>().Ignore(p => p.Templates);
+            //builder.Entity<Package>()
+            //    .HasMany(p => p.Packages)
+            //    .WithOne()
+            //    .HasForeignKey(c => c.ParentID);
+
+            //builder.Entity<Package>()
+            //    .HasMany(p => p.Obsoletes)
+            //    .WithOne()
+            //    .HasForeignKey(c => c.ParentID);
+
+
+            builder.Entity<Package>()
+                .Property(e => e.Types)
+                .HasConversion(v => string.Join('|', v),
+                    v => v.Split('|', StringSplitOptions.RemoveEmptyEntries));
+
+            builder.Entity<Package>()
+                .Property(e => e.Scopes)
+                .HasConversion(v => string.Join('|', v),
+                    v => v.Split('|', StringSplitOptions.RemoveEmptyEntries));
+
+            builder.Entity<Package>()
+                .Property(e => e.Obsoletes)
+                .HasConversion(
+                    v => v == null || !v.Any() ? null : JsonConvert.SerializeObject(v),
+                    v => string.IsNullOrWhiteSpace(v) ? null : JsonConvert.DeserializeObject<List<PackageReference>>(v));
+
+            //builder.Entity<Package>().Ignore(p => p.Templates);
 
             builder.Entity<Claim>().HasKey(p => p.DatabaseID);
             builder.Entity<Claim>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
@@ -59,20 +90,16 @@ namespace DtpCore.Repository
             builder.Entity<KeyValue>().HasIndex(p => p.Key);
 
             builder.Entity<ClaimPackageRelationship>(relationship => {
-                //relationship.HasKey(bc => new { bc.ClaimID, bc.PackageID });
-                //relationship.HasIndex(p => p.ClaimID);
-                //relationship.HasIndex(p => p.PackageID);
-                relationship.HasKey(p => p.DatabaseID);
-
+                relationship.HasKey(bc => new { bc.ClaimID, bc.PackageID });
                 relationship.HasOne(p => p.Claim)
                     .WithMany(x => x.ClaimPackages)
                     .HasForeignKey(y => y.ClaimID)
-                    .IsRequired(false);
+                    .IsRequired(true);
 
                 relationship.HasOne(p => p.Package)
                     .WithMany(x => x.ClaimPackages)
                     .HasForeignKey(y => y.PackageID)
-                    .IsRequired(false); 
+                    .IsRequired(true); 
             });
 
 

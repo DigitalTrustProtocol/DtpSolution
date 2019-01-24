@@ -50,7 +50,7 @@ namespace UnitTest.DtpPackage.Commands
             foreach (var id in packageIds)
                 Assert.AreEqual(packageID, id);
 
-            foreach (var tp in DB.TrustPackages)
+            foreach (var tp in DB.ClaimPackageRelationships)
             {
                 Assert.IsTrue(tp.PackageID == packageID);
                 Assert.IsTrue(tp.ClaimID > 0);
@@ -76,7 +76,7 @@ namespace UnitTest.DtpPackage.Commands
                 Assert.AreEqual(packageID, trust.PackageDatabaseID);
             }
 
-            foreach (var tp in DB.TrustPackages)
+            foreach (var tp in DB.ClaimPackageRelationships)
             {
                 Assert.IsTrue(tp.PackageID == packageID);
                 Assert.IsTrue(tp.ClaimID > 0);
