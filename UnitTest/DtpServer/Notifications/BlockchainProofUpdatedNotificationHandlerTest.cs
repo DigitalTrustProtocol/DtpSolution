@@ -48,7 +48,6 @@ namespace UnitTest.DtpServer.Notifications
 
         //    var result = Mediator.SendAndWait(new AddTrustCommand { Trust = trust});
 
-        //    //Assert.IsNull(builder.CurrentTrust.PackageDatabaseID);
 
         //    //var trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
         //    //trustDBService.Add(builder.CurrentTrust);

@@ -15,15 +15,15 @@ namespace UnitTest.DtpPackage.Commands
     public class BuildTrustPackageCommandHandlerTest : StartupMock
     {
 
-        private Claim CreateTrust(string issuer, string subject)
+        private NotificationSegment CreateTrust(string issuerName, string subjectName)
         {
-            var builder = new PackageBuilder();
-            var trust = builder.BuildBinaryClaim(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = trust, Package = builder.Package });
-            DB.SaveChanges();
-            return trust;
+             var builder = new PackageBuilder();
+            builder.SetServer("testserver");
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true)).BuildClaimID();
+            
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = builder.Package });
+            return result;
         }
-
 
         [TestMethod]
         public void Empty()
@@ -31,7 +31,7 @@ namespace UnitTest.DtpPackage.Commands
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is PackageNoTrustNotification);
+            Assert.IsTrue(notifications[0] is PackageNoClaimsNotification);
         }
 
         [TestMethod]
@@ -43,18 +43,11 @@ namespace UnitTest.DtpPackage.Commands
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
             Assert.IsTrue(notifications[0] is PackageBuildNotification);
-            Assert.AreEqual(1, ((PackageBuildNotification)notifications[0]).TrustPackage.Claims.Count);
+            Assert.AreEqual(1, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
 
-            var packageID = DB.Packages.First().DatabaseID; 
-            var packageIds = DB.Claims.Select(p => p.PackageDatabaseID);
-            foreach (var id in packageIds)
-                Assert.AreEqual(packageID, id);
-
-            foreach (var tp in DB.ClaimPackageRelationships)
-            {
-                Assert.IsTrue(tp.PackageID == packageID);
-                Assert.IsTrue(tp.ClaimID > 0);
-            } 
+            var buildPackage = TrustDBService.GetBuildPackage();
+            TrustDBService.LoadPackageClaims(buildPackage);
+            Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
         }
 
         [TestMethod]
@@ -67,20 +60,12 @@ namespace UnitTest.DtpPackage.Commands
 
             Assert.AreEqual(1, notifications.Count, "There should be one notifications");
             Assert.IsTrue(notifications[0] is PackageBuildNotification);
-            Assert.AreEqual(2, ((PackageBuildNotification)notifications[0]).TrustPackage.Claims.Count);
+            Assert.AreEqual(2, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
 
-            var packageID = DB.Packages.First().DatabaseID;
-            var trusts = DB.Claims.Select(p => p);
-            foreach (var trust in trusts)
-            {
-                Assert.AreEqual(packageID, trust.PackageDatabaseID);
-            }
+            var buildPackage = TrustDBService.GetBuildPackage();
+            TrustDBService.LoadPackageClaims(buildPackage);
+            Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
 
-            foreach (var tp in DB.ClaimPackageRelationships)
-            {
-                Assert.IsTrue(tp.PackageID == packageID);
-                Assert.IsTrue(tp.ClaimID > 0);
-            }
         }
     }
 }

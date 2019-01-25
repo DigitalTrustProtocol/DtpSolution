@@ -1,4 +1,5 @@
 ﻿using DtpCore.Builders;
+using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Database;
@@ -67,9 +68,8 @@ namespace DtpCore.Commands.Packages
                 //trust.Claim
                 //trust.Note
 
-                dbClaim.State |= ClaimStateType.Replaced; 
+                dbClaim.State |= ClaimStateType.Replaced;
                 _trustDBService.Update(dbClaim);
-
                 await _notifications.Publish(new ClaimReplacedNotification { Claim = dbClaim });
             }
 
@@ -86,13 +86,16 @@ namespace DtpCore.Commands.Packages
             }
 
             // Create the relation between the package and trust
-            request.Claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = request.Package });
+            request.Claim.ClaimPackages.Add(new ClaimPackageRelationship {Package = request.Package });
 
             // The timestamp feature will be handle by the Server on creating a package for the new claims
             // request.Claim.Timestamps.Add(_mediator.SendAndWait(new CreateTimestampCommand { Source = request.Claim.Id }));
 
             // Timestamp objects gets added to the Timestamp table as well!
             _trustDBService.Add(request.Claim);
+            //_trustDBService.SaveChanges();
+            //_trustDBService.DBContext.ClaimPackageRelationships.Add(new ClaimPackageRelationship { ClaimID = request.Claim.DatabaseID, PackageID = request.Package.DatabaseID });
+            //_trustDBService.SaveChanges();
 
             await _notifications.Publish(new ClaimAddedNotification { Claim = request.Claim });
 

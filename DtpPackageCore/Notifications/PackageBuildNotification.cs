@@ -5,11 +5,11 @@ namespace DtpPackageCore.Notifications
 {
     public class PackageBuildNotification : INotification
     {
-        public Package TrustPackage { get; }
+        public Package Package { get; }
 
-        public PackageBuildNotification(Package trustPackage)
+        public PackageBuildNotification(Package package)
         {
-            TrustPackage = trustPackage;
+            Package = package;
         }
 
     }

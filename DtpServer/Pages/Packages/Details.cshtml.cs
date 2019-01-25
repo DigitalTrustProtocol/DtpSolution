@@ -6,22 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
-using DtpCore.Repository;
 using DtpCore.Collections.Generic;
+using DtpCore.Interfaces;
 
 namespace DtpServer.Pages.Packages
 {
     public class DetailsModel : PageModel
     {
-        private readonly DtpCore.Repository.TrustDBContext _context;
+        private readonly ITrustDBService _trustDBService;
 
-        public DetailsModel(DtpCore.Repository.TrustDBContext context)
+        public DetailsModel(ITrustDBService trustDBService)
         {
-            _context = context;
+            _trustDBService = trustDBService;
         }
 
         public Package Package { get; set; }
-        public PaginatedList<Claim> Trusts { get; set; }
+        public PaginatedList<Claim> Claims { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -31,16 +31,20 @@ namespace DtpServer.Pages.Packages
                 return NotFound();
             }
 
-            Package = await _context.Packages.FirstOrDefaultAsync(m => m.DatabaseID == id);
+
+
+            Package = await _trustDBService.DBContext.Packages.FirstOrDefaultAsync(m => m.DatabaseID == id);
 
             if (Package == null)
             {
                 return NotFound();
             }
 
-            var query = _context.Claims.Where(p => p.PackageDatabaseID == id).OrderBy(p=> p.Created);
-            Trusts = await PaginatedList<Claim>.CreateAsync(query, 1, 0); // PageSize = 0 is unlimited
 
+            _trustDBService.LoadPackageClaims(Package);
+
+            var query = _trustDBService.DBContext.ClaimPackageRelationships.Where(p => p.PackageID == id).Include(p => p.Claim).OrderBy(p => p.Claim.Created).Select(p => p.Claim);
+            Claims = await PaginatedList<Claim>.CreateAsync(query, 1, 0); // PageSize = 0 is unlimited
 
             return Page();
         }

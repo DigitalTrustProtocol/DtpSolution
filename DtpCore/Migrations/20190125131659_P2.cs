@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Package : Migration
+    public partial class P2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,6 +25,35 @@ namespace DtpCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BlockchainProof", x => x.DatabaseID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Claim",
+                columns: table => new
+                {
+                    DatabaseID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Algorithm = table.Column<string>(nullable: true),
+                    Id = table.Column<byte[]>(nullable: true),
+                    Root = table.Column<byte[]>(nullable: true),
+                    Created = table.Column<uint>(nullable: false),
+                    Issuer_Type = table.Column<string>(nullable: true),
+                    Issuer_Id = table.Column<string>(nullable: true),
+                    Issuer_Signature = table.Column<byte[]>(nullable: true),
+                    Subject_Type = table.Column<string>(nullable: true),
+                    Subject_Id = table.Column<string>(nullable: true),
+                    Subject_Signature = table.Column<byte[]>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(nullable: true),
+                    Scope = table.Column<string>(nullable: true),
+                    Activate = table.Column<uint>(nullable: false),
+                    Expire = table.Column<uint>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    State = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Claim", x => x.DatabaseID);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,42 +110,6 @@ namespace DtpCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Workflow", x => x.DatabaseID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Claim",
-                columns: table => new
-                {
-                    DatabaseID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Algorithm = table.Column<string>(nullable: true),
-                    Id = table.Column<byte[]>(nullable: true),
-                    Root = table.Column<byte[]>(nullable: true),
-                    Created = table.Column<uint>(nullable: false),
-                    Issuer_Type = table.Column<string>(nullable: true),
-                    Issuer_Id = table.Column<string>(nullable: true),
-                    Issuer_Signature = table.Column<byte[]>(nullable: true),
-                    Subject_Type = table.Column<string>(nullable: true),
-                    Subject_Id = table.Column<string>(nullable: true),
-                    Subject_Signature = table.Column<byte[]>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
-                    Scope = table.Column<string>(nullable: true),
-                    Activate = table.Column<uint>(nullable: false),
-                    Expire = table.Column<uint>(nullable: false),
-                    Note = table.Column<string>(nullable: true),
-                    PackageDatabaseID = table.Column<int>(nullable: true),
-                    State = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Claim", x => x.DatabaseID);
-                    table.ForeignKey(
-                        name: "FK_Claim_Package_PackageDatabaseID",
-                        column: x => x.PackageDatabaseID,
-                        principalTable: "Package",
-                        principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,11 +183,6 @@ namespace DtpCore.Migrations
                 table: "Claim",
                 column: "Id",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Claim_PackageDatabaseID",
-                table: "Claim",
-                column: "PackageDatabaseID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Claim_Issuer_Id",

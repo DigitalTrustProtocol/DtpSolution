@@ -22,17 +22,23 @@ namespace DtpCore.Interfaces
         Claim GetClaimById(byte[] id);
         IQueryable<Claim> GetClaims(string issuerId, string subjectId, string scopeValue);
         IQueryable<Claim> GetActiveClaims(ClaimStateType exclude = ClaimStateType.Replaced);
-        Claim GetSimilarClaim(Claim trust, ClaimStateType exclude = ClaimStateType.Replaced);
+        Claim GetSimilarClaim(Claim trust);
 
         void Add(Claim claim);
+        void Remove(Claim claim);
         void Add(Package package);
+        void Remove(Package package);
+
+        //void Remove(ClaimPackageRelationship claimPackageRelationship);
 
         //bool Add(Package package);
         void Update(Claim claim);
         void Update(Package package);
 
         Package GetPackageById(byte[] packageId);
-        Package GetBuildPackage(Package package, Claim claim);
+        Package GetBuildPackage();
+        Package EnsureBuildPackage();
+        void LoadPackageClaims(Package package);
 
         void EnsurePackageState(Package package);
 

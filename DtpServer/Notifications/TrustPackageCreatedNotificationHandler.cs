@@ -27,14 +27,14 @@ namespace DtpServer.Notifications
 
         public async Task Handle(PackageBuildNotification notification, CancellationToken cancellationToken)
         {
-            if (notification.TrustPackage == null || notification.TrustPackage.Id == null)
+            if (notification.Package == null || notification.Package.Id == null)
                 return;
 
-            var name = GetPackageName(notification.TrustPackage);
+            var name = GetPackageName(notification.Package);
             if (_publicFileRepository.Exist(name))
                 return;
 
-            await _publicFileRepository.WriteFileAsync(name, notification.TrustPackage.ToString()).ConfigureAwait(false);
+            await _publicFileRepository.WriteFileAsync(name, notification.Package.ToString()).ConfigureAwait(false);
 
             _logger.LogInformation($"Package {name} has been created on the public file repository.");
         }

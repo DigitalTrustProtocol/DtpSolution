@@ -51,34 +51,34 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Id)
+                @Html.DisplayNameFor(model => model.Claims[0].Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Created)
+                @Html.DisplayNameFor(model => model.Claims[0].Created)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Type)
+                @Html.DisplayNameFor(model => model.Claims[0].Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Value)
+                @Html.DisplayNameFor(model => model.Claims[0].Value)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Activate)
+                @Html.DisplayNameFor(model => model.Claims[0].Activate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Expire)
+                @Html.DisplayNameFor(model => model.Claims[0].Expire)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].State)
+                @Html.DisplayNameFor(model => model.Claims[0].State)
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Trusts)
+        @foreach (var item in Model.Claims)
         {
             <tr>
                 <td>
-                    <a asp-page="/Trusts/Details" asp-route-id="@Convert.ToBase64String(item.Id)">@Html.DisplayFor(modelItem => item.Id)</a>
+                    <a asp-page="/Claims/Details" asp-route-id="@Convert.ToBase64String(item.Id)">@Html.DisplayFor(modelItem => item.Id)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Created)

@@ -40,23 +40,25 @@ namespace DtpCore.Commands.Packages
 
             _trustDBService.EnsurePackageState(package);
 
-            // Check for existing packages
             if (package.State.Match(PackageStateType.Signed))
             {
-                if(_trustDBService.GetPackageById(package.Id) != null)
+                // Check for existing packages
+                if (_trustDBService.GetPackageById(package.Id) != null)
                 {
                     _notifications.Add(new PackageExistNotification { Package = package });
                     return _notifications;
                 }
 
-                package.Claims = null; // Do not update the chilren yet. Special cases for them.
-                _trustDBService.Add(package); // Get a DatabaseID for the package.
+                _trustDBService.Add(package); // Add package to DBContext
+            }
+            else
+            {
+                // Replace package with a build package.
+                package = _trustDBService.GetBuildPackage();
             }
 
             foreach (var claim in claims)
             {
-                package = _trustDBService.GetBuildPackage(package, claim);
-
                 var claimNotifications = await _mediator.Send(new AddClaimCommand { Claim = claim, Package = package });
 
                 _notifications.AddRange(claimNotifications);

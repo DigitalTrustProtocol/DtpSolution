@@ -82,6 +82,7 @@ namespace DtpCore.Model
         [JsonIgnore]
         public int DatabaseID { get; set; } // Database row key
 
+        [NotMapped]
         [JsonProperty(PropertyName = "claims", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Claim> Claims { get; set; }
         public bool ShouldSerializeTrusts() => Claims != null && Claims.Count > 0;
@@ -229,13 +230,6 @@ namespace DtpCore.Model
         [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() { return Timestamps != null && Timestamps.Count > 0; }
-
-        /// <summary>
-        /// Used for direct reference to a package created by the local server. Enables to identify trusts not packaged by the local server yet.
-        /// </summary>
-        [JsonIgnore]
-        [Obsolete("Remove as other solutions has been found.")]
-        public int? PackageDatabaseID { get; set; }
 
         /// <summary>
         /// A trust can belong to multiple packages created by other servers. 

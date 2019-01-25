@@ -11,6 +11,9 @@ namespace DtpCore.Model.Database
     [Flags]
     public enum ClaimStateType : long
     {
+        [Display(Name = "None")]
+        None = 0,
+
         [Display(Name = "Replaced")]
         Replaced = 1,
         /// <summary>

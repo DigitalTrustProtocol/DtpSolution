@@ -9,13 +9,13 @@ namespace DtpCore.Model
     public class ClaimPackageRelationship
     {
         [JsonProperty(PropertyName = "claimID")]
-        public int ClaimID { get; set; }
+        public int? ClaimID { get; set; }
 
         [JsonProperty(PropertyName = "claim")]
         public Claim Claim { get; set; }
 
         [JsonProperty(PropertyName = "packageID")]
-        public int PackageID { get; set; }
+        public int? PackageID { get; set; }
 
         [JsonProperty(PropertyName = "package")]
         public Package Package { get; set; }

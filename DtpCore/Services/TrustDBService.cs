@@ -4,11 +4,8 @@ using DtpCore.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
-using System.Collections;
 using DtpCore.Extensions;
 using DtpCore.Model.Database;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Collections.Generic;
 using DtpCore.Builders;
 
 namespace DtpCore.Services
@@ -62,9 +59,11 @@ namespace DtpCore.Services
 
         public bool DoClaimExist(byte[] id)
         {
-            // GetClaimById is slower because of includes of relative tables.
+            if (id == null || id.Length == 0)
+                return false;
+
             var dbTrust = DBContext.Claims.FirstOrDefault(p => p.Id == id);
-            //var dbTrust = GetClaimById(id);
+            
             return (dbTrust != null);
         }
 
@@ -104,14 +103,16 @@ namespace DtpCore.Services
             return trusts;
         }
 
-        public Claim GetSimilarClaim(Claim trust, ClaimStateType exclude = ClaimStateType.Replaced)
+        public Claim GetSimilarClaim(Claim trust)
         {
             var query = from p in DBContext.Claims select p;
 
+            // No need
+            //query  = query.Include(p => p.ClaimPackages).ThenInclude(p => p.Package);
+
             query = query.Where(p => p.Issuer.Id == trust.Issuer.Id
                               && p.Subject.Id == trust.Subject.Id
-                              && p.Type == trust.Type
-                              && (p.State & exclude) == 0);
+                              && p.Type == trust.Type);
 
 
             if (trust.Scope != null)
@@ -123,7 +124,9 @@ namespace DtpCore.Services
                 query = query.Where(p => p.Scope == null);
             }
 
-            var dbTrust = query.FirstOrDefault();
+            query = query.OrderBy(p => p.DatabaseID);
+
+            var dbTrust = query.Take(1).FirstOrDefault();
 
             return dbTrust;
         }
@@ -134,87 +137,60 @@ namespace DtpCore.Services
             DBContext.Claims.Add(trust);
         }
 
+        public void Remove(Claim claim)
+        {
+            DBContext.Remove(claim);
+        }
+
         public void Add(Package package)
         {
             DBContext.Packages.Add(package);
         }
 
-        [ThreadStatic]
-        private Package buildPackage = null;
-
-        public Package GetBuildPackage(Package package, Claim claim)
+        public void Remove(Package package)
         {
-            if (package != null)
-            {
-                if (package.State.Match(PackageStateType.Signed | PackageStateType.Building))
-                    return package;
-            }
-
-            lock (lockObj)
-            {
-                //if (buildPackage != null)
-                //    return buildPackage;
-
-                // Check if there is a builder package ready
-                buildPackage = DBContext.Packages.Where(p => (p.State & PackageStateType.Building) > 0).OrderBy(p => p.Created).FirstOrDefault();
-                if (buildPackage == null)
-                {
-
-                    // Create a new builder package, make sure that this is done syncronius.
-                    if (package == null)
-                        package = (new PackageBuilder()).Package;
-                    else
-                        buildPackage = package;
-
-                    buildPackage.State = PackageStateType.Building;
-
-                    if (buildPackage.DatabaseID == 0)
-                        Add(buildPackage);
-                    else
-                        Update(buildPackage);
-                }
-                
-                return buildPackage;
-            }
+            DBContext.Remove(package);
         }
 
 
-        //public bool Add(Package package)
-        //{
-        //    //if(package.Id == null || package.Id.Length == 0)
-        //    //{
-        //    //    //var builder = new TrustBuilder()
-        //    //}
+        /// <summary>
+        /// There will always only be one build package.
+        /// If package provided is build and signed, then it will be used.
+        /// </summary>
+        /// <returns></returns>
+        public Package GetBuildPackage()
+        {
+            lock (lockObj)
+            {
+                return EnsureBuildPackage();
+            }
+        }
 
-        //    if (DBContext.Packages.Any(f => f.Id == package.Id))
-        //        throw new ApplicationException("Package already exist");
+        public Package EnsureBuildPackage()
+        {
+            // Check if there is a builder package ready
+            var buildPackage = DBContext.Packages.Where(p => (p.State & PackageStateType.Building) > 0).Include(p=>p.ClaimPackages).ThenInclude(p=>p.Claim).FirstOrDefault();
+            if (buildPackage == null)
+            {
+                // Create a new builder package, make sure that this is done syncronius.
+                buildPackage = (new PackageBuilder()).Package;
+                buildPackage.State = PackageStateType.Building;
 
-        //    foreach (var trust in package.Trusts.ToArray())
-        //    {
-        //        var dbTrust = DBContext.Trusts.FirstOrDefault(p => p.Id == trust.Id);
-        //        if (dbTrust == null)
-        //            continue;
+                Add(buildPackage);
+                DBContext.SaveChanges();
+            }
+            return buildPackage;
+        }
 
+        public void LoadPackageClaims(Package package)
+        {
+            if (package == null)
+                return;
 
-        //        //if (package.Timestamps == null && trust.Timestamp == null)
-        //        //{
-        //        //    package.Trusts.Remove(trust);
-        //        //    continue;
-        //        //}
+            package.ClaimPackages = DBContext.ClaimPackageRelationships.Where(p => p.PackageID == package.DatabaseID).Include(p => p.Claim).ToList();
+            package.Claims = package.ClaimPackages.OrderBy(p => p.Claim.DatabaseID).Select(p => p.Claim).ToList();
+        }
 
-        //        //if (dbTrust.Timestamp == null)
-        //        //{
-        //        //    DBContext.Trusts.Remove(dbTrust);
-        //        //    continue;
-        //        //}
-
-        //        // Check timestamp
-        //    }
-
-        //    DBContext.Packages.Add(package);
-        //    DBContext.SaveChanges();
-        //    return true;
-        //}
 
         public void Update(Claim trust)
         {

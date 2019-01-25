@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190124233111_Package")]
-    partial class Package
+    [Migration("20190125131659_P2")]
+    partial class P2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,8 +61,6 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Note");
 
-                    b.Property<int?>("PackageDatabaseID");
-
                     b.Property<byte[]>("Root");
 
                     b.Property<string>("Scope");
@@ -78,16 +76,14 @@ namespace DtpCore.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("PackageDatabaseID");
-
                     b.ToTable("Claim");
                 });
 
             modelBuilder.Entity("DtpCore.Model.ClaimPackageRelationship", b =>
                 {
-                    b.Property<int>("ClaimID");
+                    b.Property<int?>("ClaimID");
 
-                    b.Property<int>("PackageID");
+                    b.Property<int?>("PackageID");
 
                     b.HasKey("ClaimID", "PackageID");
 
@@ -214,10 +210,6 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.Claim", b =>
                 {
-                    b.HasOne("DtpCore.Model.Package")
-                        .WithMany("Claims")
-                        .HasForeignKey("PackageDatabaseID");
-
                     b.OwnsOne("DtpCore.Model.IssuerIdentity", "Issuer", b1 =>
                         {
                             b1.Property<int>("ClaimDatabaseID");

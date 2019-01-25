@@ -38,7 +38,7 @@ namespace UnitTest.DtpPackage.Commands
             CreateClaim("A", "B");
 
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
-            var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
+            var addedPackage = ((PackageBuildNotification)notifications[0]).Package;
 
             var result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
@@ -56,7 +56,7 @@ namespace UnitTest.DtpPackage.Commands
             // Create second package
             CreateClaim("B", "C");
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
-            var addedPackage = ((PackageBuildNotification)notifications[0]).TrustPackage;
+            var addedPackage = ((PackageBuildNotification)notifications[0]).Package;
 
             var result = Mediator.SendAndWait(new PackageQuery());
             Assert.AreEqual(2, result.Count);

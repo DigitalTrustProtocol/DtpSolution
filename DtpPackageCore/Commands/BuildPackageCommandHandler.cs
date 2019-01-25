@@ -30,8 +30,7 @@ namespace DtpPackageCore.Commands
         IRequestHandler<BuildPackageCommand, NotificationSegment>
     {
         private IMediator _mediator;
-
-        private TrustDBContext _dbContext;
+        private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
         private ITrustPackageService _trustPackageService;
         private NotificationSegment _notifications;
@@ -39,10 +38,10 @@ namespace DtpPackageCore.Commands
         private readonly ILogger<BuildPackageCommandHandler> logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public BuildPackageCommandHandler(IMediator mediator, TrustDBContext db, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
+        public BuildPackageCommandHandler(IMediator mediator, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
-            _dbContext = db;
+            _trustDBService = trustDBService;
             _derivationStrategyFactory = derivationStrategyFactory;
             _trustPackageService = trustPackageService;
             _notifications = notifications;
@@ -53,32 +52,44 @@ namespace DtpPackageCore.Commands
 
         public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
         {
-            var trusts = GetTrusts();
-            PackageBuilder _builder = new PackageBuilder(); // _serviceProvider.GetRequiredService<TrustBuilder>();
-            _builder.AddClaim(trusts);
-            _builder.OrderClaims(); // Order trust ny ID before package ID calculation. 
+            // Get current
+            var buildPackage = _trustDBService.GetBuildPackage();
 
-            if (_builder.Package.Claims.Count == 0)
+            _trustDBService.LoadPackageClaims(buildPackage);
+
+            if(buildPackage.Claims.Count == 0)
             {
-                // No trusts found, exit
-                _notifications.Add(new PackageNoTrustNotification());
+                _notifications.Add(new PackageNoClaimsNotification());
                 return _notifications;
             }
 
-            SignPackage(_builder);
+            var builder = new PackageBuilder();
+            _trustDBService.Add(builder.Package);
 
-            _builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = _builder.Package.Id }));
-
-            // Build many to many relation
-            foreach (var trust in trusts)
+            foreach (var claim in buildPackage.Claims)
             {
-                trust.ClaimPackages.Add(new ClaimPackageRelationship { Package = _builder.Package });
+                if (claim.State.Match(ClaimStateType.Replaced))
+                    _trustDBService.Remove(claim);
+                else
+                {
+
+                    claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != buildPackage.DatabaseID).ToList(); // Remove relation to build package
+                    claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
+
+                    builder.AddClaim(claim);
+                }
             }
 
-            _dbContext.Packages.Add(_builder.Package);
-            _dbContext.SaveChanges();
+            buildPackage.Claims = null;
 
-            await _notifications.Publish(new PackageBuildNotification(_builder.Package));
+            builder.OrderClaims(); // Order trust ny ID before package ID calculation. 
+            SignPackage(builder);
+
+            builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));
+
+            _trustDBService.SaveChanges(); // Save the new package
+
+            await _notifications.Publish(new PackageBuildNotification(builder.Package));
 
             return _notifications;
         }
@@ -94,18 +105,7 @@ namespace DtpPackageCore.Commands
 
             builder.Build();
             builder.Package.SetSignature(scriptService.SignMessage(key, builder.Package.Id));
+            builder.Package.State = PackageStateType.Signed;
         }
-
-        private IQueryable<Claim> GetTrusts()
-        {
-            var exclude = ClaimStateType.Replaced;
-            // Get all trusts from LastTrustDatabaseID to now
-            var trusts = from trust in _dbContext.Claims
-                         where trust.PackageDatabaseID == null
-                            && (trust.State & exclude) == 0 // Do not include replaced claims
-                         select trust;
-            return trusts;
-        }
-
     }
 }

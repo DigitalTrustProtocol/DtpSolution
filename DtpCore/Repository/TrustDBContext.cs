@@ -35,10 +35,6 @@ namespace DtpCore.Repository
             builder.Entity<Package>().HasKey(p => p.DatabaseID);
             builder.Entity<Package>().HasIndex(p => p.Id);
             builder.Entity<Package>().OwnsOne(p => p.Server);
-            builder.Entity<Package>()
-                .HasMany(p => p.Claims)
-                .WithOne()
-                .HasForeignKey(c => c.PackageDatabaseID);
 
             //builder.Entity<Package>()
             //    .HasMany(p => p.Packages)

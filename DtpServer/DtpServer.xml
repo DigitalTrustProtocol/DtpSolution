@@ -102,6 +102,18 @@
             Static configuration 
             </summary>
         </member>
+        <member name="T:DtpServer.Startup">
+            <summary>
+            Startup class for Server
+            </summary>
+        </member>
+        <member name="M:DtpServer.Startup.#ctor(Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="env"></param>
+            <param name="configuration"></param>
+        </member>
         <member name="M:DtpServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,NicolasDorier.RateLimits.RateLimitService)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

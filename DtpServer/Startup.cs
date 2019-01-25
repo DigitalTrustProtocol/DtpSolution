@@ -26,11 +26,19 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DtpServer
 {
+    /// <summary>
+    /// Startup class for Server
+    /// </summary>
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnv;
         private IServiceCollection _services;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="env"></param>
+        /// <param name="configuration"></param>
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             _hostingEnv = env;
@@ -166,8 +174,8 @@ namespace DtpServer
                     rateLimitService.SetZone(Configuration.RateLimits());
             }
 
-            
 
+            app.DtpCore(); // Ensure configuration of core
             app.DtpGraph(); // Load the Trust Graph from Database
             app.DtpStamp();
             app.DtpPackage();
