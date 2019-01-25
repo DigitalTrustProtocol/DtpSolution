@@ -1,5 +1,6 @@
 ﻿using DtpCore.Builders;
 using DtpCore.Interfaces;
+using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Notifications;
 using MediatR;
@@ -51,6 +52,10 @@ namespace DtpCore.Commands.Packages
                 // For now, we just ignore the old trust being added. This may be from packages containing old claims.
                 if (dbClaim.Created > request.Claim.Created)
                 {
+
+                    request.Claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = request.Package });
+                    _trustDBService.Update(request.Claim);
+
                     _notifications.Add(new ClaimObsoleteNotification { OldClaim = request.Claim, ExistingClaim = dbClaim });
                     return _notifications; // Make sure not to process the old claim.
                 }
@@ -79,6 +84,9 @@ namespace DtpCore.Commands.Packages
                     _notifications.AddRange(await _mediator.Send(new RemoveClaimsCommand { Claim = request.Claim }));
                 }
             }
+
+            // Create the relation between the package and trust
+            request.Claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = request.Package });
 
             // The timestamp feature will be handle by the Server on creating a package for the new claims
             // request.Claim.Timestamps.Add(_mediator.SendAndWait(new CreateTimestampCommand { Source = request.Claim.Id }));

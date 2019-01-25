@@ -20,7 +20,7 @@ namespace UnitTest.DtpCore.Builders
         [TestMethod]
         public void Build()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver");
             var claim = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
 

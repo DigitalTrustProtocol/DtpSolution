@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190124141124_Obsolete")]
-    partial class Obsolete
+    [Migration("20190124233111_Package")]
+    partial class Package
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -123,8 +123,7 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("File");
 
-                    b.Property<byte[]>("Id")
-                        .IsRequired();
+                    b.Property<byte[]>("Id");
 
                     b.Property<string>("Obsoletes");
 
@@ -138,7 +137,7 @@ namespace DtpCore.Migrations
 
                     b.HasKey("DatabaseID");
 
-                    b.HasAlternateKey("Id");
+                    b.HasIndex("Id");
 
                     b.ToTable("Package");
                 });

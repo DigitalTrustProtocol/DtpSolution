@@ -17,9 +17,9 @@ namespace UnitTest.DtpPackage.Commands
 
         private Claim CreateTrust(string issuer, string subject)
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             var trust = builder.BuildBinaryClaim(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = trust });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = trust, Package = builder.Package });
             DB.SaveChanges();
             return trust;
         }

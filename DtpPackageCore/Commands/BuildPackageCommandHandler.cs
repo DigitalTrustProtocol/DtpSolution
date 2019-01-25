@@ -54,7 +54,7 @@ namespace DtpPackageCore.Commands
         public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
         {
             var trusts = GetTrusts();
-            PackageBuilder _builder = new PackageBuilder(_serviceProvider); // _serviceProvider.GetRequiredService<TrustBuilder>();
+            PackageBuilder _builder = new PackageBuilder(); // _serviceProvider.GetRequiredService<TrustBuilder>();
             _builder.AddClaim(trusts);
             _builder.OrderClaims(); // Order trust ny ID before package ID calculation. 
 

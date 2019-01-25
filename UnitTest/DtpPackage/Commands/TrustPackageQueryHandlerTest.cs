@@ -16,9 +16,9 @@ namespace UnitTest.DtpPackage.Commands
 
         private Claim CreateClaim(string issuer, string subject)
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             var claim = builder.BuildBinaryClaim(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim });
+            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim, Package = builder.Package });
             DB.SaveChanges();
             return claim;
         }

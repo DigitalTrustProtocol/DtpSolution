@@ -10,7 +10,7 @@ namespace DtpCore.Notifications
     {
         
         public Package Package { get; set; }
-        public PackageAddedResult Result{ get; set; }
+        //public PackageAddedResult Result{ get; set; }
 
         public override string ToString()
         {

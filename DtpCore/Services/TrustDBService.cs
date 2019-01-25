@@ -7,11 +7,16 @@ using System;
 using System.Collections;
 using DtpCore.Extensions;
 using DtpCore.Model.Database;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
+using DtpCore.Builders;
 
 namespace DtpCore.Services
 {
     public class TrustDBService : ITrustDBService
     {
+        private static object lockObj = new object();
+
         public long ID { get; set; }
         public TrustDBContext DBContext { get; }
 
@@ -129,6 +134,51 @@ namespace DtpCore.Services
             DBContext.Claims.Add(trust);
         }
 
+        public void Add(Package package)
+        {
+            DBContext.Packages.Add(package);
+        }
+
+        [ThreadStatic]
+        private Package buildPackage = null;
+
+        public Package GetBuildPackage(Package package, Claim claim)
+        {
+            if (package != null)
+            {
+                if (package.State.Match(PackageStateType.Signed | PackageStateType.Building))
+                    return package;
+            }
+
+            lock (lockObj)
+            {
+                //if (buildPackage != null)
+                //    return buildPackage;
+
+                // Check if there is a builder package ready
+                buildPackage = DBContext.Packages.Where(p => (p.State & PackageStateType.Building) > 0).OrderBy(p => p.Created).FirstOrDefault();
+                if (buildPackage == null)
+                {
+
+                    // Create a new builder package, make sure that this is done syncronius.
+                    if (package == null)
+                        package = (new PackageBuilder()).Package;
+                    else
+                        buildPackage = package;
+
+                    buildPackage.State = PackageStateType.Building;
+
+                    if (buildPackage.DatabaseID == 0)
+                        Add(buildPackage);
+                    else
+                        Update(buildPackage);
+                }
+                
+                return buildPackage;
+            }
+        }
+
+
         //public bool Add(Package package)
         //{
         //    //if(package.Id == null || package.Id.Length == 0)
@@ -171,14 +221,43 @@ namespace DtpCore.Services
             DBContext.Claims.Update(trust);
         }
 
-        public Package GetPackage(byte[] packageId)
+        public void Update(Package package)
         {
-            var task = Packages.SingleOrDefaultAsync(f => f.Id == packageId); 
-
-            task.Wait();
-
-            return task.Result;
+            DBContext.Packages.Update(package);
         }
 
+        public Package GetPackageById(byte[] packageId)
+        {
+            if (packageId == null || packageId.Length == 0)
+                return null;
+
+            var task = Packages.SingleOrDefaultAsync(f => f.Id == packageId); 
+
+            return task.GetAwaiter().GetResult();
+        }
+
+        public void EnsurePackageState(Package package)
+        {
+            if (package == null)
+                return;
+
+            if (package.State > 0)
+                return;
+
+            package.State = PackageStateType.New;
+
+            // Packages without ID is a client submitted packages containing new claims.
+            // Packages with ID, is commonly a package from another server.
+            if ((package.Id != null && package.Id.Length > 0))
+                package.State = PackageStateType.Build;
+
+            if(package.Server != null && package.Server.Signature != null && package.Server.Signature.Length > 0)
+                package.State = PackageStateType.Signed;
+        }
+
+        public void SaveChanges()
+        {
+            DBContext.SaveChanges();
+        }
     }
 }

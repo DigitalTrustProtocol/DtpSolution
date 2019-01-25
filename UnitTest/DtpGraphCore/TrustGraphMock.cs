@@ -43,7 +43,7 @@ namespace UnitTest.DtpGraphCore
         {
             base.Init();
             _graphTrustService = ServiceProvider.GetRequiredService<IGraphClaimService>();
-            _trustBuilder = new PackageBuilder(ServiceProvider);
+            _trustBuilder = new PackageBuilder();
             _trustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
             //_graphQueryService = new GraphQueryService(_graphTrustService);
             _graphQueryService = ServiceProvider.GetRequiredService<IGraphQueryService>();

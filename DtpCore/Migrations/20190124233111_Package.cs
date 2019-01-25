@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Obsolete : Migration
+    public partial class Package : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,7 +47,7 @@ namespace DtpCore.Migrations
                 {
                     DatabaseID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Id = table.Column<byte[]>(nullable: false),
+                    Id = table.Column<byte[]>(nullable: true),
                     File = table.Column<string>(nullable: true),
                     Algorithm = table.Column<string>(nullable: true),
                     Root = table.Column<byte[]>(nullable: true),
@@ -63,7 +63,6 @@ namespace DtpCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Package", x => x.DatabaseID);
-                    table.UniqueConstraint("AK_Package_Id", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,6 +215,11 @@ namespace DtpCore.Migrations
                 name: "IX_KeyValues_Key",
                 table: "KeyValues",
                 column: "Key");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Package_Id",
+                table: "Package",
+                column: "Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_BlockchainProofDatabaseID",

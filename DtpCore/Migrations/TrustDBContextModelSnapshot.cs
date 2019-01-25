@@ -121,8 +121,7 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("File");
 
-                    b.Property<byte[]>("Id")
-                        .IsRequired();
+                    b.Property<byte[]>("Id");
 
                     b.Property<string>("Obsoletes");
 
@@ -136,7 +135,7 @@ namespace DtpCore.Migrations
 
                     b.HasKey("DatabaseID");
 
-                    b.HasAlternateKey("Id");
+                    b.HasIndex("Id");
 
                     b.ToTable("Package");
                 });

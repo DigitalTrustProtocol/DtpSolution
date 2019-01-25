@@ -27,7 +27,7 @@ namespace DtpCore.Model
         /// If a root property exist, then this is used with the Id to calculate the final value based on the merkle tree defined in the algorithm property.
         /// </summary>
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id", Order = -3)]
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() => Id != null && Id.Length > 0;
 
@@ -42,17 +42,17 @@ namespace DtpCore.Model
         /// <summary>
         /// The algorithm used to calculate the Id.
         /// </summary>
-        [JsonProperty(PropertyName = "algorithm")]
+        [JsonProperty(PropertyName = "algorithm", Order = -2)]
         public string Algorithm { get; set; }
         public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
 
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "root")]
+        [JsonProperty(PropertyName = "root", Order = 30)]
         public byte[] Root { get; set; }
         public bool ShouldSerializeRoot() { return Root != null; }
 
         [UIHint("UnixTimeUInt")]
-        [JsonProperty(PropertyName = "created")]
+        [JsonProperty(PropertyName = "created", Order = 40)]
         public uint Created { get; set; }
         public bool ShouldSerializeCreated() => Created > 0;
 
@@ -134,6 +134,7 @@ namespace DtpCore.Model
             Timestamps = new List<Timestamp>();
             Obsoletes = new List<PackageReference>();
             ClaimPackages = new List<ClaimPackageRelationship>();
+            Server = new ServerIdentity();
         }
 
         public override string ToString()

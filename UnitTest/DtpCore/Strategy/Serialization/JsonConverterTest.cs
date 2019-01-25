@@ -34,7 +34,7 @@ namespace UnitTest.DtpCore.Strategy
         [TestMethod]
         public void ObjectToStringConverter()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.AddClaimTrue("A", "B");
             var json = builder.Serialize(Formatting.Indented);
             Assert.IsTrue(json.Contains("\"claim\": true"));
@@ -60,7 +60,7 @@ namespace UnitTest.DtpCore.Strategy
         [TestMethod]
         public void SerializeDeserialize()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             var trust = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var data = JsonConvert.SerializeObject(trust, Formatting.Indented);
             Console.WriteLine(data);

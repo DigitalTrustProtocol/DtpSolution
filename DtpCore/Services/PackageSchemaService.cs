@@ -140,7 +140,7 @@ namespace DtpCore.Services
             {
                 try
                 {
-                    var testBuilder = new PackageBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
                     var trustIndex = 0;
                     testBuilder.AddClaim(trust);
                     ValidateTrust(trustIndex++, trust, result);
@@ -163,7 +163,7 @@ namespace DtpCore.Services
                 {
                     var script = _merkleStrategyFactory.GetStrategy(package.Algorithm);
                 
-                    var testBuilder = new PackageBuilder(_derivationStrategyFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
                     var trustIndex = 0;
                     if(package.Claims.Count == 0)
                     {

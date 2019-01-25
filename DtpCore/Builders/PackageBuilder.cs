@@ -9,6 +9,7 @@ using DtpCore.Factories;
 using System;
 using DtpCore.Strategy;
 using DtpCore.Collections.Generic;
+using DtpCore.Model.Database;
 
 namespace DtpCore.Builders
 {
@@ -44,25 +45,25 @@ namespace DtpCore.Builders
         }
 
 
-        private IDerivationStrategyFactory _derivationServiceFactory;
+        //private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
         private IHashAlgorithmFactory _hashAlgorithmFactory;
 
 
-        public PackageBuilder(IServiceProvider serviceProvider) : this(new DerivationStrategyFactory(serviceProvider), new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new ClaimBinary())
+        public PackageBuilder() : this(new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new ClaimBinary())
         {
             
         }
 
-        public PackageBuilder(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
+        public PackageBuilder(IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
         {
             Package = new Package
             {
                 Created = (uint)DateTime.UtcNow.ToUnixTime(),
-                Claims = new List<Claim>(),
-                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1
+                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1,
+                State = PackageStateType.New
             };
-            _derivationServiceFactory = derivationServiceFactory;
+            //_derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
             _hashAlgorithmFactory = hashAlgorithmFactory;
             _claimBinary = trustBinary;
@@ -295,6 +296,7 @@ namespace DtpCore.Builders
 
             
             Package.Id = merkleTree.HashAlgorithm.HashOf(_claimBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
+            Package.State = PackageStateType.Build;
 
             return this;
         }
@@ -322,6 +324,7 @@ namespace DtpCore.Builders
             }
 
             SignServer(Package);
+            Package.State = PackageStateType.Signed;
 
             return Package;
         }

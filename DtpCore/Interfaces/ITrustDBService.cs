@@ -3,6 +3,7 @@ using System.Linq;
 using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Repository;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DtpCore.Interfaces
 {
@@ -24,11 +25,17 @@ namespace DtpCore.Interfaces
         Claim GetSimilarClaim(Claim trust, ClaimStateType exclude = ClaimStateType.Replaced);
 
         void Add(Claim claim);
+        void Add(Package package);
+
         //bool Add(Package package);
         void Update(Claim claim);
-        
-        Package GetPackage(byte[] packageId);
+        void Update(Package package);
 
-        
+        Package GetPackageById(byte[] packageId);
+        Package GetBuildPackage(Package package, Claim claim);
+
+        void EnsurePackageState(Package package);
+
+        void SaveChanges();
     }
 }

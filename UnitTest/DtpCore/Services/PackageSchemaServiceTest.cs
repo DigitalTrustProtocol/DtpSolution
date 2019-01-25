@@ -14,7 +14,7 @@ namespace UnitTest.DtpCore.Services
         [TestMethod]
         public void GetTrustTypeString()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver")
                 .AddClaimTrue("testissuer1", "testsubject1")
                 .AddClaimTrue("testissuer2", "testsubject1")
@@ -36,7 +36,7 @@ namespace UnitTest.DtpCore.Services
         [TestMethod]
         public void ValidatePackage()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver")
                 .AddClaimTrue("testissuer1", "testsubject1")
                 .AddClaimTrue("testissuer2", "testsubject1")
@@ -57,7 +57,7 @@ namespace UnitTest.DtpCore.Services
         [TestMethod]
         public void ValidateTrust()
         {
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver")
                 .AddClaimTrue("testissuer1", "testsubject1")
                 .Build()

@@ -24,13 +24,16 @@ namespace DtpCore.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#if DEBUG
+            optionsBuilder.EnableSensitiveDataLogging(true);
+#endif
         }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Package>().HasKey(p => p.DatabaseID);
-            builder.Entity<Package>().HasAlternateKey(p => p.Id);
+            builder.Entity<Package>().HasIndex(p => p.Id);
             builder.Entity<Package>().OwnsOne(p => p.Server);
             builder.Entity<Package>()
                 .HasMany(p => p.Claims)
@@ -46,7 +49,7 @@ namespace DtpCore.Repository
             //    .HasMany(p => p.Obsoletes)
             //    .WithOne()
             //    .HasForeignKey(c => c.ParentID);
-
+            
 
             builder.Entity<Package>()
                 .Property(e => e.Types)

@@ -61,7 +61,7 @@ namespace UnitTest.DtpGraphCore
             var httpResult = (HttpResult)result.Value;
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver");
             builder.AddClaim("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.Build().Sign();
@@ -94,7 +94,7 @@ namespace UnitTest.DtpGraphCore
             var httpResult = (HttpResult)result.Value;
             Assert.AreEqual(HttpResultStatusType.Success.ToString(), httpResult.Status, httpResult.Message + " : " + httpResult.Data);
 
-            var builder = new PackageBuilder(ServiceProvider);
+            var builder = new PackageBuilder();
             builder.SetServer("testserver");
             builder.AddClaim("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
             builder.CurrentClaim.Expire = 1; // Remove the trust from Graph!

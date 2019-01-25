@@ -69,7 +69,7 @@
                 @Html.DisplayNameFor(model => model.Trusts[0].Expire)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trusts[0].Replaced)
+                @Html.DisplayNameFor(model => model.Trusts[0].State)
             </th>
         </tr>
     </thead>
@@ -96,7 +96,7 @@
                     @Html.DisplayFor(modelItem => item.Expire)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Replaced)
+                    @Html.DisplayFor(modelItem => item.State)
                 </td>
             </tr>
         }
