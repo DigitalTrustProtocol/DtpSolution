@@ -12,6 +12,7 @@ using DtpCore.Commands;
 using DtpCore.Model;
 using UnitTest.DtpStampCore.Mocks;
 using DtpCore.Enumerations;
+using DtpCore.Strategy;
 
 namespace UnitTest.DtpStampCore.Workflows
 {
@@ -38,7 +39,7 @@ namespace UnitTest.DtpStampCore.Workflows
         public void One()
         {
             var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-            var derivationStrategy = derivationStrategyFactory.GetService("btcpkh");
+            var derivationStrategy = derivationStrategyFactory.GetService(DerivationSecp256k1PKH.NAME);
             var one = Encoding.UTF8.GetBytes("Hello world\n");
             var oneHash = derivationStrategy.HashOf(one);
 
@@ -66,7 +67,7 @@ namespace UnitTest.DtpStampCore.Workflows
         public void Many()
         {
             var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-            var derivationStrategy = derivationStrategyFactory.GetService("btcpkh");
+            var derivationStrategy = derivationStrategyFactory.GetService(DerivationSecp256k1PKH.NAME);
             var one = Encoding.UTF8.GetBytes("Hello world\n");
             var oneHash = derivationStrategy.HashOf(one);
 

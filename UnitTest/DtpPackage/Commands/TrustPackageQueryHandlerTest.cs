@@ -14,13 +14,14 @@ namespace UnitTest.DtpPackage.Commands
     public class TrustPackageQueryHandlerTest : StartupMock
     {
 
-        private Claim CreateClaim(string issuer, string subject)
+        private NotificationSegment CreateClaim(string issuerName, string subjectName)
         {
             var builder = new PackageBuilder();
-            var claim = builder.BuildBinaryClaim(issuer, subject, true);
-            NotificationSegment result = Mediator.SendAndWait(new AddClaimCommand { Claim = claim, Package = builder.Package });
-            DB.SaveChanges();
-            return claim;
+            builder.SetServer("testserver");
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true)).BuildClaimID();
+
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = builder.Package });
+            return result;
         }
 
 
@@ -42,8 +43,10 @@ namespace UnitTest.DtpPackage.Commands
 
             var result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
-            Assert.AreEqual(addedPackage.Claims.Count, result[0].Claims.Count);
+            var package = result[0];
+            TrustDBService.LoadPackageClaims(package);
+            Assert.AreEqual(addedPackage.DatabaseID, package.DatabaseID);
+            Assert.AreEqual(addedPackage.Claims.Count, package.Claims.Count);
         }
 
         [TestMethod]
@@ -59,12 +62,15 @@ namespace UnitTest.DtpPackage.Commands
             var addedPackage = ((PackageBuildNotification)notifications[0]).Package;
 
             var result = Mediator.SendAndWait(new PackageQuery());
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(3, result.Count); // Build package and two customs
 
             result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(addedPackage.DatabaseID, result[0].DatabaseID);
-            Assert.AreEqual(addedPackage.Claims.Count, result[0].Claims.Count);
+
+            var package = result[0];
+            TrustDBService.LoadPackageClaims(package);
+            Assert.AreEqual(addedPackage.DatabaseID, package.DatabaseID);
+            Assert.AreEqual(addedPackage.Claims.Count, package.Claims.Count);
         }
     }
 }

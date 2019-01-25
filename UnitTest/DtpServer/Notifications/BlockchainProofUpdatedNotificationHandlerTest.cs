@@ -30,7 +30,7 @@ namespace UnitTest.DtpServer.Notifications
         //{
         //    // Create the source
         //    //var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
-        //    //var derivationStrategy = derivationStrategyFactory.GetService("btcpkh");
+        //    //var derivationStrategy = derivationStrategyFactory.GetService(DerivationSecp256k1PKH.NAME);
         //    //var one = Encoding.UTF8.GetBytes("Hello world\n");
         //    //var oneHash = derivationStrategy.HashOf(one);
 

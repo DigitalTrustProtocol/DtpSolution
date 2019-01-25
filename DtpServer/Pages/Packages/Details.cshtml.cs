@@ -33,7 +33,7 @@ namespace DtpServer.Pages.Packages
 
 
 
-            Package = await _trustDBService.DBContext.Packages.FirstOrDefaultAsync(m => m.DatabaseID == id);
+            Package = await _trustDBService.DBContext.Packages.Include(p=>p.Timestamps).FirstOrDefaultAsync(m => m.DatabaseID == id);
 
             if (Package == null)
             {

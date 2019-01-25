@@ -31,31 +31,31 @@ namespace UnitTest.DtpCore.Strategy
       ]
     }";
 
-        [TestMethod]
-        public void ObjectToStringConverter()
-        {
-            var builder = new PackageBuilder();
-            builder.AddClaimTrue("A", "B");
-            var json = builder.Serialize(Formatting.Indented);
-            Assert.IsTrue(json.Contains("\"claim\": true"));
-            Console.WriteLine(json);
+        //[TestMethod]
+        //public void ObjectToStringConverter()
+        //{
+        //    var builder = new PackageBuilder();
+        //    builder.AddClaimTrue("A", "B");
+        //    var json = builder.Serialize(Formatting.Indented);
+        //    Assert.IsTrue(json.Contains("\"claim\": true"));
+        //    Console.WriteLine(json);
 
-            // Test claim string 
-            var package = JsonConvert.DeserializeObject<Package>(json);
-            var trust = package.Claims[0];
-            Assert.IsTrue(trust.Value == builder.CurrentClaim.Value);
+        //    // Test claim string 
+        //    var package = JsonConvert.DeserializeObject<Package>(json);
+        //    var trust = package.Claims[0];
+        //    Assert.IsTrue(trust.Value == builder.CurrentClaim.Value);
 
 
-        }
+        //}
 
-        [TestMethod]
-        public void TestParse()
-        {
-            // Test claim string 
-            var package = JsonConvert.DeserializeObject<Package>(JSONdata);
-            var trust = package.Claims[0];
-            Assert.IsTrue(trust.Type.Length > 0);
-        }
+        //[TestMethod]
+        //public void TestParse()
+        //{
+        //    // Test claim string 
+        //    var package = JsonConvert.DeserializeObject<Package>(JSONdata);
+        //    var trust = package.Claims[0];
+        //    Assert.IsTrue(trust.Type.Length > 0);
+        //}
 
         [TestMethod]
         public void SerializeDeserialize()

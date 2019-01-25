@@ -14,27 +14,28 @@ namespace DtpPackageCore.Commands
     public class PackageQueryHandler : IRequestHandler<PackageQuery, IPaginatedList<Package>>
     {
         private IMediator _mediator;
-        private TrustDBContext _db;
+        private ITrustDBService _trustDBService;
         private readonly ILogger<PackageQueryHandler> _logger;
 
-        public PackageQueryHandler(IMediator mediator, TrustDBContext db, ILogger<PackageQueryHandler> logger)
+        public PackageQueryHandler(IMediator mediator, ITrustDBService trustDBService, ILogger<PackageQueryHandler> logger)
         {
             _mediator = mediator;
-            _db = db;
+            _trustDBService = trustDBService;
             _logger = logger;
         }
 
         public async Task<IPaginatedList<Package>> Handle(PackageQuery request, CancellationToken cancellationToken)
         {
-            var query = _db.Packages.AsNoTracking();
+            var query = _trustDBService.Packages.AsNoTracking();
 
-            if (request.IncludeTrusts)
-                query = query.Include(p => p.Claims);
+            //if (request.IncludeClaims)
+            //    _trustDBService.LoadPackageClaims()
 
             if (request.DatabaseID != null)
                 query = query.Where(p => p.DatabaseID == request.DatabaseID);
 
             var list = PaginatedList<Package>.CreateAsync(query, request.PageIndex.GetValueOrDefault(), request.PageSize.GetValueOrDefault());
+
             return await list;
         }
     }

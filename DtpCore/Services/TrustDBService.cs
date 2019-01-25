@@ -22,8 +22,7 @@ namespace DtpCore.Services
             get
             {
                 return DBContext.Packages
-                .Include(c => c.Timestamps)
-                .Include(c => c.Claims);
+                .Include(c => c.Timestamps);
             }
         }
 

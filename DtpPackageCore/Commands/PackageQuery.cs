@@ -7,14 +7,14 @@ namespace DtpPackageCore.Commands
 {
     public class PackageQuery : QueryCommand, IRequest<IPaginatedList<Package>>
     {
-        public PackageQuery(int? databaseID = null, bool includeTrusts = false)
+        public PackageQuery(int? databaseID = null, bool includeClaims = false)
         {
             DatabaseID = databaseID;
-            IncludeTrusts = includeTrusts;
+            IncludeClaims = includeClaims;
         }
 
         public int? DatabaseID { get; }
-        public bool IncludeTrusts { get; }
+        public bool IncludeClaims { get; }
 
 
 
