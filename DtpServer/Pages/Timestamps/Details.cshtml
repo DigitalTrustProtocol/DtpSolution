@@ -50,8 +50,8 @@
             <td>@ViewData["confirmations"]</td>
         </tr>
         <tr>
-            <td>@Html.DisplayNameFor(t => Model.Timestamp.BlockchainProof_db_ID):</td>
-            <td><a asp-page="/Proofs/Details" asp-route-id="@Model.Timestamp.BlockchainProof_db_ID">@Html.DisplayFor(t => Model.Timestamp.BlockchainProof_db_ID)</a></td>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Proof):</td>
+            <td><a asp-page="/Proofs/Details" asp-route-id="@Model.Timestamp.Proof?.DatabaseID">@Html.DisplayFor(t => Model.Timestamp.Proof)</a></td>
         </tr>
     </tbody>
 </table>

@@ -6,6 +6,7 @@ using DtpCore.Model;
 using DtpCore.Model.Configuration;
 using DtpCore.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading;
@@ -29,7 +30,12 @@ namespace DtpCore.Commands
 
         public Task<BlockchainProof> Handle(CurrentBlockchainProofQuery request, CancellationToken cancellationToken)
         {
-            var proof = _db.Proofs.Where(p => p.Status == ProofStatusType.New.ToString()).OrderBy(p => p.DatabaseID).FirstOrDefault();
+            var proof = _db.Proofs
+                .Where(p => p.Status == ProofStatusType.New.ToString())
+                .OrderBy(p => p.DatabaseID)
+                .Include(p => p.Timestamps)
+                .FirstOrDefault();
+
             if (proof == null)
             {
                 proof = _mediator.SendAndWait(new AddNewBlockchainProofCommand());

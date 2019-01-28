@@ -53,30 +53,30 @@ namespace DtpServer.Pages.Timestamps
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)
                 return Page();
 
-            var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProof_db_ID);
-            if (proof == null)
-                return Page();
+            //var proof = _context.Proofs.FirstOrDefault(p => p.DatabaseID == Timestamp.BlockchainProof_db_ID);
+            //if (proof == null)
+            //    return Page();
 
-            if (proof.Blockchain == null)
-                proof.Blockchain = _configuration.Blockchain();
+            //if (proof.Blockchain == null)
+            //    proof.Blockchain = _configuration.Blockchain();
 
-            var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
-            var root = _merkleTree.ComputeRoot(hash, Timestamp.Value);
+            //var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
+            //var root = _merkleTree.ComputeRoot(hash, Timestamp.Value);
 
-            Timestamp.Blockchain = proof.Blockchain;
+            //Timestamp.Blockchain = proof.Blockchain;
 
-            var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
-            var key = blockchainService.DerivationStrategy.GetKey(root);
-            var address = blockchainService.DerivationStrategy.GetAddress(key);
+            //var blockchainService = _blockchainServiceFactory.GetService(Timestamp.Blockchain);
+            //var key = blockchainService.DerivationStrategy.GetKey(root);
+            //var address = blockchainService.DerivationStrategy.GetAddress(key);
 
-            if (String.IsNullOrEmpty(Timestamp.Service))
-                Timestamp.Service = blockchainService.Repository.ServiceUrl;
+            //if (String.IsNullOrEmpty(Timestamp.Service))
+            //    Timestamp.Service = blockchainService.Repository.ServiceUrl;
 
-            ViewData["root"] = root.ToHex();
-            ViewData["rootMacth"] = root.SequenceEqual(proof.MerkleRoot);
-            ViewData["address"] = proof.Address;
-            ViewData["confirmations"] = proof.Confirmations;
-            ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
+            //ViewData["root"] = root.ToHex();
+            //ViewData["rootMacth"] = root.SequenceEqual(proof.MerkleRoot);
+            //ViewData["address"] = proof.Address;
+            //ViewData["confirmations"] = proof.Confirmations;
+            //ViewData["addressLookupUrl"] = blockchainService.Repository.AddressLookupUrl(Timestamp.Blockchain, address);
 
             return Page();
         }

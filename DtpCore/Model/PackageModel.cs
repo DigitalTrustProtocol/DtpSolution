@@ -47,12 +47,12 @@ namespace DtpCore.Model
         public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
 
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "root", Order = 30)]
+        [JsonProperty(PropertyName = "root", Order = -4)]
         public byte[] Root { get; set; }
         public bool ShouldSerializeRoot() { return Root != null; }
 
         [UIHint("UnixTimeUInt")]
-        [JsonProperty(PropertyName = "created", Order = 40)]
+        [JsonProperty(PropertyName = "created", Order = -5)]
         public uint Created { get; set; }
         public bool ShouldSerializeCreated() => Created > 0;
 
@@ -378,6 +378,7 @@ namespace DtpCore.Model
         public bool ShouldSerializeSource() { return Source != null && Source.Length > 0; }
 
         [UIHint("ByteToHexLong")]
+        [DisplayName("Merkle path")]
         [JsonProperty(PropertyName = "value", NullValueHandling = NullValueHandling.Ignore)]
         public byte[] Value { get; set; }
         public bool ShouldSerializeValue() { return Value != null && Value.Length > 0; }
@@ -387,16 +388,21 @@ namespace DtpCore.Model
         public long Registered { get; set; }
         public bool ShouldSerializeRegistered() { return Registered != 0; }
 
+
+        [JsonIgnore]
+        [DisplayName("Proof")]
+        public BlockchainProof Proof { get; set; } 
+
+    //[JsonIgnore]
+    //public int WorkflowID { get; set; }
         //[JsonIgnore]
-        //public int WorkflowID { get; set; }
-        [JsonIgnore]
-        public int BlockchainProof_db_ID { get; set; }
+        //public int BlockchainProof_db_ID { get; set; }
 
-        [JsonIgnore]
-        public int PackageDatabase_db_ID { get; set; }
+        //[JsonIgnore]
+        //public int PackageDatabase_db_ID { get; set; }
 
-        [JsonIgnore]
-        public int TrustDatabase_db_ID { get; set; }
+        //[JsonIgnore]
+        //public int TrustDatabase_db_ID { get; set; }
 
     }
 

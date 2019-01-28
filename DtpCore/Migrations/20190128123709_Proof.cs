@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class P2 : Migration
+    public partial class Proof : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -148,22 +148,13 @@ namespace DtpCore.Migrations
                     Source = table.Column<byte[]>(nullable: true),
                     Value = table.Column<byte[]>(nullable: true),
                     Registered = table.Column<long>(nullable: false),
-                    BlockchainProof_db_ID = table.Column<int>(nullable: false),
-                    PackageDatabase_db_ID = table.Column<int>(nullable: false),
-                    TrustDatabase_db_ID = table.Column<int>(nullable: false),
-                    BlockchainProofDatabaseID = table.Column<int>(nullable: true),
+                    ProofDatabaseID = table.Column<int>(nullable: true),
                     ClaimDatabaseID = table.Column<int>(nullable: true),
                     PackageDatabaseID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Timestamp", x => x.DatabaseID);
-                    table.ForeignKey(
-                        name: "FK_Timestamp_BlockchainProof_BlockchainProofDatabaseID",
-                        column: x => x.BlockchainProofDatabaseID,
-                        principalTable: "BlockchainProof",
-                        principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Timestamp_Claim_ClaimDatabaseID",
                         column: x => x.ClaimDatabaseID,
@@ -176,6 +167,12 @@ namespace DtpCore.Migrations
                         principalTable: "Package",
                         principalColumn: "DatabaseID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Timestamp_BlockchainProof_ProofDatabaseID",
+                        column: x => x.ProofDatabaseID,
+                        principalTable: "BlockchainProof",
+                        principalColumn: "DatabaseID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -210,16 +207,6 @@ namespace DtpCore.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Timestamp_BlockchainProofDatabaseID",
-                table: "Timestamp",
-                column: "BlockchainProofDatabaseID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Timestamp_BlockchainProof_db_ID",
-                table: "Timestamp",
-                column: "BlockchainProof_db_ID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_ClaimDatabaseID",
                 table: "Timestamp",
                 column: "ClaimDatabaseID");
@@ -228,6 +215,11 @@ namespace DtpCore.Migrations
                 name: "IX_Timestamp_PackageDatabaseID",
                 table: "Timestamp",
                 column: "PackageDatabaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Timestamp_ProofDatabaseID",
+                table: "Timestamp",
+                column: "ProofDatabaseID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_Source",
@@ -260,13 +252,13 @@ namespace DtpCore.Migrations
                 name: "Workflow");
 
             migrationBuilder.DropTable(
-                name: "BlockchainProof");
-
-            migrationBuilder.DropTable(
                 name: "Claim");
 
             migrationBuilder.DropTable(
                 name: "Package");
+
+            migrationBuilder.DropTable(
+                name: "BlockchainProof");
         }
     }
 }

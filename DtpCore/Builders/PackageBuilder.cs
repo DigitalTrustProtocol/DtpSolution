@@ -431,17 +431,22 @@ namespace DtpCore.Builders
             if (!BINARY_TRUST_DTP1.EqualsIgnoreCase(type))
                 return false;
 
-            var jData = JToken.Parse(data);
-            if (jData.Type == JTokenType.Boolean)
-            {
-                return (bool)((JValue)jData).Value;
-            }
-            else {
-                if(jData.Type == JTokenType.Object)
-                    if (jData["trust"] != null && jData["trust"].Value<bool>() == true)
-                            return true;
-            }
+            if ("true".EqualsIgnoreCase(data) || "1".EqualsIgnoreCase(data))
+                return true;
+
             return false;
+
+            //var jData = JToken.Parse(data);
+            //if (jData.Type == JTokenType.Boolean)
+            //{
+            //    return (bool)((JValue)jData).Value;
+            //}
+            //else {
+            //    if(jData.Type == JTokenType.Object)
+            //        if (jData["trust"] != null && jData["trust"].Value<bool>() == true)
+            //                return true;
+            //}
+            //return false;
         }
 
         public static JToken CreateTrust(bool value = true)

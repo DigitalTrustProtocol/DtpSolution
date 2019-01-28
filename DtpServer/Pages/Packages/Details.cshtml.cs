@@ -33,13 +33,15 @@ namespace DtpServer.Pages.Packages
 
 
 
-            Package = await _trustDBService.DBContext.Packages.Include(p=>p.Timestamps).FirstOrDefaultAsync(m => m.DatabaseID == id);
+            Package = await _trustDBService.DBContext.Packages
+                .Include(p=>p.Timestamps)
+                .ThenInclude(p => p.Proof)
+                .FirstOrDefaultAsync(m => m.DatabaseID == id);
 
             if (Package == null)
             {
                 return NotFound();
             }
-
 
             _trustDBService.LoadPackageClaims(Package);
 

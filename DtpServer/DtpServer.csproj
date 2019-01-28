@@ -63,6 +63,7 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="Attributes\" />
+    <Folder Include="public\" />
     <Folder Include="wwwroot\lib\NewFolder\" />
   </ItemGroup>
   <ItemGroup>

@@ -72,7 +72,7 @@ namespace DtpServer.Pages.Timestamps
 
             Expression<Func<Timestamp, bool>> q = null;
             if (int.TryParse(searchString, out int proofId))
-                q = s => s.BlockchainProof_db_ID == proofId;
+                q = s => s.Proof != null && s.Proof.DatabaseID == proofId;
 
             var likeSearch = $"%{searchString}%";
             q = q.Or(s => EF.Functions.Like(s.Blockchain, likeSearch)

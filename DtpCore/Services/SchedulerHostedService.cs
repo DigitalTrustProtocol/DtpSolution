@@ -21,6 +21,9 @@ namespace DtpCore.Services
 {
     public class SchedulerHostedService : BackgroundService
     {
+        private CancellationTokenSource DelayTokenSource = null;
+        //private static CancellationToken DelayToken = new CancellationToken();
+
         public event EventHandler<UnobservedTaskExceptionEventArgs> UnobservedTaskException;
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -28,11 +31,24 @@ namespace DtpCore.Services
         private readonly ILogger _logger;
 
 
+        public void RunNow()
+        {
+            //DelayTokenSource.Cancel();  // Cancel current token.
+            DelayTokenSource.CancelAfter(1);
+            //DelayToken = DelayTokenSource.Token; // Create new token.
+        }
+
         public SchedulerHostedService(IServiceScopeFactory serviceScopeFactory, ILogger<SchedulerHostedService> logger, IConfiguration configuration)
         {
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
             _configuration = configuration;
             _logger = logger;
+        }
+
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            DelayTokenSource = new CancellationTokenSource();
+            return base.StartAsync(cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -43,7 +59,15 @@ namespace DtpCore.Services
             {
                 await ExecuteOnceAsync(cancellationToken);
 
-                await Task.Delay(_configuration.WorkflowInterval() * 1000, cancellationToken); // WorkflowInterval is in seconds
+                // Hack
+                var count = 0; // WorkflowInterval is in seconds
+                while (!DelayTokenSource.Token.IsCancellationRequested && count++ < _configuration.WorkflowInterval() * 1000)
+                {
+                    await Task.Delay(1); // Cannot get Cancellation token to work with Task.Deplay
+                }
+
+                if (DelayTokenSource.IsCancellationRequested)
+                    DelayTokenSource = new CancellationTokenSource();
             }
 
             _logger.LogDebug($"Scheduler Service is stopping.");

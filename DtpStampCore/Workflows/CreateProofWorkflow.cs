@@ -50,8 +50,8 @@ namespace DtpStampCore.Workflows
         {
             CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
 
-            var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProof_db_ID == CurrentProof.DatabaseID).Count();
-            if (count == 0)
+            //var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProof_db_ID == CurrentProof.DatabaseID).Count();
+            if (CurrentProof.Timestamps.Count == 0)
             {
                 CombineLog(_logger, $"No proofs found");
                 Wait(_configuration.TimestampInterval()); // Default 10 min
@@ -82,19 +82,19 @@ namespace DtpStampCore.Workflows
 
         public void Merkle()
         {
-            var timestamps = (from p in _trustDBContext.Timestamps
-                              where p.BlockchainProof_db_ID == CurrentProof.DatabaseID
-                              select p).ToList();
+            //var timestamps = (from p in _trustDBContext.Timestamps
+            //                  where p.BlockchainProof_db_ID == CurrentProof.DatabaseID
+            //                  select p).ToList();
 
-            foreach (var proof in timestamps)
-                _merkleTree.Add(proof);
+            foreach (var item in CurrentProof.Timestamps)
+                _merkleTree.Add(item);
 
             CurrentProof.MerkleRoot = _merkleTree.Build().Hash;
             CurrentProof.Status = ProofStatusType.Waiting.ToString();
 
             //_trustDBService.DBContext.Timestamps.UpdateRange(timestamps); // Shoud work auto
 
-            CombineLog(_logger, $"Proof ID:{CurrentProof.DatabaseID} Timestamp found {timestamps.Count} - Merkleroot: {CurrentProof.MerkleRoot.ConvertToHex()}");
+            CombineLog(_logger, $"Proof ID:{CurrentProof.DatabaseID} Timestamp found {CurrentProof.Timestamps.Count} - Merkleroot: {CurrentProof.MerkleRoot.ConvertToHex()}");
         }
 
 

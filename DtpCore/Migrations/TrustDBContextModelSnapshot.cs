@@ -145,15 +145,11 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Blockchain");
 
-                    b.Property<int?>("BlockchainProofDatabaseID");
-
-                    b.Property<int>("BlockchainProof_db_ID");
-
                     b.Property<int?>("ClaimDatabaseID");
 
                     b.Property<int>("PackageDatabaseID");
 
-                    b.Property<int>("PackageDatabase_db_ID");
+                    b.Property<int?>("ProofDatabaseID");
 
                     b.Property<long>("Registered");
 
@@ -161,19 +157,15 @@ namespace DtpCore.Migrations
 
                     b.Property<byte[]>("Source");
 
-                    b.Property<int>("TrustDatabase_db_ID");
-
                     b.Property<byte[]>("Value");
 
                     b.HasKey("DatabaseID");
 
-                    b.HasIndex("BlockchainProofDatabaseID");
-
-                    b.HasIndex("BlockchainProof_db_ID");
-
                     b.HasIndex("ClaimDatabaseID");
 
                     b.HasIndex("PackageDatabaseID");
+
+                    b.HasIndex("ProofDatabaseID");
 
                     b.HasIndex("Source");
 
@@ -291,10 +283,6 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>
                 {
-                    b.HasOne("DtpCore.Model.BlockchainProof")
-                        .WithMany("Timestamps")
-                        .HasForeignKey("BlockchainProofDatabaseID");
-
                     b.HasOne("DtpCore.Model.Claim")
                         .WithMany("Timestamps")
                         .HasForeignKey("ClaimDatabaseID");
@@ -303,6 +291,10 @@ namespace DtpCore.Migrations
                         .WithMany("Timestamps")
                         .HasForeignKey("PackageDatabaseID")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DtpCore.Model.BlockchainProof", "Proof")
+                        .WithMany("Timestamps")
+                        .HasForeignKey("ProofDatabaseID");
                 });
 #pragma warning restore 612, 618
         }

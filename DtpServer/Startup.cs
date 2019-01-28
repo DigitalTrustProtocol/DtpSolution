@@ -194,6 +194,7 @@ namespace DtpServer
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age=31536000"); // 1 year
                 }
             });
+
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
                 FileProvider = new PhysicalFileProvider(PublicFileRepository.PublicFullPath),

@@ -69,7 +69,7 @@ namespace DtpCore.Services
         public Claim GetClaimById(byte[] id)
         {
             var dbTrust = DBContext.Claims
-                .Include(p => p.Timestamps)
+                .Include(cl => cl.Timestamps)
                 .Include(p => p.ClaimPackages)
                 .FirstOrDefault(p => p.Id == id);
             return dbTrust;

@@ -45,6 +45,10 @@
             </td>
             <td>
                 <a asp-page="./Details" asp-route-id="@item.DatabaseID">View</a>
+                @if (Model.Admin)
+                {
+                <span>&nbsp;|&nbsp;</span><a asp-page="./Index" asp-route-id="@item.DatabaseID">Run</a>
+                }
             </td>
         </tr>
 }
