@@ -61,7 +61,7 @@ namespace DtpServer.Pages.Timestamps
             //    proof.Blockchain = _configuration.Blockchain();
 
             //var hash = _merkleTree.HashAlgorithm.HashOf(Timestamp.Source);
-            //var root = _merkleTree.ComputeRoot(hash, Timestamp.Value);
+            //var root = _merkleTree.ComputeRoot(hash, Timestamp.Path);
 
             //Timestamp.Blockchain = proof.Blockchain;
 

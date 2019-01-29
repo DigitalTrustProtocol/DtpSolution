@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Proof : Migration
+    public partial class Path : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -146,7 +146,7 @@ namespace DtpCore.Migrations
                     Algorithm = table.Column<string>(nullable: true),
                     Service = table.Column<string>(nullable: true),
                     Source = table.Column<byte[]>(nullable: true),
-                    Value = table.Column<byte[]>(nullable: true),
+                    Path = table.Column<byte[]>(nullable: true),
                     Registered = table.Column<long>(nullable: false),
                     ProofDatabaseID = table.Column<int>(nullable: true),
                     ClaimDatabaseID = table.Column<int>(nullable: true),

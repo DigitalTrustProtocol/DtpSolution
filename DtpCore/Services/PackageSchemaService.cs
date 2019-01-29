@@ -266,7 +266,7 @@ namespace DtpCore.Services
                 {
                     MaxRangeCheck("Timestamp Algorithm", timestamp.Algorithm, location, ALGORITHM_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Blockchain", timestamp.Blockchain, location, TEXT50_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Receipt", timestamp.Value, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
+                    MaxRangeCheck("Timestamp Receipt", timestamp.Path, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Service", timestamp.Service, location, TEXT200_MAX_LENGTH);
                     MaxRangeCheck("Timestamp Source", timestamp.Source, location, ID_MAX_LENGTH);
                 }

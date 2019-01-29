@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190128123709_Proof")]
-    partial class Proof
+    [Migration("20190129095527_Path")]
+    partial class Path
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,6 +151,8 @@ namespace DtpCore.Migrations
 
                     b.Property<int>("PackageDatabaseID");
 
+                    b.Property<byte[]>("Path");
+
                     b.Property<int?>("ProofDatabaseID");
 
                     b.Property<long>("Registered");
@@ -158,8 +160,6 @@ namespace DtpCore.Migrations
                     b.Property<string>("Service");
 
                     b.Property<byte[]>("Source");
-
-                    b.Property<byte[]>("Value");
 
                     b.HasKey("DatabaseID");
 

@@ -149,6 +149,8 @@ namespace DtpCore.Migrations
 
                     b.Property<int>("PackageDatabaseID");
 
+                    b.Property<byte[]>("Path");
+
                     b.Property<int?>("ProofDatabaseID");
 
                     b.Property<long>("Registered");
@@ -156,8 +158,6 @@ namespace DtpCore.Migrations
                     b.Property<string>("Service");
 
                     b.Property<byte[]>("Source");
-
-                    b.Property<byte[]>("Value");
 
                     b.HasKey("DatabaseID");
 

@@ -27,7 +27,7 @@ namespace DtpCore.Model
         /// If a root property exist, then this is used with the Id to calculate the final value based on the merkle tree defined in the algorithm property.
         /// </summary>
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "id", Order = -3)]
+        [JsonProperty(PropertyName = "id", Order = -100)]
         public byte[] Id { get; set; }
         public bool ShouldSerializeId() => Id != null && Id.Length > 0;
 
@@ -42,17 +42,17 @@ namespace DtpCore.Model
         /// <summary>
         /// The algorithm used to calculate the Id.
         /// </summary>
-        [JsonProperty(PropertyName = "algorithm", Order = -2)]
+        [JsonProperty(PropertyName = "algorithm", Order = -200)]
         public string Algorithm { get; set; }
         public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
 
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "root", Order = -4)]
+        [JsonProperty(PropertyName = "root", Order = -99)]
         public byte[] Root { get; set; }
         public bool ShouldSerializeRoot() { return Root != null; }
 
         [UIHint("UnixTimeUInt")]
-        [JsonProperty(PropertyName = "created", Order = -5)]
+        [JsonProperty(PropertyName = "created", Order = -50)]
         public uint Created { get; set; }
         public bool ShouldSerializeCreated() => Created > 0;
 
@@ -379,9 +379,9 @@ namespace DtpCore.Model
 
         [UIHint("ByteToHexLong")]
         [DisplayName("Merkle path")]
-        [JsonProperty(PropertyName = "value", NullValueHandling = NullValueHandling.Ignore)]
-        public byte[] Value { get; set; }
-        public bool ShouldSerializeValue() { return Value != null && Value.Length > 0; }
+        [JsonProperty(PropertyName = "path", NullValueHandling = NullValueHandling.Ignore)]
+        public byte[] Path { get; set; }
+        public bool ShouldSerializePath() { return Path != null && Path.Length > 0; }
 
         [UIHint("UnixTimeLong")]
         [JsonProperty(PropertyName = "registered")]
@@ -393,18 +393,6 @@ namespace DtpCore.Model
         [JsonIgnore]
         [DisplayName("Proof")]
         public BlockchainProof Proof { get; set; } 
-
-    //[JsonIgnore]
-    //public int WorkflowID { get; set; }
-        //[JsonIgnore]
-        //public int BlockchainProof_db_ID { get; set; }
-
-        //[JsonIgnore]
-        //public int PackageDatabase_db_ID { get; set; }
-
-        //[JsonIgnore]
-        //public int TrustDatabase_db_ID { get; set; }
-
     }
 
 

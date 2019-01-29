@@ -34,7 +34,7 @@ namespace UnitTest.DtpCore.Strategy
 
             Assert.AreEqual(hashAlgorithm.Length, root.Hash.Length, "Root hash has wrong length");
             Assert.IsTrue(oneProof.Hash.Compare(root.Hash) == 0, "Expected and root hash are not the same");
-            Assert.AreEqual(0, oneProof.Proof.Value.Length);
+            Assert.AreEqual(0, oneProof.Proof.Path.Length);
 
         }
 
@@ -61,13 +61,13 @@ namespace UnitTest.DtpCore.Strategy
             Console.WriteLine($"Root        - Hash: {root.Hash.ConvertToHex()}");
             Console.WriteLine($"Expected    - Hash: {expectedResult.ConvertToHex()}");
 
-            Console.WriteLine($"One  - source: {one.ConvertToHex()} - hash: {oneProof.Hash.ConvertToHex()} -Receipt: {oneProof.Proof.Value.ConvertToHex()}");
-            Console.WriteLine($"Two  - source: {two.ConvertToHex()} - hash: {twoProof.Hash.ConvertToHex()} -Receipt: {twoProof.Proof.Value.ConvertToHex()}");
+            Console.WriteLine($"One  - source: {one.ConvertToHex()} - hash: {oneProof.Hash.ConvertToHex()} -Receipt: {oneProof.Proof.Path.ConvertToHex()}");
+            Console.WriteLine($"Two  - source: {two.ConvertToHex()} - hash: {twoProof.Hash.ConvertToHex()} -Receipt: {twoProof.Proof.Path.ConvertToHex()}");
 
             Assert.IsTrue(expectedResult.Compare(root.Hash) == 0, "Expected and root hash are not the same");
 
-            Assert.IsTrue(root.Hash.Compare(CombineHash(hashAlgorithm, oneProof.Hash, oneProof.Proof.Value)) == 0, "root and one with receipt are not the same");
-            Assert.IsTrue(root.Hash.Compare(CombineHash(hashAlgorithm, twoProof.Hash, twoProof.Proof.Value)) == 0, "root and two with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(CombineHash(hashAlgorithm, oneProof.Hash, oneProof.Proof.Path)) == 0, "root and one with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(CombineHash(hashAlgorithm, twoProof.Hash, twoProof.Proof.Path)) == 0, "root and two with receipt are not the same");
 
 
         }
@@ -100,16 +100,16 @@ namespace UnitTest.DtpCore.Strategy
             Console.WriteLine($"Root        - Hash: {root.Hash.ConvertToHex()}");
             Console.WriteLine($"Expected    - Hash: {expectedResult.ConvertToHex()}");
 
-            Console.WriteLine($"One  - source: {one.ConvertToHex()} - hash: {oneProof.Hash.ConvertToHex()} -Receipt: {oneProof.Proof.Value.ConvertToHex()}");
-            Console.WriteLine($"Two  - source: {two.ConvertToHex()} - hash: {twoProof.Hash.ConvertToHex()} -Receipt: {twoProof.Proof.Value.ConvertToHex()}");
-            Console.WriteLine($"Two  - source: {three.ConvertToHex()} - hash: {threeProof.Hash.ConvertToHex()} -Receipt: {threeProof.Proof.Value.ConvertToHex()}");
+            Console.WriteLine($"One  - source: {one.ConvertToHex()} - hash: {oneProof.Hash.ConvertToHex()} -Receipt: {oneProof.Proof.Path.ConvertToHex()}");
+            Console.WriteLine($"Two  - source: {two.ConvertToHex()} - hash: {twoProof.Hash.ConvertToHex()} -Receipt: {twoProof.Proof.Path.ConvertToHex()}");
+            Console.WriteLine($"Two  - source: {three.ConvertToHex()} - hash: {threeProof.Hash.ConvertToHex()} -Receipt: {threeProof.Proof.Path.ConvertToHex()}");
 
             Assert.IsTrue(expectedResult.Compare(root.Hash) == 0, "Expected and root hash are not the same");
 
-            var ee = merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Value);
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Value)) == 0, "root and one with receipt are not the same");
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(twoProof.Hash, twoProof.Proof.Value)) == 0, "root and two with receipt are not the same");
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(threeProof.Hash, threeProof.Proof.Value)) == 0, "root and three with receipt are not the same");
+            var ee = merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Path);
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Path)) == 0, "root and one with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(twoProof.Hash, twoProof.Proof.Path)) == 0, "root and two with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(threeProof.Hash, threeProof.Proof.Path)) == 0, "root and three with receipt are not the same");
         }
 
         [TestMethod]
@@ -131,14 +131,14 @@ namespace UnitTest.DtpCore.Strategy
 
             var one = nodes[0];
             Console.WriteLine($"Root        - Hash: {root.Hash.ConvertToHex()}");
-            Console.WriteLine($"One  - source: {one.Proof.Source.ConvertToHex()} - hash: {one.Hash.ConvertToHex()} -Receipt: {one.Proof.Value.ConvertToHex()}");
+            Console.WriteLine($"One  - source: {one.Proof.Source.ConvertToHex()} - hash: {one.Hash.ConvertToHex()} -Receipt: {one.Proof.Path.ConvertToHex()}");
 
             var index = 0;
             foreach (var node in nodes)
             {
                 var hash = merkle.HashAlgorithm.HashOf(node.Proof.Source);
                 Assert.IsTrue(node.Hash.SequenceEqual(hash), "The source and hash are not equal");
-                var expectedResult = merkle.ComputeRoot(hash, node.Proof.Value);
+                var expectedResult = merkle.ComputeRoot(hash, node.Proof.Path);
                 Assert.IsTrue(expectedResult.Compare(root.Hash) == 0, $"Expected node number {index} and root hash are not the same");
                 index++;
             }

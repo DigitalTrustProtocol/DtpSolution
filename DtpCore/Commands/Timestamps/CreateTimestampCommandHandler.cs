@@ -1,20 +1,12 @@
-﻿using DtpCore.Builders;
-using DtpCore.Enumerations;
-using DtpCore.Extensions;
+﻿using DtpCore.Extensions;
 using DtpCore.Factories;
-using DtpCore.Interfaces;
 using DtpCore.Model;
-using DtpCore.Model.Configuration;
 using DtpCore.Repository;
+using DtpCore.Strategy;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,7 +34,7 @@ namespace DtpCore.Commands
             var timestamp = new Timestamp
             {
                 Proof = proof,
-                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1,
+                Algorithm = $"{DerivationSecp256k1PKH.DERIVATION_NAME}-{MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1}",
                 Blockchain = _configuration.Blockchain(),
                 Source = request.Source,
                 Registered = DateTime.Now.ToUnixTime()

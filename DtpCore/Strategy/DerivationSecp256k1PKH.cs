@@ -13,6 +13,7 @@ namespace DtpCore.Strategy
         public int AddressLength { get; }
         public string ScriptName { get; }
         public const string NAME = "secp256k1-pkh";
+        public const string DERIVATION_NAME = "secp256k1";
 
 
         public string NetworkName
