@@ -69,20 +69,19 @@ namespace DtpPackageCore.Commands
             foreach (var claim in buildPackage.Claims)
             {
                 if (claim.State.Match(ClaimStateType.Replaced))
-                    _trustDBService.Remove(claim);
+                    _trustDBService.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
                 else
                 {
-
-                    claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != buildPackage.DatabaseID).ToList(); // Remove relation to build package
+                    claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != buildPackage.DatabaseID).ToList(); // Remove relation to static build package
                     claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
 
                     builder.AddClaim(claim);
                 }
             }
 
-            buildPackage.Claims = null;
+            //buildPackage.Claims = null;
 
-            builder.OrderClaims(); // Order trust ny ID before package ID calculation. 
+            builder.OrderClaims(); // Order claims ny ID before package ID calculation. 
             SignPackage(builder);
 
             builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));

@@ -118,7 +118,7 @@ namespace DtpCore.Services
 
 
             private SchemaValidationResult result = new SchemaValidationResult();
-            private IClaimBinary _trustBinary;
+            private IClaimBinary _claimBinary;
 
             private IDerivationStrategyFactory _derivationStrategyFactory;
             private IMerkleStrategyFactory _merkleStrategyFactory;
@@ -127,23 +127,23 @@ namespace DtpCore.Services
             private TrustSchemaValidationOptions _options; 
 
 
-            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary, TrustSchemaValidationOptions options)
+            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary claimBinary, TrustSchemaValidationOptions options)
             {
                 _derivationStrategyFactory = derivationStrategyFactory;
                 _merkleStrategyFactory = merkleStrategyFactory;
                 _hashAlgorithmFactory = hashAlgorithmFactory;
-                _trustBinary = trustBinary;
+                _claimBinary = claimBinary;
                 _options = options;
             }
 
-            public SchemaValidationResult Validate(Claim trust)
+            public SchemaValidationResult Validate(Claim claim)
             {
                 try
                 {
-                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
-                    var trustIndex = 0;
-                    testBuilder.AddClaim(trust);
-                    ValidateTrust(trustIndex++, trust, result);
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _claimBinary);
+                    var claimIndex = 0;
+                    testBuilder.AddClaim(claim);
+                    ValidateClaim(claimIndex++, claim, result);
                 }
                 catch (Exception ex)
                 {
@@ -163,8 +163,8 @@ namespace DtpCore.Services
                 {
                     var script = _merkleStrategyFactory.GetStrategy(package.Algorithm);
                 
-                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary);
-                    var trustIndex = 0;
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _claimBinary);
+                    var claimIndex = 0;
                     if(package.Claims.Count == 0)
                     {
                         MissingCheck("Package claims", "", "");
@@ -173,7 +173,7 @@ namespace DtpCore.Services
                     foreach (var claim in package.Claims)
                     {
                         testBuilder.AddClaim(claim);
-                        ValidateTrust(trustIndex++, claim, result);
+                        ValidateClaim(claimIndex++, claim, result);
                     }
 
                     if (package.Id != null && package.Id.Length > 0)
@@ -208,7 +208,7 @@ namespace DtpCore.Services
                 MaxRangeCheck("Package Server Signature", package.Server.Signature, "", SIGNATURE_MAX_LENGTH);
             }
 
-            private void ValidateTrust(int trustIndex, Claim claim, SchemaValidationResult result)
+            private void ValidateClaim(int trustIndex, Claim claim, SchemaValidationResult result)
             {
                 var location = $"Trust Index: {trustIndex} - ";
 
@@ -231,7 +231,7 @@ namespace DtpCore.Services
                     if (result.ErrorsFound == 0) 
                     {
                         var hashService = _hashAlgorithmFactory.GetAlgorithm(claim.Algorithm);
-                        var trustID = hashService.HashOf(_trustBinary.GetIssuerBinary(claim));
+                        var trustID = hashService.HashOf(_claimBinary.GetIssuerBinary(claim));
                         if (trustID.Compare(claim.Id) != 0)
                             result.Errors.Add(location + "Invalid claim id");
 

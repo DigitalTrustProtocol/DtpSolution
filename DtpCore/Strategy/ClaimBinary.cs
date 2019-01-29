@@ -44,13 +44,10 @@ namespace DtpCore.Strategy
         }
 
 
-        public byte[] GetPackageBinary(Package package, byte[] merkleRoot)
+        public byte[] GetPackageBinary(Package package)
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                if (merkleRoot != null)
-                    ms.WriteBytes(merkleRoot);
-
                 if (package == null)
                     return ms.ToArray();
 

@@ -285,36 +285,33 @@ namespace DtpCore.Builders
         }
 
 
+        /// <summary>
+        /// Build the Package ID from the hash of the package properties and all the claim ids computed in a merkle structure.
+        /// This enables claims to prove existence in original package when it have been sepereated into another package.
+        /// </summary>
+        /// <returns>PackageBuilder</returns>
         public PackageBuilder Build()
         {
-            IMerkleTree merkleTree = CreateMerkleTree();
-
-            //var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm();
-
-            //if (string.IsNullOrEmpty(Package.Algorithm))
-            //    Package.Algorithm = _hashAlgorithm.AlgorithmName;
-
-            
-            Package.Id = merkleTree.HashAlgorithm.HashOf(_claimBinary.GetPackageBinary(Package, merkleTree.Build().Hash));
-            Package.State = PackageStateType.Build;
-
-            return this;
-        }
-
-        private IMerkleTree CreateMerkleTree()
-        {
             var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
+            
+            var packageHash = _claimBinary.GetPackageBinary(Package);
+            merkleTree.Add(packageHash); // Start with adding the package hash
 
             foreach (var claim in Package.Claims)
             {
                 if (claim.Id == null)
                     BuildClaimID(claim);
 
-                merkleTree.Add(new Timestamp { Source = claim.Id });
+                merkleTree.Add(claim.Id); // Add claim ID
             }
 
-            return merkleTree;
+            Package.Id = merkleTree.Build().Hash;   // Merkle of Package hash and all the claims.
+            Package.State = PackageStateType.Build;
+
+            return this;
         }
+
+
 
         public Package Sign()
         {

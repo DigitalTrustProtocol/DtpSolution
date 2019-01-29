@@ -388,7 +388,8 @@ namespace DtpCore.Model
         public long Registered { get; set; }
         public bool ShouldSerializeRegistered() { return Registered != 0; }
 
-
+        // No read of proof into the system!! Only render! Make Converter.
+        //[JsonProperty(PropertyName = "proof")]
         [JsonIgnore]
         [DisplayName("Proof")]
         public BlockchainProof Proof { get; set; } 

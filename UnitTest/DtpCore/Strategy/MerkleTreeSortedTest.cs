@@ -125,10 +125,9 @@ namespace UnitTest.DtpCore.Strategy
             for (int i = 0; i < length; i++)
             {
                 var data = Encoding.UTF8.GetBytes($"{i}\n");
-                nodes.Add(merkle.Add(new Timestamp { Source = data }));
+                nodes.Add(merkle.Add(data));
             }
             var root = merkle.Build();
-
 
             var one = nodes[0];
             Console.WriteLine($"Root        - Hash: {root.Hash.ConvertToHex()}");
