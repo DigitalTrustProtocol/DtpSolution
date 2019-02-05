@@ -30,7 +30,7 @@ namespace DtpServer.AspNetCore.MVC.Filters
             }
 
             var ServiceProvider = context.HttpContext.RequestServices;
-            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
             var keyValue = context.ActionArguments.FirstOrDefault(p=> p.Value is Package);
             if(keyValue.Value == null)
             {

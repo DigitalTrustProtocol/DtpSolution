@@ -10,11 +10,11 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace DtpCore.Services
+namespace DtpCore.Model.Schema
 {
 
 
-    public class PackageSchemaService : IPackageSchemaService
+    public class PackageSchemaValidator : IPackageSchemaValidator
     {
         private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
@@ -22,7 +22,7 @@ namespace DtpCore.Services
         private IClaimBinary _trustBinary;
 
 
-        public PackageSchemaService(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
+        public PackageSchemaValidator(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
         {
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;

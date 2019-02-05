@@ -6,10 +6,10 @@ using DtpCore.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
-namespace UnitTest.DtpCore.Services
+namespace UnitTest.DtpCore.Model.Schema
 {
     [TestClass]
-    public class PackageSchemaServiceTest : StartupMock
+    public class PackageSchemaValidatorTest : StartupMock
     {
         [TestMethod]
         public void GetTrustTypeString()
@@ -21,7 +21,7 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
 
-            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
             var claim = builder.Package.Claims[0];
             Assert.IsTrue(claim.Type == schemaService.GetTrustTypeString(claim));
 
@@ -43,7 +43,7 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
 
-            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
 
             var result = schemaService.Validate(builder.Package);
 
@@ -63,7 +63,7 @@ namespace UnitTest.DtpCore.Services
                 .Build()
                 .Sign();
             
-            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaService>();
+            var schemaService = ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
             var result = schemaService.Validate(builder.CurrentClaim);
 
             Console.WriteLine(result.ToString());

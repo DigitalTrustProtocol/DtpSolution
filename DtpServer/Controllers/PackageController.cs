@@ -20,7 +20,7 @@ namespace DtpServer.Controllers
     {
         private IMediator _mediator;
 
-        private IPackageSchemaService _trustSchemaService;
+        private IPackageSchemaValidator _trustSchemaService;
         private ITrustDBService _trustDBService;
         private IServiceProvider _serviceProvider;
 
@@ -28,7 +28,7 @@ namespace DtpServer.Controllers
         /// Constructor
         /// </summary>
         /// <param name="context"></param>
-        public PackageController(IMediator mediator, IPackageSchemaService trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
+        public PackageController(IMediator mediator, IPackageSchemaValidator trustSchemaService, ITrustDBService trustDBService, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
             _trustSchemaService = trustSchemaService;

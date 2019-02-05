@@ -19,8 +19,6 @@
     <Compile Remove="Model\TimestampModel.cs" />
     <Compile Remove="Model\TrustModel.cs" />
     <Compile Remove="Repository\TrustDBContextOld.cs" />
-    <Compile Remove="Trust\TrustECDSASignature.cs" />
-    <Compile Remove="Trust\TrustManager.cs" />
     <Compile Remove="Workflows\FailueWorkflow.cs" />
     <Compile Remove="Workflows\SleepWorkflow.cs" />
     <Compile Remove="Workflows\SuccessStep.cs" />
@@ -43,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Trust\" />
   </ItemGroup>
 
 </Project>

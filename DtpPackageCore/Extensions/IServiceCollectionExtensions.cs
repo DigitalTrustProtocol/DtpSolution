@@ -1,5 +1,6 @@
 ﻿using DtpPackageCore.Commands;
 using DtpPackageCore.Interfaces;
+using DtpPackageCore.Model.Schema;
 using DtpPackageCore.Notifications;
 using DtpPackageCore.Services;
 using DtpPackageCore.Workflows;
@@ -22,6 +23,10 @@ namespace DtpPackageCore.Extensions
             services.AddTransient<CreateTrustPackageWorkflow>();
 
             services.AddTransient<IpfsClient>();
+
+
+            services.AddTransient<IPackageMessageValidator, PackageMessageValidator>();
+            
 
             services.AddSingleton<IPackageService, PackageService>();
 

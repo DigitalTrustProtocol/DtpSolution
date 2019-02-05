@@ -5,12 +5,15 @@ using DtpPackageCore.Notifications;
 using Ipfs.Http;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace DtpPackageCore.Services
 {
@@ -18,20 +21,21 @@ namespace DtpPackageCore.Services
     {
         public CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private IMediator _mediator;
 
-        public PackageService(IMediator mediator, IpfsClient ipfs, IConfiguration configuration)
-        {
-            _mediator = mediator;
-            Ipfs = ipfs;
-            Configuration = configuration;
-        }
-
+        //private IMediator _mediator;
         public IpfsClient Ipfs { get; set; }
         public IConfiguration Configuration { get; set; }
+        private readonly ILogger<PackageService> logger;
+        private readonly IServiceProvider _serviceProvider;
 
-
-
+        public PackageService(IpfsClient ipfs, IConfiguration configuration, ILogger<PackageService> logger, IServiceProvider serviceProvider)
+        {
+            //_mediator = mediator;
+            Ipfs = ipfs;
+            Configuration = configuration;
+            this.logger = logger;
+            _serviceProvider = serviceProvider;
+        }
 
         public string CreatePackageName()
         {
@@ -44,6 +48,7 @@ namespace DtpPackageCore.Services
             var config = PackageConfiguration.GetModel(Configuration);
             await AddPackageSubscriptions(config.ClaimTypes, config.ClaimScopes);
         }
+
 
         public async Task AddPackageSubscriptions(IEnumerable<string> claimTypes, IEnumerable<string> claimScopes)
         {
@@ -65,6 +70,8 @@ namespace DtpPackageCore.Services
                 }
 
             }
+
+            await Ipfs.PubSub.SubscribeAsync("test", this.HandleMessage, cancellationTokenSource.Token);
         }
 
         public async void PublishPackageMessage(PackageMessage packageMessage)
@@ -77,27 +84,33 @@ namespace DtpPackageCore.Services
 
         private async void HandleMessage(Ipfs.IPublishedMessage publishedMessage)
         {
-            var text = Encoding.UTF8.GetString(publishedMessage.DataBytes);
             try
             {
-                var message = JsonConvert.DeserializeObject<PackageMessage>(text);
+                //publishedMessage.Sender.Id.Digest
 
-                // Check message syntaks
-                // Check against white/black lists of source.
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var text = Encoding.UTF8.GetString(publishedMessage.DataBytes);
+                    //var message = JsonConvert.DeserializeObject<PackageMessage>(text);
 
-                // Call AddExternalPackageCommand
+                    //var packageMessageValidator = scope.ServiceProvider.GetRequiredService<IPackageMessageValidator>();
 
-                await _mediator.Publish(new PackageMessageReceived(null));
+                    logger.LogInformation(text);
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        // Check message syntaks
+                        // Check against white/black lists of source.
+
+                        // Call AddExternalPackageCommand
+
+                    await mediator.Publish(new PackageMessageReceived(null));
+                }
             }
             catch (Exception ex)
             {
                 // Ignore errors  for now
-                
+                logger.LogError(ex.Message);
             }
-            
-
-
         }
-        
+
     }
 }

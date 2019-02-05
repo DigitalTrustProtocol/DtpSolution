@@ -12,6 +12,7 @@ using DtpCore.Repository;
 using DtpCore.Strategy.Serialization;
 using DtpCore.Builders;
 using DtpCore.Notifications;
+using DtpCore.Model.Schema;
 
 namespace DtpCore.Extensions
 {
@@ -27,7 +28,7 @@ namespace DtpCore.Extensions
             services.AddScoped<IClaimBanListService, ClaimBanListService>();
 
             services.AddTransient<PackageBuilder>();
-            services.AddTransient<IPackageSchemaService, PackageSchemaService>();
+            services.AddTransient<IPackageSchemaValidator, PackageSchemaValidator>();
 
             services.AddTransient<IHashAlgorithmFactory, HashAlgorithmFactory>();
             services.AddTransient<IMerkleStrategyFactory, MerkleStrategyFactory>();
