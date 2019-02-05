@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using DtpCore.Services;
 using DtpPackageCore.Workflows;
+using DtpPackageCore.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DtpPackageCore.Extensions
 {
@@ -13,8 +15,10 @@ namespace DtpPackageCore.Extensions
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
-
                 workflowService.EnsureWorkflow<CreateTrustPackageWorkflow>();
+
+                var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
+                packageService.AddPackageSubscriptions();
             }
         }
     }

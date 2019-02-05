@@ -3,6 +3,7 @@ using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
 using DtpPackageCore.Services;
 using DtpPackageCore.Workflows;
+using Ipfs.Http;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,11 +16,14 @@ namespace DtpPackageCore.Extensions
             services.AddMediatR(typeof(BuildPackageCommandHandler));
 //            services.AddMediatR(typeof(TrustPackageCreatedNotificationHandler));
             
-            services.AddTransient<ITrustPackageService, TrustPackageService>();
+            services.AddTransient<IPackageService, PackageService>();
 
             services.AddTransient<BuildPackageCommandHandler>();
             services.AddTransient<CreateTrustPackageWorkflow>();
-            
+
+            services.AddTransient<IpfsClient>();
+
+            services.AddSingleton<IPackageService, PackageService>();
 
         }
     }

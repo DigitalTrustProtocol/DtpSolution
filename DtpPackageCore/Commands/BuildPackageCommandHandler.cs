@@ -32,13 +32,13 @@ namespace DtpPackageCore.Commands
         private IMediator _mediator;
         private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
-        private ITrustPackageService _trustPackageService;
+        private IPackageService _trustPackageService;
         private NotificationSegment _notifications;
         private IConfiguration _configuration;
         private readonly ILogger<BuildPackageCommandHandler> logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public BuildPackageCommandHandler(IMediator mediator, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, ITrustPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
+        public BuildPackageCommandHandler(IMediator mediator, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, IPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
         {
             _mediator = mediator;
             _trustDBService = trustDBService;
