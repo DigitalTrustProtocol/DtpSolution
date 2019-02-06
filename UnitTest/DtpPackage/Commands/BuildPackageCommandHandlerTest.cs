@@ -12,7 +12,7 @@ using UnitTest.DtpCore.Extensions;
 namespace UnitTest.DtpPackage.Commands
 {
     [TestClass]
-    public class BuildTrustPackageCommandHandlerTest : StartupMock
+    public class BuildPackageCommandHandlerTest : StartupMock
     {
 
         private NotificationSegment CreateTrust(string issuerName, string subjectName)
@@ -45,7 +45,7 @@ namespace UnitTest.DtpPackage.Commands
             Assert.IsTrue(notifications[0] is PackageBuildNotification);
             Assert.AreEqual(1, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
 
-            var buildPackage = TrustDBService.GetBuildPackage();
+            var buildPackage = TrustDBService.GetBuildPackage("");
             TrustDBService.LoadPackageClaims(buildPackage);
             Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
         }
@@ -62,7 +62,7 @@ namespace UnitTest.DtpPackage.Commands
             Assert.IsTrue(notifications[0] is PackageBuildNotification);
             Assert.AreEqual(2, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
 
-            var buildPackage = TrustDBService.GetBuildPackage();
+            var buildPackage = TrustDBService.GetBuildPackage("");
             TrustDBService.LoadPackageClaims(buildPackage);
             Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
 

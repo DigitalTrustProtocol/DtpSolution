@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Repository;
@@ -36,8 +37,9 @@ namespace DtpCore.Interfaces
         void Update(Package package);
 
         Package GetPackageById(byte[] packageId);
-        Package GetBuildPackage();
-        Package EnsureBuildPackage();
+        Task<List<Package>> GetBuildPackages();
+        Package GetBuildPackage(string scope);
+        Package EnsureBuildPackage(string scope);
         void LoadPackageClaims(Package package);
 
         void EnsurePackageState(Package package);

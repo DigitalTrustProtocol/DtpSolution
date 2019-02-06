@@ -56,7 +56,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Enumerations\" />
-    <Folder Include="Notifications\" />
     <Folder Include="Strategies\" />
   </ItemGroup>
 

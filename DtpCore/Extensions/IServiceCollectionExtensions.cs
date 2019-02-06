@@ -34,6 +34,7 @@ namespace DtpCore.Extensions
             services.AddTransient<IMerkleStrategyFactory, MerkleStrategyFactory>();
             services.AddTransient<IDerivationStrategyFactory, DerivationStrategyFactory>();
             services.AddTransient<DerivationSecp256k1PKH>();
+            services.AddTransient<IServerIdentityService, ServerIdentityService>();
 
             // ---------------------------------------------------------------------------------------------------------------
             // http://www.dotnet-programming.com/post/2017/05/08/Aspnet-core-Deserializing-Json-with-Dependency-Injection.aspx

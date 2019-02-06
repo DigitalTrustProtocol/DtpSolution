@@ -1,15 +1,16 @@
-﻿using DtpPackageCore.Model;
-using System.Collections.Generic;
+﻿using DtpCore.Model;
+using DtpPackageCore.Model;
 using System.Threading.Tasks;
 
 namespace DtpPackageCore.Interfaces
 {
     public interface IPackageService
     {
-        string CreatePackageName();
-
         void AddPackageSubscriptions();
-        Task AddPackageSubscriptions(IEnumerable<string> claimTypes, IEnumerable<string> claimScopes);
+        Task AddPackageSubscriptions(string scope);
         void PublishPackageMessage(PackageMessage packageMessage);
+        Task<Package> FetchPackage(string path);
+        Task<string> StorePackage(Package package);
+
     }
 }

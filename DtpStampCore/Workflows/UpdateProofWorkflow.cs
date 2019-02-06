@@ -11,6 +11,7 @@ using DtpCore.Enumerations;
 using DtpCore.Repository;
 using System.ComponentModel;
 using DtpCore.Notifications;
+using DtpStampCore.Notifications;
 
 namespace DtpStampCore.Workflows
 {
@@ -70,33 +71,16 @@ namespace DtpStampCore.Workflows
             proof.Confirmations = addressTimestamp.Confirmations;
             proof.BlockTime = addressTimestamp.Time;
 
+            _mediator.Publish(new BlockchainProofUpdatedNotification(proof));
+
             var confirmationThreshold = _configuration.ConfirmationThreshold(proof.Blockchain);
+            CombineLog(_logger, $"Proof ID:{proof.DatabaseID} current confirmations {proof.Confirmations} of {confirmationThreshold}");
+
             if (proof.Confirmations >= confirmationThreshold)
             {
                 proof.Status = ProofStatusType.Done.ToString();
+                _mediator.Publish(new BlockchainProofDoneNotification(proof));
             }
-            CombineLog(_logger, $"Proof ID:{proof.DatabaseID} current confirmations {proof.Confirmations} of {confirmationThreshold}");
-
-            _mediator.Publish(new BlockchainProofUpdatedNotification(proof));
         }
-
-
-        //public override void Execute()
-        //{
-        //    Init();
-
-        //    var time = DateTime.Now.ToUnixTime();
-
-        //    while(Container.Active && Container.NextExecution < time && !StopExecution)
-        //    {
-        //        CallMethod(Enum.GetName(typeof(TimestampStates), CurrentState));
-
-        //        if(MethodCallback != null)
-        //        {
-        //            MethodCallback.Invoke();
-        //        }
-        //    }
-        //}
-    
     }
 }

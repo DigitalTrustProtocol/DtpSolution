@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Remove="Commands\UpdateTrustPackageCommandHandler.cs" />
+    <Compile Remove="Configurations\PackageConfiguration.cs" />
+    <Compile Remove="Notifications\PackageMessageReceivedHandler.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
   <ItemGroup>
     <ProjectReference Include="..\DtpCore\DtpCore.csproj" />
     <ProjectReference Include="..\DtpStampCore\DtpStampCore.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Configurations\" />
   </ItemGroup>
 
 </Project>

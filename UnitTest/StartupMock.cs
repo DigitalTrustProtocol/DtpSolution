@@ -12,7 +12,8 @@ using DtpCore.Interfaces;
 using UnitTest.DtpPackage.Mocks;
 using MediatR;
 using DtpServer.Controllers;
-using DtpCore.Controllers;
+using Ipfs.CoreApi;
+using DtpPackageCore.Interfaces;
 
 namespace UnitTest
 {
@@ -26,6 +27,8 @@ namespace UnitTest
         public TrustDBContext DB { get; set; }
         public ITrustDBService TrustDBService { get; set; }
         public IClaimBanListService ClaimBanListService { get; set; }
+        public IPackageService PackageService { get; set; }
+        public IServerIdentityService ServerIdentityService { get; set; }
 
 
         [TestInitialize]
@@ -43,15 +46,18 @@ namespace UnitTest
 
             Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
             Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
-
-
             Services.AddTransient<PackageController>();
             Services.AddTransient<QueryController>();
+            Services.AddScoped<ICoreApi, IpfsClientMock>();
 
             ServiceScope = Services.BuildServiceProvider(false).CreateScope();
             ServiceProvider = ServiceScope.ServiceProvider;
             LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
             LoggerFactory.AddConsole();
+
+            PackageService = ServiceProvider.GetRequiredService<IPackageService>();
+            ServerIdentityService = ServiceProvider.GetRequiredService<IServerIdentityService>();
+
 
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
             //DB = ServiceProvider.GetRequiredService<TrustDBContext>();

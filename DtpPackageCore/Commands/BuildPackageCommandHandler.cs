@@ -53,42 +53,51 @@ namespace DtpPackageCore.Commands
         public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
         {
             // Get current
-            var buildPackage = _trustDBService.GetBuildPackage();
+            var buildPackages = await _trustDBService.GetBuildPackages();
 
-            _trustDBService.LoadPackageClaims(buildPackage);
-
-            if(buildPackage.Claims.Count == 0)
+            foreach (var buildPackage in buildPackages)
             {
-                _notifications.Add(new PackageNoClaimsNotification());
-                return _notifications;
-            }
+                _trustDBService.LoadPackageClaims(buildPackage);
 
-            var builder = new PackageBuilder();
-            _trustDBService.Add(builder.Package);
-
-            foreach (var claim in buildPackage.Claims)
-            {
-                if (claim.State.Match(ClaimStateType.Replaced))
-                    _trustDBService.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
-                else
+                if (buildPackage.Claims.Count == 0)
                 {
-                    claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != buildPackage.DatabaseID).ToList(); // Remove relation to static build package
-                    claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
-
-                    builder.AddClaim(claim);
+                    _notifications.Add(new PackageNoClaimsNotification(buildPackage));
+                    continue;
                 }
+
+                var builder = new PackageBuilder();
+                builder.Package.Scopes = buildPackage.Scopes;
+
+                _trustDBService.Add(builder.Package);
+
+                foreach (var claim in buildPackage.Claims)
+                {
+                    if (claim.State.Match(ClaimStateType.Replaced))
+                        _trustDBService.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
+                    else
+                    {
+                        claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != buildPackage.DatabaseID).ToList(); // Remove relation to static build package
+                        claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
+
+                        builder.AddClaim(claim);
+                    }
+                }
+
+                if(builder.Package.Claims.Count == 0)
+                {
+                    _notifications.Add(new PackageNoClaimsNotification(buildPackage));
+                    continue;
+                }
+
+                builder.OrderClaims(); // Order claims ny ID before package ID calculation. 
+                SignPackage(builder);
+
+                builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));
+
+                _trustDBService.SaveChanges(); // Save the new package
+
+                await _notifications.Publish(new PackageBuildNotification(builder.Package));
             }
-
-            //buildPackage.Claims = null;
-
-            builder.OrderClaims(); // Order claims ny ID before package ID calculation. 
-            SignPackage(builder);
-
-            builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));
-
-            _trustDBService.SaveChanges(); // Save the new package
-
-            await _notifications.Publish(new PackageBuildNotification(builder.Package));
 
             return _notifications;
         }

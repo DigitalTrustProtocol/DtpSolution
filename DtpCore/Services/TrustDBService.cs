@@ -7,6 +7,8 @@ using System;
 using DtpCore.Extensions;
 using DtpCore.Model.Database;
 using DtpCore.Builders;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DtpCore.Services
 {
@@ -152,28 +154,46 @@ namespace DtpCore.Services
         }
 
 
+
+        public async Task<List<Package>> GetBuildPackages()
+        {
+            // Check if there is a builder package ready
+            var buildPackages = DBContext.Packages
+                .Where(p => (p.State & PackageStateType.Building) > 0)
+                .Include(p => p.ClaimPackages)
+                .ThenInclude(p => p.Claim);
+
+            return await buildPackages.ToListAsync();
+        }
+
+
         /// <summary>
-        /// There will always only be one build package.
-        /// If package provided is build and signed, then it will be used.
+        /// Gets the build package where all new claims are added.
         /// </summary>
         /// <returns></returns>
-        public Package GetBuildPackage()
+        public Package GetBuildPackage(string scope)
         {
             lock (lockObj)
             {
-                return EnsureBuildPackage();
+                return EnsureBuildPackage(scope);
             }
         }
 
-        public Package EnsureBuildPackage()
+        public Package EnsureBuildPackage(string scope)
         {
             // Check if there is a builder package ready
-            var buildPackage = DBContext.Packages.Where(p => (p.State & PackageStateType.Building) > 0).Include(p=>p.ClaimPackages).ThenInclude(p=>p.Claim).FirstOrDefault();
+            var buildPackage = DBContext.Packages
+                .Where(p => (p.State & PackageStateType.Building) > 0 && p.Scopes == scope)
+                .Include(p=>p.ClaimPackages)
+                .ThenInclude(p=>p.Claim)
+                .FirstOrDefault();
+
             if (buildPackage == null)
             {
                 // Create a new builder package, make sure that this is done syncronius.
                 buildPackage = (new PackageBuilder()).Package;
                 buildPackage.State = PackageStateType.Building;
+                buildPackage.Scopes = scope;
 
                 Add(buildPackage);
                 DBContext.SaveChanges();

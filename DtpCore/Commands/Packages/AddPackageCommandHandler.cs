@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace DtpCore.Commands.Packages
         private ITrustDBService _trustDBService;
         private NotificationSegment _notifications;
         private readonly ILogger<AddPackageCommandHandler> _logger;
+
+        private Dictionary<string, Package> _packageCache = new Dictionary<string, Package>();
 
         public AddPackageCommandHandler(IMediator mediator, ITrustDBService trustDBService, NotificationSegment notifications, ILogger<AddPackageCommandHandler> logger)
         {
@@ -39,6 +42,7 @@ namespace DtpCore.Commands.Packages
             var claims = package.Claims;
 
             _trustDBService.EnsurePackageState(package);
+            Func<string, Package> getPackage = GetPackage; 
 
             if (package.State.Match(PackageStateType.Signed))
             {
@@ -50,25 +54,39 @@ namespace DtpCore.Commands.Packages
                 }
 
                 _trustDBService.Add(package); // Add package to DBContext
-            }
-            else
-            {
-                // Replace package with a build package.
-                package = _trustDBService.GetBuildPackage();
+                getPackage = (scope) => package; // Replace default function and just return the inline package
             }
 
             foreach (var claim in claims)
             {
-                var claimNotifications = await _mediator.Send(new AddClaimCommand { Claim = claim, Package = package });
+                var claimNotifications = await _mediator.Send(new AddClaimCommand { Claim = claim, Package = getPackage(claim.Scope) });
 
                 _notifications.AddRange(claimNotifications);
             }
 
             _trustDBService.SaveChanges();
 
+            _logger.LogInformation($"Package Added Database ID: {package.DatabaseID}");
+
             await _notifications.Publish(new PackageAddedNotification { Package = package });
 
             return _notifications;
+        }
+
+        /// <summary>
+        /// Gets the build package for the scope, uses caching.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Package GetPackage(string scope)
+        {
+            if (_packageCache.TryGetValue(scope, out Package package))
+                return package;
+
+            package = _trustDBService.GetBuildPackage(scope);
+            _packageCache.Add(scope, package);
+            return package;
         }
 
     }

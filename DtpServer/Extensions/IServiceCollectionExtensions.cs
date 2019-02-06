@@ -11,10 +11,6 @@ namespace DtpServer.Extensions
     {
         public static void DtpServer(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(TrustPackageCreatedNotificationHandler));
-            
-            //services.AddTransient<BlockchainProofUpdatedNotificationHandler>();
-
             // https://github.com/Biarity/Sieve/issues/4#issuecomment-364629048
             services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
 

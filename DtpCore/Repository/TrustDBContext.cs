@@ -52,10 +52,10 @@ namespace DtpCore.Repository
                 .HasConversion(v => string.Join('|', v),
                     v => v.Split('|', StringSplitOptions.RemoveEmptyEntries));
 
-            builder.Entity<Package>()
-                .Property(e => e.Scopes)
-                .HasConversion(v => string.Join('|', v),
-                    v => v.Split('|', StringSplitOptions.RemoveEmptyEntries));
+            //builder.Entity<Package>()
+            //    .Property(e => e.Scopes)
+            //    .HasConversion(v => string.Join('|', v),
+            //        v => v.Split('|', StringSplitOptions.RemoveEmptyEntries));
 
             builder.Entity<Package>()
                 .Property(e => e.Obsoletes)

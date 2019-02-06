@@ -38,5 +38,10 @@ namespace DtpCore.Notifications
             Add(notification);
             _mediator.Publish(notification).GetAwaiter().GetResult();
         }
+
+        public T FindLast<T>()  where T: class, INotification
+        {
+            return FindLast(p => p is T) as T;
+        }
     }
 }

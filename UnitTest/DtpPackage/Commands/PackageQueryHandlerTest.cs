@@ -11,7 +11,7 @@ using UnitTest.DtpCore.Extensions;
 namespace UnitTest.DtpPackage.Commands
 {
     [TestClass]
-    public class TrustPackageQueryHandlerTest : StartupMock
+    public class PackageQueryHandlerTest : StartupMock
     {
 
         private NotificationSegment CreateClaim(string issuerName, string subjectName)

@@ -85,6 +85,13 @@
             <param name="query"></param>
             <returns></returns>
         </member>
+        <member name="M:DtpServer.Pages.Packages.DetailsModel.OnGetAsync(System.Nullable{System.Int32})">
+            <summary>
+            Get a package
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:DtpServer.Pages.StatisticsModel.AutoSize(System.Int64)">
             <summary>
             Formats from bytes to KB,MB,GB,TB 

@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Controllers\StampController.cs" />
+    <Compile Remove="Notifications\TrustPackageCreatedNotificationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\Shared\DisplayTemplates\TitleDetailLink.cshtml" />

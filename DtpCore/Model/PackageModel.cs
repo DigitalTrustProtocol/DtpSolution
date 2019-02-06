@@ -67,8 +67,8 @@ namespace DtpCore.Model
         /// The scopes of claims that the package contains.
         /// </summary>
         [JsonProperty(PropertyName = "scopes")]
-        public IList<string> Scopes { get; set; }
-        public bool ShouldSerializeScopes() => Scopes != null && Scopes.Count > 0;
+        public string Scopes { get; set; }
+        public bool ShouldSerializeScopes() => !string.IsNullOrWhiteSpace(Scopes);
 
         [JsonProperty(PropertyName = "server", NullValueHandling = NullValueHandling.Ignore)]
         public ServerIdentity Server { get; set; }
@@ -358,8 +358,17 @@ namespace DtpCore.Model
 
     [Table("Timestamp")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Timestamp : DatabaseEntity, ITimestamp
+    public class Timestamp : ITimestamp
     {
+        [JsonIgnore]
+        public int DatabaseID { get; set; } // Database row key
+
+        [JsonIgnore]
+        public int? PackageDatabaseID { get; set; } // Database row key
+
+        [JsonIgnore]
+        public int? ClaimDatabaseID { get; set; } // Database row key
+
         [JsonProperty(PropertyName = "blockchain")]
         public string Blockchain { get; set; }
         public bool ShouldSerializeBlockchain() { return !string.IsNullOrWhiteSpace(Blockchain); }

@@ -11,8 +11,8 @@ namespace DtpCore.Extensions
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 // Load all data into graph, properly async will be an good idea here!
-                var trustDBService  = scope.ServiceProvider.GetRequiredService<ITrustDBService>();
-                trustDBService.EnsureBuildPackage();
+                //var trustDBService  = scope.ServiceProvider.GetRequiredService<ITrustDBService>();
+                //trustDBService.EnsureBuildPackage();
             }
         }
     }

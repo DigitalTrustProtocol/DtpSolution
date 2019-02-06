@@ -4,14 +4,15 @@ using MediatR;
 
 namespace DtpPackageCore.Notifications
 {
-    public class PackageMessageReceived : INotification
+    public class PackageStoredNotification : INotification
     {
         public PackageMessage Message { get; }
+        public Package Package { get; }
 
-        public PackageMessageReceived(PackageMessage message)
+        public PackageStoredNotification(PackageMessage message, Package package)
         {
             Message = message;
+            Package = package;
         }
-
     }
 }
