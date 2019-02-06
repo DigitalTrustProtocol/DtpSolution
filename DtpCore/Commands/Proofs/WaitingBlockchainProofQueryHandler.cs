@@ -31,14 +31,10 @@ namespace DtpCore.Commands
 
         public Task<IEnumerable<BlockchainProof>> Handle(WaitingBlockchainProofQuery request, CancellationToken cancellationToken)
         {
-            var proofs = _db.proofs
-                .include(p => p.timestamps)
-                .where(p => p.status == proofstatustype.waiting.tostring())
-                .select(p => p);
-            //var proofs = _db.Proofs
-            //            .Include(p => p.Timestamps)
-            //            .Where(p => p.Status == ProofStatusType.Done.ToString())
-            //            .Select(p => p);
+            var proofs = _db.Proofs
+                        .Include(p => p.Timestamps)
+                        .Where(p => p.Status == ProofStatusType.Waiting.ToString())
+                        .Select(p => p);
 
             return Task.FromResult(proofs.AsEnumerable());
         }
