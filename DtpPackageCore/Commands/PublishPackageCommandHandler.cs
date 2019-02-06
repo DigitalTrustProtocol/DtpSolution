@@ -1,4 +1,5 @@
-﻿using DtpCore.Notifications;
+﻿using DtpCore.Interfaces;
+using DtpCore.Notifications;
 using DtpCore.Services;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Model;
@@ -16,12 +17,12 @@ namespace DtpPackageCore.Commands
     {
 
         private IMediator _mediator;
-        private readonly ServerIdentityService serverIdentityService;
+        private readonly IServerIdentityService serverIdentityService;
         private readonly IPackageService _packageService;
         private NotificationSegment _notifications;
         private readonly ILogger<PublishPackageCommandHandler> logger;
 
-        public PublishPackageCommandHandler(IMediator mediator, ServerIdentityService serverIdentityService, IPackageService packageService, NotificationSegment notifications, ILogger<PublishPackageCommandHandler> logger)
+        public PublishPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, IPackageService packageService, NotificationSegment notifications, ILogger<PublishPackageCommandHandler> logger)
         {
             _mediator = mediator;
             this.serverIdentityService = serverIdentityService;

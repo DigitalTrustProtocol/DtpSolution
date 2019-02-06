@@ -31,7 +31,7 @@ namespace DtpPackageCore.Commands
             var message = new PackageMessage
             {
                 Path = await _packageService.StorePackage(request.Package),
-                Scope = request.Package.Scopes,
+                Scope = request.Package.Scopes ?? "twitter.com",
                 ServerId = _serverIdentityService.Id
             };
             message.ServerSignature = _serverIdentityService.Sign(message.ToBinary());

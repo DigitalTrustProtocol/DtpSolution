@@ -168,7 +168,7 @@ namespace DtpServer
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                //app.UseHsts();
 
                 if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
                     rateLimitService.SetZone(Configuration.RateLimits());
@@ -181,7 +181,7 @@ namespace DtpServer
             app.DtpPackage();
 
             app.UseMiddleware<SerilogDiagnostics>();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             // public file folder

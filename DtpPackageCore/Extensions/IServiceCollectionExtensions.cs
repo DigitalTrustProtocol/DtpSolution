@@ -21,7 +21,7 @@ namespace DtpPackageCore.Extensions
 
             services.AddScoped<IPackageMessageValidator, PackageMessageValidator>();
             services.AddScoped<ICoreApi, IpfsClient>();
-            services.AddScoped<IPackageService, IpfsPackageService>();
+            services.AddSingleton<IPackageService, IpfsPackageService>();
         }
     }
 }
