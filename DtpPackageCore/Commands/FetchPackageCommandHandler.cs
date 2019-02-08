@@ -1,5 +1,4 @@
-﻿using DtpCore.Commands.Packages;
-using DtpCore.Notifications;
+﻿using DtpCore.Notifications;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
 using MediatR;
@@ -31,7 +30,7 @@ namespace DtpPackageCore.Commands
         {
             _packageMessageValidator.Validate(request.PackageMessage);
 
-            var package = await _packageService.FetchPackage(request.PackageMessage.Path);
+            var package = await _packageService.FetchPackageAsync(request.PackageMessage.Path);
 
             _notifications.AddRange(await _mediator.Send(new AddPackageCommand { Package = package }));
 

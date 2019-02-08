@@ -10,7 +10,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class CreateTimestampCommandHandler : IRequestHandler<CreateTimestampCommand, Timestamp>
     {

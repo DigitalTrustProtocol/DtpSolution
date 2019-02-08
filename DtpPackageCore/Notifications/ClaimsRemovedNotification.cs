@@ -2,7 +2,7 @@
 using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpPackageCore.Notifications
 {
     /// <summary>
     /// Notify that a Remove Claims message has been issued.

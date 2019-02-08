@@ -1,15 +1,14 @@
-﻿using DtpCore.Builders;
-using DtpCore.Extensions;
-using DtpCore.Interfaces;
+﻿using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Notifications;
+using DtpPackageCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands.Packages
+namespace DtpPackageCore.Commands
 {
     public class AddClaimCommandHandler : IRequestHandler<AddClaimCommand, NotificationSegment>
     {
@@ -60,13 +59,6 @@ namespace DtpCore.Commands.Packages
                     _notifications.Add(new ClaimObsoleteNotification { OldClaim = request.Claim, ExistingClaim = dbClaim });
                     return _notifications; // Make sure not to process the old claim.
                 }
-
-                // Check if everything is the same except Created date, then what?
-                //trust.Activate 
-                //trust.Expire
-                //trust.Cost
-                //trust.Claim
-                //trust.Note
 
                 dbClaim.State |= ClaimStateType.Replaced;
                 _trustDBService.Update(dbClaim);

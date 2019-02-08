@@ -30,7 +30,7 @@ namespace DtpPackageCore.Commands
         {
             var message = new PackageMessage
             {
-                Path = await _packageService.StorePackage(request.Package),
+                Path = await _packageService.StorePackageAsync(request.Package),
                 Scope = request.Package.Scopes ?? "twitter.com",
                 ServerId = _serverIdentityService.Id
             };

@@ -2,7 +2,7 @@
 using MediatR;
 using System.Collections.Generic;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class WaitingBlockchainProofQuery : IRequest<IEnumerable<BlockchainProof>>
     {

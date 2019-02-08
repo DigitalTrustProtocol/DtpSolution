@@ -1,8 +1,5 @@
 ﻿using DtpCore.Extensions;
-using DtpCore.Model;
-using DtpCore.Notifications;
 using DtpPackageCore.Commands;
-using DtpPackageCore.Model;
 using DtpPackageCore.Notifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest.TestData;

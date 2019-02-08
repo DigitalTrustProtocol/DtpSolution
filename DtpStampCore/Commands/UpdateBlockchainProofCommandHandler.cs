@@ -1,23 +1,12 @@
-﻿using DtpCore.Builders;
-using DtpCore.Extensions;
-using DtpCore.Interfaces;
-using DtpCore.Model;
-using DtpCore.Model.Configuration;
-using DtpCore.Notifications;
+﻿using DtpCore.Model;
 using DtpCore.Repository;
+using DtpStampCore.Notifications;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class UpdateBlockchainProofCommandHandler : IRequestHandler<UpdateBlockchainProofCommand, BlockchainProof>
     {

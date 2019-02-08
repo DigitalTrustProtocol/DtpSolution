@@ -1,7 +1,6 @@
-﻿using DtpCore.Commands.Packages;
-using DtpCore.Extensions;
+﻿using DtpCore.Extensions;
+using DtpPackageCore.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 
 namespace UnitTest.DtpGraphCore

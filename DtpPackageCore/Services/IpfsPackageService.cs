@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using DtpCore.Model;
 using DtpPackageCore.Extensions;
-using DtpCore.Commands.Packages;
 using Ipfs.CoreApi;
 using DtpPackageCore.Commands;
 using Ipfs;
@@ -43,27 +42,31 @@ namespace DtpPackageCore.Services
             this.logger = logger;
         }
 
-        public async void AddPackageSubscriptions()
+        public Task AddPackageSubscriptionsAsync()
         {
-            await AddPackageSubscriptions(Configuration.PackageScope());
+            return AddPackageSubscriptionsAsync(Configuration.PackageScope());
         }
 
 
-        public async Task AddPackageSubscriptions(string scope)
+        public Task AddPackageSubscriptionsAsync(string scope)
         {
-            if(!string.IsNullOrEmpty(scope))
-                await Ipfs.PubSub.SubscribeAsync(scope, this.HandleMessage, cancellationTokenSource.Token);
+            return Task.Run(() =>
+            {
+                var list = new List<Task>();
+                if (!string.IsNullOrEmpty(scope))
+                    list.Add(Ipfs.PubSub.SubscribeAsync(scope, this.HandleMessage, cancellationTokenSource.Token));
 
-            await Ipfs.PubSub.SubscribeAsync("", this.HandleMessage, cancellationTokenSource.Token); // Global scope (topic)
+                list.Add(Ipfs.PubSub.SubscribeAsync("", this.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
 
 #if DEBUG
-            await Ipfs.PubSub.SubscribeAsync("test", this.HandleMessage, cancellationTokenSource.Token);
-#endif
+                list.Add(Ipfs.PubSub.SubscribeAsync("test", this.HandleMessage, cancellationTokenSource.Token));
 
-            
+#endif
+                Task.WaitAll(list.ToArray());
+            });
         }
 
-        public async Task<Package> FetchPackage(string path)
+        public async Task<Package> FetchPackageAsync(string path)
         {
             var json = await Ipfs.FileSystem.ReadAllTextAsync(path); // Load the file from the IPFS network!
             var package = JsonConvert.DeserializeObject<Package>(json);
@@ -71,7 +74,7 @@ namespace DtpPackageCore.Services
             return package;
         }
 
-        public async Task<string> StorePackage(Package package)
+        public async Task<string> StorePackageAsync(Package package)
         {
             var content = JsonConvert.SerializeObject(package, Formatting.None);
             var node = await Ipfs.FileSystem.AddTextAsync(content) as FileSystemNode;
@@ -80,18 +83,11 @@ namespace DtpPackageCore.Services
         }
 
 
-        public async void PublishPackageMessage(PackageMessage packageMessage)
+        public async void PublishPackageMessageAsync(PackageMessage packageMessage)
         {
             var text = JsonConvert.SerializeObject(packageMessage, Formatting.None);
             await Ipfs.PubSub.PublishAsync(packageMessage.Scope, text);
             logger.LogInformation($"PackageMessage {packageMessage.Path} has been published to network.");
-        }
-
-        private Task LogInfo(string msg)
-        {
-            return Task.Run(() => 
-                logger.LogError(msg)
-                );
         }
 
 
@@ -99,11 +95,11 @@ namespace DtpPackageCore.Services
         /// Only raw processing, no check or validation of Peers. 
         /// </summary>
         /// <param name="publishedMessage"></param>
-        private async void HandleMessage(Ipfs.IPublishedMessage publishedMessage)
+        private async void HandleMessage(IPublishedMessage publishedMessage)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            try
             {
-                try
+                using (var scope = _serviceProvider.CreateScope())
                 {
                     // Create a scope so all dependency injections are available.
                     var text = Encoding.UTF8.GetString(publishedMessage.DataBytes);
@@ -118,14 +114,21 @@ namespace DtpPackageCore.Services
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                     var result = await mediator.Send(new FetchPackageCommand(packageMessage));
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    //var msg = $"Received message from server {publishedMessage.Id} failed with: {ex.Message}";
-                    //LogInfo(msg).Wait();
-                    //Console.WriteLine(msg);
-                    //var log = scope.ServiceProvider.GetRequiredService<ILogger<IpfsPackageService>>();
-                    //log.LogError(msg);
+                    var msg = $"Received message from server {publishedMessage.Id} failed with: {ex.Message}";
+                    var log = scope.ServiceProvider.GetRequiredService<ILogger<IpfsPackageService>>();
+                    log.LogError(msg);
                 }
+                // No logging possiblilities here!
+
+                //LogInfo(msg).Wait();
+                //Console.WriteLine(msg);
+                //var log = scope.ServiceProvider.GetRequiredService<ILogger<IpfsPackageService>>();
+                //log.LogError(msg);
             }
         }
 

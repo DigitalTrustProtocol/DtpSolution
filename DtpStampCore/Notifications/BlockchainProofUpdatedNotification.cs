@@ -1,7 +1,7 @@
 ﻿using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpStampCore.Notifications
 {
     public class BlockchainProofUpdatedNotification : INotification
     {

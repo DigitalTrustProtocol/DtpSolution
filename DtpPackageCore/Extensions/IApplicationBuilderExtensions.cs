@@ -18,7 +18,7 @@ namespace DtpPackageCore.Extensions
                 workflowService.EnsureWorkflow<CreateTrustPackageWorkflow>();
 
                 var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
-                packageService.AddPackageSubscriptions();
+                packageService.AddPackageSubscriptionsAsync();
             }
         }
     }

@@ -39,7 +39,7 @@ namespace DtpPackageCore.Commands
             _notifications.AddRange(await _mediator.Send(new StorePackageCommand(request.Package)));
             var notification = _notifications.FindLast<PackageStoredNotification>();
 
-            _packageService.PublishPackageMessage(notification.Message);
+            _packageService.PublishPackageMessageAsync(notification.Message);
 
             await _notifications.Publish(new PackagePublishedNotification(request.Package, notification.Message));
 

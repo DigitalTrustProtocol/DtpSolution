@@ -1,7 +1,6 @@
-﻿using DtpCore.Builders;
-using DtpCore.Extensions;
-using DtpCore.Notifications;
+﻿using DtpCore.Extensions;
 using DtpGraphCore.Interfaces;
+using DtpPackageCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;

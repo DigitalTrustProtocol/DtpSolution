@@ -19,7 +19,9 @@
     <Compile Remove="Repository\BlockrRepository.cs" />
     <Compile Remove="Repository\SoChainTransactionRepository.cs" />
     <Compile Remove="Services\Batch.cs" />
+    <Compile Remove="Services\BytesToHexConverter.cs" />
     <Compile Remove="Services\Crypto.cs" />
+    <Compile Remove="Services\IDContainer.cs" />
     <Compile Remove="Services\Info.cs" />
     <Compile Remove="Services\Proof.cs" />
     <Compile Remove="Services\TimestampService.cs" />

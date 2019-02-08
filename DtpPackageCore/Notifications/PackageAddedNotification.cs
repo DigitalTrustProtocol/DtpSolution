@@ -4,7 +4,7 @@ using DtpCore.Model;
 using DtpCore.ViewModel;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpPackageCore.Notifications
 {
     public class PackageAddedNotification : INotification
     {

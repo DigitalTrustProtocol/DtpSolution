@@ -2,7 +2,7 @@
 using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpPackageCore.Notifications
 {
     public class ClaimObsoleteNotification : INotification
     {

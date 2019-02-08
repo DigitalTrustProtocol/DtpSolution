@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class CurrentBlockchainProofQueryHandler : IRequestHandler<CurrentBlockchainProofQuery, BlockchainProof>
     {

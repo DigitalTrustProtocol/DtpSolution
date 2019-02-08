@@ -9,7 +9,7 @@ using DtpCore.Model;
 using DtpCore.Collections.Generic;
 using DtpCore.Interfaces;
 using MediatR;
-using DtpCore.Commands.Packages;
+using DtpPackageCore.Commands;
 
 namespace DtpServer.Pages.Packages
 {

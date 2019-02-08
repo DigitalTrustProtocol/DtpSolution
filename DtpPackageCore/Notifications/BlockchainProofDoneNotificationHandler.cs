@@ -1,6 +1,4 @@
-﻿using DtpCore.Commands.Packages;
-using DtpPackageCore.Commands;
-using DtpPackageCore.Interfaces;
+﻿using DtpPackageCore.Commands;
 using DtpStampCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;

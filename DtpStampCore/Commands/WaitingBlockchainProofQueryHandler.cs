@@ -1,9 +1,5 @@
-﻿using DtpCore.Builders;
-using DtpCore.Enumerations;
-using DtpCore.Extensions;
-using DtpCore.Interfaces;
+﻿using DtpCore.Enumerations;
 using DtpCore.Model;
-using DtpCore.Model.Configuration;
 using DtpCore.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class WaitingBlockchainProofQueryHandler : IRequestHandler<WaitingBlockchainProofQuery, IEnumerable<BlockchainProof>>
     {

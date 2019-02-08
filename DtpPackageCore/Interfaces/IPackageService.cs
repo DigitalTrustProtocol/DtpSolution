@@ -6,11 +6,11 @@ namespace DtpPackageCore.Interfaces
 {
     public interface IPackageService
     {
-        void AddPackageSubscriptions();
-        Task AddPackageSubscriptions(string scope);
-        void PublishPackageMessage(PackageMessage packageMessage);
-        Task<Package> FetchPackage(string path);
-        Task<string> StorePackage(Package package);
+        Task AddPackageSubscriptionsAsync();
+        Task AddPackageSubscriptionsAsync(string scope);
+        void PublishPackageMessageAsync(PackageMessage packageMessage);
+        Task<Package> FetchPackageAsync(string path);
+        Task<string> StorePackageAsync(Package package);
 
     }
 }

@@ -2,7 +2,7 @@
 using DtpCore.Notifications;
 using DtpCore.Model;
 
-namespace DtpCore.Commands.Packages
+namespace DtpPackageCore.Commands
 {
     /// <summary>
     /// Claims with issuer id to be removed from DTP Server.

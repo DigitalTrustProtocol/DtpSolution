@@ -6,8 +6,7 @@ using DtpCore.Controllers;
 using DtpServer.AspNetCore.MVC.Filters;
 using DtpCore.Interfaces;
 using MediatR;
-using DtpCore.Extensions;
-using DtpCore.Commands.Packages;
+using DtpPackageCore.Commands;
 
 namespace DtpServer.Controllers
 {

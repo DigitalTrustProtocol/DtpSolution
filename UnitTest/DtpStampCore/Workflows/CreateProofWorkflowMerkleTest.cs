@@ -6,11 +6,9 @@ using System.Text;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Services;
-using DtpStampCore.Interfaces;
 using DtpStampCore.Workflows;
-using DtpCore.Commands;
+using DtpStampCore.Commands;
 using DtpCore.Model;
-using UnitTest.DtpStampCore.Mocks;
 using DtpCore.Enumerations;
 using DtpCore.Strategy;
 

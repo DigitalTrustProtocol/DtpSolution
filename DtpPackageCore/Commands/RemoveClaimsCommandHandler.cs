@@ -1,20 +1,16 @@
-﻿using DtpCore.Enumerations;
-using DtpCore.Extensions;
-using DtpCore.Interfaces;
-using DtpCore.Model;
+﻿using DtpCore.Interfaces;
 using DtpCore.Notifications;
 using DtpCore.Repository;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model.Database;
+using DtpPackageCore.Notifications;
 
-namespace DtpCore.Commands.Packages
+namespace DtpPackageCore.Commands
 {
     public class RemoveClaimsCommandHandler : IRequestHandler<RemoveClaimsCommand, NotificationSegment>
     {

@@ -1,22 +1,18 @@
-﻿using DtpCore.Enumerations;
-using DtpCore.Extensions;
+﻿using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Notifications;
-using DtpCore.Repository;
-using DtpCore.ViewModel;
+using DtpPackageCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DtpCore.Commands.Packages
+namespace DtpPackageCore.Commands
 {
     public class AddPackageCommandHandler : IRequestHandler<AddPackageCommand, NotificationSegment>
     {
@@ -52,6 +48,10 @@ namespace DtpCore.Commands.Packages
                     _notifications.Add(new PackageExistNotification { Package = package });
                     return _notifications;
                 }
+
+                // Verify timestamp
+                
+
 
                 _trustDBService.Add(package); // Add package to DBContext
                 getPackage = (scope) => package; // Replace default function and just return the inline package

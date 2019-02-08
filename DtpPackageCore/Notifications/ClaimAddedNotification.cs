@@ -1,9 +1,8 @@
-﻿using DtpCore.Enumerations;
-using DtpCore.Extensions;
+﻿using DtpCore.Extensions;
 using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpPackageCore.Notifications
 {
     public class ClaimAddedNotification : INotification
     {

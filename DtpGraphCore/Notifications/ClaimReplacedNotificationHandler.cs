@@ -1,4 +1,4 @@
-﻿using DtpCore.Notifications;
+﻿using DtpPackageCore.Notifications;
 using DtpGraphCore.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;

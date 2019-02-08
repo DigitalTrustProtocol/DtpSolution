@@ -1,7 +1,7 @@
 ﻿using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Commands
+namespace DtpStampCore.Commands
 {
     public class CurrentBlockchainProofQuery : IRequest<BlockchainProof>
     {

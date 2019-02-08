@@ -3,15 +3,15 @@ using DtpCore.Extensions;
 using DtpCore.Model;
 using MediatR;
 
-namespace DtpCore.Notifications
+namespace DtpPackageCore.Notifications
 {
-    public class ClaimExistNotification : INotification
+    public class ClaimBannedNotification : INotification
     {
         public Claim Claim { get; set; }
 
         public override string ToString()
         {
-            return $"Trust {Claim?.Id.ToHex()} already exist";
+            return $"Claim {Claim?.Id.ToHex()} is banned";
         }
 
     }
