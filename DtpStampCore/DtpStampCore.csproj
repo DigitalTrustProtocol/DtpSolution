@@ -11,7 +11,6 @@
     <Compile Remove="Extensions\JsonExtensions.cs" />
     <Compile Remove="Factories\TimestampProofFactory.cs" />
     <Compile Remove="Interfaces\ITimestampProofFactory.cs" />
-    <Compile Remove="Interfaces\ITimestampService.cs" />
     <Compile Remove="Interfaces\ITimestampStep.cs" />
     <Compile Remove="Interfaces\ITimestampSynchronizationService.cs" />
     <Compile Remove="Interfaces\ITimestampWorkflowService.cs" />
@@ -24,7 +23,6 @@
     <Compile Remove="Services\IDContainer.cs" />
     <Compile Remove="Services\Info.cs" />
     <Compile Remove="Services\Proof.cs" />
-    <Compile Remove="Services\TimestampService.cs" />
     <Compile Remove="Services\TimestampSynchronizationService.cs" />
     <Compile Remove="Services\TimestampWorkflowService.cs" />
     <Compile Remove="Workflows\AddressVerifyStep.cs" />

@@ -18,6 +18,7 @@ using Ipfs.CoreApi;
 using DtpPackageCore.Commands;
 using Ipfs;
 using DtpCore.Interfaces;
+using DtpCore.Extensions;
 
 namespace DtpPackageCore.Services
 {
@@ -112,7 +113,41 @@ namespace DtpPackageCore.Services
 
 
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    var result = await mediator.Send(new FetchPackageCommand(packageMessage));
+                    var notificationSegment = mediator.SendAndWait(new FetchPackageCommand(packageMessage));
+                    var notification = notificationSegment.FindLast<PackageFetchedNotification>();
+                    var package = notification.Package;
+
+                    if (package == null)
+                    {
+                        logger.LogError($"Error wrong notitifiation returned from FatchPackageCommand");
+                        return;
+                    }
+
+                    if (package.Timestamps == null || package.Timestamps.Count == 0)
+                    {
+                        logger.LogError($"Error no timestamps was found on package id {package.Id} from server id {packageMessage.ServerId}");
+                        return;
+                    }
+
+                    var packageValidator = scope.ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
+                    SchemaValidationResult validationResult = packageValidator.Validate(package); // 
+                    if(validationResult.ErrorsFound > 0)
+                    {
+                        logger.LogError(validationResult.ToString());
+                        return;
+                    }
+
+                    var timestampValidator = scope.ServiceProvider.GetRequiredService<ITimestampProofValidator>();
+                    if(!timestampValidator.Validate(package.Timestamps[0], out IList<string> errors))
+                    {
+                        var msg = string.Join(", ", errors);
+                        logger.LogError(msg);
+                        return;
+                    }
+                    
+
+                    // Now add the package!
+                    await mediator.Send(new AddPackageCommand { Package = package });
                 }
             }
             catch (Exception ex)

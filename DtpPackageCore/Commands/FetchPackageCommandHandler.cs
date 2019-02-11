@@ -1,4 +1,5 @@
-﻿using DtpCore.Notifications;
+﻿using DtpCore.Interfaces;
+using DtpCore.Notifications;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
 using MediatR;
@@ -13,14 +14,16 @@ namespace DtpPackageCore.Commands
     {
         private readonly IMediator _mediator;
         private readonly IPackageMessageValidator _packageMessageValidator;
+        private readonly ITimestampProofValidator _timestampValidator;
         private readonly IPackageService _packageService;
         private readonly NotificationSegment _notifications;
         private readonly ILogger<BuildPackageCommandHandler> logger;
 
-        public FetchPackageCommandHandler(IMediator mediator, IPackageMessageValidator packageMessageValidator, IPackageService packageService, NotificationSegment notifications, ILogger<BuildPackageCommandHandler> logger)
+        public FetchPackageCommandHandler(IMediator mediator, IPackageMessageValidator packageMessageValidator, ITimestampProofValidator timestampValidator, IPackageService packageService, NotificationSegment notifications, ILogger<BuildPackageCommandHandler> logger)
         {
             _mediator = mediator;
             _packageMessageValidator = packageMessageValidator;
+            _timestampValidator = timestampValidator;
             _packageService = packageService;
             _notifications = notifications;
             this.logger = logger;
@@ -32,11 +35,9 @@ namespace DtpPackageCore.Commands
 
             var package = await _packageService.FetchPackageAsync(request.PackageMessage.Path);
 
-            _notifications.AddRange(await _mediator.Send(new AddPackageCommand { Package = package }));
+            _notifications.Add(new PackageFetchedNotification(request.PackageMessage, package));
 
-            _notifications.Add(new PackageFetchedNotification(request.PackageMessage));
-
-            logger.LogInformation("PackageMessage Received and loaded");
+            logger.LogInformation("PackageMessage Received");
 
             return _notifications;
         }

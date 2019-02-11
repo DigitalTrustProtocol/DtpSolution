@@ -363,12 +363,6 @@ namespace DtpCore.Model
         [JsonIgnore]
         public int DatabaseID { get; set; } // Database row key
 
-        [JsonIgnore]
-        public int? PackageDatabaseID { get; set; } // Database row key
-
-        [JsonIgnore]
-        public int? ClaimDatabaseID { get; set; } // Database row key
-
         [JsonProperty(PropertyName = "blockchain")]
         public string Blockchain { get; set; }
         public bool ShouldSerializeBlockchain() { return !string.IsNullOrWhiteSpace(Blockchain); }
@@ -401,7 +395,23 @@ namespace DtpCore.Model
         //[JsonProperty(PropertyName = "proof")]
         [JsonIgnore]
         [DisplayName("Proof")]
-        public BlockchainProof Proof { get; set; } 
+        public BlockchainProof Proof { get; set; }
+
+        [JsonIgnore]
+        public int? ProofDatabaseID { get; set; } // Database row key
+
+        [JsonIgnore]
+        public int? PackageDatabaseID { get; set; } // Database row key
+
+        [JsonIgnore]
+        public int? ClaimDatabaseID { get; set; } // Database row key
+    }
+
+    public class TimestampAlgorithm
+    {
+        public string Derivation { get; set; }
+        public string Hash { get; set; }
+        public string Merkle { get; set; }
     }
 
 

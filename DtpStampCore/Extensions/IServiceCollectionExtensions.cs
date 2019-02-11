@@ -6,6 +6,7 @@ using DtpStampCore.Interfaces;
 using DtpStampCore.Repository;
 using DtpStampCore.Services;
 using DtpStampCore.Workflows;
+using DtpStampCore.Model.Schema;
 
 namespace DtpStampCore.Extensions
 {
@@ -13,11 +14,6 @@ namespace DtpStampCore.Extensions
     {
         public static void DtpStrampCore(this IServiceCollection services)
         {
-            //services.AddSingleton<ITimestampSynchronizationService, TimestampSynchronizationService>();
-
-            //services.AddTransient<ITimestampWorkflowService, TimestampWorkflowService>();
-            //services.AddTransient<ITimestampService, TimestampService>();
-
             services.AddTransient<IHashAlgorithm, Double256>();
             services.AddTransient<IMerkleTree, MerkleTreeSorted>();
 
@@ -30,6 +26,8 @@ namespace DtpStampCore.Extensions
 
             services.AddTransient<BitcoinService>();
             services.AddTransient<BitcoinTestService>();
+            services.AddTransient<ITimestampProofValidator, TimestampProofValidator>();
+            services.AddTransient<ITimestampService, TimestampService>();
         }
     }
 }

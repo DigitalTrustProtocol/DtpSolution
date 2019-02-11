@@ -7,10 +7,12 @@ namespace DtpPackageCore.Notifications
     public class PackageFetchedNotification : INotification
     {
         public PackageMessage Message { get; }
+        public Package Package { get; }
 
-        public PackageFetchedNotification(PackageMessage message)
+        public PackageFetchedNotification(PackageMessage message, Package package)
         {
             Message = message;
+            Package = package;
         }
 
     }
