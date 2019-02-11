@@ -1,5 +1,5 @@
 # DtpSolution
-Server side solution with web server and core libraries. Written in .Net Core C# 2.1
+Server side solution with web server and core libraries, dependen on IPFS/go. Written in .Net Core C# 2.1
 
 ##Install  
 
