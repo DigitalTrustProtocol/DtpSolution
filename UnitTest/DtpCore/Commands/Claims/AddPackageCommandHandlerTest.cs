@@ -19,7 +19,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             var builder = new PackageBuilder();
             builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var package = builder.Package;
-            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand(package));
             DB.SaveChanges();
             return package;
         }
@@ -30,7 +30,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             var builder = new PackageBuilder();
             builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
             var package = builder.Package;
-            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = package });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand(package));
             DB.SaveChanges();
 
             Assert.AreEqual(2, result.Count);

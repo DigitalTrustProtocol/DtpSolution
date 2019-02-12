@@ -14,10 +14,9 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackageCore(this IServiceCollection services)
         {
-            //services.AddMediatR(typeof(BuildPackageCommandHandler));
-            
             services.AddTransient<BuildPackageCommandHandler>();
             services.AddTransient<CreateTrustPackageWorkflow>();
+            services.AddTransient<SynchronizePackageWorkflow>();
 
             services.AddScoped<IPackageMessageValidator, PackageMessageValidator>();
             services.AddScoped<ICoreApi, IpfsClient>();

@@ -15,7 +15,7 @@ namespace UnitTest.DtpGraphCore
             BuildTestGraph();
             var package = _trustBuilder.Package;
 
-            var result = Mediator.SendAndWait(new AddPackageCommand { Package = _trustBuilder.Package });
+            var result = Mediator.SendAndWait(new AddPackageCommand( _trustBuilder.Package));
 
             // Load into Graph
             _graphLoadSaveService.LoadFromDatabase();

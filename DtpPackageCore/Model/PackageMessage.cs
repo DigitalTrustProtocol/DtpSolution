@@ -10,7 +10,7 @@ namespace DtpPackageCore.Model
         /// A path to an existing file, such as "QmXarR6rgkQ2fDSHjSY5nM2kuCXKYGViky5nohtwgF65Ec/about"
         //  or "QmZTR5bcpQD7cFgTorqxZDYaew1Wqgfbd2ud9QqGPAkK2V"
         /// </summary>
-        public string Path { get; set; }
+        public string File { get; set; }
 
         public string Scope { get; set; }
 
@@ -29,7 +29,7 @@ namespace DtpPackageCore.Model
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                ms.WriteString(Path);
+                ms.WriteString(File);
                 ms.WriteString(Scope);
                 ms.WriteString(ServerId);
                 return ms.ToArray();

@@ -34,6 +34,7 @@ namespace DtpPackageCore.Services
         private IServerIdentityService _serverIdentityService;
         private readonly ILogger<IpfsPackageService> logger;
 
+
         public IpfsPackageService(ICoreApi ipfs, IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, ILogger<IpfsPackageService> logger)
         {
             Ipfs = ipfs;
@@ -43,11 +44,23 @@ namespace DtpPackageCore.Services
             this.logger = logger;
         }
 
+
+        public Task<Peer> GetLocalPeer()
+        {
+            return Ipfs.Generic.IdAsync();
+        }
+
+
+        public Task<IEnumerable<Peer>> GetPeersAsync(string scope)
+        {
+            return Ipfs.Swarm.PeersAsync();
+        }
+
+
         public Task AddPackageSubscriptionsAsync()
         {
             return AddPackageSubscriptionsAsync(Configuration.PackageScope());
         }
-
 
         public Task AddPackageSubscriptionsAsync(string scope)
         {
@@ -88,7 +101,7 @@ namespace DtpPackageCore.Services
         {
             var text = JsonConvert.SerializeObject(packageMessage, Formatting.None);
             await Ipfs.PubSub.PublishAsync(packageMessage.Scope, text);
-            logger.LogInformation($"PackageMessage {packageMessage.Path} has been published to network.");
+            logger.LogInformation($"PackageMessage {packageMessage.File} has been published to network.");
         }
 
 
@@ -113,9 +126,7 @@ namespace DtpPackageCore.Services
 
 
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    var notificationSegment = mediator.SendAndWait(new FetchPackageCommand(packageMessage));
-                    var notification = notificationSegment.FindLast<PackageFetchedNotification>();
-                    var package = notification.Package;
+                    var package = mediator.SendAndWait(new FetchPackageCommand(packageMessage));
 
                     if (package == null)
                     {
@@ -144,10 +155,11 @@ namespace DtpPackageCore.Services
                         logger.LogError(msg);
                         return;
                     }
-                    
+
+                    //var peers = await Ipfs.PubSub.PublishAsync;
 
                     // Now add the package!
-                    await mediator.Send(new AddPackageCommand { Package = package });
+                    await mediator.Send(new AddPackageCommand(package));
                 }
             }
             catch (Exception ex)

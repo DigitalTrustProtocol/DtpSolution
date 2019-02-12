@@ -47,6 +47,11 @@ namespace DtpCore.Model.Database
         [Display(Name = "Signed")]
         Signed = 32 + 4,
 
+        ///// <summary>
+        ///// The package is to be loaded from external source.
+        ///// </summary>
+        //[Display(Name = "LoadExternal")]
+        //LoadExternal = 64,
     }
 
 }

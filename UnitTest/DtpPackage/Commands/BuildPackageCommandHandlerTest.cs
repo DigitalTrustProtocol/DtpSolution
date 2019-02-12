@@ -18,7 +18,7 @@ namespace UnitTest.DtpPackage.Commands
             builder.SetServer("testserver");
             builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true)).BuildClaimID();
             
-            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = builder.Package });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand (builder.Package));
             return result;
         }
 

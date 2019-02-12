@@ -18,7 +18,7 @@ namespace UnitTest.DtpPackage.Commands
             builder.SetServer("testserver");
             builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true)).BuildClaimID();
 
-            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand { Package = builder.Package });
+            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand(builder.Package));
             return result;
         }
 
@@ -26,7 +26,7 @@ namespace UnitTest.DtpPackage.Commands
         [TestMethod]
         public void Empty()
         {
-            var result = Mediator.SendAndWait(new PackageQuery());
+            var result = Mediator.SendAndWait(new PackagePaginatedListQuery());
             
             Assert.AreEqual(0, result.Count);
         }
@@ -39,7 +39,7 @@ namespace UnitTest.DtpPackage.Commands
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
             var addedPackage = ((PackageBuildNotification)notifications[0]).Package;
 
-            var result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
+            var result = Mediator.SendAndWait(new PackagePaginatedListQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
             var package = result[0];
             TrustDBService.LoadPackageClaims(package);
@@ -59,10 +59,10 @@ namespace UnitTest.DtpPackage.Commands
             var notifications = Mediator.SendAndWait(new BuildPackageCommand());
             var addedPackage = ((PackageBuildNotification)notifications[0]).Package;
 
-            var result = Mediator.SendAndWait(new PackageQuery());
+            var result = Mediator.SendAndWait(new PackagePaginatedListQuery());
             Assert.AreEqual(3, result.Count); // Build package and two customs
 
-            result = Mediator.SendAndWait(new PackageQuery(addedPackage.DatabaseID, true));
+            result = Mediator.SendAndWait(new PackagePaginatedListQuery(addedPackage.DatabaseID, true));
             Assert.AreEqual(1, result.Count);
 
             var package = result[0];

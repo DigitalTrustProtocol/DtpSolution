@@ -1,4 +1,5 @@
 ﻿using DtpCore.Interfaces;
+using DtpCore.Model;
 using DtpCore.Notifications;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace DtpPackageCore.Commands
 {
     public class FetchPackageCommandHandler :
-        IRequestHandler<FetchPackageCommand, NotificationSegment>
+        IRequestHandler<FetchPackageCommand, Package>
     {
         private readonly IMediator _mediator;
         private readonly IPackageMessageValidator _packageMessageValidator;
@@ -29,17 +30,17 @@ namespace DtpPackageCore.Commands
             this.logger = logger;
         }
 
-        public async Task<NotificationSegment> Handle(FetchPackageCommand request, CancellationToken cancellationToken)
+        public async Task<Package> Handle(FetchPackageCommand request, CancellationToken cancellationToken)
         {
             _packageMessageValidator.Validate(request.PackageMessage);
 
-            var package = await _packageService.FetchPackageAsync(request.PackageMessage.Path);
+            var package = await _packageService.FetchPackageAsync(request.PackageMessage.File);
 
-            _notifications.Add(new PackageFetchedNotification(request.PackageMessage, package));
+            await _notifications.Publish(new PackageFetchedNotification(request.PackageMessage, package));
 
             logger.LogInformation("PackageMessage Received");
 
-            return _notifications;
+            return package;
         }
 
     }

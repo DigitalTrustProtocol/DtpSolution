@@ -46,6 +46,12 @@
             <param name="package"></param>
             <returns></returns>
         </member>
+        <member name="M:DtpServer.Controllers.PackageController.GetPackageInfoCollection(System.Int64)">
+            <summary>
+            List all packages
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:DtpServer.Controllers.ThrowController">
             <summary>
             Test the exception handling in API

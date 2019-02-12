@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 
 namespace DtpPackageCore.Commands
 {
-    public class PackageQueryHandler : IRequestHandler<PackageQuery, IPaginatedList<Package>>
+    public class PackagePaginatedListQueryHandler : IRequestHandler<PackagePaginatedListQuery, IPaginatedList<Package>>
     {
         private IMediator _mediator;
         private ITrustDBService _trustDBService;
-        private readonly ILogger<PackageQueryHandler> _logger;
+        private readonly ILogger<PackagePaginatedListQueryHandler> _logger;
 
-        public PackageQueryHandler(IMediator mediator, ITrustDBService trustDBService, ILogger<PackageQueryHandler> logger)
+        public PackagePaginatedListQueryHandler(IMediator mediator, ITrustDBService trustDBService, ILogger<PackagePaginatedListQueryHandler> logger)
         {
             _mediator = mediator;
             _trustDBService = trustDBService;
             _logger = logger;
         }
 
-        public async Task<IPaginatedList<Package>> Handle(PackageQuery request, CancellationToken cancellationToken)
+        public async Task<IPaginatedList<Package>> Handle(PackagePaginatedListQuery request, CancellationToken cancellationToken)
         {
             var query = _trustDBService.Packages.AsNoTracking();
 

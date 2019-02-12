@@ -36,6 +36,7 @@ namespace DtpCore.Interfaces
         void Update(Claim claim);
         void Update(Package package);
 
+        Task<bool> DoPackageExistAsync(byte[] packageId);
         Package GetPackageById(byte[] packageId);
         Task<List<Package>> GetBuildPackages();
         Package GetBuildPackage(string scope);

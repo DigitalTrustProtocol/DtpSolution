@@ -43,7 +43,7 @@ namespace DtpPackageCore.Commands
             if (package.State.Match(PackageStateType.Signed))
             {
                 // Check for existing packages
-                if (_trustDBService.GetPackageById(package.Id) != null)
+                if (await _trustDBService.DoPackageExistAsync(package.Id))
                 {
                     _notifications.Add(new PackageExistNotification { Package = package });
                     return _notifications;

@@ -27,7 +27,7 @@ namespace DtpPackageCore.Model.Schema
         {
             errors = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(message.Path))
+            if (string.IsNullOrWhiteSpace(message.File))
                 errors.Add("Path is null or empty.");
 
             if (string.IsNullOrWhiteSpace(message.ServerId))

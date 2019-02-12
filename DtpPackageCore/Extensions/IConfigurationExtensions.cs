@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DtpPackageCore.Extensions
 {
@@ -11,6 +8,16 @@ namespace DtpPackageCore.Extensions
         public static string PackageScope(this IConfiguration configuration, string defaultValue = "twitter.com") // 10 minutes
         {
             return configuration.GetValue("packageScope", defaultValue);
+        }
+
+        public static int TrustPackageWorkflowInterval(this IConfiguration configuration, int defaultValue = 60 * 60 * 24) // 24 hours
+        {
+            return configuration.GetValue("TrustPackageWorkflowInterval", defaultValue); // 10 minutes
+        }
+
+        public static int SynchronizePackageWorkflowInterval(this IConfiguration configuration, int defaultValue = 60 * 10) // 10 minutes
+        {
+            return configuration.GetValue("TrustPackageWorkflowInterval", defaultValue); // 10 minutes
         }
     }
 }

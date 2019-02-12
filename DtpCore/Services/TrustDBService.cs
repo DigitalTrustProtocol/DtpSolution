@@ -221,6 +221,15 @@ namespace DtpCore.Services
             DBContext.Packages.Update(package);
         }
 
+
+        public async Task<bool> DoPackageExistAsync(byte[] packageId)
+        {
+            if (packageId == null || packageId.Length == 0)
+                return false;
+
+            return await Packages.AsNoTracking().AnyAsync(f => f.Id == packageId); 
+        }
+
         public Package GetPackageById(byte[] packageId)
         {
             if (packageId == null || packageId.Length == 0)

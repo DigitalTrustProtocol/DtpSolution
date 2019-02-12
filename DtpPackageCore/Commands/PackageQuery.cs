@@ -2,19 +2,18 @@
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using MediatR;
+using System.Collections.Generic;
 
 namespace DtpPackageCore.Commands
 {
-    public class PackageQuery : QueryCommand, IRequest<IPaginatedList<Package>>
+    public class PackageQuery : QueryCommand
     {
-        public PackageQuery(int? databaseID = null, bool includeClaims = false)
-        {
-            DatabaseID = databaseID;
-            IncludeClaims = includeClaims;
-        }
 
-        public int? DatabaseID { get; }
-        public bool IncludeClaims { get; }
+        //public int? DatabaseID { get; }
+        //public bool IncludeClaims { get; }
+
+        public string Scope { get; }
+        
 
 
 

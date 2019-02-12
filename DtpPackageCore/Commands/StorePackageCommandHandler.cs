@@ -30,13 +30,13 @@ namespace DtpPackageCore.Commands
         {
             var message = new PackageMessage
             {
-                Path = await _packageService.StorePackageAsync(request.Package),
+                File = await _packageService.StorePackageAsync(request.Package),
                 Scope = request.Package.Scopes ?? "twitter.com",
                 ServerId = _serverIdentityService.Id
             };
             message.ServerSignature = _serverIdentityService.Sign(message.ToBinary());
 
-            logger.LogInformation($"Package stored on {message.Path}");
+            logger.LogInformation($"Package stored on {message.File}");
             _notifications.Add(new PackageStoredNotification(message, request.Package));
 
             return _notifications;

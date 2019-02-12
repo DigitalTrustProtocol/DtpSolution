@@ -7,6 +7,10 @@ using DtpServer.AspNetCore.MVC.Filters;
 using DtpCore.Interfaces;
 using MediatR;
 using DtpPackageCore.Commands;
+using DtpCore.ViewModel;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using DtpCore.Model.Database;
 
 namespace DtpServer.Controllers
 {
@@ -49,7 +53,7 @@ namespace DtpServer.Controllers
             //_context.Packages.Add(package);
             //await _context.SaveChangesAsync();
 
-            var result = await _mediator.Send(new AddPackageCommand { Package = package });
+            var result = await _mediator.Send(new AddPackageCommand(package));
 
             return StatusCode(201, result);
             //return Created();
@@ -57,18 +61,35 @@ namespace DtpServer.Controllers
         }
 
 
-        ///// <summary>
-        ///// List all packages
-        ///// </summary>
-        ///// <returns></returns>
-        //// GET: api/Packages
-        //[HttpGet]
-        //public IEnumerable<Package> GetPackages([FromServices]SieveProcessor sieveProcessor, SieveModel sieveModel)
-        //{
-        //    var packages = _context.Packages.AsNoTracking(); // Makes read-only queries faster
-        //    packages = sieveProcessor.Apply(sieveModel, packages); // Returns `result` after applying the sort/filter/page query in `SieveModel` to it
-        //    return packages;
-        //}
+        /// <summary>
+        /// List all packages
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/Packages
+        [Route("info")]
+        [HttpGet]
+        public PackageInfoCollection GetPackageInfoCollection([FromQuery]long from = 0)
+        {
+            var query = _trustDBService.DBContext.Packages.AsNoTracking(); // Makes read-only queries faster
+            
+            // The package need to be signed and not replaced!
+            query = query.Where(p => (p.State & PackageStateType.Signed) > 0 && (p.State & PackageStateType.Replaced) == 0);
+            query = query.Where(p => p.File != null);
+
+            if (from > 0)
+                query = query.Where(p => p.Created >= from);
+
+            query = query.OrderByDescending(p => p.Created);
+
+            var result = new PackageInfoCollection();
+
+            foreach (var entity in query)
+            {
+                result.Packages.Add(new PackageInfo { Id = entity.Id, File = entity.File });
+            }
+           
+            return result;
+        }
 
         ///// <summary>
         ///// Get a package by ID

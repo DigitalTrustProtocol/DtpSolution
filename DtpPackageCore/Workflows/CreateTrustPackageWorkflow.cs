@@ -18,6 +18,7 @@ using DtpPackageCore.Interfaces;
 using DtpPackageCore.Commands;
 using DtpStampCore.Interfaces;
 using DtpPackageCore.Notifications;
+using DtpPackageCore.Extensions;
 
 namespace DtpPackageCore.Workflows
 {
