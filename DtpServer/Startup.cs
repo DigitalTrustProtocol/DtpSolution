@@ -49,7 +49,7 @@ namespace DtpServer
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {  
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -157,7 +157,7 @@ namespace DtpServer
         /// <param name="env"></param>
         /// <param name="loggerFactory"></param>
         /// <param name="rateLimitService"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, RateLimitService rateLimitService)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService)
         {
             
             if (env.IsDevelopment())
@@ -174,11 +174,14 @@ namespace DtpServer
                     rateLimitService.SetZone(Configuration.RateLimits());
             }
 
+            // Do not work :(
+            applicationLifetime.ApplicationStopping.Register(OnShutdown, app);
 
             app.DtpCore(); // Ensure configuration of core
             app.DtpGraph(); // Load the Trust Graph from Database
             app.DtpStamp();
             app.DtpPackage();
+            app.DtpServer();
 
             app.UseMiddleware<SerilogDiagnostics>();
             //app.UseHttpsRedirection();
@@ -230,6 +233,12 @@ namespace DtpServer
 
 
             app.AllServices(_services);
+        }
+
+        private void OnShutdown(object obj)
+        {
+            var app = obj as IApplicationBuilder;
+            app.DtpServerDispose();
         }
 
     }

@@ -21,6 +21,7 @@ using DtpCore.Model.Database;
 using DtpPackageCore.Commands;
 using DtpPackageCore.Model;
 using DtpPackageCore.Notifications;
+using DtpCore.Collections.Generic;
 
 namespace DtpPackageCore.Workflows
 {
@@ -33,6 +34,7 @@ namespace DtpPackageCore.Workflows
     {
         // A cache of peers last synchronized with.
         private static Dictionary<int, Peer> peerCache = new Dictionary<int, Peer>();
+        private Dictionary<byte[], PackageInfo> packageCache = new Dictionary<byte[], PackageInfo>(ByteComparer.EqualityComparer);
 
         private IMediator _mediator;
         private readonly IPackageService _packageService;
@@ -78,14 +80,14 @@ namespace DtpPackageCore.Workflows
                 if (peerCache.ContainsKey(peerHashId))
                     continue;
 
-                if(ProcessPeerAsync(peer).GetAwaiter().GetResult())
+                if(ProcessPeerAsync(peer))
                     peerCache[peerHashId] = peer;
             }
 
             Wait(_configuration.SynchronizePackageWorkflowInterval()); // Never end the workflow
         }
 
-        private async Task<bool> ProcessPeerAsync(Peer peer)
+        private bool ProcessPeerAsync(Peer peer)
         {
             //_logger.LogInformation("Connected peer: " + peer.Id.ToString());
             if (peer.ConnectedAddress == null)
@@ -96,30 +98,11 @@ namespace DtpPackageCore.Workflows
                 return false;
 
             var ipAddress = ipV4.Value;
-            var port = 80;
-            var callUrl = new Uri($"http://{ipAddress}:{port}/api/packages/info?from={LastSyncTime}");
-
-            try
-            {
-
-                using (var client = new WebClient())
-                {
-                    // Get packages from server
-
-                    var json = await client.DownloadStringTaskAsync(callUrl);
-
-                    var packageInfoCollection = JsonConvert.DeserializeObject<PackageInfoCollection>(json);
-
-                    AddPackages(packageInfoCollection);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                CombineLog(_logger, $"Failed to get packages from server {ipAddress} - Error : {ex.Message}");
+            var info = _packageService.GetPackageInfoCollection(ipV4.Value, "", 0);
+            if (info == null)
                 return false;
-            }
+
+            AddPackages(info);
 
             return true;
         }
@@ -128,27 +111,36 @@ namespace DtpPackageCore.Workflows
         {
             foreach (var packageInfo in infoCollection.Packages)
             {
+                if (packageCache.ContainsKey(packageInfo.Id))
+                    continue;
+
                 if(_trustDBService.DoPackageExistAsync(packageInfo.Id).GetAwaiter().GetResult())
                     continue;
 
-                AddPackage(packageInfo);
+                // Get Package
+                var package = _mediator.SendAndWait(new FetchPackageCommand(new PackageMessage { File = packageInfo.File }));
+                if (ValidatePackage(packageInfo, package))
+                {
+                    // Now add the package to the system, the graph should automatically be updated as well.
+                    var result = _mediator.Send(new AddPackageCommand(package)).GetAwaiter().GetResult();
+                    packageCache[packageInfo.Id] = packageInfo;
+                }
+
             }
         }
 
-        private void AddPackage(PackageInfo packageInfo)
+        private bool ValidatePackage(PackageInfo packageInfo, Package package)
         {
-            // Get Package
-            var package = _mediator.SendAndWait(new FetchPackageCommand(new PackageMessage { File = packageInfo.File }));
             if (package == null)
             {
                 _logger.LogError($"Error wrong notitifiation returned from FatchPackageCommand");
-                return;
+                return false;
             }
 
             if (package.Timestamps == null || package.Timestamps.Count == 0)
             {
                 _logger.LogError($"Error no timestamps was found on package id {package.Id}");
-                return;
+                return false;
             }
 
             // Verify package
@@ -156,18 +148,24 @@ namespace DtpPackageCore.Workflows
             if (validationResult.ErrorsFound > 0)
             {
                 _logger.LogError(validationResult.ToString());
-                return;
+                return false;
             }
 
             if (!_timestampProofValidator.Validate(package.Timestamps[0], out IList<string> errors))
             {
                 var msg = string.Join(", ", errors);
                 _logger.LogError(msg);
-                return;
+                return false;
             }
 
-            // Now add the package to the system, the graph should automatically be updated as well.
-            var result = _mediator.Send(new AddPackageCommand(package)).GetAwaiter().GetResult();
+            if(!ByteComparer.EqualityComparer.Equals(packageInfo.Id, package.Id))
+            {
+                _logger.LogError($"Error PackageInfo id {packageInfo.Id} is not the same as package id {package.Id} from file {packageInfo.File}");
+                return false;
+            }
+
+
+            return true;
         }
     }
 

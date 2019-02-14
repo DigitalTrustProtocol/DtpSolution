@@ -11,7 +11,7 @@ namespace DtpStampCore.Services
     public class TimestampService : ITimestampService
     {
 
-        static ConcurrentDictionary<byte[], BlockchainProof> proofCache = new ConcurrentDictionary<byte[], BlockchainProof>(ByteComparer.Equals);
+        static ConcurrentDictionary<byte[], BlockchainProof> proofCache = new ConcurrentDictionary<byte[], BlockchainProof>(ByteComparer.EqualityComparer);
 
         public TrustDBContext DB { get; }
         private IBlockchainServiceFactory _blockchainServiceFactory;

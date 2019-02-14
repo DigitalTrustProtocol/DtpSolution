@@ -127,7 +127,7 @@
             <param name="env"></param>
             <param name="configuration"></param>
         </member>
-        <member name="M:DtpServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,NicolasDorier.RateLimits.RateLimitService)">
+        <member name="M:DtpServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Hosting.IApplicationLifetime,NicolasDorier.RateLimits.RateLimitService)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             </summary>

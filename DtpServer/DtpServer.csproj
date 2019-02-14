@@ -31,7 +31,29 @@
   <ItemGroup>
     <None Remove="Logs\log-20180620.txt" />
     <None Remove="Logs\log-20180621.txt" />
+    <None Remove="Platform\ipfs\config" />
+    <None Remove="Platform\ipfs\ipfs.exe" />
+    <None Remove="Platform\ipfs\ipfsinit.cmd" />
+    <None Remove="Platform\ipfs\ipfsrun.cmd" />
+    <None Remove="Platform\ipfs\swarm.key" />
     <None Remove="trust - backup.old" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Platform\ipfs\config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Platform\IPFS\ipfs.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Platform\IPFS\ipfsinit.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Platform\IPFS\ipfsrun.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Platform\IPFS\swarm.key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -44,15 +66,15 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.2105168" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.2" />
     <PackageReference Include="NicolasDorier.RateLimits" Version="1.0.0.3" />
     <!--<PackageReference Include="NSwag.Core" Version="12.0.10" />-->
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Sieve" Version="2.2.0" />
+    <PackageReference Include="Sieve" Version="2.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>

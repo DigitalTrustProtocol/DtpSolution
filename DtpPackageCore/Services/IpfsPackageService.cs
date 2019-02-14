@@ -19,6 +19,8 @@ using DtpPackageCore.Commands;
 using Ipfs;
 using DtpCore.Interfaces;
 using DtpCore.Extensions;
+using DtpCore.ViewModel;
+using System.Net;
 
 namespace DtpPackageCore.Services
 {
@@ -179,7 +181,32 @@ namespace DtpPackageCore.Services
             }
         }
 
+        public PackageInfoCollection GetPackageInfoCollection(string ipAddress, string scope, long from)
+        {
+            var port = 80;
+            var callUrl = new Uri($"http://{ipAddress}:{port}/api/packages/info?from={from}");
 
+            try
+            {
 
+                using (var client = new WebClient())
+                {
+                    // Get packages from server
+
+                    var json = client.DownloadStringTaskAsync(callUrl).GetAwaiter().GetResult();
+
+                    var packageInfoCollection = JsonConvert.DeserializeObject<PackageInfoCollection>(json);
+
+                    return packageInfoCollection;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to get packages from server {ipAddress} - Error : {ex.Message}");
+                return null;
+            }
+        }
     }
 }

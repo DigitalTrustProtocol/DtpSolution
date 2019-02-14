@@ -34,6 +34,8 @@ namespace DtpServer
 
         public static int Main(string[] args)
         {
+
+
             var formatter = (false) ? (ITextFormatter)new RenderedCompactJsonFormatter() : new MessageTemplateTextFormatter("{Timestamp:o} {RequestId,13} [{Level:u3}] {Message} ({EventId:x8}){NewLine}{Exception}", null);
 
             var pathFormat = "Logs/log-{Date}.txt";

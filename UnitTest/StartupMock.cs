@@ -14,6 +14,10 @@ using MediatR;
 using DtpServer.Controllers;
 using Ipfs.CoreApi;
 using DtpPackageCore.Interfaces;
+using DtpCore.Services;
+using Serilog;
+using Serilog.Events;
+using UnitTest.DtpPackageCore.Mocks;
 
 namespace UnitTest
 {
@@ -29,7 +33,19 @@ namespace UnitTest
         public IClaimBanListService ClaimBanListService { get; set; }
         public IPackageService PackageService { get; set; }
         public IServerIdentityService ServerIdentityService { get; set; }
+        public IWorkflowService WorkflowService  { get; set; }
 
+        [AssemblyInitialize]
+        public static void AssemblyInitialize(TestContext context)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                //.ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+        }
 
         [TestInitialize]
         public virtual void Init()
@@ -44,6 +60,7 @@ namespace UnitTest
                 return config;
                 });
 
+            Services.AddTransient<IPackageService, PackageServiceMock>();
             Services.AddTransient<IBlockchainRepository, BlockchainRepositoryMock>();
             Services.AddTransient<IPublicFileRepository, PublicFileRepositoryMock>();
             Services.AddTransient<PackageController>();
@@ -52,15 +69,15 @@ namespace UnitTest
 
             ServiceScope = Services.BuildServiceProvider(false).CreateScope();
             ServiceProvider = ServiceScope.ServiceProvider;
-            LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
-            LoggerFactory.AddConsole();
+            //LoggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
+            //LoggerFactory.AddConsole();
 
             PackageService = ServiceProvider.GetRequiredService<IPackageService>();
             ServerIdentityService = ServiceProvider.GetRequiredService<IServerIdentityService>();
+            WorkflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
 
 
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
-            //DB = ServiceProvider.GetRequiredService<TrustDBContext>();
             TrustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
             DB = TrustDBService.DBContext;
 

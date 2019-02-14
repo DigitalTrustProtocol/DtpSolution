@@ -60,6 +60,6 @@ namespace DtpCore.Collections.Generic
         public static readonly IComparer<byte[]> Compare = new ByteComparerImplementation();
 
 
-        public static readonly IEqualityComparer<byte[]> Equals = new StandardComparer();
+        public static readonly IEqualityComparer<byte[]> EqualityComparer = new StandardComparer();
     }
 }
