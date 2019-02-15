@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Serilog;
 
 namespace DtpServer.Platform
 {
@@ -13,11 +13,8 @@ namespace DtpServer.Platform
         private ProcessStartInfo processInfo;
 
 
-        private readonly ILogger _logger;
-
-        public Shell(ILogger logger)
+        public Shell()
         {
-            _logger = logger;
         }
 
 
@@ -30,19 +27,9 @@ namespace DtpServer.Platform
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             
-            // TODO: Not working :(
             startInfo.RedirectStandardOutput = true;
-            process.OutputDataReceived += (sender, data) => {
-                //_logger.LogInformation(data.Data);
-                //Console.WriteLine(data.Data);
-                //Serilog.Log.Information(data.Data);
-            };
-            process.StartInfo.RedirectStandardError = false;
-            process.ErrorDataReceived += (sender, data) => {
-                //_logger.LogInformation(data.Data);
-                //Console.WriteLine(data.Data);
-                //Serilog.Log.Error(data.Data);
-            };
+            startInfo.RedirectStandardError = true;
+
             return startInfo;
         }
 
@@ -83,8 +70,33 @@ namespace DtpServer.Platform
             if (!started)
             {
                 processInfo = info;
-                process = Process.Start(info);
-                _logger.LogInformation($"Process {processInfo.FileName} started");
+                process = new Process
+                {
+                    StartInfo = info
+                };
+                if (!info.UseShellExecute)
+                {
+                    process.OutputDataReceived += (sender, data) => {
+                        //_logger.LogInformation(data.Data);
+                        //Console.WriteLine(data.Data);
+                        Log.Information(data.Data);
+                    };
+                    
+                    process.ErrorDataReceived += (sender, data) => {
+                        //_logger.LogInformation(data.Data);
+                        //Console.WriteLine(data.Data);
+                        Log.Error(data.Data);
+                    };
+                }
+
+                process.Start();
+                if (!info.UseShellExecute)
+                {
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                }
+
+                Log.Information($"Process {processInfo.FileName} started");
             }
 
             started = true;
@@ -103,7 +115,7 @@ namespace DtpServer.Platform
             if (started)
             {
                 process.CloseMainWindow();
-                _logger.LogInformation($"Process {processInfo.FileName} stopped");
+                Log.Information($"Process {processInfo.FileName} stopped");
 
             }
             started = false;
@@ -116,7 +128,7 @@ namespace DtpServer.Platform
             {
                 Stop();
                 process.Dispose();
-                _logger.LogInformation($"Process {processInfo.FileName} disposed");
+                Log.Information($"Process {processInfo.FileName} disposed");
             }
         }
     }

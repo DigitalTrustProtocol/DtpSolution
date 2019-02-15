@@ -31,7 +31,7 @@ namespace DtpServer.Platform.IPFS
             if (Directory.Exists(IpfsDataPath))
                 return;
 
-            var local = new Shell(_logger);
+            var local = new Shell();
             local.ExecuteInline($"ipfsinit.cmd", IpfsDataPath, IpfsExePath);
 
             CopyToIpfs("swarm.key"); // Copy the DTP network swarm key
@@ -42,7 +42,7 @@ namespace DtpServer.Platform.IPFS
             if (!Directory.Exists(IpfsDataPath))
                 EnsureIpfsDir();
 
-            shell = new Shell(_logger);
+            shell = new Shell();
 
             shell.StartShell($"ipfsrun.cmd", IpfsDataPath, IpfsExePath);
         }
