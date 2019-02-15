@@ -15,12 +15,6 @@ namespace DtpServer.Extensions
                 var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
                 ipfsManager.StartIpfs();
                 Startup.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
-                //Startup.StopTasks.Add(() =>
-                //    {
-                //        ipfsManager.Dispose();
-                //        return Task.CompletedTask;
-                //    }
-                //);
             }
         }
     }

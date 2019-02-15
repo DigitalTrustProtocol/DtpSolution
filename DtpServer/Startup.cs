@@ -131,16 +131,16 @@ namespace DtpServer
             AddBackgroundServices(services);
 
             // Adds a default in-memory implementation of IDistributedCache.
-            services.AddDistributedMemoryCache();
+            //services.AddDistributedMemoryCache();
 
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = false;
-            });
+            //services.AddSession(options =>
+            //{
+            //    // Set a short timeout for easy testing.
+            //    options.IdleTimeout = TimeSpan.FromMinutes(30);
+            //    options.Cookie.HttpOnly = false;
+            //});
 
-            services.AddDirectoryBrowser();
+            //services.AddDirectoryBrowser();
 
             _services = services;
         }
@@ -201,24 +201,6 @@ namespace DtpServer
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            // public file folder
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(PublicFileRepository.PublicFullPath),
-                RequestPath = PublicFileRepository.REQUESTPATH,
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age=31536000"); // 1 year
-                }
-            });
-
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = new PhysicalFileProvider(PublicFileRepository.PublicFullPath),
-                RequestPath = PublicFileRepository.REQUESTPATH,
-            });
-
-
             app.UseCookiePolicy();
             app.UseHealthChecks("/ready");
 
@@ -230,7 +212,7 @@ namespace DtpServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
 
-            app.UseSession();
+            //app.UseSession();
 
 
             app.UseMvc(routes =>

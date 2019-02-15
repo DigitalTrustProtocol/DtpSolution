@@ -89,6 +89,7 @@ namespace DtpServer.Platform
                     };
                 }
 
+                Log.Information($"Starting Process {processInfo.FileName} from folder: {processInfo.WorkingDirectory}");
                 process.Start();
                 if (!info.UseShellExecute)
                 {
