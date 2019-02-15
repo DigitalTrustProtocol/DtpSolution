@@ -23,6 +23,11 @@ namespace DtpCore.Extensions
             return model;
         }
 
+        public static string ServerKeyword(this IConfiguration configuration, string defaultValue = "")
+        {
+            return configuration.GetValue("ServerKeyword", defaultValue);
+        }
+
 
         public static string Blockchain(this IConfiguration configuration, string defaultValue = "btctest")
         {

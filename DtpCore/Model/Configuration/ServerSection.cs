@@ -8,18 +8,19 @@ namespace DtpCore.Model.Configuration
         public string Name { get; set; }
         public string Keyword { get; set; }
 
-        private const string KEYWORDPATH = @"C:\tmp\ServerKeyword.txt";
+        //private const string KEYWORDPATH = @"C:\tmp\ServerKeyword.txt";
+
 
         public string GetSecureKeyword()
         {
             if (Keyword != null)
                 return Keyword;
 
-            if(File.Exists(KEYWORDPATH))
-            {
-                // Returns Unicode (UTF16)
-                return File.ReadAllText(KEYWORDPATH);
-            }
+            //if(File.Exists(KEYWORDPATH))
+            //{
+            //    // Returns Unicode (UTF16)
+            //    return File.ReadAllText(KEYWORDPATH);
+            //}
             return string.Empty;
         }
     }

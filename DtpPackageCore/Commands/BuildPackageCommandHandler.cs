@@ -23,24 +23,24 @@ namespace DtpPackageCore.Commands
         IRequestHandler<BuildPackageCommand, NotificationSegment>
     {
         private IMediator _mediator;
+        private readonly IServerIdentityService _serverIdentityService;
         private ITrustDBService _trustDBService;
         private IDerivationStrategyFactory _derivationStrategyFactory;
         private IPackageService _trustPackageService;
         private NotificationSegment _notifications;
         private IConfiguration _configuration;
         private readonly ILogger<BuildPackageCommandHandler> logger;
-        private readonly IServiceProvider _serviceProvider;
 
-        public BuildPackageCommandHandler(IMediator mediator, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, IPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger, IServiceProvider serviceProvider)
+        public BuildPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, IPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger)
         {
             _mediator = mediator;
+            _serverIdentityService = serverIdentityService;
             _trustDBService = trustDBService;
             _derivationStrategyFactory = derivationStrategyFactory;
             _trustPackageService = trustPackageService;
             _notifications = notifications;
             _configuration = configuration;
             this.logger = logger;
-            _serviceProvider = serviceProvider;
         }
 
         public async Task<NotificationSegment> Handle(BuildPackageCommand request, CancellationToken cancellationToken)
@@ -100,12 +100,10 @@ namespace DtpPackageCore.Commands
             var serverSection = _configuration.GetModel(new ServerSection());
             var scriptService = _derivationStrategyFactory.GetService(serverSection.Type);
 
-            var key = scriptService.GetKey(Encoding.UTF8.GetBytes(serverSection.GetSecureKeyword()));
-
-            builder.SetServer(scriptService.GetAddress(key));
+            builder.SetServer(scriptService.GetAddress(_serverIdentityService.Key));
 
             builder.Build();
-            builder.Package.SetSignature(scriptService.SignMessage(key, builder.Package.Id));
+            builder.Package.SetSignature(scriptService.SignMessage(_serverIdentityService.Key, builder.Package.Id));
             builder.Package.State = PackageStateType.Signed;
         }
     }

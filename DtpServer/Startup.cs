@@ -191,7 +191,6 @@ namespace DtpServer
                     rateLimitService.SetZone(Configuration.RateLimits());
             }
 
-
             app.DtpCore(); // Ensure configuration of core
             app.DtpGraph(); // Load the Trust Graph from Database
             app.DtpStamp();

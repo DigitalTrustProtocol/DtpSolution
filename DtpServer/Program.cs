@@ -100,15 +100,24 @@ namespace DtpServer
 
         private static void SetupConfiguration()
         {
+            var serverKeywordFilename = "ServerKeyword.json";
             var isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             var configfile = EnsureDataFile(isDevelopment, "appsettings.json", Platform.DtpServerDataPath); // GetPfxFile
+            var configKeyword = EnsureDataFile(isDevelopment, serverKeywordFilename, Platform.DtpServerDataPath); // Keyword for signing the packages
 
             Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile(configfile, optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddJsonFile(configKeyword, optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
+
+            if(!isDevelopment && string.IsNullOrEmpty(Configuration.GetValue<string>("ServerKeyword")))
+            {
+                var keyword = Guid.NewGuid().ToByteArray().ToHex();
+                var json = $"{{ \"ServerKeyword\": \"{keyword}\" }}";
+                File.WriteAllText(Path.Combine(Platform.DtpServerDataPath, serverKeywordFilename), json);
+            }
         }
 
         private static void SetupLogger()

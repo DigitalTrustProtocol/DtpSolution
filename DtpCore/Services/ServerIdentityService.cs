@@ -30,7 +30,8 @@ namespace DtpCore.Services
             serverSection = _configuration.GetModel(new ServerSection());
             Derivation = _derivationStrategyFactory.GetService(serverSection.Type);
             var scriptService = _derivationStrategyFactory.GetService(serverSection.Type);
-            Key = scriptService.GetKey(Encoding.UTF8.GetBytes(serverSection.GetSecureKeyword()));
+            var keyword = _configuration.ServerKeyword();
+            Key = scriptService.GetKey(Encoding.UTF8.GetBytes(keyword));
             Id = scriptService.GetAddress(Key);
         }
 
