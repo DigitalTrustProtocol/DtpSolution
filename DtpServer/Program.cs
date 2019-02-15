@@ -12,6 +12,8 @@ using Serilog.Events;
 using Microsoft.AspNetCore.Server.Kestrel.Https.Internal;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
+using DtpServer.Platform;
+using DtpCore.Extensions;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -25,37 +27,17 @@ namespace DtpServer
         /// <summary>
         /// Static configuration 
         /// </summary>
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
+        public static IConfiguration Configuration { get; private set; } 
+
+        public static PlatformDirectory Platform { get; private set; }
 
         public static int Main(string[] args)
         {
+            Platform = new PlatformDirectory();
+            Platform.EnsureDtpServerDirectory();
 
-
-            var formatter = (false) ? (ITextFormatter)new RenderedCompactJsonFormatter() : new MessageTemplateTextFormatter("{Timestamp:o} {RequestId,13} [{Level:u3}] {Message} ({EventId:x8}){NewLine}{Exception}", null);
-
-            var pathFormat = "Logs/log-{Date}.txt";
-            const long DefaultFileSizeLimitBytes = 1024 * 1024 * 1024;
-            const int DefaultRetainedFileCountLimit = 31;
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Async(w => w.RollingFile(
-                    formatter,
-                    Environment.ExpandEnvironmentVariables(pathFormat),
-                    fileSizeLimitBytes: DefaultFileSizeLimitBytes,
-                    retainedFileCountLimit: DefaultRetainedFileCountLimit,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(2)))
-                .CreateLogger();
+            SetupConfiguration();
+            SetupLogger();
 
             try
             {
@@ -87,15 +69,16 @@ namespace DtpServer
                 {
                     options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
                 })
-                .UseKestrel(options =>
+                .UseKestrel((context, options) =>
                 {
+                    var isDevelopment = context.HostingEnvironment.IsDevelopment();
+
                     options.AddServerHeader = false;
                     options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
 
-                    //var file = "/root/.aspnet/https/" + "trust.dance.pfx";
-                    var file = "trust.dance.pfx";
                     options.Listen(IPAddress.Any, 80);
 
+                    var file = EnsureDataFile(isDevelopment, "domaincert.pfx", Platform.DtpServerDataPath); // GetPfxFile
                     if (File.Exists(file))
                     {
                         options.Listen(IPAddress.Any, 443, listenOptions =>
@@ -114,5 +97,58 @@ namespace DtpServer
                 })
                 .UseSerilog()
                 .Build();
+
+        private static void SetupConfiguration()
+        {
+            var isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            var configfile = EnsureDataFile(isDevelopment, "appsettings.json", Platform.DtpServerDataPath); // GetPfxFile
+
+            Configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(configfile, optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+        }
+
+        private static void SetupLogger()
+        {
+            var formatter = (false) ? (ITextFormatter)new RenderedCompactJsonFormatter() : new MessageTemplateTextFormatter("{Timestamp:o} {RequestId,13} [{Level:u3}] {Message} ({EventId:x8}){NewLine}{Exception}", null);
+
+            var pathFormat = "Logs/log-{Date}.txt";
+            const long DefaultFileSizeLimitBytes = 1024 * 1024 * 1024;
+            const int DefaultRetainedFileCountLimit = 31;
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Async(w => w.RollingFile(
+                    formatter,
+                    Environment.ExpandEnvironmentVariables(pathFormat),
+                    fileSizeLimitBytes: DefaultFileSizeLimitBytes,
+                    retainedFileCountLimit: DefaultRetainedFileCountLimit,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(2)))
+                .CreateLogger(); 
+        }
+
+        private static string EnsureDataFile(bool isDevelopment, string filename, string destination)
+        {
+            if (isDevelopment)
+                return filename;
+
+            if (!Directory.Exists(destination))
+                Directory.CreateDirectory(destination);
+
+            var fileDestination = Path.Combine(destination, filename);
+            if (!File.Exists(fileDestination))
+                File.Copy(filename, fileDestination);
+
+            return fileDestination;
+        }
+
     }
 }

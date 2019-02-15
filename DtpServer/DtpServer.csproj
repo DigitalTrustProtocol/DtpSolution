@@ -107,7 +107,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Update="trust.dance.pfx">
+    <None Update="domaincert.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="trust.db">

@@ -181,7 +181,7 @@ namespace DtpPackageCore.Services
             }
         }
 
-        public PackageInfoCollection GetPackageInfoCollection(string ipAddress, string scope, long from)
+        public async Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from)
         {
             var port = 80;
             var callUrl = new Uri($"http://{ipAddress}:{port}/api/packages/info?from={from}");
@@ -193,7 +193,7 @@ namespace DtpPackageCore.Services
                 {
                     // Get packages from server
 
-                    var json = client.DownloadStringTaskAsync(callUrl).GetAwaiter().GetResult();
+                    var json = await client.DownloadStringTaskAsync(callUrl);
 
                     var packageInfoCollection = JsonConvert.DeserializeObject<PackageInfoCollection>(json);
 

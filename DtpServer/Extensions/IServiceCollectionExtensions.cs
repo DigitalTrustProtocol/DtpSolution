@@ -15,6 +15,7 @@ namespace DtpServer.Extensions
         {
             // https://github.com/Biarity/Sieve/issues/4#issuecomment-364629048
             services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
+            services.AddTransient<PlatformDirectory>();
             services.AddSingleton<IpfsManager>();
         }
     }

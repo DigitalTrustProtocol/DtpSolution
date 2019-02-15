@@ -55,13 +55,8 @@ namespace DtpPackageCore.Workflows
             _logger = logger;
         }
 
-
-
-
         // Last run of the synchronization
         public long LastSyncTime { get; set; }
-
-
 
         public override void Execute()
         {
@@ -84,6 +79,9 @@ namespace DtpPackageCore.Workflows
                     peerCache[peerHashId] = peer;
             }
 
+            if (peers.Count() > 2) // Only save if where was more than 2 connections.
+                LastSyncTime = DateTime.Now.ToUnixTime(); // Save last sync time.
+
             Wait(_configuration.SynchronizePackageWorkflowInterval()); // Never end the workflow
         }
 
@@ -98,7 +96,8 @@ namespace DtpPackageCore.Workflows
                 return false;
 
             var ipAddress = ipV4.Value;
-            var info = _packageService.GetPackageInfoCollection(ipV4.Value, "", 0);
+            // TODO: Should be optimized for better async handling.
+            var info = _packageService.GetPackageInfoCollectionAsync(ipV4.Value, "", 0).GetAwaiter().GetResult();
             if (info == null)
                 return false;
 

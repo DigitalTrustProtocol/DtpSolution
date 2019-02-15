@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using DtpCore.Services;
-using DtpPackageCore.Workflows;
-using DtpPackageCore.Interfaces;
-using Microsoft.Extensions.Configuration;
 using DtpServer.Platform.IPFS;
+using System.Threading.Tasks;
 
 namespace DtpServer.Extensions
 {
@@ -17,19 +14,14 @@ namespace DtpServer.Extensions
             {
                 var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
                 ipfsManager.StartIpfs();
-
+                Startup.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
+                //Startup.StopTasks.Add(() =>
+                //    {
+                //        ipfsManager.Dispose();
+                //        return Task.CompletedTask;
+                //    }
+                //);
             }
         }
-
-        public static void DtpServerDispose(this IApplicationBuilder app)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
-                ipfsManager.Dispose(); ;
-
-            }
-        }
-
     }
 }

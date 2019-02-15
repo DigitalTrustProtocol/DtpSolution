@@ -14,7 +14,7 @@ namespace DtpPackageCore.Interfaces
         Task AddPackageSubscriptionsAsync();
         Task AddPackageSubscriptionsAsync(string scope);
         void PublishPackageMessageAsync(PackageMessage packageMessage);
-        PackageInfoCollection GetPackageInfoCollection(string ipAddress, string scope, long from);
+        Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from);
         Task<Package> FetchPackageAsync(string path);
         Task<string> StorePackageAsync(Package package);
 

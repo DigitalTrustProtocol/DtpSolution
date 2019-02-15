@@ -30,14 +30,19 @@ namespace DtpServer.Platform
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             
-            //startInfo.RedirectStandardOutput = true;
-            //process.OutputDataReceived += (sender, data) => {
-            //    _logger.LogInformation(data.Data);
-            //};
-            //process.StartInfo.RedirectStandardError = true;
-            //process.ErrorDataReceived += (sender, data) => {
-            //    _logger.LogInformation(data.Data);
-            //};
+            // TODO: Not working :(
+            startInfo.RedirectStandardOutput = true;
+            process.OutputDataReceived += (sender, data) => {
+                //_logger.LogInformation(data.Data);
+                //Console.WriteLine(data.Data);
+                //Serilog.Log.Information(data.Data);
+            };
+            process.StartInfo.RedirectStandardError = false;
+            process.ErrorDataReceived += (sender, data) => {
+                //_logger.LogInformation(data.Data);
+                //Console.WriteLine(data.Data);
+                //Serilog.Log.Error(data.Data);
+            };
             return startInfo;
         }
 
@@ -48,18 +53,11 @@ namespace DtpServer.Platform
 
             var startInfo = new ProcessStartInfo(command, arguments);
             startInfo.WorkingDirectory = workingDirectory;
+
             // When UseShellExecute is true, the working directory of the application that starts the executable is also the working directory of the executable.
             startInfo.UseShellExecute = true;
             startInfo.CreateNoWindow = false;
 
-            //startInfo.RedirectStandardOutput = false;
-            //process.OutputDataReceived += (sender, data) => {
-            //    _logger.LogInformation(data.Data);
-            //};
-            //process.StartInfo.RedirectStandardError = true;
-            //process.ErrorDataReceived += (sender, data) => {
-            //    _logger.LogInformation(data.Data);
-            //};
             return startInfo;
         }
 
@@ -97,13 +95,14 @@ namespace DtpServer.Platform
         {
             if(started)
                 process.WaitForExit();
+            started = false;
         }
 
         public void Stop()
         {
             if (started)
             {
-                process.Close();
+                process.CloseMainWindow();
                 _logger.LogInformation($"Process {processInfo.FileName} stopped");
 
             }

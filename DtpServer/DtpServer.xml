@@ -120,6 +120,11 @@
             Startup class for Server
             </summary>
         </member>
+        <member name="P:DtpServer.Startup.StopTasks">
+            <summary>
+            Shut down task is run on application closing.
+            </summary>
+        </member>
         <member name="M:DtpServer.Startup.#ctor(Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Constructor
@@ -128,13 +133,18 @@
             <param name="configuration"></param>
         </member>
         <member name="M:DtpServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Hosting.IApplicationLifetime,NicolasDorier.RateLimits.RateLimitService)">
-            <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        </member>
+        <member name="M:DtpServer.Startup.StopAsync">
+            <summary>
+              Stops the running services.
             </summary>
-            <param name="app"></param>
-            <param name="env"></param>
-            <param name="loggerFactory"></param>
-            <param name="rateLimitService"></param>
+            <returns>
+              A task that represents the asynchronous operation.
+            </returns>
+            <remarks>
+              Multiple calls are okay.
+            </remarks>
         </member>
     </members>
 </doc>

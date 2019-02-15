@@ -52,11 +52,11 @@ namespace UnitTest.DtpPackageCore.Mocks
             return IPFSTest.Ipfs.LocalPeer.Task;
         }
 
-        public PackageInfoCollection GetPackageInfoCollection(string ipAddress, string scope, long from)
+        public Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from)
         {
             var info = new PackageInfoCollection();
             info.Packages.Add(new PackageInfo { Id = Encoding.UTF8.GetBytes("123"), File = "123" });
-            return info;
+            return Task.FromResult(info);
         }
 
         public Task<IEnumerable<Peer>> GetPeersAsync(string scope)

@@ -23,6 +23,12 @@ using System.Reflection;
 using System.IO;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using Serilog;
+using System.Linq;
+using DtpServer.Platform;
 
 namespace DtpServer
 {
@@ -35,12 +41,18 @@ namespace DtpServer
         private IServiceCollection _services;
 
         /// <summary>
+        /// Shut down task is run on application closing.
+        /// </summary>
+        public static ConcurrentBag<Func<Task>> StopTasks { get; private set; } = new ConcurrentBag<Func<Task>>();
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="env"></param>
         /// <param name="configuration"></param>
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
+            
             _hostingEnv = env;
             Configuration = configuration;
         }
@@ -135,8 +147,19 @@ namespace DtpServer
 
         public virtual void ConfigureDbContext(IServiceCollection services)
         {
+            var platform = new PlatformDirectory();
+            var dbName = "trust.db";
+            var dbDestination = "./trust.db";
+            if (_hostingEnv.IsProduction())
+            {
+                dbDestination = Path.Combine(platform.DatabaseDataPath, dbName);
+                platform.EnsureDtpServerDirectory();
+                if (!File.Exists(dbDestination))
+                    File.Copy(Path.Combine(dbName), dbDestination);
+            }
+
             services.AddDbContext<TrustDBContext>(options =>
-                options.UseSqlite("Filename=./trust.db", b => b.MigrationsAssembly("DtpCore"))
+                options.UseSqlite($"Filename={dbDestination}", b => b.MigrationsAssembly("DtpCore"))
                 .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))
                 );
         }
@@ -150,20 +173,14 @@ namespace DtpServer
             });
         }
 
-        /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        /// <param name="rateLimitService"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService)
         {
-            
+            applicationLifetime.ApplicationStopping.Register(OnShutdown);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //loggerFactory.AddConsole();
             }
             else
             {
@@ -174,8 +191,6 @@ namespace DtpServer
                     rateLimitService.SetZone(Configuration.RateLimits());
             }
 
-            // Do not work :(
-            applicationLifetime.ApplicationStopping.Register(OnShutdown, app);
 
             app.DtpCore(); // Ensure configuration of core
             app.DtpGraph(); // Load the Trust Graph from Database
@@ -235,10 +250,42 @@ namespace DtpServer
             app.AllServices(_services);
         }
 
-        private void OnShutdown(object obj)
+        private void OnShutdown()
         {
-            var app = obj as IApplicationBuilder;
-            app.DtpServerDispose();
+            //var app = obj as IApplicationBuilder;
+            //app.DtpServerDispose();
+            StopAsync().Wait();
+        }
+
+        /// <summary>
+        ///   Stops the running services.
+        /// </summary>
+        /// <returns>
+        ///   A task that represents the asynchronous operation.
+        /// </returns>
+        /// <remarks>
+        ///   Multiple calls are okay.
+        /// </remarks>
+        public async Task StopAsync()
+        {
+            Log.Debug("stopping");
+            try
+            {
+                var tasks = StopTasks.ToArray();
+                StopTasks = new ConcurrentBag<Func<Task>>();
+                await Task.WhenAll(tasks.Select(t => t()));
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failure when stopping the engine", e);
+            }
+
+            // Many services use cancellation to stop.  A cancellation may not run
+            // immediately, so we need to give them some.
+            // TODO: Would be nice to make this deterministic.
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+            Log.Debug("stopped");
         }
 
     }
