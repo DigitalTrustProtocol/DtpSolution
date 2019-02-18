@@ -88,10 +88,19 @@ namespace DtpServer
                     }
                     else
                     {
-                        options.Listen(IPAddress.Loopback, 443, listenOptions =>
+                        try
                         {
-                            listenOptions.UseHttps(CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true));
-                        });
+                            var cert = CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true);
+                            options.Listen(IPAddress.Loopback, 443, listenOptions =>
+                            {
+                                listenOptions.UseHttps(cert);
+                            });
+                        }
+                        catch 
+                        {
+                            Log.Warning("Localhost https certificate not supported.");
+                        }
+
                     }
 
                 })
@@ -142,7 +151,9 @@ namespace DtpServer
                     shared: true,
                     flushToDiskInterval: TimeSpan.FromSeconds(2)))
                 .CreateLogger(); 
-        }
+
+            
+         }
 
         private static string EnsureDataFile(bool isDevelopment, string filename, string destination)
         {
@@ -151,6 +162,9 @@ namespace DtpServer
 
             if (!Directory.Exists(destination))
                 Directory.CreateDirectory(destination);
+
+            if (!File.Exists(filename))
+                return "";
 
             var fileDestination = Path.Combine(destination, filename);
             if (!File.Exists(fileDestination))

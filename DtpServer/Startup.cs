@@ -130,18 +130,6 @@ namespace DtpServer
 
             AddBackgroundServices(services);
 
-            // Adds a default in-memory implementation of IDistributedCache.
-            //services.AddDistributedMemoryCache();
-
-            //services.AddSession(options =>
-            //{
-            //    // Set a short timeout for easy testing.
-            //    options.IdleTimeout = TimeSpan.FromMinutes(30);
-            //    options.Cookie.HttpOnly = false;
-            //});
-
-            //services.AddDirectoryBrowser();
-
             _services = services;
         }
 
@@ -168,7 +156,11 @@ namespace DtpServer
         {
             services.AddScheduler((sender, args) =>
             {
-                Console.Write(args.Exception.Message);
+#if DEBUG
+                Log.Error(args.Exception, args.Exception.Message);
+#else
+                Log.Error(args.Exception.Message);
+#endif
                 args.SetObserved();
             });
         }
@@ -180,7 +172,7 @@ namespace DtpServer
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount= 100  }  );
             }
             else
             {
@@ -212,9 +204,6 @@ namespace DtpServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
 
-            //app.UseSession();
-
-
             app.UseMvc(routes =>
             {
                 //routes.MapRoute(
@@ -233,8 +222,6 @@ namespace DtpServer
 
         private void OnShutdown()
         {
-            //var app = obj as IApplicationBuilder;
-            //app.DtpServerDispose();
             StopAsync().Wait();
         }
 

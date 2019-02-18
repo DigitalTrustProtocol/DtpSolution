@@ -161,6 +161,9 @@ namespace DtpCore.Services
 
                     UnobservedTaskException?.Invoke(this, args);
 
+                    //_logger.LogError(ex, ex.Message);
+
+
                     if (!args.Observed)
                     {
                         throw;

@@ -1,6 +1,5 @@
 ﻿using DtpPackageCore.Interfaces;
 using DtpPackageCore.Model;
-using DtpPackageCore.Notifications;
 using Ipfs.Http;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +27,6 @@ namespace DtpPackageCore.Services
     {
         public CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-
-        //private IMediator _mediator;
         public ICoreApi Ipfs { get; set; }
         public IConfiguration Configuration { get; set; }
         private readonly IServiceProvider _serviceProvider;
@@ -53,9 +50,19 @@ namespace DtpPackageCore.Services
         }
 
 
-        public Task<IEnumerable<Peer>> GetPeersAsync(string scope)
+        public async Task<IEnumerable<Peer>> GetPeersAsync(string scope)
         {
-            return Ipfs.Swarm.PeersAsync();
+            var list = new List<Peer>();
+            try
+            {
+                list.AddRange(await Ipfs.Swarm.PeersAsync());
+            }
+            catch
+            {
+                logger.LogWarning("No peers");
+            }
+
+            return list;
         }
 
 
@@ -204,7 +211,7 @@ namespace DtpPackageCore.Services
             }
             catch (Exception ex)
             {
-                logger.LogError($"Failed to get packages from server {ipAddress} - Error : {ex.Message}");
+                logger.LogError(ex, $"Failed to get packages from server {ipAddress} - Error : {ex.Message}");
                 return null;
             }
         }

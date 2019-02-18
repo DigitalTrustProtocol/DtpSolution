@@ -29,6 +29,7 @@
     <Content Remove="Views\Shared\DisplayTemplates\TitleDetailLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="domaincert.pfx" />
     <None Remove="Logs\log-20180620.txt" />
     <None Remove="Logs\log-20180621.txt" />
     <None Remove="Platform\ipfs\config" />
@@ -107,9 +108,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Update="domaincert.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="trust.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
