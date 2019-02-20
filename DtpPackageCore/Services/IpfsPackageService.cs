@@ -73,19 +73,29 @@ namespace DtpPackageCore.Services
 
         public Task AddPackageSubscriptionsAsync(string scope)
         {
+            var pubSubController = _serviceProvider.GetRequiredService<PubSubController>();
+            var ipfs = Ipfs;
             return Task.Run(() =>
             {
-                var list = new List<Task>();
-                if (!string.IsNullOrEmpty(scope))
-                    list.Add(Ipfs.PubSub.SubscribeAsync(scope, this.HandleMessage, cancellationTokenSource.Token));
+                try
+                {
+                    var list = new List<Task>();
+                    if (!string.IsNullOrEmpty(scope))
+                        list.Add(ipfs.PubSub.SubscribeAsync(scope, pubSubController.HandleMessage, cancellationTokenSource.Token));
 
-                list.Add(Ipfs.PubSub.SubscribeAsync("", this.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
+                    list.Add(ipfs.PubSub.SubscribeAsync("", pubSubController.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
 
-#if DEBUG
-                list.Add(Ipfs.PubSub.SubscribeAsync("test", this.HandleMessage, cancellationTokenSource.Token));
+    #if DEBUG
+                    list.Add(ipfs.PubSub.SubscribeAsync("test", pubSubController.HandleMessage, cancellationTokenSource.Token));
 
-#endif
-                Task.WaitAll(list.ToArray());
+    #endif
+                    Task.WaitAll(list.ToArray());
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
             });
         }
 
@@ -114,84 +124,19 @@ namespace DtpPackageCore.Services
         }
 
 
-        /// <summary>
-        /// Only raw processing, no check or validation of Peers. 
-        /// </summary>
-        /// <param name="publishedMessage"></param>
-        private async void HandleMessage(IPublishedMessage publishedMessage)
-        {
-            try
-            {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    // Create a scope so all dependency injections are available.
-                    var text = Encoding.UTF8.GetString(publishedMessage.DataBytes);
+        ///// <summary>
+        ///// Only raw processing, no check or validation of Peers. 
+        ///// </summary>
+        ///// <param name="publishedMessage"></param>
+        //private async void HandleMessage(IPublishedMessage publishedMessage)
+        //{
 
-                    var packageMessage = JsonConvert.DeserializeObject<PackageMessage>(text);
-                    if (_serverIdentityService.Id.Equals(packageMessage.ServerId)) // Do not process own package messages
-                        return;
-
-                    logger.LogInformation($"Received message from {packageMessage.ServerId}");
-
-
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    var package = mediator.SendAndWait(new FetchPackageCommand(packageMessage));
-
-                    if (package == null)
-                    {
-                        logger.LogError($"Error wrong notitifiation returned from FatchPackageCommand");
-                        return;
-                    }
-
-                    if (package.Timestamps == null || package.Timestamps.Count == 0)
-                    {
-                        logger.LogError($"Error no timestamps was found on package id {package.Id} from server id {packageMessage.ServerId}");
-                        return;
-                    }
-
-                    var packageValidator = scope.ServiceProvider.GetRequiredService<IPackageSchemaValidator>();
-                    SchemaValidationResult validationResult = packageValidator.Validate(package); // 
-                    if(validationResult.ErrorsFound > 0)
-                    {
-                        logger.LogError(validationResult.ToString());
-                        return;
-                    }
-
-                    var timestampValidator = scope.ServiceProvider.GetRequiredService<ITimestampProofValidator>();
-                    if(!timestampValidator.Validate(package.Timestamps[0], out IList<string> errors))
-                    {
-                        var msg = string.Join(", ", errors);
-                        logger.LogError(msg);
-                        return;
-                    }
-
-                    //var peers = await Ipfs.PubSub.PublishAsync;
-
-                    // Now add the package!
-                    await mediator.Send(new AddPackageCommand(package));
-                }
-            }
-            catch (Exception ex)
-            {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var msg = $"Received message from server {publishedMessage.Id} failed with: {ex.Message}";
-                    var log = scope.ServiceProvider.GetRequiredService<ILogger<IpfsPackageService>>();
-                    log.LogError(msg);
-                }
-                // No logging possiblilities here!
-
-                //LogInfo(msg).Wait();
-                //Console.WriteLine(msg);
-                //var log = scope.ServiceProvider.GetRequiredService<ILogger<IpfsPackageService>>();
-                //log.LogError(msg);
-            }
-        }
+        //}
 
         public async Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from)
         {
             var port = 80;
-            var callUrl = new Uri($"http://{ipAddress}:{port}/api/packages/info?from={from}");
+            var callUrl = new Uri($"http://{ipAddress}:{port}/api/package/info?from={from}");
 
             try
             {

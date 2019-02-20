@@ -66,10 +66,10 @@ namespace UnitTest.DtpGraphCore
 
         protected QueryRequest BuildQuery(QueryRequestBuilder queryBuilder, string source, string target)
         {
-            var sourceAddress = TrustBuilderExtensions.GetAddress(source);
+            var sourceAddress = PackageBuilderExtensions.GetAddress(source);
             var subject = new Identity
             {
-                Id = TrustBuilderExtensions.GetAddress(target)
+                Id = PackageBuilderExtensions.GetAddress(target)
             };
             queryBuilder.Add(sourceAddress, subject.Id);
 
@@ -84,8 +84,8 @@ namespace UnitTest.DtpGraphCore
 
         protected void VerfifyResult(QueryContext context, string source, string target, string type = "")
         {
-            var sourceAddress = TrustBuilderExtensions.GetAddress(source);
-            var targetAddress = TrustBuilderExtensions.GetAddress(target);
+            var sourceAddress = PackageBuilderExtensions.GetAddress(source);
+            var targetAddress = PackageBuilderExtensions.GetAddress(target);
             var sourceIndex = _graphTrustService.Graph.IssuerIndex.GetValueOrDefault(sourceAddress);
             var targetIndex = _graphTrustService.Graph.IssuerIndex.GetValueOrDefault(targetAddress);
 

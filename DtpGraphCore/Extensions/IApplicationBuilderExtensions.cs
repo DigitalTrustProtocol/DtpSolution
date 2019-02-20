@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using DtpGraphCore.Interfaces;
+using DtpCore.Services;
+using System.Threading.Tasks;
 
 namespace DtpGraphCore.Extensions
 {
@@ -8,15 +10,16 @@ namespace DtpGraphCore.Extensions
     {
         public static void DtpGraph(this IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                // Load all data into graph, properly async will be an good idea here!
-                var trustLoadService = scope.ServiceProvider.GetRequiredService<IGraphLoadSaveService>();
-                trustLoadService.LoadFromDatabase();
+            var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
 
-                // Activate and expire
-                //var graphWorkflowService = scope.ServiceProvider.GetRequiredService<IGraphWorkflowService>();
-            }
+            applicationEvent.BootupTasks.Add(Task.Run(() => { 
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    // Load all data into graph, properly async will be an good idea here!
+                    var trustLoadService = scope.ServiceProvider.GetRequiredService<IGraphLoadSaveService>();
+                    trustLoadService.LoadFromDatabase();
+                }
+            }));
         }
     }
 }

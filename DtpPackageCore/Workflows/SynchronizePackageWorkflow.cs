@@ -6,21 +6,15 @@ using DtpCore.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using DtpCore.Interfaces;
-using Newtonsoft.Json;
 using System.ComponentModel;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Extensions;
 using System.Collections.Generic;
 using Ipfs;
-using System.Net;
-using System.Threading.Tasks;
 using DtpCore.ViewModel;
-using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
-using DtpCore.Model.Database;
 using DtpPackageCore.Commands;
 using DtpPackageCore.Model;
-using DtpPackageCore.Notifications;
 using DtpCore.Collections.Generic;
 
 namespace DtpPackageCore.Workflows
@@ -75,7 +69,7 @@ namespace DtpPackageCore.Workflows
                 if (peerCache.ContainsKey(peerHashId))
                     continue;
 
-                if(ProcessPeerAsync(peer))
+                if(ProcessPeer(peer))
                     peerCache[peerHashId] = peer;
             }
 
@@ -85,7 +79,7 @@ namespace DtpPackageCore.Workflows
             Wait(_configuration.SynchronizePackageWorkflowInterval()); // Never end the workflow
         }
 
-        private bool ProcessPeerAsync(Peer peer)
+        private bool ProcessPeer(Peer peer)
         {
             //_logger.LogInformation("Connected peer: " + peer.Id.ToString());
             if (peer.ConnectedAddress == null)
@@ -97,7 +91,7 @@ namespace DtpPackageCore.Workflows
 
             var ipAddress = ipV4.Value;
             // TODO: Should be optimized for better async handling.
-            var info = _packageService.GetPackageInfoCollectionAsync(ipV4.Value, "", 0).GetAwaiter().GetResult();
+            var info = _packageService.GetPackageInfoCollectionAsync(ipV4.Value, "", LastSyncTime).GetAwaiter().GetResult();
             if (info == null)
                 return false;
 

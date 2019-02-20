@@ -20,6 +20,8 @@ namespace DtpCore.Extensions
     {
         public static void DtpCore(this IServiceCollection services)
         {
+
+            services.AddSingleton<ApplicationEvents>();
             services.AddSingleton<IExecutionSynchronizationService, ExecutionSynchronizationService>();
             services.AddScoped<IClaimBinary, ClaimBinary>();
             services.AddScoped<ITrustDBService, TrustDBService>();

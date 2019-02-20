@@ -5,6 +5,11 @@ namespace DtpCore.Extensions
     public static class IConfigurationExtensions
     {
 
+        public static bool IsAdminEnabled(this IConfiguration configuration, bool defaultValue = false) 
+        {
+            return configuration.GetValue("AdminEnabled", defaultValue);
+        }
+
         public static int WorkflowInterval(this IConfiguration configuration, int defaultValue = 60*10) // 10 minutes
         {
             return configuration.GetValue("workflowinterval", defaultValue); 

@@ -42,10 +42,10 @@ namespace DtpCore.Model.Database
         Replaced = 16,
 
         /// <summary>
-        /// The package is build and signed.
+        /// The package is signed.
         /// </summary>
         [Display(Name = "Signed")]
-        Signed = 32 + 4,
+        Signed = 32,
 
         ///// <summary>
         ///// The package is to be loaded from external source.

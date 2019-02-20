@@ -29,6 +29,7 @@ using System.Collections.Concurrent;
 using Serilog;
 using System.Linq;
 using DtpServer.Platform;
+using DtpCore.Services;
 
 namespace DtpServer
 {
@@ -39,11 +40,6 @@ namespace DtpServer
     {
         private readonly IHostingEnvironment _hostingEnv;
         private IServiceCollection _services;
-
-        /// <summary>
-        /// Shut down task is run on application closing.
-        /// </summary>
-        public static ConcurrentBag<Func<Task>> StopTasks { get; private set; } = new ConcurrentBag<Func<Task>>();
 
         /// <summary>
         /// Constructor
@@ -166,9 +162,9 @@ namespace DtpServer
         }
 
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService, ApplicationEvents applicationEvents)
         {
-            applicationLifetime.ApplicationStopping.Register(OnShutdown);
+            applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
 
             if (env.IsDevelopment())
             {
@@ -216,44 +212,10 @@ namespace DtpServer
                     template: "v1/{controller}/{action=Index}/{id?}");
             });
 
+            applicationEvents.WaitBootupTasksAsync().Wait();
 
             app.AllServices(_services);
-        }
 
-        private void OnShutdown()
-        {
-            StopAsync().Wait();
-        }
-
-        /// <summary>
-        ///   Stops the running services.
-        /// </summary>
-        /// <returns>
-        ///   A task that represents the asynchronous operation.
-        /// </returns>
-        /// <remarks>
-        ///   Multiple calls are okay.
-        /// </remarks>
-        public async Task StopAsync()
-        {
-            Log.Debug("stopping");
-            try
-            {
-                var tasks = StopTasks.ToArray();
-                StopTasks = new ConcurrentBag<Func<Task>>();
-                await Task.WhenAll(tasks.Select(t => t()));
-            }
-            catch (Exception e)
-            {
-                Log.Error("Failure when stopping the engine", e);
-            }
-
-            // Many services use cancellation to stop.  A cancellation may not run
-            // immediately, so we need to give them some.
-            // TODO: Would be nice to make this deterministic.
-            await Task.Delay(TimeSpan.FromMilliseconds(100));
-
-            Log.Debug("stopped");
         }
 
     }

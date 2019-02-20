@@ -8,7 +8,7 @@ namespace DtpCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Match(this PackageStateType source, PackageStateType target)
         {
-            return (source & target) > 0;
+            return (source & target) == target;
         }
     }
 }

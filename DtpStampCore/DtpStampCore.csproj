@@ -49,7 +49,8 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="NBitcoin" Version="4.1.1.74" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+    <PackageReference Include="NBitcoin" Version="4.1.1.82" />
     <PackageReference Include="QBitNinja.Client" Version="1.0.3.47" />
   </ItemGroup>
 

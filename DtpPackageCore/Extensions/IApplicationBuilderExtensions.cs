@@ -4,6 +4,7 @@ using DtpCore.Services;
 using DtpPackageCore.Workflows;
 using DtpPackageCore.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace DtpPackageCore.Extensions
 {
@@ -11,16 +12,20 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackage(this IApplicationBuilder app)
         {
-            // Ensure that workflows are installed.
-            using (var scope = app.ApplicationServices.CreateScope())
+            var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
+            applicationEvent.BootupTasks.Add(Task.Run(() =>
             {
-                var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
-                workflowService.EnsureWorkflow<CreateTrustPackageWorkflow>();
-                workflowService.EnsureWorkflow<SynchronizePackageWorkflow>();
+                // Ensure that workflows are installed.
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
+                    workflowService.EnsureWorkflow<CreateTrustPackageWorkflow>();
+                    workflowService.EnsureWorkflow<SynchronizePackageWorkflow>();
 
-                var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
-                packageService.AddPackageSubscriptionsAsync();
-            }
+                    var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
+                    packageService.AddPackageSubscriptionsAsync().Wait();
+                }
+            }));
         }
     }
 }

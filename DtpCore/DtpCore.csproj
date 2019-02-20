@@ -33,11 +33,11 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="JsonSubTypes" Version="1.5.1" />
+    <PackageReference Include="JsonSubTypes" Version="1.5.2" />
     <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0" />
-    <PackageReference Include="NBitcoin" Version="4.1.1.74" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+    <PackageReference Include="NBitcoin" Version="4.1.1.82" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.10" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\" />

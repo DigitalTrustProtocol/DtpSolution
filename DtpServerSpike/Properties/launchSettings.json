@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DtpServerSpike": {
+      "commandName": "Project",
+      "commandLineArgs": "claimproducer 100"
+    }
+  }
+}

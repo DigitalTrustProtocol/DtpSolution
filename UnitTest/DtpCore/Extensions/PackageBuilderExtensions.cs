@@ -9,7 +9,7 @@ using DtpCore.Strategy;
 
 namespace UnitTest.DtpCore.Extensions
 {
-    public static class TrustBuilderExtensions
+    public static class PackageBuilderExtensions
     {
         public static IDerivationStrategy ScriptService { get; set; } = new DerivationSecp256k1PKH();
 

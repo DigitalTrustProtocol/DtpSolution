@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using DtpServer.Platform.IPFS;
 using System.Threading.Tasks;
+using DtpCore.Services;
 
 namespace DtpServer.Extensions
 {
@@ -12,9 +13,11 @@ namespace DtpServer.Extensions
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
+                var applicationEvent = scope.ServiceProvider.GetRequiredService<ApplicationEvents>();
+
                 var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
                 ipfsManager.StartIpfs();
-                Startup.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
+                applicationEvent.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
             }
         }
     }

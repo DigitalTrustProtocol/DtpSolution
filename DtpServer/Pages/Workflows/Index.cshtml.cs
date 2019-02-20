@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DtpCore.Model;
 using DtpCore.Repository;
 using MediatR;
 using DtpCore.Commands.Workflow;
@@ -14,6 +11,7 @@ using DtpCore.ViewModel;
 using DtpCore.Enumerations;
 using Microsoft.Extensions.Hosting;
 using DtpCore.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace DtpServer.Pages.Workflows
 {
@@ -22,6 +20,7 @@ namespace DtpServer.Pages.Workflows
         private readonly IMediator _mediator;
         private readonly TrustDBContext _context;
         private readonly IHostedService _schedulerHostedService;
+        private readonly IConfiguration _configuration;
 
         public IList<WorkflowView> WorkflowViews { get; set; }
         public bool Admin { get; set; }
@@ -29,14 +28,16 @@ namespace DtpServer.Pages.Workflows
         [BindProperty]
         public int DatabaseID { get; set; }
 
-        public IndexModel(IMediator mediator, TrustDBContext context, IHostedService schedulerHostedService)
+        public IndexModel(IMediator mediator, TrustDBContext context, IHostedService schedulerHostedService, IConfiguration configuration)
         {
             _mediator = mediator;
             _context = context;
             _schedulerHostedService = schedulerHostedService;
+            _configuration = configuration;
 #if DEBUG
             Admin = true;
 #endif
+            Admin = _configuration.IsAdminEnabled(Admin);
         }
 
 
@@ -44,8 +45,7 @@ namespace DtpServer.Pages.Workflows
         {
             WorkflowViews = _mediator.SendAndWait(new WorkflowViewQuery());
 
-#if DEBUG
-            if (id != null)
+            if (Admin && id != null)
             {
                 var workflowContainer = await _context.Workflows.SingleOrDefaultAsync(m => m.DatabaseID == id.Value);
                 workflowContainer.NextExecution = 1;
@@ -55,7 +55,6 @@ namespace DtpServer.Pages.Workflows
                 ((SchedulerHostedService)_schedulerHostedService).RunNow();
                 return Redirect("./Workflows");
             }
-#endif
 
             return Page();
         }
