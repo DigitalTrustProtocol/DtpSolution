@@ -7,11 +7,11 @@ namespace DtpCore.Service
     {
         public Stopwatch Watch { get; set; }
         public string Message { get; set; }
-        private Action<string> cb;
+        private Action<string> _print;
 
         public TimeMe(string message, Action<string> callback = null)
         {
-            cb = callback ?? Print;
+            _print = callback ?? Print;
 
             Message = message;
             Watch = new Stopwatch();
@@ -22,7 +22,15 @@ namespace DtpCore.Service
         public void Dispose()
         {
             Watch.Stop();
-            cb(Message + " - Elapsed milliseconds: " + Watch.ElapsedMilliseconds + " ");
+
+            Trace.WriteLine("Trace line!");
+            _print(Message + " - Elapsed milliseconds: " + Watch.ElapsedMilliseconds + " ");
+
+        }
+
+        public static TimeMe Track(string message, Action<string> print = null)
+        {
+            return new TimeMe(message, print);
         }
 
         public void Print(string message)

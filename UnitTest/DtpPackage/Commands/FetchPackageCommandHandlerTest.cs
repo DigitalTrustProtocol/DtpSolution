@@ -1,5 +1,6 @@
 ﻿using DtpCore.Extensions;
 using DtpPackageCore.Commands;
+using DtpPackageCore.Model;
 using DtpPackageCore.Notifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest.TestData;
@@ -18,7 +19,18 @@ namespace UnitTest.DtpPackage.Commands
             Assert.IsTrue(storeNotifications[0] is PackageStoredNotification);
 
             var notification = storeNotifications.FindLast<PackageStoredNotification>();
-            var packageB = Mediator.SendAndWait(new FetchPackageCommand(notification.Message));
+            
+
+            var message = new PackageMessage
+            {
+                File = notification.File,
+                Scope = package.Scopes ?? "twitter.com",
+                ServerId = ServerIdentityService.Id
+            };
+            message.ServerSignature = ServerIdentityService.Sign(message.ToBinary());
+
+
+            var packageB = Mediator.SendAndWait(new FetchPackageCommand(message));
 
             //Assert.AreEqual(3, notifications.Count, "There should be one notifications");
 

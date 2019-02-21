@@ -6,28 +6,52 @@
 }
 
 <h2>Index</h2>
-
+<h3>Build packages</h3>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Package[0].Algorithm)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Package[0].Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Package[0].Created)
+                @Html.DisplayNameFor(model => model.BuildPackages[0].Scopes)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Package) {
+        @foreach (var item in Model.BuildPackages)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Scopes)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Signed packages</h3>
+<table class="table">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Algorithm)
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Packages[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Packages[0].Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Packages[0].Scopes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Packages[0].File)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Packages) {
+        <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
@@ -35,7 +59,13 @@
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
             <td>
-                <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a> |
+                @Html.DisplayFor(modelItem => item.Scopes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.File)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a>
             </td>
         </tr>
 }

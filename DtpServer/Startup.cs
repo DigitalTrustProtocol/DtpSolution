@@ -30,6 +30,7 @@ using Serilog;
 using System.Linq;
 using DtpServer.Platform;
 using DtpCore.Services;
+using DtpCore.Service;
 
 namespace DtpServer
 {
@@ -48,7 +49,7 @@ namespace DtpServer
         /// <param name="configuration"></param>
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
-            
+
             _hostingEnv = env;
             Configuration = configuration;
         }
@@ -57,165 +58,189 @@ namespace DtpServer
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {  
-            services.Configure<CookiePolicyOptions>(options =>
+        {
+            using (TimeMe.Track("ConfigureServices"))
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            ConfigureDbContext(services);
-            
-            // Mvc stuff
-            services.AddMvc(options =>
-            {
-                if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
-                    options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
-
-                options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
-            }).AddJsonOptions(opts =>
-            {
-                opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter
+                services.Configure<CookiePolicyOptions>(options =>
                 {
-                    CamelCaseText = true
+                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = SameSiteMode.None;
                 });
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddHealthChecks()
-                .AddDbContextCheck<TrustDBContext>();
+                ConfigureDbContext(services);
 
-            services.AddRateLimits(); // Add Rate limits for against DDOS attacks
-
-            services
-                .AddSwaggerGen(c =>
+                // Mvc stuff
+                services.AddMvc(options =>
                 {
-                    c.SwaggerDoc("v1", new Info
+                    if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
+                        options.Filters.Add(new RateLimitsFilterAttribute("ALL") { Scope = RateLimitsScope.RemoteAddress });
+
+                    options.Filters.Add(new RequestSizeLimitAttribute(10 * 1024 * 1024)); // 10Mb
+                }).AddJsonOptions(opts =>
+                {
+                    opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    opts.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter
                     {
-                        Version = "v1",
-                        Title = "DTP API",
-                        Description = "DTP API (ASP.NET Core 2.0)",
-                        Contact = new Contact()
-                        {
-                            Name = "DTP",
-                            Url = "https://trust.dance",
-                            Email = ""
-                        },
-                        TermsOfService = "MIT"
+                        CamelCaseText = true
                     });
-                    c.CustomSchemaIds(type => type.FriendlyId(true));
-                    c.DescribeAllEnumsAsStrings();
-                    //if(_hostingEnv != null)
-                    //    c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{_hostingEnv.ApplicationName}.xml");
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-                    // Include DataAnnotation attributes on Controller Action parameters as Swagger validation rules (e.g required, pattern, ..)
-                    // Use [ValidateModelState] on Actions to actually validate it in C# as well!
-                    //c.OperationFilter<GeneratePathParamsValidationFilter>();
-                });
+                services.AddHealthChecks()
+                    .AddDbContextCheck<TrustDBContext>();
+
+                services.AddRateLimits(); // Add Rate limits for against DDOS attacks
+
+                services
+                    .AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new Info
+                        {
+                            Version = "v1",
+                            Title = "DTP API",
+                            Description = "DTP API (ASP.NET Core 2.0)",
+                            Contact = new Contact()
+                            {
+                                Name = "DTP",
+                                Url = "https://trust.dance",
+                                Email = ""
+                            },
+                            TermsOfService = "MIT"
+                        });
+                        c.CustomSchemaIds(type => type.FriendlyId(true));
+                        c.DescribeAllEnumsAsStrings();
+                        //if(_hostingEnv != null)
+                        //    c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{_hostingEnv.ApplicationName}.xml");
+
+                        // Include DataAnnotation attributes on Controller Action parameters as Swagger validation rules (e.g required, pattern, ..)
+                        // Use [ValidateModelState] on Actions to actually validate it in C# as well!
+                        //c.OperationFilter<GeneratePathParamsValidationFilter>();
+                    });
 
 
 
-            services.AddMediatR();
+                services.AddMediatR();
 
-            services.DtpCore();
-            services.DtpGraphCore();
-            services.DtpStrampCore();
-            services.DtpPackageCore();
-            services.DtpServer();
+                services.DtpCore();
+                services.DtpGraphCore();
+                services.DtpStrampCore();
+                services.DtpPackageCore();
+                services.DtpServer();
 
-            AddBackgroundServices(services);
+                AddBackgroundServices(services);
 
-            _services = services;
+                _services = services;
+            }
         }
 
         public virtual void ConfigureDbContext(IServiceCollection services)
         {
-            var platform = new PlatformDirectory();
-            var dbName = "trust.db";
-            var dbDestination = "./trust.db";
-            if (_hostingEnv.IsProduction())
+            using (TimeMe.Track("ConfigureDbContext"))
             {
-                dbDestination = Path.Combine(platform.DatabaseDataPath, dbName);
-                platform.EnsureDtpServerDirectory();
-                if (!File.Exists(dbDestination))
-                    File.Copy(Path.Combine(dbName), dbDestination);
-            }
 
-            services.AddDbContext<TrustDBContext>(options =>
-                options.UseSqlite($"Filename={dbDestination}", b => b.MigrationsAssembly("DtpCore"))
-                .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))
-                );
+                var platform = new PlatformDirectory();
+                var dbName = "trust.db";
+                var dbDestination = "./trust.db";
+                if (_hostingEnv.IsProduction())
+                {
+                    dbDestination = Path.Combine(platform.DatabaseDataPath, dbName);
+                    platform.EnsureDtpServerDirectory();
+                    if (!File.Exists(dbDestination))
+                        File.Copy(Path.Combine(dbName), dbDestination);
+                }
+
+                services.AddDbContext<TrustDBContext>(options =>
+                    options.UseSqlite($"Filename={dbDestination}", b => b.MigrationsAssembly("DtpCore"))
+                    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))
+                    );
+            }
         }
 
         public virtual void AddBackgroundServices(IServiceCollection services)
         {
-            services.AddScheduler((sender, args) =>
+            using (TimeMe.Track("AddBackgroundServices"))
             {
+
+                services.AddScheduler((sender, args) =>
+                {
 #if DEBUG
-                Log.Error(args.Exception, args.Exception.Message);
+                    Log.Error(args.Exception, args.Exception.Message);
 #else
-                Log.Error(args.Exception.Message);
+                    Log.Error(args.Exception.Message);
 #endif
-                args.SetObserved();
-            });
+                    args.SetObserved();
+                });
+            }
         }
 
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService, ApplicationEvents applicationEvents)
         {
-            applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
-
-            if (env.IsDevelopment())
+            using (TimeMe.Track("Configure"))
             {
-                app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount= 100  }  );
+                app.AllServices(_services);
+                applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
+
+                using (TimeMe.Track("IsDevelopment"))
+                {
+                    if (env.IsDevelopment())
+                    {
+                        app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount = 100 });
+                    }
+                    else
+                    {
+                        app.UseExceptionHandler("/Error");
+                        //app.UseHsts();
+
+                        if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
+                            rateLimitService.SetZone(Configuration.RateLimits());
+                    }
+
+                }
+
+                using (TimeMe.Track("DTP apps"))
+                {
+
+                    app.DtpCore(); // Ensure configuration of core
+                    app.DtpGraph(); // Load the Trust Graph from Database
+                    app.DtpStamp();
+                    app.DtpPackage();
+                    app.DtpServer();
+                }
+
+                using (TimeMe.Track("Serilog, Swagger and UseMVC"))
+                {
+
+                    app.UseMiddleware<SerilogDiagnostics>();
+                    //app.UseHttpsRedirection();
+                    app.UseStaticFiles();
+
+                    app.UseCookiePolicy();
+                    app.UseHealthChecks("/ready");
+
+                    // Enable middleware to serve generated Swagger as a JSON endpoint.
+                    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+                    app.UseSwagger();
+                    app.UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                    });
+
+                    app.UseMvc(routes =>
+                    {
+                        //routes.MapRoute(
+                        //    name: "stamp",
+                        //    template: "v1/stamp/{blockchain}/{action=Index}/{source?}");
+                        //routes.MapRoute("Proof.htm");
+
+                        routes.MapRoute(
+                                name: "default",
+                                template: "v1/{controller}/{action=Index}/{id?}");
+                    });
+                }
+                applicationEvents.WaitBootupTasksAsync().Wait();
+
             }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                //app.UseHsts();
-
-                if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
-                    rateLimitService.SetZone(Configuration.RateLimits());
-            }
-
-            app.DtpCore(); // Ensure configuration of core
-            app.DtpGraph(); // Load the Trust Graph from Database
-            app.DtpStamp();
-            app.DtpPackage();
-            app.DtpServer();
-
-            app.UseMiddleware<SerilogDiagnostics>();
-            //app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseCookiePolicy();
-            app.UseHealthChecks("/ready");
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwagger();
-            app.UseSwaggerUI(c => 
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-            });
-
-            app.UseMvc(routes =>
-            {
-                //routes.MapRoute(
-                //    name: "stamp",
-                //    template: "v1/stamp/{blockchain}/{action=Index}/{source?}");
-                //routes.MapRoute("Proof.htm");
-
-                routes.MapRoute(
-                    name: "default",
-                    template: "v1/{controller}/{action=Index}/{id?}");
-            });
-
-            applicationEvents.WaitBootupTasksAsync().Wait();
-
-            app.AllServices(_services);
-
         }
 
     }

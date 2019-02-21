@@ -11,26 +11,41 @@
     <tbody>
         <tr>
             <td>
+                @Html.DisplayNameFor(model => model.Package.Id)
+            </td>
+            <td>@Html.DisplayFor(model => model.Package.Id)</td>
+        </tr>
+        <tr>
+            <td>
                 @Html.DisplayNameFor(model => model.Package.Algorithm)
             </td>
             <td>
                 @Html.DisplayFor(model => model.Package.Algorithm)
             </td>
         </tr>
-
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => model.Package.Id)
-            </td>
-            <td>@Html.DisplayFor(model => model.Package.Id)</td>
-        </tr>
-
         <tr>
             <td>
                 @Html.DisplayNameFor(model => model.Package.Created)
             </td>
             <td>@Html.DisplayFor(model => model.Package.Created)</td>
         </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.Package.Scopes)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Package.Scopes)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.Package.File)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Package.File)
+            </td>
+        </tr>
+
         <tr>
             <td>
                 @Html.DisplayNameFor(model => Model.Package.Server)

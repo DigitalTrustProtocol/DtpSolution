@@ -21,6 +21,10 @@ namespace DtpPackageCore.Workflows
 {
     /// <summary>
     /// Makes sure to synchronize packages with other servers.
+    /// A very simple implementation, not efficient, needs a review and a better synchronization algo.
+    /// When new nodes connect, they are asked for all of their packages information.
+    /// Then on, new packages are discovered by the IPFS PubSub from the nodes.
+    /// Reboot of the DtpServer, resets the workflow and all peers are requried.
     /// </summary>
     [DisplayName("Synchronize Packages")]
     [Description("Synchronize packages with other nodes.")]
@@ -62,14 +66,17 @@ namespace DtpPackageCore.Workflows
 
             foreach (var peer in peers)
             {
+                if (!peer.IsValid())
+                    continue;
+
                 var peerHashId = peer.Id.GetHashCode();
                 if (peerHashId == localPeerHashId)
-                    continue;
+                    continue; // Do not process one self
 
                 if (peerCache.ContainsKey(peerHashId))
-                    continue;
+                    continue; // Do not process known peers
 
-                if(ProcessPeer(peer))
+                if(ProcessPeer(peer)) // All new peers gets processed
                     peerCache[peerHashId] = peer;
             }
 

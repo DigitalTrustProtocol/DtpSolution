@@ -13,14 +13,13 @@ namespace DtpPackageCore.Commands
     public class StorePackageCommandHandler :
         IRequestHandler<StorePackageCommand, NotificationSegment>
     {
-        private readonly IServerIdentityService _serverIdentityService;
+        //private readonly IServerIdentityService _serverIdentityService;
         private readonly IPackageService _packageService;
         private readonly NotificationSegment _notifications;
         private readonly ILogger<BuildPackageCommandHandler> logger;
 
-        public StorePackageCommandHandler(IServerIdentityService serverIdentityService, IPackageService packageService, NotificationSegment notifications, ILogger<BuildPackageCommandHandler> logger)
+        public StorePackageCommandHandler(IPackageService packageService, NotificationSegment notifications, ILogger<BuildPackageCommandHandler> logger)
         {
-            _serverIdentityService = serverIdentityService;
             _packageService = packageService;
             _notifications = notifications;
             this.logger = logger;
@@ -28,16 +27,11 @@ namespace DtpPackageCore.Commands
 
         public async Task<NotificationSegment> Handle(StorePackageCommand request, CancellationToken cancellationToken)
         {
-            var message = new PackageMessage
-            {
-                File = await _packageService.StorePackageAsync(request.Package),
-                Scope = request.Package.Scopes ?? "twitter.com",
-                ServerId = _serverIdentityService.Id
-            };
-            message.ServerSignature = _serverIdentityService.Sign(message.ToBinary());
 
-            logger.LogInformation($"Package stored on {message.File}");
-            _notifications.Add(new PackageStoredNotification(message, request.Package));
+            var file = await _packageService.StorePackageAsync(request.Package);
+
+            logger.LogInformation($"Package {request.Package.Id} stored, file name: {file}");
+            _notifications.Add(new PackageStoredNotification(file, request.Package));
 
             return _notifications;
         }

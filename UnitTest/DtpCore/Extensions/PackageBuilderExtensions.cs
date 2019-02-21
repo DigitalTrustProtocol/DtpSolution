@@ -1,7 +1,4 @@
-﻿
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Text;
+﻿using System.Text;
 using DtpCore.Builders;
 using DtpCore.Interfaces;
 using DtpCore.Model;

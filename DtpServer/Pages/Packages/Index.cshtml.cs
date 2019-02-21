@@ -1,29 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Model;
 using DtpCore.Repository;
+using System.Linq;
+using DtpCore.Model.Database;
 
 namespace DtpServer.Pages.Packages
 {
     public class IndexModel : PageModel
     {
-        private readonly DtpCore.Repository.TrustDBContext _context;
+        private readonly TrustDBContext _context;
 
-        public IndexModel(DtpCore.Repository.TrustDBContext context)
+        public IndexModel(TrustDBContext context)
         {
             _context = context;
         }
 
-        public IList<Package> Package { get;set; }
+        public IList<Package> BuildPackages { get; set; }
+        public IList<Package> Packages { get;set; }
 
+        /// <summary>
+        /// Load data
+        /// </summary>
+        /// <returns></returns>
         public async Task OnGetAsync()
         {
-            Package = await _context.Packages.ToListAsync();
+            BuildPackages = await _context.Packages.AsNoTracking().Where(p => p.State == PackageStateType.Building).ToListAsync();
+            foreach (var package in BuildPackages)
+            {
+                if (string.IsNullOrEmpty(package.Scopes))
+                    package.Scopes = "Global";
+            }
+
+            Packages = await _context.Packages.AsNoTracking().Where(p => p.State != PackageStateType.Building).ToListAsync();
+            foreach (var package in Packages)
+            {
+                if (string.IsNullOrEmpty(package.Scopes))
+                    package.Scopes = "Global";
+            }
         }
     }
 }

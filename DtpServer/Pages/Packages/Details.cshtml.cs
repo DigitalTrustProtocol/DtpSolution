@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,9 +41,10 @@ namespace DtpServer.Pages.Packages
             Package = await mediator.Send(new GetPackageCommand { DatabaseID = (int)id });
 
             if (Package == null)
-            {
                 return NotFound();
-            }
+
+            if (string.IsNullOrEmpty(Package.Scopes))
+                Package.Scopes = "Global";
 
             var query = _trustDBService.DBContext.ClaimPackageRelationships.Where(p => p.PackageID == id).Include(p => p.Claim).OrderBy(p => p.Claim.Created).Select(p => p.Claim);
             Claims = await PaginatedList<Claim>.CreateAsync(query, 1, 0); // PageSize = 0 is unlimited

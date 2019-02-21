@@ -82,10 +82,16 @@ namespace DtpPackageCore.Commands
                     continue;
                 }
 
-                builder.OrderClaims(); // Order claims ny ID before package ID calculation. 
+                builder.OrderClaims(); // Order claims now ID before package ID calculation. 
                 SignPackage(builder);
 
+                // Add package to timestamp
                 builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));
+
+                // Store the package at local drive 
+                _notifications.AddRange(await _mediator.Send(new StorePackageCommand(builder.Package)));
+                var notification = _notifications.FindLast<PackageStoredNotification>();
+                builder.Package.File = notification.File;
 
                 _trustDBService.SaveChanges(); // Save the new package
 

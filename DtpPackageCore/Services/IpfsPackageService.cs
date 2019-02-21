@@ -25,6 +25,8 @@ namespace DtpPackageCore.Services
 {
     public class IpfsPackageService : IPackageService
     {
+        public const string FILE_SCHEME = "ipfs://";
+
         public CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public ICoreApi Ipfs { get; set; }
@@ -83,7 +85,7 @@ namespace DtpPackageCore.Services
                     if (!string.IsNullOrEmpty(scope))
                         list.Add(ipfs.PubSub.SubscribeAsync(scope, pubSubController.HandleMessage, cancellationTokenSource.Token));
 
-                    list.Add(ipfs.PubSub.SubscribeAsync("", pubSubController.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
+                    list.Add(ipfs.PubSub.SubscribeAsync("global", pubSubController.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
 
     #if DEBUG
                     list.Add(ipfs.PubSub.SubscribeAsync("test", pubSubController.HandleMessage, cancellationTokenSource.Token));
@@ -101,6 +103,8 @@ namespace DtpPackageCore.Services
 
         public async Task<Package> FetchPackageAsync(string path)
         {
+            path = path.ReplaceIgnoreCase(FILE_SCHEME, ""); // Remove the "ipfs://" part
+
             var json = await Ipfs.FileSystem.ReadAllTextAsync(path); // Load the file from the IPFS network!
             var package = JsonConvert.DeserializeObject<Package>(json);
             package.File = path;
@@ -112,7 +116,7 @@ namespace DtpPackageCore.Services
             var content = JsonConvert.SerializeObject(package, Formatting.None);
             var node = await Ipfs.FileSystem.AddTextAsync(content) as FileSystemNode;
             logger.LogInformation($"Package {package.DatabaseID} has been stored on drive.");
-            return node.Id.Hash.ToString(); // Multihash value == id of file.
+            return "ipfs://"+node.Id.Hash.ToString(); // Multihash value == id of file.
         }
 
 
@@ -123,15 +127,6 @@ namespace DtpPackageCore.Services
             logger.LogInformation($"PackageMessage {packageMessage.File} has been published to network.");
         }
 
-
-        ///// <summary>
-        ///// Only raw processing, no check or validation of Peers. 
-        ///// </summary>
-        ///// <param name="publishedMessage"></param>
-        //private async void HandleMessage(IPublishedMessage publishedMessage)
-        //{
-
-        //}
 
         public async Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from)
         {

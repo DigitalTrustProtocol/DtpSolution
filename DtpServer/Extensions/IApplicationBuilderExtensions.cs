@@ -11,14 +11,17 @@ namespace DtpServer.Extensions
 
         public static void DtpServer(this IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
+            applicationEvent.BootupTasks.Add(Task.Run(() =>
             {
-                var applicationEvent = scope.ServiceProvider.GetRequiredService<ApplicationEvents>();
 
-                var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
-                ipfsManager.StartIpfs();
-                applicationEvent.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
-            }
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
+                    ipfsManager.StartIpfs();
+                    applicationEvent.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
+                }
+            }));
         }
     }
 }

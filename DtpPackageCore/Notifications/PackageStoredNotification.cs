@@ -6,12 +6,12 @@ namespace DtpPackageCore.Notifications
 {
     public class PackageStoredNotification : INotification
     {
-        public PackageMessage Message { get; }
+        public string File { get; }
         public Package Package { get; }
 
-        public PackageStoredNotification(PackageMessage message, Package package)
+        public PackageStoredNotification(string file, Package package)
         {
-            Message = message;
+            File = file;
             Package = package;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using DtpCore.Interfaces;
 using DtpCore.Notifications;
-using DtpCore.Services;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Model;
 using DtpPackageCore.Notifications;
@@ -17,7 +16,7 @@ namespace DtpPackageCore.Commands
     {
 
         private IMediator _mediator;
-        private readonly IServerIdentityService serverIdentityService;
+        private readonly IServerIdentityService _serverIdentityService;
         private readonly IPackageService _packageService;
         private NotificationSegment _notifications;
         private readonly ILogger<PublishPackageCommandHandler> logger;
@@ -25,7 +24,7 @@ namespace DtpPackageCore.Commands
         public PublishPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, IPackageService packageService, NotificationSegment notifications, ILogger<PublishPackageCommandHandler> logger)
         {
             _mediator = mediator;
-            this.serverIdentityService = serverIdentityService;
+            _serverIdentityService = serverIdentityService;
             _packageService = packageService;
             _notifications = notifications;
             this.logger = logger;
@@ -33,15 +32,23 @@ namespace DtpPackageCore.Commands
 
         public async Task<NotificationSegment> Handle(PublishPackageCommand request, CancellationToken cancellationToken)
         {
-            if (request.Package == null)
-                throw new ApplicationException("Package cannot be null.");
+            if(string.IsNullOrEmpty(request.Package.File))
+            {
+                logger.LogWarning($"Cannot publish package {request.Package.Id} without a file");
+                return _notifications;
+            }
 
-            _notifications.AddRange(await _mediator.Send(new StorePackageCommand(request.Package)));
-            var notification = _notifications.FindLast<PackageStoredNotification>();
+            var message = new PackageMessage
+            {
+                File = request.Package.File,
+                Scope = request.Package.Scopes ?? "twitter.com",
+                ServerId = _serverIdentityService.Id
+            };
+            message.ServerSignature = _serverIdentityService.Sign(message.ToBinary());
 
-            _packageService.PublishPackageMessageAsync(notification.Message);
+            _packageService.PublishPackageMessageAsync(message);
 
-            await _notifications.Publish(new PackagePublishedNotification(request.Package, notification.Message));
+            await _notifications.Publish(new PackagePublishedNotification(request.Package, message));
 
             return _notifications;
         }
