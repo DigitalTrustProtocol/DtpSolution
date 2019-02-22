@@ -2,6 +2,7 @@
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpPackageCore.Commands;
+using DtpPackageCore.Interfaces;
 using DtpPackageCore.Model;
 using Ipfs;
 using MediatR;
@@ -22,13 +23,15 @@ namespace DtpPackageCore
         private IConfiguration _configuration;
         private readonly IServiceProvider _serviceProvider;
         private IServerIdentityService _serverIdentityService;
+        private readonly IPackageMessageValidator _packageMessageValidator;
         private readonly ILogger<PubSubController> logger;
 
-        public PubSubController(IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, ILogger<PubSubController> logger)
+        public PubSubController(IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, IPackageMessageValidator packageMessageValidator, ILogger<PubSubController> logger)
         {
             _configuration = configuration;
             _serviceProvider = serviceProvider;
             _serverIdentityService = serverIdentityService;
+            _packageMessageValidator = packageMessageValidator;
             this.logger = logger;
         }
 
@@ -47,9 +50,10 @@ namespace DtpPackageCore
 
                     logger.LogInformation($"Received message from {packageMessage.ServerId}");
 
+                    _packageMessageValidator.Validate(packageMessage);
 
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    var package = mediator.SendAndWait(new FetchPackageCommand(packageMessage));
+                    var package = mediator.SendAndWait(new FetchPackageCommand(packageMessage.File));
 
                     if (package == null)
                     {
@@ -87,7 +91,7 @@ namespace DtpPackageCore
             }
             catch (Exception ex)
             {
-                var msg = $"Received message from server {publishedMessage.Sender.Id} failed with: {ex.Message}";
+                var msg = $"Message from server {publishedMessage.Sender.Id} failed with: {ex.Message}";
                 logger.LogError(msg);
             }
 

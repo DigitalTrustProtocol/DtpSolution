@@ -1,17 +1,16 @@
 ﻿using DtpCore.Model;
-using DtpPackageCore.Model;
 using MediatR;
 
 namespace DtpPackageCore.Notifications
 {
     public class PackageFetchedNotification : INotification
     {
-        public PackageMessage Message { get; }
+        public string File { get; }
         public Package Package { get; }
 
-        public PackageFetchedNotification(PackageMessage message, Package package)
+        public PackageFetchedNotification(string file, Package package)
         {
-            Message = message;
+            File = file;
             Package = package;
         }
 

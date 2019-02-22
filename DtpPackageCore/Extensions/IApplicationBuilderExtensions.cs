@@ -23,7 +23,7 @@ namespace DtpPackageCore.Extensions
                     workflowService.EnsureWorkflow<SynchronizePackageWorkflow>();
 
                     var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
-                    packageService.AddPackageSubscriptionsAsync().Wait();
+                    packageService.AddPackageSubscriptions();
                 }
             }));
         }

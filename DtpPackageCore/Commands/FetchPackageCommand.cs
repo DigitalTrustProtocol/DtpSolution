@@ -7,11 +7,13 @@ namespace DtpPackageCore.Commands
 {
     public class FetchPackageCommand : IRequest<Package>
     {
-        public PackageMessage PackageMessage { get; }
+        public string File { get; }
 
-        public FetchPackageCommand(PackageMessage packageMessage)
+        public FetchPackageCommand(string file)
         {
-            PackageMessage = packageMessage;
+            File = file;
         }
+
+
     }
 }

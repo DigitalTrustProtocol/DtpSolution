@@ -31,14 +31,12 @@ namespace UnitTest.DtpPackageCore.Mocks
             ConnectedAddress = new MultiAddress("/ip4/192.168.0.82/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h")
         };
 
-        public Task AddPackageSubscriptionsAsync()
+        public void AddPackageSubscriptions()
         {
-            return Task.CompletedTask;
         }
 
-        public Task AddPackageSubscriptionsAsync(string scope)
+        public void AddPackageSubscriptions(string scope)
         {
-            return Task.CompletedTask;
         }
 
         public Task<Package> FetchPackageAsync(string path)

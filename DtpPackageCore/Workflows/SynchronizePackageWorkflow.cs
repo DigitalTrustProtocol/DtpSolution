@@ -41,8 +41,10 @@ namespace DtpPackageCore.Workflows
         private ITimestampProofValidator _timestampProofValidator;
         private IConfiguration _configuration;
         private ILogger<SynchronizePackageWorkflow> _logger;
+        private readonly IPackageMessageValidator _packageMessageValidator;
+        private IServerIdentityService _serverIdentityService;
 
-        public SynchronizePackageWorkflow(IMediator mediator, IPackageService packageService, ITrustDBService trustDBService, IPackageSchemaValidator packageSchemaValidator, ITimestampProofValidator timestampProofValidator, IConfiguration configuration, ILogger<SynchronizePackageWorkflow> logger)
+        public SynchronizePackageWorkflow(IMediator mediator, IPackageService packageService, ITrustDBService trustDBService, IPackageSchemaValidator packageSchemaValidator, ITimestampProofValidator timestampProofValidator, IConfiguration configuration, ILogger<SynchronizePackageWorkflow> logger, IPackageMessageValidator packageMessageValidator, IServerIdentityService serverIdentityService)
         {
             _mediator = mediator;
             _packageService = packageService;
@@ -51,7 +53,10 @@ namespace DtpPackageCore.Workflows
             _timestampProofValidator = timestampProofValidator;
             _configuration = configuration;
             _logger = logger;
+            _packageMessageValidator = packageMessageValidator;
+            _serverIdentityService = serverIdentityService;
         }
+
 
         // Last run of the synchronization
         public long LastSyncTime { get; set; }
@@ -87,6 +92,23 @@ namespace DtpPackageCore.Workflows
 
             Wait(_configuration.SynchronizePackageWorkflowInterval()); // Never end the workflow
         }
+
+        //private void PP()
+        //{
+        //    string file = "ipfs://QmUWpEZyccMkPRhRL1wSYTZpcXDMNgHD5oEiF1i8XxCsbt";
+
+        //    var message = new PackageMessage
+        //    {
+        //        File = file,
+        //        Scope = "twitter.com",
+        //        ServerId = _serverIdentityService.Id
+        //    };
+        //    message.ServerSignature = _serverIdentityService.Sign(message.ToBinary());
+
+        //    _packageMessageValidator.Validate(message);
+            
+        //    _packageService.PublishPackageMessageAsync(message);
+        //}
 
         private bool ProcessPeer(Peer peer)
         {
@@ -125,7 +147,7 @@ namespace DtpPackageCore.Workflows
                     continue;
 
                 // Get Package
-                var package = _mediator.SendAndWait(new FetchPackageCommand(new PackageMessage { File = packageInfo.File }));
+                var package = _mediator.SendAndWait(new FetchPackageCommand(packageInfo.File));
                 if (ValidatePackage(packageInfo, package))
                 {
                     // Now add the package to the system, the graph should automatically be updated as well.

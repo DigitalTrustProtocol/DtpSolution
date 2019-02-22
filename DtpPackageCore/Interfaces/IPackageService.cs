@@ -11,8 +11,8 @@ namespace DtpPackageCore.Interfaces
     {
         Task<Peer> GetLocalPeer();
         Task<IEnumerable<Peer>> GetPeersAsync(string scope);
-        Task AddPackageSubscriptionsAsync();
-        Task AddPackageSubscriptionsAsync(string scope);
+        void AddPackageSubscriptions();
+        void AddPackageSubscriptions(string scope);
         void PublishPackageMessageAsync(PackageMessage packageMessage);
         Task<PackageInfoCollection> GetPackageInfoCollectionAsync(string ipAddress, string scope, long from);
         Task<Package> FetchPackageAsync(string path);

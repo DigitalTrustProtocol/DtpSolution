@@ -33,18 +33,18 @@ namespace DtpPackageCore.Services
         public IConfiguration Configuration { get; set; }
         private readonly IServiceProvider _serviceProvider;
         private IServerIdentityService _serverIdentityService;
+        private readonly PubSubController _pubSubController;
         private readonly ILogger<IpfsPackageService> logger;
 
-
-        public IpfsPackageService(ICoreApi ipfs, IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, ILogger<IpfsPackageService> logger)
+        public IpfsPackageService(ICoreApi ipfs, IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, PubSubController pubSubController, ILogger<IpfsPackageService> logger)
         {
             Ipfs = ipfs;
             Configuration = configuration;
             _serviceProvider = serviceProvider;
             _serverIdentityService = serverIdentityService;
+            _pubSubController = pubSubController;
             this.logger = logger;
         }
-
 
         public Task<Peer> GetLocalPeer()
         {
@@ -68,37 +68,23 @@ namespace DtpPackageCore.Services
         }
 
 
-        public Task AddPackageSubscriptionsAsync()
+        public void AddPackageSubscriptions()
         {
-            return AddPackageSubscriptionsAsync(Configuration.PackageScope());
+            AddPackageSubscriptions(Configuration.PackageScope());
         }
 
-        public Task AddPackageSubscriptionsAsync(string scope)
+        public void AddPackageSubscriptions(string scope)
         {
-            var pubSubController = _serviceProvider.GetRequiredService<PubSubController>();
             var ipfs = Ipfs;
-            return Task.Run(() =>
-            {
-                try
-                {
-                    var list = new List<Task>();
-                    if (!string.IsNullOrEmpty(scope))
-                        list.Add(ipfs.PubSub.SubscribeAsync(scope, pubSubController.HandleMessage, cancellationTokenSource.Token));
+            if (!string.IsNullOrEmpty(scope))
+                ipfs.PubSub.SubscribeAsync(scope, _pubSubController.HandleMessage, cancellationTokenSource.Token).Wait();
 
-                    list.Add(ipfs.PubSub.SubscribeAsync("global", pubSubController.HandleMessage, cancellationTokenSource.Token)); // Global scope (topic)
+            ipfs.PubSub.SubscribeAsync("global", _pubSubController.HandleMessage, cancellationTokenSource.Token).Wait(); // Global scope (topic)
 
-    #if DEBUG
-                    list.Add(ipfs.PubSub.SubscribeAsync("test", pubSubController.HandleMessage, cancellationTokenSource.Token));
+#if DEBUG
+            ipfs.PubSub.SubscribeAsync("test", _pubSubController.HandleMessage, cancellationTokenSource.Token).Wait();
 
-    #endif
-                    Task.WaitAll(list.ToArray());
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            });
+#endif
         }
 
         public async Task<Package> FetchPackageAsync(string path)
@@ -125,6 +111,7 @@ namespace DtpPackageCore.Services
             var text = JsonConvert.SerializeObject(packageMessage, Formatting.None);
             await Ipfs.PubSub.PublishAsync(packageMessage.Scope, text);
             logger.LogInformation($"PackageMessage {packageMessage.File} has been published to network.");
+            logger.LogInformation($"Json: {text}");
         }
 
 

@@ -20,7 +20,7 @@ namespace DtpPackageCore.Extensions
             services.AddTransient<CreateTrustPackageWorkflow>();
             services.AddTransient<SynchronizePackageWorkflow>();
 
-            services.AddScoped<IPackageMessageValidator, PackageMessageValidator>();
+            services.AddSingleton<IPackageMessageValidator, PackageMessageValidator>();
             services.AddScoped<ICoreApi, IpfsClient>();
             services.AddScoped<IPackageService, IpfsPackageService>();
         }

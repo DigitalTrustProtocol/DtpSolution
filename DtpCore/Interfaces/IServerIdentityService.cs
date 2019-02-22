@@ -8,5 +8,6 @@
         byte[] Sign(byte[] data);
         byte[] Sign(string text);
         bool Verify(byte[] data, byte[] signature);
+        IDerivationStrategy Derivation { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace DtpPackageCore.Model.Schema
             if (message.ServerSignature == null || message.ServerSignature.Length == 0)
                 errors.Add("Server signature is null or empty.");
 
-            if (!serverIdentityService.Verify(message.ToBinary(), message.ServerSignature))
+            if (!serverIdentityService.Derivation.VerifySignatureMessage(message.ToBinary(), message.ServerSignature, message.ServerId))
                 errors.Add("Server signature do not match address and/or binary of message.");
 
             return errors.Count == 0;

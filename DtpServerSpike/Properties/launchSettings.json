@@ -2,7 +2,7 @@
   "profiles": {
     "DtpServerSpike": {
       "commandName": "Project",
-      "commandLineArgs": "claimproducer 3"
+      "commandLineArgs": "PackageMessage"
     }
   }
 }

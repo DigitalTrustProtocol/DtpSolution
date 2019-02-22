@@ -30,7 +30,7 @@ namespace UnitTest.DtpPackage.Commands
             message.ServerSignature = ServerIdentityService.Sign(message.ToBinary());
 
 
-            var packageB = Mediator.SendAndWait(new FetchPackageCommand(message));
+            var packageB = Mediator.SendAndWait(new FetchPackageCommand(message.File));
 
             //Assert.AreEqual(3, notifications.Count, "There should be one notifications");
 
