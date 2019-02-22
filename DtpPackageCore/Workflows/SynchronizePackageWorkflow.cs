@@ -76,6 +76,8 @@ namespace DtpPackageCore.Workflows
                 if (peerCache.ContainsKey(peerHashId))
                     continue; // Do not process known peers
 
+                var cco = peer.ConnectedAddress;
+
                 if(ProcessPeer(peer)) // All new peers gets processed
                     peerCache[peerHashId] = peer;
             }
@@ -95,6 +97,11 @@ namespace DtpPackageCore.Workflows
             var ipV4 = peer.ConnectedAddress.Protocols.FirstOrDefault(p => "ip4".EndsWithIgnoreCase(p.Name));
             if (ipV4 == null)
                 return false;
+
+            var port = peer.ConnectedAddress.Protocols.FirstOrDefault(p => p.Code == 6);
+            if (port == null || !"4001".EqualsIgnoreCase(port.Value)) // TODO: Do not call peers on other ports than 4001, they may be hidden behind a fireware without direct connection.
+                return false;
+
 
             var ipAddress = ipV4.Value;
             // TODO: Should be optimized for better async handling.

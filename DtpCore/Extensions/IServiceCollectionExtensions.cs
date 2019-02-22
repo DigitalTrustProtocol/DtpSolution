@@ -23,6 +23,7 @@ namespace DtpCore.Extensions
 
             services.AddSingleton<ApplicationEvents>();
             services.AddSingleton<IExecutionSynchronizationService, ExecutionSynchronizationService>();
+            services.AddScoped<NotificationSegment>();
             services.AddScoped<IClaimBinary, ClaimBinary>();
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
@@ -52,7 +53,6 @@ namespace DtpCore.Extensions
 
             services.AddTransient<PackageBuilder>();
 
-            services.AddTransient<NotificationSegment>();
             
 
             // ---------------------------------------------------------------------------------------------------------------

@@ -38,7 +38,7 @@ namespace DtpCore.Interfaces
 
         Task<bool> DoPackageExistAsync(byte[] packageId);
         Package GetPackageById(byte[] packageId);
-        Task<List<Package>> GetBuildPackages();
+        Task<List<Package>> GetBuildPackagesAsync();
         Package GetBuildPackage(string scope);
         Package EnsureBuildPackage(string scope);
         void LoadPackageClaims(Package package);

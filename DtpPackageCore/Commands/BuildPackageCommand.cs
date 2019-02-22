@@ -4,8 +4,13 @@ using MediatR;
 
 namespace DtpPackageCore.Commands
 {
-    public class BuildPackageCommand : IRequest<NotificationSegment>
+    public class BuildPackageCommand : IRequest<Package>
     {
-        // Some filtering data, to narrow down the package.
+        public Package SourcePackage { get; set; }
+
+        public BuildPackageCommand(Package sourcePackage)
+        {
+            SourcePackage = sourcePackage;
+        }
     }
 }

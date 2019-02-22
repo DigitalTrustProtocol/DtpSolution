@@ -1,4 +1,5 @@
-﻿using DtpPackageCore.Commands;
+﻿using DtpCore.Notifications;
+using DtpPackageCore.Commands;
 using DtpStampCore.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -28,7 +29,7 @@ namespace DtpPackageCore.Notifications
 
                 var package = await mediator.Send(new GetPackageCommand { DatabaseID = (int)timestamp.PackageDatabaseID });
 
-                var notifications = await mediator.Send(new PublishPackageCommand(package));
+                await mediator.Send(new PublishPackageCommand(package));
             }
         }
     }

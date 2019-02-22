@@ -29,26 +29,29 @@ namespace DtpPackageCore.Workflows
     [Description("Create trust packages from new trusts received.")]
     public class CreateTrustPackageWorkflow : WorkflowContext
     {
-        private IMediator _mediator;
-        private IConfiguration _configuration;
-        private ILogger<CreateTrustPackageWorkflow> _logger;
+        private readonly IMediator _mediator;
+        private readonly ITrustDBService _trustDBService;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<CreateTrustPackageWorkflow> _logger;
 
-
-        public CreateTrustPackageWorkflow(IMediator mediator, IConfiguration configuration, ILogger<CreateTrustPackageWorkflow> logger)
+        public CreateTrustPackageWorkflow(IMediator mediator, ITrustDBService trustDBService, IConfiguration configuration, ILogger<CreateTrustPackageWorkflow> logger)
         {
             _mediator = mediator;
+            _trustDBService = trustDBService;
             _configuration = configuration;
             _logger = logger;
         }
 
         public override void Execute()
         {
-            var notification = _mediator.SendAndWait(new BuildPackageCommand()).FirstOrDefault();
-            if (notification == null || notification is PackageNoClaimsNotification)
-                return;
+            var buildPackages = _trustDBService.GetBuildPackagesAsync().GetAwaiter().GetResult();
 
-            var package = ((PackageBuildNotification)notification).Package;
-            CombineLog(_logger, $"Package ({package.Id}) created with {package.Claims.Count} trusts.");
+            foreach (var buildPackage in buildPackages)
+            {
+                var signedPackage = _mediator.SendAndWait(new BuildPackageCommand(buildPackage));
+                if(signedPackage != null)
+                    CombineLog(_logger, $"Package {signedPackage.Id.ToHex()}, scope: {signedPackage.Scopes}, created with {signedPackage.Claims.Count} claims.");
+            }
 
             Wait(_configuration.TrustPackageWorkflowInterval()); // Never end the workflow
         }

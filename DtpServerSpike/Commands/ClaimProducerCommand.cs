@@ -56,7 +56,7 @@ namespace DtpServerSpike.Commands
             {
                 var issuer = Guid.NewGuid().ToString();
                 var subject = Guid.NewGuid().ToString();
-                builder.AddClaimTrue(issuer, subject).CurrentClaim.Scope = "forum.com";
+                builder.AddClaimTrue(issuer, subject).CurrentClaim.Scope = "twitter.com";
             }
             builder.Build().Sign();
 

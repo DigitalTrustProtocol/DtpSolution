@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 namespace DtpPackageCore.Commands
 {
     public class PublishPackageCommandHandler :
-        IRequestHandler<PublishPackageCommand, NotificationSegment>
+        IRequestHandler<PublishPackageCommand, PackageMessage>
     {
 
         private IMediator _mediator;
         private readonly IServerIdentityService _serverIdentityService;
         private readonly IPackageService _packageService;
-        private NotificationSegment _notifications;
+        private NotificationSegment _notifications; 
         private readonly ILogger<PublishPackageCommandHandler> logger;
 
         public PublishPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, IPackageService packageService, NotificationSegment notifications, ILogger<PublishPackageCommandHandler> logger)
@@ -30,12 +30,12 @@ namespace DtpPackageCore.Commands
             this.logger = logger;
         }
 
-        public async Task<NotificationSegment> Handle(PublishPackageCommand request, CancellationToken cancellationToken)
+        public async Task<PackageMessage> Handle(PublishPackageCommand request, CancellationToken cancellationToken)
         {
             if(string.IsNullOrEmpty(request.Package.File))
             {
                 logger.LogWarning($"Cannot publish package {request.Package.Id} without a file");
-                return _notifications;
+                return null;
             }
 
             var message = new PackageMessage
@@ -50,7 +50,7 @@ namespace DtpPackageCore.Commands
 
             await _notifications.Publish(new PackagePublishedNotification(request.Package, message));
 
-            return _notifications;
+            return message;
         }
     }
 }

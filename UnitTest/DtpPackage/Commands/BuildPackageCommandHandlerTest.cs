@@ -1,10 +1,13 @@
 ﻿using DtpCore.Builders;
 using DtpCore.Extensions;
+using DtpCore.Model;
 using DtpCore.Notifications;
 using DtpPackageCore.Commands;
 using DtpPackageCore.Notifications;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using UnitTest.DtpCore.Extensions;
+using UnitTest.TestData;
 
 namespace UnitTest.DtpPackage.Commands
 {
@@ -12,37 +15,36 @@ namespace UnitTest.DtpPackage.Commands
     public class BuildPackageCommandHandlerTest : StartupMock
     {
 
-        private NotificationSegment CreateTrust(string issuerName, string subjectName)
+        private Package CreateAndSavePackage(string issuerName, string subjectName)
         {
-             var builder = new PackageBuilder();
+            var builder = new PackageBuilder();
             builder.SetServer("testserver");
             builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true)).BuildClaimID();
-            
-            NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand (builder.Package));
-            return result;
-        }
 
+            var command = new AddPackageCommand(builder.Package);
+            Mediator.SendAndWait(command);
+            var buildPackage = TrustDBService.GetBuildPackage("");
+
+            return buildPackage;
+        }
         [TestMethod]
         public void Empty()
         {
-            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
-
-            Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is PackageNoClaimsNotification);
+            var package = TestPackage.CreateBinary(0);
+            var buildPackage = Mediator.SendAndWait(new BuildPackageCommand(package));
+            Assert.IsNull(buildPackage);
         }
 
         [TestMethod]
         public void One()
         {
-            CreateTrust("A", "B");
+            var buildPackage = CreateAndSavePackage("A", "B");
 
-            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
+            var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
+            Assert.IsNotNull(signedPackage);
+            Assert.AreEqual(1, signedPackage.Claims.Count);
 
-            Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is PackageBuildNotification);
-            Assert.AreEqual(1, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
-
-            var buildPackage = TrustDBService.GetBuildPackage("");
+            buildPackage = TrustDBService.GetBuildPackage("");
             TrustDBService.LoadPackageClaims(buildPackage);
             Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
         }
@@ -50,18 +52,19 @@ namespace UnitTest.DtpPackage.Commands
         [TestMethod]
         public void Two()
         {
-            CreateTrust("A", "B");
-            CreateTrust("B", "C");
+            var command1 = CreateAndSavePackage("A", "B");
+            var command2 = CreateAndSavePackage("B", "C");
 
-            var notifications = Mediator.SendAndWait(new BuildPackageCommand());
+            var buildPackages = TrustDBService.GetBuildPackagesAsync().GetAwaiter().GetResult();
+            var buildPackage = buildPackages.FirstOrDefault();
 
-            Assert.AreEqual(1, notifications.Count, "There should be one notifications");
-            Assert.IsTrue(notifications[0] is PackageBuildNotification);
-            Assert.AreEqual(2, ((PackageBuildNotification)notifications[0]).Package.Claims.Count);
+            var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
+            Assert.IsNotNull(signedPackage);
+            Assert.AreEqual(2, signedPackage.Claims.Count);
 
-            var buildPackage = TrustDBService.GetBuildPackage("");
-            TrustDBService.LoadPackageClaims(buildPackage);
-            Assert.AreEqual(0, buildPackage.Claims.Count, "Should be no more claims in build package.");
+            var buildPackage2 = TrustDBService.GetBuildPackage("");
+            TrustDBService.LoadPackageClaims(buildPackage2);
+            Assert.AreEqual(0, buildPackage2.Claims.Count, "Should be no more claims in build package.");
 
         }
     }

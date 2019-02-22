@@ -155,7 +155,7 @@ namespace DtpCore.Services
 
 
 
-        public async Task<List<Package>> GetBuildPackages()
+        public async Task<List<Package>> GetBuildPackagesAsync()
         {
             // Check if there is a builder package ready
             var buildPackages = DBContext.Packages
