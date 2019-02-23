@@ -136,9 +136,9 @@ namespace UnitTest.DtpCore.Strategy
             var index = 0;
             foreach (var node in nodes)
             {
-                var hash = merkle.HashAlgorithm.HashOf(node.Proof.Source);
-                Assert.IsTrue(node.Hash.SequenceEqual(hash), "The source and hash are not equal");
-                var expectedResult = merkle.ComputeRoot(hash, node.Proof.Path);
+                //var hash = merkle.HashAlgorithm.HashOf(node.Proof.Source);
+                //Assert.IsTrue(node.Hash.SequenceEqual(hash), "The source and hash are not equal");
+                var expectedResult = merkle.ComputeRoot(node.Proof.Source, node.Proof.Path);
                 Assert.IsTrue(expectedResult.Compare(root.Hash) == 0, $"Expected node number {index} and root hash are not the same");
                 index++;
             }

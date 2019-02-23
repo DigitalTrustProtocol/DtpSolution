@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using DtpCore.Extensions;
 using DtpStampCore.Interfaces;
+using System.Text;
+using DtpCore.Strategy;
+using DtpCore.Model;
 
 namespace UnitTest.DtpStampCore.Services
 {
@@ -10,38 +12,21 @@ namespace UnitTest.DtpStampCore.Services
     public class TimestampServiceTest : StartupMock
     {
         [TestMethod]
-        public void AddProof()
+        public void GetMerkleRoot()
         {
-            var timestampSynchronizationService = ServiceProvider.GetRequiredService<ITimestampSynchronizationService>();
-            timestampSynchronizationService.CurrentWorkflowID = 2;
             var timestampService = ServiceProvider.GetRequiredService<ITimestampService>();
 
-            var source = Guid.NewGuid().ToByteArray();
-            var entity = timestampService.Add(source);
+            var hashAlgorithm = new Double256();
+            var merkle = new MerkleTreeSorted(hashAlgorithm);
 
-            Assert.IsNotNull(entity);
-            Assert.IsTrue(entity.DatabaseID > 0);
-            Assert.IsTrue(entity.WorkflowID == timestampSynchronizationService.CurrentWorkflowID);
-            Assert.IsTrue(entity.Registered > DateTime.MinValue.ToUnixTime());
-            Assert.IsTrue(source.Equals(entity.Source));
+            var one = Encoding.UTF8.GetBytes("Hello world\n");
+            var oneHash = hashAlgorithm.HashOf(one);
+            var timestamp = new Timestamp { Source = oneHash };
+            var oneProof = merkle.Add(timestamp);
+            var merkleRoot = merkle.Build();
+
+            var timestampMerkleRoot = timestampService.GetMerkleRoot(timestamp);
+            Assert.IsTrue(ByteExtensions.Compare(timestampMerkleRoot, merkleRoot.Hash) == 0, $"Calculated timestamp merkle root {timestampMerkleRoot.ToHex()} are not equal to source {merkleRoot.Hash.ToHex()}");
         }
-
-        [TestMethod]
-        public void GetProof()
-        {
-            var timestampSynchronizationService = ServiceProvider.GetRequiredService<ITimestampSynchronizationService>();
-            timestampSynchronizationService.CurrentWorkflowID = 2;
-            var proofService = ServiceProvider.GetRequiredService<ITimestampService>();
-            var source = Guid.NewGuid().ToByteArray();
-            var addEntity = proofService.Add(source);
-
-            var getEntity = proofService.Get(source);
-            Assert.AreEqual(addEntity.DatabaseID, getEntity.DatabaseID);
-            Assert.AreEqual(addEntity.WorkflowID, getEntity.WorkflowID);
-            Assert.IsTrue(addEntity.Source.Equals(getEntity.Source));
-            Assert.AreEqual(addEntity.Registered, getEntity.Registered);
-            Assert.IsTrue(getEntity.Registered > DateTime.MinValue.ToUnixTime());
-        }
-
     }
 }

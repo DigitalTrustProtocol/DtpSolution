@@ -7,6 +7,7 @@
 
 <h2>Index</h2>
 <h3>Build packages</h3>
+<div>@Model.CommandResult</div>
 <table class="table">
     <thead>
         <tr>
@@ -66,6 +67,10 @@
             </td>
             <td>
                 <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a>
+                @if (Model.Admin)
+                {
+                    <span>&nbsp;|&nbsp;</span><a asp-page-handler="Publish" asp-route-id="@item.DatabaseID">Publish</a>
+                }
             </td>
         </tr>
 }

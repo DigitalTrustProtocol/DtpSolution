@@ -120,6 +120,7 @@ namespace DtpCore.Strategy
 
         public byte[] ComputeRoot(byte[] hash, byte[] path)
         {
+            hash = HashAlgorithm.HashOf(hash);
             var hashLength = HashAlgorithm.Length;
             if (path != null && path.Length > 0)
             {

@@ -34,9 +34,6 @@ namespace DtpServer.Pages.Workflows
             _context = context;
             _schedulerHostedService = schedulerHostedService;
             _configuration = configuration;
-#if DEBUG
-            Admin = true;
-#endif
             Admin = _configuration.IsAdminEnabled(Admin);
         }
 

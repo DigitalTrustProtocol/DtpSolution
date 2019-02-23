@@ -228,15 +228,10 @@ namespace DtpServer
 
                     app.UseMvc(routes =>
                     {
-                        //routes.MapRoute(
-                        //    name: "stamp",
-                        //    template: "v1/stamp/{blockchain}/{action=Index}/{source?}");
-                        //routes.MapRoute("Proof.htm");
-
                         routes.MapRoute(
                                 name: "default",
-                                template: "v1/{controller}/{action=Index}/{id?}");
-                    });
+                                template: "{controller}/{action=Index}/{id?}");
+                });
                 }
                 applicationEvents.WaitBootupTasksAsync().Wait();
 

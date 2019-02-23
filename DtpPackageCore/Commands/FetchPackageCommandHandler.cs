@@ -1,4 +1,5 @@
-﻿using DtpCore.Interfaces;
+﻿using DtpCore.Extensions;
+using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Notifications;
 using DtpPackageCore.Interfaces;
@@ -30,7 +31,7 @@ namespace DtpPackageCore.Commands
 
             await _notifications.Publish(new PackageFetchedNotification(request.File, package));
 
-            _logger.LogInformation("Package loaded from file system");
+            _logger.LogInformation($"Package {package.Id.ToHex()} loaded from file system");
 
             return package;
         }

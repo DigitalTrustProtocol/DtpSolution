@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace DtpServerSpike
 {
     [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
-    [Subcommand(typeof(PackageMessageCommand))]
+    //[Subcommand(typeof(PackageMessageCommand))]
     [Subcommand(typeof(IdCommand))]
     [Subcommand(typeof(ClaimProducerCommand))]
     public class Program : CommandBase

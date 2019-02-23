@@ -24,9 +24,16 @@ namespace DtpStampCore.Services
             _merkleTree = merkleTree;
         }
 
-        public BlockchainProof GetProof(Timestamp timestamp)
+
+        public byte[] GetMerkleRoot(Timestamp timestamp)
         {
             var merkleRoot = _merkleTree.ComputeRoot(timestamp.Source, timestamp.Path);
+            return merkleRoot;
+        }
+
+        public BlockchainProof GetProof(Timestamp timestamp)
+        {
+            var merkleRoot = GetMerkleRoot(timestamp);
 
             if (proofCache.TryGetValue(merkleRoot, out BlockchainProof proof))
                 return proof;
@@ -57,10 +64,6 @@ namespace DtpStampCore.Services
             proofCache[merkleRoot] = proof;
 
             return proof;
-            //if("secp256k1-double256.merkle.dtp1".ToLower().Equals(timestamp.Algorithm))
-            //{
-            //}
-            //return null;
         }
     }
 }

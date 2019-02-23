@@ -111,7 +111,6 @@ namespace DtpPackageCore.Services
             var text = JsonConvert.SerializeObject(packageMessage, Formatting.None);
             await Ipfs.PubSub.PublishAsync(packageMessage.Scope, text);
             logger.LogInformation($"PackageMessage {packageMessage.File} has been published to network.");
-            logger.LogInformation($"Json: {text}");
         }
 
 

@@ -45,8 +45,8 @@ namespace DtpPackageCore
                     var text = Encoding.UTF8.GetString(publishedMessage.DataBytes);
 
                     var packageMessage = JsonConvert.DeserializeObject<PackageMessage>(text);
-                    if (_serverIdentityService.Id.Equals(packageMessage.ServerId)) // Do not process own package messages
-                        return;
+                    //if (_serverIdentityService.Id.Equals(packageMessage.ServerId)) // Do not process own package messages
+                        //return;
 
                     logger.LogInformation($"Received message from {packageMessage.ServerId}");
 
