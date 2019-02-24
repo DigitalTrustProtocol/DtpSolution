@@ -69,6 +69,7 @@
                 <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a>
                 @if (Model.Admin)
                 {
+                    <span>&nbsp;|&nbsp;</span><a asp-page-handler="Verify" asp-route-id="@item.DatabaseID">Verify</a>
                     <span>&nbsp;|&nbsp;</span><a asp-page-handler="Publish" asp-route-id="@item.DatabaseID">Publish</a>
                 }
             </td>

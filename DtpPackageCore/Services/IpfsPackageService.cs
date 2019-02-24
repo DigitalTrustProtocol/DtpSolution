@@ -33,10 +33,10 @@ namespace DtpPackageCore.Services
         public IConfiguration Configuration { get; set; }
         private readonly IServiceProvider _serviceProvider;
         private IServerIdentityService _serverIdentityService;
-        private readonly PubSubController _pubSubController;
+        private readonly PubSubMessageController _pubSubController;
         private readonly ILogger<IpfsPackageService> logger;
 
-        public IpfsPackageService(ICoreApi ipfs, IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, PubSubController pubSubController, ILogger<IpfsPackageService> logger)
+        public IpfsPackageService(ICoreApi ipfs, IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, PubSubMessageController pubSubController, ILogger<IpfsPackageService> logger)
         {
             Ipfs = ipfs;
             Configuration = configuration;

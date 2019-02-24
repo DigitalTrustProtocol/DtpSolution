@@ -46,12 +46,9 @@ namespace DtpPackageCore.Commands
                 if (await _trustDBService.DoPackageExistAsync(package.Id))
                 {
                     _notifications.Add(new PackageExistNotification { Package = package });
+                    _logger.LogInformation($"Package {package.Id.ToHex()} already exist in database");
                     return _notifications;
                 }
-
-                // Verify timestamp
-                
-
 
                 _trustDBService.Add(package); // Add package to DBContext
                 getPackage = (scope) => package; // Replace default function and just return the inline package

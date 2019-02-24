@@ -16,7 +16,7 @@ using System.Text;
 
 namespace DtpPackageCore
 {
-    public class PubSubController
+    public class PubSubMessageController
     {
 
         //public ICoreApi Ipfs { get; set; }
@@ -24,9 +24,9 @@ namespace DtpPackageCore
         private readonly IServiceProvider _serviceProvider;
         private IServerIdentityService _serverIdentityService;
         private readonly IPackageMessageValidator _packageMessageValidator;
-        private readonly ILogger<PubSubController> logger;
+        private readonly ILogger<PubSubMessageController> logger;
 
-        public PubSubController(IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, IPackageMessageValidator packageMessageValidator, ILogger<PubSubController> logger)
+        public PubSubMessageController(IConfiguration configuration, IServiceProvider serviceProvider, IServerIdentityService serverIdentityService, IPackageMessageValidator packageMessageValidator, ILogger<PubSubMessageController> logger)
         {
             _configuration = configuration;
             _serviceProvider = serviceProvider;
@@ -46,7 +46,7 @@ namespace DtpPackageCore
 
                     var packageMessage = JsonConvert.DeserializeObject<PackageMessage>(text);
                     //if (_serverIdentityService.Id.Equals(packageMessage.ServerId)) // Do not process own package messages
-                        //return;
+                    //   return;
 
                     logger.LogInformation($"Received message from {packageMessage.ServerId}");
 

@@ -104,6 +104,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DtpServer.Pages.Packages.IndexModel.OnGetVerifyAsync(System.Nullable{System.Int32})">
+            <summary>
+            Verify package
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:DtpServer.Pages.Packages.IndexModel.OnGetPublishAsync(System.Nullable{System.Int32})">
             <summary>
             Re publish package

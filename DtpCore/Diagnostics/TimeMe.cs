@@ -35,7 +35,9 @@ namespace DtpCore.Service
 
         public void Print(string message)
         {
+#if DEBUG
             Console.WriteLine(message);
+#endif
         }
     }
 }

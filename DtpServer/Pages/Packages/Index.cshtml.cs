@@ -11,6 +11,7 @@ using MediatR;
 using DtpCore.Extensions;
 using DtpPackageCore.Commands;
 using Microsoft.AspNetCore.Mvc;
+using DtpCore.Interfaces;
 
 namespace DtpServer.Pages.Packages
 {
@@ -18,12 +19,14 @@ namespace DtpServer.Pages.Packages
     {
         private readonly IMediator _mediator;
         private readonly TrustDBContext _context;
+        private readonly ITimestampProofValidator _timestampProofValidator;
         private readonly IConfiguration _configuration;
 
-        public IndexModel(IMediator mediator, TrustDBContext context, IConfiguration configuration)
+        public IndexModel(IMediator mediator, TrustDBContext context, ITimestampProofValidator timestampProofValidator, IConfiguration configuration)
         {
             _mediator = mediator;
             _context = context;
+            _timestampProofValidator = timestampProofValidator;
             _configuration = configuration;
         }
 
@@ -40,7 +43,10 @@ namespace DtpServer.Pages.Packages
         public async Task OnGetAsync(int? id = null, string action = null)
         {
             Admin = _configuration.IsAdminEnabled(Admin);
-            BuildPackages = await _context.Packages.AsNoTracking().Where(p => p.State == PackageStateType.Building).ToListAsync();
+            BuildPackages = await _context.Packages.AsNoTracking()
+                .Where(p => p.State == PackageStateType.Building)
+                .ToListAsync();
+
             foreach (var package in BuildPackages)
             {
                 if (string.IsNullOrEmpty(package.Scopes))
@@ -56,6 +62,40 @@ namespace DtpServer.Pages.Packages
 
 
         }
+
+        /// <summary>
+        /// Verify package
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task OnGetVerifyAsync(int? id)
+        {
+            await OnGetAsync();
+
+            if (id == null)
+                return;
+
+            if (Admin && id != null)
+            {
+                // Get full package
+                var package = await _mediator.Send(new GetPackageCommand { DatabaseID = (int)id });
+
+                if (package == null)
+                    return;
+
+                if (package.Timestamps.Count == 0)
+                {
+                    CommandResult = "Missing timestamp object";
+                    return;
+                }
+
+                if (!_timestampProofValidator.Validate(package.Timestamps[0], out IList<string> errors))
+                    CommandResult = string.Join(", ", errors);
+                else
+                    CommandResult = $"Package {package.Id.ToHex()} is valid!";
+            }
+        }
+
 
         /// <summary>
         /// Re publish package
@@ -79,7 +119,8 @@ namespace DtpServer.Pages.Packages
                 }
 
             }
-
         }
+
+
     }
 }

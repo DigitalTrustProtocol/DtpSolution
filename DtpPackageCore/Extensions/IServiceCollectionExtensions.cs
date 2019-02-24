@@ -14,7 +14,7 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackageCore(this IServiceCollection services)
         {
-            services.AddSingleton<PubSubController>();
+            services.AddSingleton<PubSubMessageController>();
 
             services.AddTransient<BuildPackageCommandHandler>();
             services.AddTransient<CreateTrustPackageWorkflow>();
