@@ -74,9 +74,6 @@ namespace DtpPackageCore.Commands
                     builder.AddClaim(claim);
                 }
             }
-            //sourcePackage.Claims.Clear();
-            //sourcePackage.ClaimPackages.Clear();
-
 
             if (builder.Package.Claims.Count == 0)
             {

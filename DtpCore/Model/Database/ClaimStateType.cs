@@ -11,22 +11,26 @@ namespace DtpCore.Model.Database
     [Flags]
     public enum ClaimStateType : long
     {
+        /// <summary>
+        /// Normal Claims without a special function
+        /// </summary>
         [Display(Name = "None")]
         None = 0,
 
+        /// <summary>
+        /// Claims that have been replaced
+        /// </summary>
         [Display(Name = "Replaced")]
         Replaced = 1,
+
         /// <summary>
         /// The claim is functional, this would be like Ban claims.
         /// </summary>
         [Display(Name = "Functional")]
         Functional = 2,
+
         [Display(Name = "Ban")]
         Ban = 4,
-        //Thursday = 8,
-        //Friday = 16,
-        //Saturday = 32,
-        //Sunday = 64,
     }
 
 }

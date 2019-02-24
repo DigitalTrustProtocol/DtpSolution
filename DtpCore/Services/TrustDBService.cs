@@ -104,21 +104,25 @@ namespace DtpCore.Services
             return trusts;
         }
 
-        public Claim GetSimilarClaim(Claim trust)
+        /// <summary>
+        /// Get the same claim or a similar claim from database.
+        /// </summary>
+        /// <param name="claim"></param>
+        /// <returns></returns>
+        public Claim GetSimilarClaim(Claim claim)
         {
             var query = from p in DBContext.Claims select p;
 
-            // No need
-            //query  = query.Include(p => p.ClaimPackages).ThenInclude(p => p.Package);
+            query = query.Where(p => p.Id == claim.Id 
+                            || (p.Issuer.Id == claim.Issuer.Id
+                              && p.Subject.Id == claim.Subject.Id
+                              && p.Type == claim.Type
+                              && p.State != ClaimStateType.Replaced));
 
-            query = query.Where(p => p.Issuer.Id == trust.Issuer.Id
-                              && p.Subject.Id == trust.Subject.Id
-                              && p.Type == trust.Type);
 
-
-            if (trust.Scope != null)
+            if (claim.Scope != null)
             {
-                query = query.Where(p => p.Scope == trust.Scope);
+                query = query.Where(p => p.Scope == claim.Scope);
             }
             else
             {

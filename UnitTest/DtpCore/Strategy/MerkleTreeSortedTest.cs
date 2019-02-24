@@ -106,10 +106,10 @@ namespace UnitTest.DtpCore.Strategy
 
             Assert.IsTrue(expectedResult.Compare(root.Hash) == 0, "Expected and root hash are not the same");
 
-            var ee = merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Path);
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Path)) == 0, "root and one with receipt are not the same");
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(twoProof.Hash, twoProof.Proof.Path)) == 0, "root and two with receipt are not the same");
-            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(threeProof.Hash, threeProof.Proof.Path)) == 0, "root and three with receipt are not the same");
+ //           var ee = merkle.ComputeRoot(oneProof.Hash, oneProof.Proof.Path);
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(oneProof.Proof.Source, oneProof.Proof.Path)) == 0, "root and one with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(twoProof.Proof.Source, twoProof.Proof.Path)) == 0, "root and two with receipt are not the same");
+            Assert.IsTrue(root.Hash.Compare(merkle.ComputeRoot(threeProof.Proof.Source, threeProof.Proof.Path)) == 0, "root and three with receipt are not the same");
         }
 
         [TestMethod]

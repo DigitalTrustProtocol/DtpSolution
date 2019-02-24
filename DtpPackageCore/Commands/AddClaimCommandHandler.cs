@@ -1,4 +1,5 @@
-﻿using DtpCore.Interfaces;
+﻿using DtpCore.Collections.Generic;
+using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Database;
 using DtpCore.Notifications;
@@ -37,24 +38,26 @@ namespace DtpPackageCore.Commands
                 return _notifications; // Just return without any processing.
             }
 
-            if (_trustDBService.DoClaimExist(request.Claim.Id))
-            {
-                // The claim already exist in database, do not process further.
-                _notifications.Add(new ClaimExistNotification { Claim = request.Claim });
-                return _notifications;
-            }
-
             var dbClaim = _trustDBService.GetSimilarClaim(request.Claim);
             if (dbClaim != null)
             {
+                if(ByteComparer.Equals(dbClaim.Id, request.Claim.Id))
+                {
+                    // The claim already exist in database, do not process further.
+                    _notifications.Add(new ClaimExistNotification { Claim = request.Claim });
+                    return _notifications;
+                }
+
                 // TODO: Needs to verfify with Timestamp if exist, for deciding action!
                 // The trick is to compare "created" in order to awoid old trust being replayed.
+
                 // For now, we just ignore the old trust being added. This may be from packages containing old claims.
                 if (dbClaim.Created > request.Claim.Created)
                 {
-
-                    request.Claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = request.Package });
-                    _trustDBService.Update(request.Claim);
+                    // Why do I need to add the old claim to database?
+                    //request.Claim.ClaimPackages.Add(new ClaimPackageRelationship { Package = request.Package });
+                    //request.Claim.State |= ClaimStateType.Replaced;
+                    //_trustDBService.Update(request.Claim);
 
                     _notifications.Add(new ClaimObsoleteNotification { OldClaim = request.Claim, ExistingClaim = dbClaim });
                     return _notifications; // Make sure not to process the old claim.
@@ -80,15 +83,9 @@ namespace DtpPackageCore.Commands
             // Create the relation between the package and trust
             request.Claim.ClaimPackages.Add(new ClaimPackageRelationship {Package = request.Package });
 
-            // The timestamp feature will be handle by the Server on creating a package for the new claims
-            // request.Claim.Timestamps.Add(_mediator.SendAndWait(new CreateTimestampCommand { Source = request.Claim.Id }));
-
-            // Timestamp objects gets added to the Timestamp table as well!
             _trustDBService.Add(request.Claim);
-            //_trustDBService.SaveChanges();
-            //_trustDBService.DBContext.ClaimPackageRelationships.Add(new ClaimPackageRelationship { ClaimID = request.Claim.DatabaseID, PackageID = request.Package.DatabaseID });
-            //_trustDBService.SaveChanges();
-
+            _trustDBService.SaveChanges();
+            
             await _notifications.Publish(new ClaimAddedNotification { Claim = request.Claim });
 
             return _notifications;
