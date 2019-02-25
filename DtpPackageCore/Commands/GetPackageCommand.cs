@@ -10,10 +10,12 @@ namespace DtpPackageCore.Commands
         public byte[] ID { get; set; }
 
         public bool IncludeClaims { get; set; }
+        public bool ExcludeReplaced { get; set; }
 
         public GetPackageCommand()
         {
             IncludeClaims = true;
+            ExcludeReplaced = true;
         }
     }
 }

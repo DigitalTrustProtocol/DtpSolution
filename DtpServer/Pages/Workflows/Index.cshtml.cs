@@ -12,6 +12,8 @@ using DtpCore.Enumerations;
 using Microsoft.Extensions.Hosting;
 using DtpCore.Services;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading;
 
 namespace DtpServer.Pages.Workflows
 {
@@ -19,6 +21,7 @@ namespace DtpServer.Pages.Workflows
     {
         private readonly IMediator _mediator;
         private readonly TrustDBContext _context;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IHostedService _schedulerHostedService;
         private readonly IConfiguration _configuration;
 
@@ -27,32 +30,38 @@ namespace DtpServer.Pages.Workflows
 
         [BindProperty]
         public int DatabaseID { get; set; }
+        public object Datetime { get; private set; }
 
-        public IndexModel(IMediator mediator, TrustDBContext context, IHostedService schedulerHostedService, IConfiguration configuration)
+        public IndexModel(IMediator mediator, TrustDBContext context, IServiceProvider serviceProvider, IHostedService schedulerHostedService, IConfiguration configuration)
         {
             _mediator = mediator;
             _context = context;
+            _serviceProvider = serviceProvider;
             _schedulerHostedService = schedulerHostedService;
             _configuration = configuration;
             Admin = _configuration.IsAdminEnabled(Admin);
         }
 
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync()
         {
             WorkflowViews = _mediator.SendAndWait(new WorkflowViewQuery());
 
-            if (Admin && id != null)
+            return Page();
+        }
+
+        public async Task<IActionResult> OnGetRunAsync(int id)
+        {
+            await OnGetAsync();
+
+            if (Admin && id > 0)
             {
-                var workflowContainer = await _context.Workflows.SingleOrDefaultAsync(m => m.DatabaseID == id.Value);
-                workflowContainer.NextExecution = 1;
-                workflowContainer.State = WorkflowStatusType.Running.ToString();
-                _context.SaveChanges();
-                //SchedulerHostedService.RunNow();
-                ((SchedulerHostedService)_schedulerHostedService).RunNow();
+                var tokenSource = new CancellationTokenSource();
+
+                ((SchedulerHostedService)_schedulerHostedService).RunNow(id);
+
                 return Redirect("./Workflows");
             }
-
             return Page();
         }
     }

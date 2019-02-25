@@ -11,7 +11,9 @@ using DtpCore.Enumerations;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
+using DtpCore.Repository;
 using DtpCore.Strategy.Cron;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,8 +23,9 @@ namespace DtpCore.Services
 {
     public class SchedulerHostedService : BackgroundService
     {
-        private CancellationTokenSource DelayTokenSource = null;
-        //private static CancellationToken DelayToken = new CancellationToken();
+        public static CancellationTokenSource DelayTokenSource = null;
+
+        public int ContainerId = 0;
 
         public event EventHandler<UnobservedTaskExceptionEventArgs> UnobservedTaskException;
 
@@ -31,11 +34,10 @@ namespace DtpCore.Services
         private readonly ILogger _logger;
 
 
-        public void RunNow()
+        public void RunNow(int containerId)
         {
-            //DelayTokenSource.Cancel();  // Cancel current token.
-            DelayTokenSource.CancelAfter(1);
-            //DelayToken = DelayTokenSource.Token; // Create new token.
+            ContainerId = containerId;
+            ExecuteOne(DelayTokenSource.Token);
         }
 
         public SchedulerHostedService(IServiceScopeFactory serviceScopeFactory, ILogger<SchedulerHostedService> logger, IConfiguration configuration)
@@ -57,15 +59,10 @@ namespace DtpCore.Services
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                await ExecuteOnceAsync(cancellationToken);
+                ExecuteOnce(cancellationToken);
 
-                // Hack
-                var count = 0; // WorkflowInterval is in seconds
-                while (!DelayTokenSource.Token.IsCancellationRequested && count++ < _configuration.WorkflowInterval() * 1000)
-                {
-                    await Task.Delay(1); // Cannot get Cancellation token to work with Task.Deplay
-                }
-
+                await Task.Delay(_configuration.WorkflowInterval() * 1000, DelayTokenSource.Token);
+                //_logger.LogInformation("Checking Workflows !");
                 if (DelayTokenSource.IsCancellationRequested)
                     DelayTokenSource = new CancellationTokenSource();
             }
@@ -73,19 +70,61 @@ namespace DtpCore.Services
             _logger.LogDebug($"Scheduler Service is stopping.");
         }
 
-        private async Task ExecuteOnceAsync(CancellationToken cancellationToken)
+        private void ExecuteOnce(CancellationToken cancellationToken)
         {
-            var taskFactory = new TaskFactory(TaskScheduler.Current);
+
+            if (ContainerId > 0)
+                return; // Do not execute now!
 
             // Get all workflows group by type.
             var workflowContainers = GetWorkflowContainers();
 
-            // Run containers
+            //// Run containers
+            //foreach (var entry in workflowContainers)
+            //{
+            //    await taskFactory.StartNew(
+            //        RunContainers(entry.Value, cancellationToken),
+            //        cancellationToken);
+            //}
+
+            var taskFactory = new TaskFactory(TaskScheduler.Current);
+            var list = new List<Task>();
             foreach (var entry in workflowContainers)
             {
-                await taskFactory.StartNew(
-                    RunContainers(entry.Value, cancellationToken),
-                    cancellationToken);
+                list.Add(taskFactory.StartNew(RunContainers(entry.Value, cancellationToken)));
+            }
+            Task.WaitAll(list.ToArray());
+        }
+
+        private void ExecuteOne(CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                // Run only one specific workflow
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
+                    var db = scope.ServiceProvider.GetRequiredService<TrustDBContext>();
+                    var workflowContainer = db.Workflows.SingleOrDefaultAsync(m => m.DatabaseID == ContainerId).GetAwaiter().GetResult();
+
+                    RunContainer(scope.ServiceProvider, workflowContainer, cancellationToken).GetAwaiter().GetResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                var args = new UnobservedTaskExceptionEventArgs(
+                    ex as AggregateException ?? new AggregateException(ex));
+
+                UnobservedTaskException?.Invoke(this, args);
+                if (!args.Observed)
+                {
+                    throw;
+                }
+            }
+            finally
+            {
+                ContainerId = 0;
             }
         }
 
@@ -109,7 +148,7 @@ namespace DtpCore.Services
             return workflowContainers;
         }
 
-        private Func<Task> RunContainers(IList<WorkflowContainer> containers, CancellationToken cancellationToken)
+        public Func<Task> RunContainers(IList<WorkflowContainer> containers, CancellationToken cancellationToken)
         {
             return async () =>
             {
@@ -117,38 +156,11 @@ namespace DtpCore.Services
                 {
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
+
                         // Run all the same workflow type in a sequential order
                         foreach (var container in containers)
                         {
-                            var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
-                            var workflowInstance = workflowService.Create(container);
-
-                            var t = workflowInstance.GetType();
-                            var method = t.GetMethod("Execute", BindingFlags.Instance | BindingFlags.Public);
-                            var arguments = method.GetParameters()
-                                            .Select(a => a.ParameterType == typeof(CancellationToken) ? cancellationToken : scope.ServiceProvider.GetService(a.ParameterType))
-                                            .ToArray();
-
-
-                            container.State = WorkflowStatusType.Running.ToString();
-                            workflowService.Save(workflowInstance);
-
-                            //invoke.
-                            if (typeof(Task).Equals(method.ReturnType))
-                            {
-                                await (Task)method.Invoke(workflowInstance, arguments);
-                            }
-                            else
-                            {
-                                method.Invoke(workflowInstance, arguments);
-                            }
-
-
-                            if (container.State == WorkflowStatusType.Running.ToString())
-                            {
-                                container.State = WorkflowStatusType.Waiting.ToString();
-                                workflowService.Save(workflowInstance);
-                            }
+                            await RunContainer(scope.ServiceProvider, container, cancellationToken);
                         }
 
                     }
@@ -160,10 +172,6 @@ namespace DtpCore.Services
                         ex as AggregateException ?? new AggregateException(ex));
 
                     UnobservedTaskException?.Invoke(this, args);
-
-                    //_logger.LogError(ex, ex.Message);
-
-
                     if (!args.Observed)
                     {
                         throw;
@@ -171,6 +179,42 @@ namespace DtpCore.Services
                 }
             };
         }
+
+        public async Task RunContainer(IServiceProvider serviceProvider, WorkflowContainer container, CancellationToken cancellationToken)
+        {
+            var workflowService = serviceProvider.GetRequiredService<IWorkflowService>();
+            var workflowInstance = workflowService.Create(container);
+
+            var t = workflowInstance.GetType();
+            var method = t.GetMethod("Execute", BindingFlags.Instance | BindingFlags.Public);
+            var arguments = method.GetParameters()
+                            .Select(a => a.ParameterType == typeof(CancellationToken) ? cancellationToken : serviceProvider.GetService(a.ParameterType))
+                            .ToArray();
+
+            try
+            {
+                container.State = WorkflowStatusType.Running.ToString();
+                workflowService.Save(workflowInstance);
+
+                if (typeof(Task).Equals(method.ReturnType))
+                {
+                    await (Task)method.Invoke(workflowInstance, arguments);
+                }
+                else
+                {
+                    method.Invoke(workflowInstance, arguments);
+                }
+            }
+            finally
+            {
+                if (container.State == WorkflowStatusType.Running.ToString())
+                {
+                    container.State = WorkflowStatusType.Waiting.ToString();
+                    workflowService.Save(workflowInstance);
+                }
+            }
+        }
+
 
         private class SchedulerTaskWrapper
         {

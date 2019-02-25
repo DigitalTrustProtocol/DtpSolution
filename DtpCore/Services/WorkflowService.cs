@@ -9,6 +9,7 @@ using DtpCore.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using DtpCore.Enumerations;
 
 namespace DtpCore.Services
 {
@@ -132,7 +133,9 @@ namespace DtpCore.Services
             var time = DateTime.Now.ToUnixTime();
 
             var containers = (from p in _trustDBService.Workflows
-                              where p.Active && p.NextExecution <= time
+                              where p.Active 
+                              && p.NextExecution <= time 
+                              && p.State != WorkflowStatusType.Running.ToString()
                               select p).ToArray();
 
             return containers;
