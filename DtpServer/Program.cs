@@ -72,7 +72,7 @@ namespace DtpServer
                 .UseKestrel((context, options) =>
                 {
                     var isDevelopment = context.HostingEnvironment.IsDevelopment();
-
+                    
                     options.AddServerHeader = false;
                     options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
 
@@ -85,6 +85,7 @@ namespace DtpServer
                         {
                             listenOptions.UseHttps(file, "123");
                         });
+                        Log.Information("Certiticate loaded!");
                     }
                     else
                     {
@@ -161,14 +162,20 @@ namespace DtpServer
                 return filename;
 
             if (!Directory.Exists(destination))
+            {
+                Log.Information("Creating destination: "+ destination);
                 Directory.CreateDirectory(destination);
+            }
 
-            if (!File.Exists(filename))
-                return "";
 
             var fileDestination = Path.Combine(destination, filename);
             if (!File.Exists(fileDestination))
+            {
+                if (!File.Exists(filename))
+                    return "";
+
                 File.Copy(filename, fileDestination);
+            }
 
             return fileDestination;
         }
