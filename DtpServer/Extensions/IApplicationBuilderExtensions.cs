@@ -9,19 +9,15 @@ namespace DtpServer.Extensions
     public static class IApplicationBuilderExtensions
     {
 
-        public static void DtpServer(this IApplicationBuilder app)
+        public static void StartIPFS(this IApplicationBuilder app)
         {
             var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
-            applicationEvent.BootupTasks.Add(Task.Run(() =>
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
-                    ipfsManager.StartIpfs();
-                    applicationEvent.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
-                }
-            }));
+                var ipfsManager = scope.ServiceProvider.GetRequiredService<IpfsManager>();
+                ipfsManager.StartIpfs();
+                applicationEvent.StopTasks.Add(async () => await Task.Run(() => ipfsManager.Dispose()));
+            }
         }
     }
 }

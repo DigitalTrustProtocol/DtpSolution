@@ -176,66 +176,63 @@ namespace DtpServer
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService, ApplicationEvents applicationEvents)
         {
-            using (TimeMe.Track("Configure"))
+            app.AllServices(_services);
+            applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
+
+            using (TimeMe.Track("IsDevelopment"))
             {
-                app.AllServices(_services);
-                applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
-
-                using (TimeMe.Track("IsDevelopment"))
+                if (env.IsDevelopment())
                 {
-                    if (env.IsDevelopment())
-                    {
-                        app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount = 100 });
-                    }
-                    else
-                    {
-                        app.UseExceptionHandler("/Error");
-                        //app.UseHsts();
-
-                        if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
-                            rateLimitService.SetZone(Configuration.RateLimits());
-                    }
-
+                    app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount = 100 });
                 }
-
-                using (TimeMe.Track("DTP apps"))
+                else
                 {
+                    app.UseExceptionHandler("/Error");
+                    //app.UseHsts();
 
-                    app.DtpCore(); // Ensure configuration of core
-                    app.DtpGraph(); // Load the Trust Graph from Database
-                    app.DtpStamp();
-                    app.DtpPackage();
-                    app.DtpServer();
+                    if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
+                        rateLimitService.SetZone(Configuration.RateLimits());
                 }
-
-                using (TimeMe.Track("Serilog, Swagger and UseMVC"))
-                {
-
-                    app.UseMiddleware<SerilogDiagnostics>();
-                    //app.UseHttpsRedirection();
-                    app.UseStaticFiles();
-
-                    //app.UseCookiePolicy();
-                    app.UseHealthChecks("/ready");
-
-                    // Enable middleware to serve generated Swagger as a JSON endpoint.
-                    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-                    app.UseSwagger();
-                    app.UseSwaggerUI(c =>
-                    {
-                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-                    });
-
-                    app.UseMvc(routes =>
-                    {
-                        routes.MapRoute(
-                                name: "default",
-                                template: "{controller}/{action=Index}/{id?}");
-                });
-                }
-                applicationEvents.WaitBootupTasksAsync().Wait();
 
             }
+
+            using (TimeMe.Track("DTP apps"))
+            {
+                app.StartIPFS();
+
+                app.DtpCore(); // Ensure configuration of core
+                app.DtpGraph(); // Load the Trust Graph from Database
+                app.DtpStamp();
+            }
+
+            using (TimeMe.Track("Serilog, Swagger and UseMVC"))
+            {
+
+                app.UseMiddleware<SerilogDiagnostics>();
+                //app.UseHttpsRedirection();
+                app.UseStaticFiles();
+
+                //app.UseCookiePolicy();
+                app.UseHealthChecks("/ready");
+
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                });
+
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                            name: "default",
+                            template: "{controller}/{action=Index}/{id?}");
+            });
+            }
+            applicationEvents.WaitBootupTasksAsync().Wait();
+            app.DtpPackage(); // Wait to last minute
+
         }
 
     }

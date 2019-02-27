@@ -4,6 +4,7 @@ using System;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DtpCore.Repository
 {
@@ -24,9 +25,13 @@ namespace DtpCore.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-#if DEBUG
+            EnableSensitiveDataLogging(optionsBuilder);
+        }
+
+        [Conditional("DEBUG")]
+        private void EnableSensitiveDataLogging(DbContextOptionsBuilder optionsBuilder)
+        {
             optionsBuilder.EnableSensitiveDataLogging(true);
-#endif
         }
 
 

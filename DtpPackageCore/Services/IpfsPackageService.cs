@@ -1,20 +1,16 @@
 ﻿using DtpPackageCore.Interfaces;
 using DtpPackageCore.Model;
 using Ipfs.Http;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using DtpCore.Model;
 using DtpPackageCore.Extensions;
 using Ipfs.CoreApi;
-using DtpPackageCore.Commands;
 using Ipfs;
 using DtpCore.Interfaces;
 using DtpCore.Extensions;
@@ -83,7 +79,6 @@ namespace DtpPackageCore.Services
 
 #if DEBUG
             ipfs.PubSub.SubscribeAsync("test", _pubSubController.HandleMessage, cancellationTokenSource.Token).Wait();
-
 #endif
         }
 
