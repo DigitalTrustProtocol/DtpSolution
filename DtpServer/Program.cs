@@ -97,7 +97,7 @@ namespace DtpServer
                                 listenOptions.UseHttps(cert);
                             });
                         }
-                        catch 
+                        catch
                         {
                             Log.Warning("Localhost https certificate not supported.");
                         }

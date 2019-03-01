@@ -118,8 +118,8 @@ namespace DtpGraphCore.Services
                 follow = (TrustService.Graph.Claims[index].Flags == ClaimFlags.Trust);
 
             //if (!follow) // Check Global scope disable for now. Need more expirence.
-            //    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryTrustTypeIndex, out index))
-            //        follow = (TrustService.Graph.Claims[index].Flags == ClaimFlags.Trust);
+                //if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryClaimTypeIndex, out index))
+                   // follow = (TrustService.Graph.Claims[index].Flags == ClaimFlags.Trust);
             return follow;
         }
 
@@ -144,8 +144,8 @@ namespace DtpGraphCore.Services
                 if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex, out index)) // Check local scope for claims
                     claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex).Value, index));
                 //else // Check Global scope disable for now. Need more expirence.
-                //    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryTrustTypeIndex, out index)) // Check global scope for claims
-                //        claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, TrustService.BinaryTrustTypeIndex).Value, index));
+                    //if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryClaimTypeIndex, out index)) // Check global scope for claims
+                       //claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, TrustService.BinaryClaimTypeIndex).Value, index));
             
             BuildResult(context, tracker, claims); // Target found!
 

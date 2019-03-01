@@ -41,7 +41,6 @@
     <None Remove="Platform\ipfs\ipfsrun.cmd" />
     <None Remove="Platform\ipfs\swarm.key" />
     <None Remove="trust - backup.old" />
-    <None Remove="trust.db" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Platform\ipfs\config">
@@ -57,9 +56,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Platform\IPFS\swarm.key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="trust.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -113,5 +109,10 @@
     <Content Update="wwwroot\resources\Proof.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="trust.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

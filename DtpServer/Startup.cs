@@ -188,7 +188,7 @@ namespace DtpServer
                 else
                 {
                     app.UseExceptionHandler("/Error");
-                    //app.UseHsts();
+                    app.UseHsts();
 
                     if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
                         rateLimitService.SetZone(Configuration.RateLimits());
@@ -199,7 +199,7 @@ namespace DtpServer
             using (TimeMe.Track("DTP apps"))
             {
                 app.StartIPFS();
-
+                Task.Delay(3000);
                 app.DtpCore(); // Ensure configuration of core
                 app.DtpGraph(); // Load the Trust Graph from Database
                 app.DtpStamp();
@@ -209,11 +209,11 @@ namespace DtpServer
             {
 
                 app.UseMiddleware<SerilogDiagnostics>();
-                //app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
                 app.UseStaticFiles();
 
                 //app.UseCookiePolicy();
-                app.UseHealthChecks("/ready");
+                //app.UseHealthChecks("/ready");
 
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.

@@ -56,17 +56,18 @@ namespace DtpStampCore.Workflows
             }
 
             // Ensure a new Proof object! 
-            _mediator.SendAndWait(new AddNewBlockchainProofCommand());
+           
 
             try
             {
+                _mediator.SendAndWait(new AddNewBlockchainProofCommand());
                 Merkle();
                 LocalTimestamp();
             }
             catch (Exception ex)
             {
                 CurrentProof.Status = ProofStatusType.Failed.ToString();
-                CombineLog(_logger, $"Error in proof ID:{CurrentProof.DatabaseID} " + ex.Message);
+                CombineLog(_logger, $"Error in proof ID:{CurrentProof.DatabaseID} " + ex.Message+":"+ex.StackTrace);
             }
             finally
             {
