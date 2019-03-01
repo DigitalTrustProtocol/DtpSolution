@@ -41,6 +41,7 @@
     <None Remove="Platform\ipfs\ipfsrun.cmd" />
     <None Remove="Platform\ipfs\swarm.key" />
     <None Remove="trust - backup.old" />
+    <None Remove="trust.db" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Platform\ipfs\config">
@@ -58,6 +59,7 @@
     <Content Include="Platform\IPFS\swarm.key">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="trust.db" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
