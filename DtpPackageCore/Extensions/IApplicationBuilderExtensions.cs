@@ -12,9 +12,9 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackage(this IApplicationBuilder app)
         {
-            //var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
-            //applicationEvent.BootupTasks.Add(Task.Run(() =>
-            //{
+            var applicationEvent = app.ApplicationServices.GetRequiredService<ApplicationEvents>();
+            applicationEvent.BootupTasks.Add(Task.Run(() =>
+            {
                 // Ensure that workflows are installed.
                 using (var scope = app.ApplicationServices.CreateScope())
                 {
@@ -25,7 +25,7 @@ namespace DtpPackageCore.Extensions
                     var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
                     packageService.AddPackageSubscriptions();
                 }
-            //}));
+            }));
         }
     }
 }

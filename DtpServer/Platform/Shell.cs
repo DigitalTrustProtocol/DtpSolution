@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using Serilog;
 
 namespace DtpServer.Platform
@@ -18,7 +19,7 @@ namespace DtpServer.Platform
         }
 
 
-        private ProcessStartInfo CreateInlineInfo(string command, string arguments)
+        private ProcessStartInfo CreateInlineInfo(string command, string arguments = "")
         {
             var startInfo = new ProcessStartInfo(command, arguments);
 
@@ -33,7 +34,7 @@ namespace DtpServer.Platform
             return startInfo;
         }
 
-        private ProcessStartInfo CreateShellExecuteInfo(string command, string arguments, string workingDirectory)
+        private ProcessStartInfo CreateShellExecuteInfo(string command, string arguments = "", string workingDirectory = null)
         {
             if (string.IsNullOrEmpty(workingDirectory))
                 workingDirectory = Directory.GetCurrentDirectory();
@@ -49,23 +50,31 @@ namespace DtpServer.Platform
         }
 
 
-        public void ExecuteInline(string command, string arguments, string workingDirectory)
+        public Shell ExecuteInline(string command, string arguments ="", string workingDirectory = null, Action<string> outputcallback = null)
         {
-            var temp = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(workingDirectory);
+            string temp = null;
+            if (!string.IsNullOrEmpty(workingDirectory))
+            {
+                temp = Directory.GetCurrentDirectory();
+                Directory.SetCurrentDirectory(workingDirectory);
+            }
 
-            Start(CreateInlineInfo(command, arguments));
+            var info = CreateInlineInfo(command, arguments);
+            Start(info, outputcallback);
             WaitForExit();
 
-            Directory.SetCurrentDirectory(temp);
+            if (temp != null)
+                Directory.SetCurrentDirectory(temp);
+
+            return this;
         }
 
-        public void StartShell(string command, string arguments, string workingDirectory)
+        public void StartShell(string command, string arguments = "", string workingDirectory = null)
         {
             Start(CreateShellExecuteInfo(command, arguments, workingDirectory));
         }
 
-        private Process Start(ProcessStartInfo info)
+        private Process Start(ProcessStartInfo info, Action<string> outputcallback = null)
         {
             if (!started)
             {
@@ -77,16 +86,15 @@ namespace DtpServer.Platform
                 if (!info.UseShellExecute)
                 {
                     process.OutputDataReceived += (sender, data) => {
-                        //_logger.LogInformation(data.Data);
-                        //Console.WriteLine(data.Data);
                         Log.Information(data.Data);
                     };
                     
                     process.ErrorDataReceived += (sender, data) => {
-                        //_logger.LogInformation(data.Data);
-                        //Console.WriteLine(data.Data);
                         Log.Error(data.Data);
                     };
+
+                    if (outputcallback != null)
+                        process.OutputDataReceived += (sender, data) => outputcallback.Invoke(data.Data);
                 }
 
                 Log.Information($"Starting Process {processInfo.FileName} from folder: {processInfo.WorkingDirectory}");
@@ -115,7 +123,7 @@ namespace DtpServer.Platform
         {
             if (started)
             {
-                process.CloseMainWindow();
+                process.Kill();
                 Log.Information($"Process {processInfo.FileName} stopped");
 
             }

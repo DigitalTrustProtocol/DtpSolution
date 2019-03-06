@@ -31,6 +31,9 @@ using System.Linq;
 using DtpServer.Platform;
 using DtpCore.Services;
 using DtpCore.Service;
+using DtpServer.Platform.ipfs;
+using DtpPackageCore.Interfaces;
+using System.Threading;
 
 namespace DtpServer
 {
@@ -41,6 +44,8 @@ namespace DtpServer
     {
         private readonly IHostingEnvironment _hostingEnv;
         private IServiceCollection _services;
+        private CancellationTokenSource cancellationTokenSource;
+        public event EventHandler IPFSReady;
 
         /// <summary>
         /// Constructor
@@ -52,6 +57,7 @@ namespace DtpServer
 
             _hostingEnv = env;
             Configuration = configuration;
+            cancellationTokenSource = new CancellationTokenSource();
         }
 
         public IConfiguration Configuration { get; }
@@ -160,6 +166,11 @@ namespace DtpServer
         {
             using (TimeMe.Track("AddBackgroundServices"))
             {
+                services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, IPFSShell>(serviceProvider => {
+                    var ipfsShell = new IPFSShell(Program.Platform);
+                    ipfsShell.WaitForInputReady += (sender, args) => OnIPFSReady(args);
+                    return ipfsShell;
+                    });
 
                 services.AddScheduler((sender, args) =>
                 {
@@ -198,11 +209,11 @@ namespace DtpServer
 
             using (TimeMe.Track("DTP apps"))
             {
-                app.StartIPFS();
-                Task.Delay(3000);
+                //app.StartIPFS();
                 app.DtpCore(); // Ensure configuration of core
                 app.DtpGraph(); // Load the Trust Graph from Database
                 app.DtpStamp();
+
             }
 
             using (TimeMe.Track("Serilog, Swagger and UseMVC"))
@@ -230,9 +241,24 @@ namespace DtpServer
                             template: "{controller}/{action=Index}/{id?}");
             });
             }
-            applicationEvents.WaitBootupTasksAsync().Wait();
-            app.DtpPackage(); // Wait to last minute
 
+            IPFSReady += (sender, e) =>
+            {
+                // Wait for IPFS to be ready
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
+                    packageService.AddPackageSubscriptions();
+                }
+            };
+
+            applicationEvents.WaitBootupTasksAsync().Wait();
+
+        }
+
+        protected virtual void OnIPFSReady(EventArgs e)
+        {
+            IPFSReady?.Invoke(this, e);
         }
 
     }

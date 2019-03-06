@@ -2,6 +2,7 @@
 using DtpServer.AspNetCore;
 using DtpServer.Notifications;
 using DtpServer.Platform;
+using DtpServer.Platform.ipfs;
 using DtpServer.Platform.IPFS;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ namespace DtpServer.Extensions
             // https://github.com/Biarity/Sieve/issues/4#issuecomment-364629048
             services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
             services.AddTransient<PlatformDirectory>();
-            services.AddSingleton<IpfsManager>();
+            //services.AddSingleton<IPFSShell>();
         }
     }
 }
