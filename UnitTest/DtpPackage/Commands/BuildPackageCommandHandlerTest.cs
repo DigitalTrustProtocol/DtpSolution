@@ -43,6 +43,7 @@ namespace UnitTest.DtpPackage.Commands
             var buildPackage = CreateAndSavePackage("A", "B");
 
             var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
+
             Assert.IsNotNull(signedPackage);
             Assert.AreEqual(1, signedPackage.Claims.Count);
 
@@ -80,7 +81,6 @@ namespace UnitTest.DtpPackage.Commands
             var buildPackage = buildPackages.FirstOrDefault();
 
             var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
-
             Assert.IsNotNull(signedPackage);
 
             Assert.AreEqual(1, signedPackage.Claims.Count, "Should only be one because the first one have been replaced");
@@ -101,7 +101,6 @@ namespace UnitTest.DtpPackage.Commands
             var buildPackage = TrustDBService.GetBuildPackage("twitter.com");
 
             var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
-
             Assert.IsNotNull(signedPackage);
             System.Console.WriteLine(signedPackage.ToString());
             Assert.AreEqual(1, signedPackage.Claims.Count, "Should only be one because the first two has been replaced");

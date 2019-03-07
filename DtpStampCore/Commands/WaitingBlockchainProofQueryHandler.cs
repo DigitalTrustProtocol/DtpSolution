@@ -27,9 +27,10 @@ namespace DtpStampCore.Commands
 
         public Task<IEnumerable<BlockchainProof>> Handle(WaitingBlockchainProofQuery request, CancellationToken cancellationToken)
         {
-            var proofs = _db.Proofs
-                        .Include(p => p.Timestamps)
-                        .Where(p => p.Status == ProofStatusType.Waiting.ToString())
+            var proofs = (request.IncludeTimestamps) 
+                ? _db.Proofs.Include(p => p.Timestamps) 
+                : _db.Proofs.AsQueryable();
+            proofs = proofs.Where(p => p.Status == ProofStatusType.Waiting.ToString())
                         .Select(p => p);
 
             return Task.FromResult(proofs.AsEnumerable());

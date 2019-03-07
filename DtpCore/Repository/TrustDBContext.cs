@@ -5,11 +5,16 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DtpCore.Model.Database;
+using System.Threading.Tasks;
+using DtpCore.Builders;
 
 namespace DtpCore.Repository
 {
     public class TrustDBContext : DbContext
     {
+        private static object lockObj = new object();
+
         public DbSet<Package> Packages { get; set; }
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
@@ -121,6 +126,84 @@ namespace DtpCore.Repository
             Packages.RemoveRange(Packages);
 
             SaveChanges();
+        }
+
+        public void LoadPackageClaims(Package package)
+        {
+            if (package == null)
+                return;
+
+            package.ClaimPackages = ClaimPackageRelationships.Where(p => p.PackageID == package.DatabaseID).Include(p => p.Claim).ToList();
+            package.Claims = package.ClaimPackages.OrderBy(p => p.Claim.DatabaseID).Select(p => p.Claim).ToList();
+        }
+
+        public void EnsurePackageState(Package package)
+        {
+            if (package == null)
+                return;
+
+            if (package.State > 0)
+                return;
+
+            package.State = PackageStateType.New;
+
+            // Packages without ID is a client submitted packages containing new claims.
+            // Packages with ID, is commonly a package from another server.
+            if ((package.Id != null && package.Id.Length > 0))
+                package.State = PackageStateType.Build;
+
+            if (package.Server != null && package.Server.Signature != null && package.Server.Signature.Length > 0)
+                package.State = PackageStateType.Signed;
+        }
+
+        public async Task<bool> DoPackageExistAsync(byte[] packageId)
+        {
+            if (packageId == null || packageId.Length == 0)
+                return false;
+
+            return await Packages.AsNoTracking().AnyAsync(f => f.Id == packageId);
+        }
+
+        /// <summary>
+        /// Gets the build package where all new claims are added.
+        /// </summary>
+        /// <returns></returns>
+        public Package GetBuildPackage(string scope)
+        {
+            lock (lockObj)
+            {
+                return EnsureBuildPackage(scope);
+            }
+        }
+
+        public Package EnsureBuildPackage(string scope)
+        {
+            // Check if there is a builder package ready
+            var buildPackage = Packages
+                .Where(p => (p.State & PackageStateType.Building) > 0 && p.Scopes == scope)
+                .Include(p => p.ClaimPackages)
+                .ThenInclude(p => p.Claim)
+                .FirstOrDefault();
+
+            if (buildPackage == null)
+            {
+                // Create a new builder package, make sure that this is done syncronius.
+                buildPackage = (new PackageBuilder()).Package;
+                buildPackage.State = PackageStateType.Building;
+                buildPackage.Scopes = scope;
+
+                Add(buildPackage);
+                SaveChanges();
+            }
+            return buildPackage;
+        }
+
+        public async Task<Package> GetPackageById(byte[] packageId)
+        {
+            if (packageId == null || packageId.Length == 0)
+                return null;
+
+            return await Packages.SingleOrDefaultAsync(f => f.Id == packageId);
         }
 
     }

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using DtpCore.Notifications;
 using DtpStampCore.Notifications;
 using DtpStampCore.Commands;
+using System.Linq;
 
 namespace DtpStampCore.Workflows
 {
@@ -20,16 +21,16 @@ namespace DtpStampCore.Workflows
     public class UpdateProofWorkflow : WorkflowContext, ITimestampWorkflow
     {
         private readonly IMediator _mediator;
-        private TrustDBContext _trustDBContext;
+        private TrustDBContext _db;
         private IBlockchainService _blockchainService;
         private IConfiguration _configuration;
         private ILogger<UpdateProofWorkflow> _logger;
 
 
-        public UpdateProofWorkflow(IMediator mediator, TrustDBContext trustDBContext, IBlockchainService blockchainService, IConfiguration configuration, ILogger<UpdateProofWorkflow> logger)
+        public UpdateProofWorkflow(IMediator mediator, TrustDBContext db, IBlockchainService blockchainService, IConfiguration configuration, ILogger<UpdateProofWorkflow> logger)
         {
             _mediator = mediator;
-            _trustDBContext = trustDBContext;
+            _db = db;
             _blockchainService = blockchainService;
             _configuration = configuration;
             _logger = logger;
@@ -37,14 +38,15 @@ namespace DtpStampCore.Workflows
 
         public override void Execute()
         {
-            // Get all waiting and process them.
-            var proofs = _mediator.SendAndWait(new WaitingBlockchainProofQuery());
+            var proofs = _db.Proofs
+                        .Where(p => p.Status == ProofStatusType.Waiting.ToString())
+                        .Select(p => p);
 
             foreach (var proof in proofs)
             {
                 ProcessProof(proof);
             }
-            _trustDBContext.SaveChanges();
+            _db.SaveChanges();
 
             Wait(_configuration.ConfirmationWait(_configuration.Blockchain()));
         }

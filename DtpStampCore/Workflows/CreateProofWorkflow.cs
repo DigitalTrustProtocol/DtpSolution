@@ -13,6 +13,9 @@ using DtpCore.Enumerations;
 using System;
 using System.ComponentModel;
 using DtpStampCore.Commands;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using DtpCore.Model.Database;
 
 namespace DtpStampCore.Workflows
 {
@@ -23,19 +26,19 @@ namespace DtpStampCore.Workflows
         //private ITimestampWorkflowService _timestampWorkflowService;
 
         private readonly IMediator _mediator;
-        private TrustDBContext _trustDBContext;
+        private TrustDBContext _db;
         private IConfiguration _configuration;
         private ILogger<CreateProofWorkflow> _logger;
 
-        public BlockchainProof CurrentProof { get; private set; }
+        //public BlockchainProof CurrentProof { get; private set; }
         private IMerkleTree _merkleTree;
         private IBlockchainServiceFactory _blockchainServiceFactory;
         private IKeyValueService _keyValueService;
 
-        public CreateProofWorkflow(IMediator mediator, TrustDBContext trustDBContext, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IKeyValueService keyValueService, IConfiguration configuration, ILogger<CreateProofWorkflow> logger)
+        public CreateProofWorkflow(IMediator mediator, TrustDBContext db, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IKeyValueService keyValueService, IConfiguration configuration, ILogger<CreateProofWorkflow> logger)
         {
             _mediator = mediator;
-            _trustDBContext = trustDBContext;
+            _db = db;
             _merkleTree = merkleTree;
             _blockchainServiceFactory = blockchainServiceFactory;
             _keyValueService = keyValueService;
@@ -45,76 +48,79 @@ namespace DtpStampCore.Workflows
 
         public override void Execute()
         {
-            CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
+            // Getting the current aggregator for timestamps
+            var proof = new BlockchainProof();
+            // TODO: Support more than one blockchain type!!
+            proof.Timestamps = _db.Timestamps.Where(p => p.ProofDatabaseID == null).ToList();
 
-            //var count = _trustDBContext.Timestamps.Where(p => p.BlockchainProof_db_ID == CurrentProof.DatabaseID).Count();
-            if (CurrentProof.Timestamps.Count == 0)
+            if (proof.Timestamps.Count == 0)
             {
-                CombineLog(_logger, $"No proofs found");
+                CombineLog(_logger, $"No timestamps found");
                 Wait(_configuration.TimestampInterval()); // Default 10 min
                 return; // Exit workflow succesfully
             }
 
+            //CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
             // Ensure a new Proof object! 
-           
-
             try
             {
-                _mediator.SendAndWait(new AddNewBlockchainProofCommand());
-                Merkle();
-                LocalTimestamp();
+                Merkle(proof);
+
+                // If funding key is available then use, local timestamping.
+                LocalTimestamp(proof);
+
+                proof.Status = ProofStatusType.Waiting.ToString();
+
+                _db.Proofs.Add(proof);
+                // Otherwise use the remote timestamp from trust.dance.
             }
             catch (Exception ex)
             {
-                CurrentProof.Status = ProofStatusType.Failed.ToString();
-                CombineLog(_logger, $"Error in proof ID:{CurrentProof.DatabaseID} " + ex.Message+":"+ex.StackTrace);
+                proof.Status = ProofStatusType.Failed.ToString();
+                CombineLog(_logger, $"Error in proof ID:{proof.DatabaseID} " + ex.Message+":"+ex.StackTrace);
             }
             finally
             {
-                _trustDBContext.SaveChanges();
+                var result = _db.SaveChangesAsync().GetAwaiter().GetResult();
+                _logger.LogTrace($"CreateProofWorkflow save with result code: {result}");
+                
             }
             Wait(_configuration.ConfirmationWait(_configuration.Blockchain()));
         }
 
 
 
-        public void Merkle()
+        public void Merkle(BlockchainProof proof)
         {
-            //var timestamps = (from p in _trustDBContext.Timestamps
-            //                  where p.BlockchainProof_db_ID == CurrentProof.DatabaseID
-            //                  select p).ToList();
-
-            foreach (var item in CurrentProof.Timestamps)
+            foreach (var item in proof.Timestamps)
                 _merkleTree.Add(item);
 
-            CurrentProof.MerkleRoot = _merkleTree.Build().Hash;
-            CurrentProof.Status = ProofStatusType.Waiting.ToString();
 
-            //_trustDBService.DBContext.Timestamps.UpdateRange(timestamps); // Shoud work auto
+            proof.MerkleRoot = _merkleTree.Build().Hash;
 
-            CombineLog(_logger, $"Proof ID:{CurrentProof.DatabaseID} Timestamp found {CurrentProof.Timestamps.Count} - Merkleroot: {CurrentProof.MerkleRoot.ConvertToHex()}");
+            CombineLog(_logger, $"Proof ID:{proof.DatabaseID} Timestamp found {proof.Timestamps.Count} - Merkleroot: {proof.MerkleRoot.ConvertToHex()}");
         }
 
 
-        public void LocalTimestamp()
+        public void LocalTimestamp(BlockchainProof proof)
         {
-            var _fundingKeyWIF = _configuration.FundingKey(CurrentProof.Blockchain);
-            var _blockchainService = _blockchainServiceFactory.GetService(CurrentProof.Blockchain);
+            var _fundingKeyWIF = _configuration.FundingKey(proof.Blockchain);
+            var _blockchainService = _blockchainServiceFactory.GetService(proof.Blockchain);
             var fundingKey = _blockchainService.DerivationStrategy.KeyFromString(_fundingKeyWIF);
 
-            var tempTxKey = CurrentProof.Blockchain + "_previousTx";
+            var tempTxKey = proof.Blockchain + "_previousTx";
             var previousTx = _keyValueService.Get(tempTxKey);
             var previousTxList = (previousTx != null) ? new List<Byte[]> { previousTx } : null;
 
-            var OutTx = _blockchainService.Send(CurrentProof.MerkleRoot, fundingKey, previousTxList);
+            var OutTx = _blockchainService.Send(proof.MerkleRoot, fundingKey, previousTxList);
 
             //OutTX needs to go to a central store for that blockchain
            _keyValueService.Set(tempTxKey, OutTx[0]);
 
-            var merkleRootKey = _blockchainService.DerivationStrategy.GetKey(CurrentProof.MerkleRoot);
-            CurrentProof.Address = _blockchainService.DerivationStrategy.GetAddress(merkleRootKey);
+            var merkleRootKey = _blockchainService.DerivationStrategy.GetKey(proof.MerkleRoot);
+            proof.Address = _blockchainService.DerivationStrategy.GetAddress(merkleRootKey);
 
-            CombineLog(_logger, $"Proof ID:{CurrentProof.DatabaseID} Merkle root: {CurrentProof.MerkleRoot.ConvertToHex()} has been timestamped with address: {CurrentProof.Address}");
+            CombineLog(_logger, $"Proof ID:{proof.DatabaseID} Merkle root: {proof.MerkleRoot.ConvertToHex()} has been timestamped with address: {proof.Address}");
         }
 
         public void RemoteTimestamp()

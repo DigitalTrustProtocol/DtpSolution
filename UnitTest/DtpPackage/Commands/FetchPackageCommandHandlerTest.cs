@@ -38,6 +38,19 @@ namespace UnitTest.DtpPackage.Commands
             //Assert.IsTrue(notifications[1] is PackageAddedNotification);
             Assert.IsNotNull(packageB);
         }
+
+        [TestMethod]
+        public void SaveFile()
+        {
+            var package = TestPackage.CreateBinary(1);
+            Mediator.SendAndWait(new AddPackageCommand(package));
+
+            var storeNotifications = Mediator.SendAndWait(new StorePackageCommand(package));
+            var loadPackage = DB.GetPackageById(package.Id).GetAwaiter().GetResult();
+
+            Assert.IsNotNull(loadPackage);
+            Assert.IsNotNull(loadPackage.File);
+        }
     }
 
 }

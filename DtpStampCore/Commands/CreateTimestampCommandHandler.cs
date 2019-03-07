@@ -27,19 +27,25 @@ namespace DtpStampCore.Commands
             _logger = logger;
         }
 
-        public Task<Timestamp> Handle(CreateTimestampCommand request, CancellationToken cancellationToken)
+        public async Task<Timestamp> Handle(CreateTimestampCommand request, CancellationToken cancellationToken)
         {
-            var proof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
-
-            var timestamp = new Timestamp
+            var timestamp = await _mediator.Send(new GetTimestampCommand(request.Source, true));
+            if (timestamp == null)
             {
-                Proof = proof,
-                Algorithm = $"{DerivationSecp256k1PKH.DERIVATION_NAME}-{MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1}",
-                Blockchain = _configuration.Blockchain(),
-                Source = request.Source,
-                Registered = DateTime.Now.ToUnixTime()
-            };
-            return Task.FromResult(timestamp);
+                // TODO: Lookup configuration
+                var algorithm = $"{DerivationSecp256k1PKH.DERIVATION_NAME}-{MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1}";
+
+                timestamp = new Timestamp
+                {
+                    Algorithm = algorithm,
+                    Blockchain = _configuration.Blockchain(),
+                    Source = request.Source,
+                    Registered = DateTime.Now.ToUnixTime()
+                };
+                _db.Timestamps.Add(timestamp);
+            }
+            
+            return timestamp;
         }
     }
 }

@@ -50,14 +50,8 @@ namespace DtpServer.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPackage([FromBody] Package package)
         {
-            //_context.Packages.Add(package);
-            //await _context.SaveChangesAsync();
-
             var result = await _mediator.Send(new AddPackageCommand(package));
-
             return StatusCode(201, result);
-            //return Created();
-            //return CreatedAtAction("GetPackage", new { id = package.DatabaseID }, package);
         }
 
 

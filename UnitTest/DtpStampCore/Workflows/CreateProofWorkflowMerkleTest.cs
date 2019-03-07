@@ -27,8 +27,9 @@ namespace UnitTest.DtpStampCore.Workflows
 
             workflow.Execute();
 
-            Assert.IsNotNull(workflow.CurrentProof);
-            Assert.IsNull(workflow.CurrentProof.MerkleRoot);
+            var waitingProofs = Mediator.SendAndWait(new WaitingBlockchainProofQuery());
+            Assert.IsTrue(waitingProofs.Count() == 0);
+
             Assert.IsTrue(workflow.Container.Active);
 
         }
@@ -41,14 +42,8 @@ namespace UnitTest.DtpStampCore.Workflows
             var one = Encoding.UTF8.GetBytes("Hello world\n");
             var oneHash = derivationStrategy.HashOf(one);
 
-            var proof = Mediator.SendAndWait(new AddNewBlockchainProofCommand());
-
-            proof.Timestamps = new List<Timestamp>
-            {
-                Mediator.SendAndWait(new CreateTimestampCommand { Source = oneHash })
-            };
-
-            Mediator.SendAndWait(new UpdateBlockchainProofCommand { Proof = proof });
+            Mediator.SendAndWait(new CreateTimestampCommand(oneHash)); // Create do not save to DB!
+            DB.SaveChanges();
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<CreateProofWorkflow>();
@@ -66,9 +61,6 @@ namespace UnitTest.DtpStampCore.Workflows
         {
             var derivationStrategyFactory = ServiceProvider.GetRequiredService<IDerivationStrategyFactory>();
             var derivationStrategy = derivationStrategyFactory.GetService(DerivationSecp256k1PKH.NAME);
-            var one = Encoding.UTF8.GetBytes("Hello world\n");
-            var oneHash = derivationStrategy.HashOf(one);
-
 
             var proof1 = Mediator.SendAndWait(new AddNewBlockchainProofCommand());
             proof1.Status = ProofStatusType.Done.ToString();
@@ -78,12 +70,9 @@ namespace UnitTest.DtpStampCore.Workflows
             proof2.Status = ProofStatusType.Waiting.ToString();
             Mediator.SendAndWait(new UpdateBlockchainProofCommand { Proof = proof2 });
 
-            var proof = Mediator.SendAndWait(new AddNewBlockchainProofCommand());
-            proof.Timestamps = new List<Timestamp>
-            {
-                Mediator.SendAndWait(new CreateTimestampCommand { Source = oneHash })
-            };
-            Mediator.SendAndWait(new UpdateBlockchainProofCommand { Proof = proof });
+            Mediator.SendAndWait(new CreateTimestampCommand(derivationStrategy.HashOf(Encoding.UTF8.GetBytes("Hello world\n")) ));
+            Mediator.SendAndWait(new CreateTimestampCommand(derivationStrategy.HashOf(Encoding.UTF8.GetBytes("Hello world2\n")) ));
+            DB.SaveChanges(); 
 
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<CreateProofWorkflow>();

@@ -391,6 +391,10 @@ namespace DtpCore.Model
         public long Registered { get; set; }
         public bool ShouldSerializeRegistered() { return Registered != 0; }
 
+        //[JsonIgnore]
+        //[Description("The system state of the timestamp.")]
+        //public TimestampStateType State { get; set; }
+
         // No read of proof into the system!! Only render! Make Converter.
         //[JsonProperty(PropertyName = "proof")]
         [JsonIgnore]
@@ -405,6 +409,16 @@ namespace DtpCore.Model
 
         [JsonIgnore]
         public int? ClaimDatabaseID { get; set; } // Database row key
+
+        public Timestamp()
+        {
+            //State = TimestampStateType.New;
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
     }
 
     public class TimestampAlgorithm

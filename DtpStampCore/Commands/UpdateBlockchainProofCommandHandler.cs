@@ -21,14 +21,14 @@ namespace DtpStampCore.Commands
             _logger = logger;
         }
 
-        public Task<BlockchainProof> Handle(UpdateBlockchainProofCommand request, CancellationToken cancellationToken)
+        public async Task<BlockchainProof> Handle(UpdateBlockchainProofCommand request, CancellationToken cancellationToken)
         {
             _db.Proofs.Update(request.Proof);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
-            _mediator.Publish(new BlockchainProofUpdatedNotification(request.Proof));
+            await _mediator.Publish(new BlockchainProofUpdatedNotification(request.Proof));
 
-            return Task.FromResult(request.Proof);
+            return request.Proof;
         }
     }
 }

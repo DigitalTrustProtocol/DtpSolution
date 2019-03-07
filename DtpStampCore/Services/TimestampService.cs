@@ -35,6 +35,7 @@ namespace DtpStampCore.Services
         {
             var merkleRoot = GetMerkleRoot(timestamp);
 
+            // Check cache first, before database
             if (proofCache.TryGetValue(merkleRoot, out BlockchainProof proof))
                 return proof;
 

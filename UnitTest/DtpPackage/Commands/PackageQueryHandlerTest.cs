@@ -41,6 +41,7 @@ namespace UnitTest.DtpPackage.Commands
             var buildPackage = CreateAndSavePackage("A", "B");
 
             var signedPackage = Mediator.SendAndWait(new BuildPackageCommand(buildPackage));
+            
             Assert.IsNotNull(signedPackage);
             Assert.AreEqual(1, signedPackage.Claims.Count);
 

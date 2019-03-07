@@ -51,6 +51,8 @@ namespace DtpPackageCore.Workflows
                 var signedPackage = _mediator.SendAndWait(new BuildPackageCommand(buildPackage));
                 if(signedPackage != null)
                     CombineLog(_logger, $"Package {signedPackage.Id.ToHex()}, scope: {signedPackage.Scopes}, created with {signedPackage.Claims.Count} claims.");
+
+                _trustDBService.SaveChanges();
             }
 
             Wait(_configuration.TrustPackageWorkflowInterval()); // Never end the workflow

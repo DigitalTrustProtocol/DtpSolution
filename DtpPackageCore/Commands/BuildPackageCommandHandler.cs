@@ -5,6 +5,7 @@ using DtpCore.Model;
 using DtpCore.Model.Configuration;
 using DtpCore.Model.Database;
 using DtpCore.Notifications;
+using DtpCore.Repository;
 using DtpPackageCore.Interfaces;
 using DtpPackageCore.Notifications;
 using DtpStampCore.Commands;
@@ -24,18 +25,18 @@ namespace DtpPackageCore.Commands
     {
         private IMediator _mediator;
         private readonly IServerIdentityService _serverIdentityService;
-        private ITrustDBService _trustDBService;
+        private readonly TrustDBContext _db;
         private IDerivationStrategyFactory _derivationStrategyFactory;
         private IPackageService _trustPackageService;
         private NotificationSegment _notifications;
         private IConfiguration _configuration;
         private readonly ILogger<BuildPackageCommandHandler> logger;
 
-        public BuildPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, ITrustDBService trustDBService, IDerivationStrategyFactory derivationStrategyFactory, IPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger)
+        public BuildPackageCommandHandler(IMediator mediator, IServerIdentityService serverIdentityService, TrustDBContext db, IDerivationStrategyFactory derivationStrategyFactory, IPackageService trustPackageService, NotificationSegment notifications, IConfiguration configuration, ILogger<BuildPackageCommandHandler> logger)
         {
             _mediator = mediator;
             _serverIdentityService = serverIdentityService;
-            _trustDBService = trustDBService;
+            _db = db;
             _derivationStrategyFactory = derivationStrategyFactory;
             _trustPackageService = trustPackageService;
             _notifications = notifications;
@@ -49,7 +50,7 @@ namespace DtpPackageCore.Commands
             
             // Ensure to load the claims
             if(sourcePackage.Claims.Count == 0 || sourcePackage.ClaimPackages.Count == 0)
-                _trustDBService.LoadPackageClaims(sourcePackage);
+                _db.LoadPackageClaims(sourcePackage);
 
             if (sourcePackage.Claims.Count == 0)
             {
@@ -60,12 +61,12 @@ namespace DtpPackageCore.Commands
             // Build a new Package 
             var builder = new PackageBuilder();
             builder.Package.Scopes = sourcePackage.Scopes;
-            _trustDBService.Add(builder.Package); // Add the package to the DB context, so it will be handle in the claims bindings.
+            _db.Packages.Add(builder.Package); // Add the package to the DB context, so it will be handle in the claims bindings.
 
             foreach (var claim in sourcePackage.Claims)
             {
                 if (claim.State.Match(ClaimStateType.Replaced))
-                    _trustDBService.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
+                    _db.Claims.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
                 else
                 {
                     claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != sourcePackage.DatabaseID).ToList(); // Remove relation to static build package
@@ -84,15 +85,11 @@ namespace DtpPackageCore.Commands
             builder.OrderClaims(); // Order claims now ID before package ID calculation. 
             SignPackage(builder);
 
-            // Add package to timestamp
-            builder.Package.AddTimestamp(_mediator.SendAndWait(new CreateTimestampCommand { Source = builder.Package.Id }));
+            // Add timestamp to package, DB will auto connect from object reference
+            builder.Package.AddTimestamp(await _mediator.Send(new CreateTimestampCommand(builder.Package.Id)));
 
-            // Store the package at local drive 
-            _notifications.AddRange(await _mediator.Send(new StorePackageCommand(builder.Package)));
-            var notification = _notifications.FindLast<PackageStoredNotification>();
-            builder.Package.File = notification.File;
-
-            _trustDBService.SaveChanges(); // Save the new package
+            // Save the new package before calling notifications
+            await _db.SaveChangesAsync(); 
 
             await _notifications.Publish(new PackageBuildNotification(builder.Package));
 
