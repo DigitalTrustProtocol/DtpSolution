@@ -16,7 +16,6 @@ namespace DtpCore.Services
     public class WorkflowService : IWorkflowService
     {
         private ITrustDBService _trustDBService;
-        private IExecutionSynchronizationService _executionSynchronizationService;
         public IServiceProvider ServiceProvider { get; set; }
         private IContractResolver _contractResolver;
         private IContractReverseResolver _contractReverseResolver;
@@ -31,12 +30,11 @@ namespace DtpCore.Services
         }
 
         public WorkflowService(ITrustDBService trustDBService, IContractResolver contractResolver, IContractReverseResolver contractReverseResolver, 
-            IExecutionSynchronizationService executionSynchronizationService, ILogger<WorkflowService> logger, IConfiguration configuration, IServiceProvider serviceProvider)
+            ILogger<WorkflowService> logger, IConfiguration configuration, IServiceProvider serviceProvider)
         {
             _trustDBService = trustDBService;
             _trustDBService.ID = DateTime.Now.Ticks;
 
-            _executionSynchronizationService = executionSynchronizationService;
             _contractResolver = contractResolver;
             _contractReverseResolver = contractReverseResolver;
             _logger = logger;

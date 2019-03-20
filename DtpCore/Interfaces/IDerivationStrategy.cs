@@ -15,5 +15,6 @@
         byte[] Sign(byte[] key, byte[] data);
         bool VerifySignature(byte[] hashkeyid, byte[] signature, string address);
         bool VerifySignatureMessage(byte[] data, byte[] signature, string address);
+        bool VerifySignatureMessage(string message, byte[] signature, string address);
     }
 }

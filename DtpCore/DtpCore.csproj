@@ -17,6 +17,7 @@
     <Compile Remove="Diagnostics\ErrorEventLoggerTextWriter.cs" />
     <Compile Remove="Diagnostics\EventLoggerTextWriter.cs" />
     <Compile Remove="Extensions\SQLiteDataReaderExtensions.cs" />
+    <Compile Remove="Interfaces\IExecutionSynchronizationService.cs" />
     <Compile Remove="Model\ClaimModel.cs" />
     <Compile Remove="Model\CoreModel.cs" />
     <Compile Remove="Model\HeadModel.cs" />

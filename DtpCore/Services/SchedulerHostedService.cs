@@ -55,7 +55,7 @@ namespace DtpCore.Services
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            _logger.LogDebug($"Scheduler Service is starting.");
+            _logger.LogTrace($"Scheduler Service is starting.");
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -67,7 +67,7 @@ namespace DtpCore.Services
                     DelayTokenSource = new CancellationTokenSource();
             }
 
-            _logger.LogDebug($"Scheduler Service is stopping.");
+            _logger.LogTrace($"Scheduler Service is stopping.");
         }
 
         private void ExecuteOnce(CancellationToken cancellationToken)

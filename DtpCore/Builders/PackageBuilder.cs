@@ -24,6 +24,8 @@ namespace DtpCore.Builders
         public const string RATING_TRUST_DTP1 = "rating.trust.dtp1";
         public const string RATING_TRUST_DTP1_SHORTFORM = "rt1";
 
+        public const string ID_IDENTITY_DTP1 = "id.identity.dtp1";
+        public const string ID_IDENTITY_DTP1_SHORTFORM = "iid1";
 
         public const string ALIAS_IDENTITY_DTP1 = "alias.identity.dtp1";
         public const string ALIAS_IDENTITY_DTP1_SHORTFORM = "aid1";

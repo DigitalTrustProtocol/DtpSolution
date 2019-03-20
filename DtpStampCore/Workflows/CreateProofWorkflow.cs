@@ -16,6 +16,8 @@ using DtpStampCore.Commands;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using DtpCore.Model.Database;
+using System.Net;
+using System.Text;
 
 namespace DtpStampCore.Workflows
 {
@@ -34,16 +36,18 @@ namespace DtpStampCore.Workflows
         private IMerkleTree _merkleTree;
         private IBlockchainServiceFactory _blockchainServiceFactory;
         private IKeyValueService _keyValueService;
+        private readonly IDTPApiService _apiService;
 
-        public CreateProofWorkflow(IMediator mediator, TrustDBContext db, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IKeyValueService keyValueService, IConfiguration configuration, ILogger<CreateProofWorkflow> logger)
+        public CreateProofWorkflow(IMediator mediator, TrustDBContext db, IConfiguration configuration, ILogger<CreateProofWorkflow> logger, IMerkleTree merkleTree, IBlockchainServiceFactory blockchainServiceFactory, IKeyValueService keyValueService, IDTPApiService apiService)
         {
             _mediator = mediator;
             _db = db;
+            _configuration = configuration;
+            _logger = logger;
             _merkleTree = merkleTree;
             _blockchainServiceFactory = blockchainServiceFactory;
             _keyValueService = keyValueService;
-            _configuration = configuration;
-            _logger = logger;
+            _apiService = apiService;
         }
 
         public override void Execute()
@@ -60,14 +64,17 @@ namespace DtpStampCore.Workflows
                 return; // Exit workflow succesfully
             }
 
-            //CurrentProof = _mediator.SendAndWait(new CurrentBlockchainProofQuery());
             // Ensure a new Proof object! 
             try
             {
                 Merkle(proof);
 
                 // If funding key is available then use, local timestamping.
-                LocalTimestamp(proof);
+
+                if (IsFundingAvailable())
+                    LocalTimestamp(proof);
+                else
+                    RemoteTimestamp(proof);
 
                 proof.Status = ProofStatusType.Waiting.ToString();
 
@@ -89,6 +96,10 @@ namespace DtpStampCore.Workflows
         }
 
 
+        private bool IsFundingAvailable()
+        {
+            return string.IsNullOrEmpty(_configuration.FundingKey());
+        }
 
         public void Merkle(BlockchainProof proof)
         {
@@ -123,9 +134,13 @@ namespace DtpStampCore.Workflows
             CombineLog(_logger, $"Proof ID:{proof.DatabaseID} Merkle root: {proof.MerkleRoot.ConvertToHex()} has been timestamped with address: {proof.Address}");
         }
 
-        public void RemoteTimestamp()
+        public void RemoteTimestamp(BlockchainProof proof)
         {
-            Failed(new MissingMethodException("Missing implementation of RemoteTimestampStep"));
+            var uri = _configuration.RemoteServer().Append("/api/timestamp");
+
+            var timestamp = _apiService.UploadData<Timestamp>(uri, proof.MerkleRoot).GetAwaiter().GetResult();
+            proof.Receipt = timestamp.Path;
+            
         }
 
     }

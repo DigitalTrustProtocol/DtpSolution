@@ -13,6 +13,9 @@ using DtpCore.Notifications;
 using DtpStampCore.Notifications;
 using DtpStampCore.Commands;
 using System.Linq;
+using System.Net;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace DtpStampCore.Workflows
 {
@@ -53,6 +56,12 @@ namespace DtpStampCore.Workflows
 
         private void ProcessProof(BlockchainProof proof)
         {
+            if(proof.Address == "Remote")
+            {
+                RemoteTimestamp(proof);
+                return;
+            }
+
             var addressTimestamp = _blockchainService.GetTimestamp(proof.MerkleRoot);
             if(addressTimestamp == null)
             {
@@ -82,6 +91,32 @@ namespace DtpStampCore.Workflows
             {
                 proof.Status = ProofStatusType.Done.ToString();
                 _mediator.Publish(new BlockchainProofDoneNotification(proof));
+            }
+        }
+
+        private void RemoteTimestamp(BlockchainProof proof)
+        {
+            var uri = _configuration.RemoteServer();
+            uri = uri.Append($"/api/timestamp/{proof.MerkleRoot.ConvertToBase64()}");
+
+            using (var client = new WebClient())
+            {
+                var json = client.DownloadString(uri);
+                if(!string.IsNullOrEmpty(json))
+                {
+                    var timestamp = JsonConvert.DeserializeObject<Timestamp>(json);
+                    if(timestamp.Proof != null)
+                    {
+                        if(timestamp.Proof.Confirmations > 0)
+                        {
+                            proof.Receipt = ByteExtensions.Combine(timestamp.Path, timestamp.Proof.Receipt);
+                            proof.Address = timestamp.Proof.Address;
+                            proof.Confirmations = timestamp.Proof.Confirmations;
+                            proof.Blockchain = timestamp.Proof.Blockchain;
+                        }
+                    }
+                }
+
             }
         }
     }

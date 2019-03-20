@@ -288,7 +288,7 @@ namespace DtpCore.Model.Schema
                 {
                     var scriptService = _derivationStrategyFactory.GetService(trust.Issuer.Type);
 
-                    if (!scriptService.VerifySignatureMessage(trust.Id, trust.Issuer.Signature, trust.Issuer.Id))
+                    if (!scriptService.VerifySignatureMessage(trust.Id.ConvertToBase64(), trust.Issuer.Signature, trust.Issuer.Id))
                     {
                         result.Errors.Add(location + "Invalid issuer signature");
                     }

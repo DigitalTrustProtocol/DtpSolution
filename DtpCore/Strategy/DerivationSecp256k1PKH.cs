@@ -92,5 +92,13 @@ namespace DtpCore.Strategy
             var recoverAddress = PubKey.RecoverFromMessage(data, sig);
             return recoverAddress.GetAddress(network).ToString() == address;
         }
+
+        public bool VerifySignatureMessage(string message, byte[] signature, string address)
+        {
+            var sig = Encoders.Base64.EncodeData(signature);
+            var recoverAddress = PubKey.RecoverFromMessage(message, sig);
+            return recoverAddress.GetAddress(network).ToString() == address;
+        }
+
     }
 }

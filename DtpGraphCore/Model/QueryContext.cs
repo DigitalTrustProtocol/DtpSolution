@@ -143,17 +143,21 @@ namespace DtpGraphCore.Model
             else
                 ClaimScope = GraphTrustService.Graph.Scopes.GetIndex(scopeValue);
 
+            // If no types have been defined then use the defaults
             if (query.Types == null || query.Types.Count == 0)
             {
                 var graphClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.BINARY_TRUST_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
                 ClaimTypes.Add(graphClaim.Index);
+                var idClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.ID_IDENTITY_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
+                ClaimTypes.Add(idClaim.Index);
+
             }
             else
             {
                 foreach (var type in query.Types)
                 {
                     if (!GraphTrustService.Graph.ClaimType.ContainsKey(type))
-                        Errors.Add($"Unknown claim type {type}");
+                        Errors.Add($"Unknown claim type {type}"); // Why!?
                     else
                         ClaimTypes.Add(GraphTrustService.Graph.ClaimType.GetIndex(type));
                 }

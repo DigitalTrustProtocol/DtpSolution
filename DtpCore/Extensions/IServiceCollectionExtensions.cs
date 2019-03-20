@@ -22,8 +22,9 @@ namespace DtpCore.Extensions
         {
 
             services.AddSingleton<ApplicationEvents>();
-            services.AddSingleton<IExecutionSynchronizationService, ExecutionSynchronizationService>();
             services.AddScoped<NotificationSegment>();
+            
+            services.AddScoped<IDTPApiService, DTPApiService>();
             services.AddScoped<IClaimBinary, ClaimBinary>();
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();

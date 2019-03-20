@@ -1,5 +1,6 @@
 ﻿using DtpCore.Extensions;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace DtpStampCore.Extensions
 {
@@ -11,6 +12,13 @@ namespace DtpStampCore.Extensions
                 blockchain = configuration.Blockchain();
             return configuration.GetValue(blockchain + "_fundingkey", defaultValue);
         }
+
+        public static Uri RemoteServer(this IConfiguration configuration, string defaultValue = "https://trust.dance")
+        {
+            var url = configuration.GetValue("RemoteServer", defaultValue);
+            return new Uri(url);
+        }
+
 
         public static int StepRetryAttemptWait(this IConfiguration configuration, int defaultValue = 60 * 10)
         {

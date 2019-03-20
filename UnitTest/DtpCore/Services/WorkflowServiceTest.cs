@@ -68,8 +68,6 @@ namespace UnitTest.DtpCore.Workflow
         [TestMethod]
         public void ExecuteOne()
         {
-            var executionSynchronizationService = ServiceProvider.GetService<IExecutionSynchronizationService>();
-
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             var workflow = workflowService.Create<WorkflowContext>();
             Assert.IsNotNull(workflow);
@@ -81,8 +79,6 @@ namespace UnitTest.DtpCore.Workflow
         [TestMethod]
         public void ExecuteMany()
         {
-            var executionSynchronizationService = ServiceProvider.GetService<IExecutionSynchronizationService>();
-
             //var list = new List<IWorkflowContext>();
             var workflowService = ServiceProvider.GetRequiredService<IWorkflowService>();
             for (int i = 0; i < 10; i++)
