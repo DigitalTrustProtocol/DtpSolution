@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Path : Migration
+    public partial class source : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,22 +33,22 @@ namespace DtpCore.Migrations
                 {
                     DatabaseID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Algorithm = table.Column<string>(nullable: true),
                     Id = table.Column<byte[]>(nullable: true),
                     Root = table.Column<byte[]>(nullable: true),
                     Created = table.Column<uint>(nullable: false),
                     Issuer_Type = table.Column<string>(nullable: true),
                     Issuer_Id = table.Column<string>(nullable: true),
-                    Issuer_Signature = table.Column<byte[]>(nullable: true),
+                    Issuer_Proof = table.Column<byte[]>(nullable: true),
                     Subject_Type = table.Column<string>(nullable: true),
                     Subject_Id = table.Column<string>(nullable: true),
-                    Subject_Signature = table.Column<byte[]>(nullable: true),
+                    Subject_Proof = table.Column<byte[]>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
                     Scope = table.Column<string>(nullable: true),
                     Activate = table.Column<uint>(nullable: false),
                     Expire = table.Column<uint>(nullable: false),
-                    Note = table.Column<string>(nullable: true),
+                    Metadata = table.Column<string>(nullable: true),
+                    TemplateId = table.Column<uint>(nullable: false),
                     State = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -85,7 +85,7 @@ namespace DtpCore.Migrations
                     Scopes = table.Column<string>(nullable: true),
                     Server_Type = table.Column<string>(nullable: true),
                     Server_Id = table.Column<string>(nullable: true),
-                    Server_Signature = table.Column<byte[]>(nullable: true),
+                    Server_Proof = table.Column<byte[]>(nullable: true),
                     Obsoletes = table.Column<string>(nullable: true),
                     State = table.Column<long>(nullable: false)
                 },
@@ -149,8 +149,8 @@ namespace DtpCore.Migrations
                     Path = table.Column<byte[]>(nullable: true),
                     Registered = table.Column<long>(nullable: false),
                     ProofDatabaseID = table.Column<int>(nullable: true),
-                    ClaimDatabaseID = table.Column<int>(nullable: true),
-                    PackageDatabaseID = table.Column<int>(nullable: false)
+                    PackageDatabaseID = table.Column<int>(nullable: true),
+                    ClaimDatabaseID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -166,7 +166,7 @@ namespace DtpCore.Migrations
                         column: x => x.PackageDatabaseID,
                         principalTable: "Package",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Timestamp_BlockchainProof_ProofDatabaseID",
                         column: x => x.ProofDatabaseID,

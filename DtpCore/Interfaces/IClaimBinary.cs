@@ -4,7 +4,7 @@ namespace DtpCore.Interfaces
 {
     public interface IClaimBinary
     {
-        byte[] GetIssuerBinary(Claim trust);
-        byte[] GetPackageBinary(Package package);
+        byte[] GetIdSource(Claim trust);
+        byte[] Serialize(Claim trust);
     }
 }

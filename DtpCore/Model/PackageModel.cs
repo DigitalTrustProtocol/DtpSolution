@@ -146,20 +146,16 @@ namespace DtpCore.Model
 
 
     [Table("Claim")]
-    //[JsonConverter(typeof(JsonSubtypes))]
-    //[JsonSubtypes.KnownSubType(typeof(BinaryClaim), "Cost")]
-    //[JsonSubtypes.KnownSubTypeWithProperty(typeof(BinaryClaim), "Cost")]
     [JsonObject(MemberSerialization.OptIn)]
     public class Claim : DatabaseEntity
     {
-        [JsonProperty(PropertyName = "algorithm")]
-        public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
-
+        /// <summary>
+        /// Id is an internal property used for identifying the claim within the database, it is not a part of the claim.
+        /// The Issuer signs the claim binary data not the ID.
+        /// </summary>
         [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "id")]
+        [JsonIgnore] // Id is not serialized as it is an internal property
         public byte[] Id { get; set; }
-        public bool ShouldSerializeId() { return Id != null; }
 
         /// <summary>
         /// Defines a root id for the claim, enables for single signing of many claims.
@@ -220,16 +216,20 @@ namespace DtpCore.Model
         /// <summary>
         /// A short comment on the reason for the trust. Very limit in size. Single word is optimal.
         /// </summary>
-        [JsonProperty(PropertyName = "note")]
-        [Description("Issuers comment on the claim.")]
-        public string Note { get; set; }
-        public bool ShouldSerializeNote() { return Note != null; }
+        [JsonProperty(PropertyName = "metadata")]
+        [Description("Issuers metadata about the claim.")]
+        public string Metadata { get; set; }
+        public bool ShouldSerializeMetadata() { return Metadata != null; }
 
 
         [UIHint("Serialize")]
         [JsonProperty(PropertyName = "timestamps", NullValueHandling = NullValueHandling.Ignore)]
         public IList<Timestamp> Timestamps { get; set; }
         public bool ShouldSerializeTimestamps() { return Timestamps != null && Timestamps.Count > 0; }
+
+        [JsonProperty(PropertyName = "templateId")]
+        public uint TemplateId { get; set; }
+        public bool ShouldSerializeTemplateId() { return TemplateId > 0; }
 
         /// <summary>
         /// A trust can belong to multiple packages created by other servers. 
@@ -328,11 +328,11 @@ namespace DtpCore.Model
         public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
 
         //[UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "signature")]
-        public byte[] Signature { get; set; }
-        public bool ShouldSerializeSignature()
+        [JsonProperty(PropertyName = "proof")]
+        public byte[] Proof { get; set; }
+        public bool ShouldSerializeProof()
         {
-            return Signature != null && Signature.Length > 0;
+            return Proof != null && Proof.Length > 0;
         }
 
         /// <summary>

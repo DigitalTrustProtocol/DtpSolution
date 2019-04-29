@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190129095527_Path")]
-    partial class Path
+    [Migration("20190429101410_source")]
+    partial class source
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
 
             modelBuilder.Entity("DtpCore.Model.BlockchainProof", b =>
                 {
@@ -51,21 +51,21 @@ namespace DtpCore.Migrations
 
                     b.Property<uint>("Activate");
 
-                    b.Property<string>("Algorithm");
-
                     b.Property<uint>("Created");
 
                     b.Property<uint>("Expire");
 
                     b.Property<byte[]>("Id");
 
-                    b.Property<string>("Note");
+                    b.Property<string>("Metadata");
 
                     b.Property<byte[]>("Root");
 
                     b.Property<string>("Scope");
 
                     b.Property<long>("State");
+
+                    b.Property<uint>("TemplateId");
 
                     b.Property<string>("Type");
 
@@ -149,7 +149,7 @@ namespace DtpCore.Migrations
 
                     b.Property<int?>("ClaimDatabaseID");
 
-                    b.Property<int>("PackageDatabaseID");
+                    b.Property<int?>("PackageDatabaseID");
 
                     b.Property<byte[]>("Path");
 
@@ -208,7 +208,7 @@ namespace DtpCore.Migrations
 
                             b1.Property<string>("Id");
 
-                            b1.Property<byte[]>("Signature");
+                            b1.Property<byte[]>("Proof");
 
                             b1.Property<string>("Type");
 
@@ -230,7 +230,7 @@ namespace DtpCore.Migrations
 
                             b1.Property<string>("Id");
 
-                            b1.Property<byte[]>("Signature");
+                            b1.Property<byte[]>("Proof");
 
                             b1.Property<string>("Type");
 
@@ -268,7 +268,7 @@ namespace DtpCore.Migrations
 
                             b1.Property<string>("Id");
 
-                            b1.Property<byte[]>("Signature");
+                            b1.Property<byte[]>("Proof");
 
                             b1.Property<string>("Type");
 
@@ -291,8 +291,7 @@ namespace DtpCore.Migrations
 
                     b.HasOne("DtpCore.Model.Package")
                         .WithMany("Timestamps")
-                        .HasForeignKey("PackageDatabaseID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PackageDatabaseID");
 
                     b.HasOne("DtpCore.Model.BlockchainProof", "Proof")
                         .WithMany("Timestamps")

@@ -67,7 +67,7 @@
             Query the Graph
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.QueryController.#ctor(DtpGraphCore.Interfaces.IGraphQueryService,DtpGraphCore.Interfaces.IQueryRequestService,System.IServiceProvider)">
+        <member name="M:DtpServer.Controllers.QueryController.#ctor(DtpGraphCore.Interfaces.IGraphQueryService,DtpGraphCore.Interfaces.IQueryRequestService)">
             <summary>
             Constructor
             </summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DtpCore.Extensions
@@ -230,6 +231,11 @@ namespace DtpCore.Extensions
             //return val - (val < 58 ? 48 : 87);
             //Or the two combined, but a bit slower:
             return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
+        }
+
+        public static byte[] ToBytes(this string text)
+        {
+            return Encoding.UTF8.GetBytes(text);
         }
     }
 }

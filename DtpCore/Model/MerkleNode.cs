@@ -4,9 +4,7 @@ namespace DtpCore.Model
 {
     public class MerkleNode 
     {
-        //public byte[] Source { get; set; }
         public byte[] Hash { get; set; }
-        //public byte[] Receipt { get; set; }
 
         public MerkleNode Left { get; set; }
         public MerkleNode Right { get; set; }
@@ -29,7 +27,6 @@ namespace DtpCore.Model
 
             Right = right ?? left;
             Right.Parent = this;
-            //Right.IsRight = true;
         }
 
     }

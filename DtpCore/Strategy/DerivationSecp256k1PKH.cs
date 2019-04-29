@@ -71,17 +71,24 @@ namespace DtpCore.Strategy
 
         public byte[] SignMessage(byte[] key, byte[] data)
         {
+            return SignMessage(key, Encoders.Base64.EncodeData(data));
+            //var ecdsaKey = new Key(key);
+            //var message = ecdsaKey.SignMessage(data);
+            //return Convert.FromBase64String(message);
+        }
+
+        public byte[] SignMessage(byte[] key, string data)
+        {
             var ecdsaKey = new Key(key);
             var message = ecdsaKey.SignMessage(data);
             return Convert.FromBase64String(message);
         }
 
+
         public bool VerifySignature(byte[] data, byte[] signature, string address)
         {
             var hashkeyid = new uint256(data); 
             var recoverAddress = PubKey.RecoverCompact(hashkeyid, signature);
-
-            
             return recoverAddress.GetAddress(network).ToString() == address;
 
         }

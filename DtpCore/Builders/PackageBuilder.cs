@@ -35,7 +35,8 @@ namespace DtpCore.Builders
 
 
         public Package Package { get; set; }
-        private IClaimBinary _claimBinary;
+        //private IClaimBinary _claimBinary;
+        private IPackageBinary _packageBinary;
 
         private Claim _currentClaim;
         public Claim CurrentClaim
@@ -52,12 +53,12 @@ namespace DtpCore.Builders
         private IHashAlgorithmFactory _hashAlgorithmFactory;
 
 
-        public PackageBuilder() : this(new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new ClaimBinary())
+        public PackageBuilder() : this(new MerkleStrategyFactory(new HashAlgorithmFactory()), new HashAlgorithmFactory(), new PackageBinary(new ClaimBinary()))
         {
             
         }
 
-        public PackageBuilder(IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
+        public PackageBuilder(IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary)
         {
             Package = new Package
             {
@@ -68,7 +69,7 @@ namespace DtpCore.Builders
             //_derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
             _hashAlgorithmFactory = hashAlgorithmFactory;
-            _claimBinary = trustBinary;
+            _packageBinary = packageBinary;
         }
 
         public PackageBuilder Load(string content)
@@ -210,19 +211,20 @@ namespace DtpCore.Builders
             return this;
         }
 
-        public PackageBuilder SignIssuer(Claim trust = null, SignDelegate sign = null)
+        public PackageBuilder SignIssuer(Claim claim = null, SignDelegate sign = null)
         {
-            if (trust == null)
-                trust = CurrentClaim;
+            if (claim == null)
+                claim = CurrentClaim;
 
+            var source = _packageBinary.ClaimBinary.GetIdSource(claim);
             if (sign != null)
             {
-                trust.Issuer.Signature = sign(trust.Id);
+                claim.Issuer.Proof = sign(source);
             }
             else
             {
-                if (trust.IssuerSign != null)
-                    trust.Issuer.Signature = trust.IssuerSign(trust.Id);
+                if (claim.IssuerSign != null)
+                    claim.Issuer.Proof = claim.IssuerSign(source);
             }
             return this;
         }
@@ -246,22 +248,23 @@ namespace DtpCore.Builders
             if (claim == null)
                 claim = _currentClaim;
 
-            var _hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(claim.Algorithm);
-
-            if (String.IsNullOrEmpty(claim.Algorithm))
-                claim.Algorithm = _hashAlgorithm.AlgorithmName;
-
-            claim.Id = _hashAlgorithm.HashOf(_claimBinary.GetIssuerBinary(claim));
+            claim.Id = GetClaimID(claim);
 
             return this;
         }
+
+        public static byte[] GetClaimID(Claim claim)
+        {
+            var claimBinary = new ClaimBinary();
+            return new Sha256().HashOf(claimBinary.GetIdSource(claim));
+        }
+
 
         public PackageBuilder SignClaim(Claim claim = null)
         {
             if (claim == null)
                 claim = _currentClaim;
 
-            BuildClaimID(claim);
             SignIssuer(claim);
 
             return this;
@@ -296,15 +299,13 @@ namespace DtpCore.Builders
         {
             var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
             
-            var packageHash = _claimBinary.GetPackageBinary(Package);
+            var packageHash =_packageBinary.GetIdSource(Package);
             merkleTree.Add(packageHash); // Start with adding the package hash
 
             foreach (var claim in Package.Claims)
             {
-                if (claim.Id == null)
-                    BuildClaimID(claim);
-
-                merkleTree.Add(claim.Id); // Add claim ID
+                var source = _packageBinary.ClaimBinary.GetIdSource(claim);
+                merkleTree.Add(source); // Add claim Id source (unique binary id)
             }
 
             Package.Id = merkleTree.Build().Hash;   // Merkle of Package hash and all the claims.

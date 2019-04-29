@@ -3,69 +3,84 @@ using DtpCore.Extensions;
 using DtpCore.Model;
 using DtpCore.Interfaces;
 
+
 namespace DtpCore.Strategy
 {
     public class ClaimBinary : IClaimBinary
     {
-        public ClaimBinary()
-        {
-        }
-
-        public byte[] GetIssuerBinary(Claim claim)
+        /// <summary>
+        /// Get the Id source data from the claim
+        /// </summary>
+        /// <param name="claim"></param>
+        /// <returns></returns>
+        public byte[] GetIdSource(Claim claim)
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                if (claim.Issuer != null)
+                BuildSource(claim, ms);
+
+                return ms.ToArray();
+            }
+        }
+               
+        /// <summary>
+        /// Gets the full binary data of the claim. 
+        /// Cannot not be used for ID calculation, as it contains the proof from Issuer and subject.
+        /// </summary>
+        /// <param name="claim"></param>
+        /// <returns></returns>
+        public byte[] Serialize(Claim claim)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BuildSource(claim, ms);
+
+                ms.LWriteBytes(claim.Issuer.Proof);
+                ms.LWriteBytes(claim.Subject.Proof);
+                ms.LWriteBytes(claim.Root);
+                ms.LWriteInteger(claim.TemplateId);
+
+                // ID is not added as it is dependen on the issuer/subject type 
+
+                foreach (var timestamp in claim.Timestamps)
                 {
-                    ms.WriteString(claim.Issuer.Type.ToLowerSafe());
-                    ms.WriteString(claim.Issuer.Id);
+
+                    // TODO: Need to add timestamps here!
                 }
-
-                if (claim.Subject != null)
-                {
-                    ms.WriteString(claim.Subject.Type.ToLowerSafe());
-                    ms.WriteString(claim.Subject.Id);
-                }
-
-                ms.WriteString(claim.Type.ToLowerSafe());
-                ms.WriteString(claim.Value);
-
-                if (claim.Scope != null)
-                {
-                    ms.WriteString(claim.Scope);
-                }
-
-                ms.WriteInteger(claim.Created);
-                ms.WriteInteger(claim.Activate);
-                ms.WriteInteger(claim.Expire);
 
                 return ms.ToArray();
             }
         }
 
-
-        public byte[] GetPackageBinary(Package package)
+        public Claim Deserialize(byte[] data)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                if (package == null)
-                    return ms.ToArray();
-
-                if(package.Algorithm != null)
-                {
-                    ms.WriteString(package.Algorithm);
-                }
-
-                ms.WriteInteger(package.Created);
-
-                if(package.Server != null)
-                {
-                    ms.WriteString(package.Server.Type.ToLowerSafe());
-                    ms.WriteString(package.Server.Id);
-                }
-                
-                return ms.ToArray();
-            }
+            // TODO: Implement
+            return null;
         }
+
+        /// <summary>
+        /// Get the binary data for ID calculation. Do not include the proof of Issuer and subject.
+        /// </summary>
+        /// <param name="claim"></param>
+        /// <param name="ms"></param>
+        private static void BuildSource(Claim claim, MemoryStream ms)
+        {
+            ms.LWriteString(claim.Type.ToLowerSafe()); // First type!
+
+            ms.LWriteString(claim.Issuer.Type.ToLowerSafe());
+            ms.LWriteString(claim.Issuer.Id);
+
+            ms.LWriteString(claim.Subject.Type.ToLowerSafe());
+            ms.LWriteString(claim.Subject.Id);
+
+            ms.LWriteString(claim.Value);
+
+            ms.LWriteString(claim.Scope);
+            ms.LWriteString(claim.Metadata);
+            ms.LWriteInteger(claim.Created);
+            ms.LWriteInteger(claim.Activate);
+            ms.LWriteInteger(claim.Expire);
+        }
+
     }
 }

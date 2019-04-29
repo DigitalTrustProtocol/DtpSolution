@@ -119,7 +119,6 @@ namespace DtpCore.Services
                               && p.Type == claim.Type
                               && p.State != ClaimStateType.Replaced));
 
-
             if (claim.Scope != null)
             {
                 query = query.Where(p => p.Scope == claim.Scope);
@@ -131,15 +130,15 @@ namespace DtpCore.Services
 
             query = query.OrderBy(p => p.DatabaseID);
 
-            var dbTrust = query.Take(1).FirstOrDefault();
+            var dbClaim = query.Take(1).FirstOrDefault();
 
-            return dbTrust;
+            return dbClaim;
         }
 
 
-        public void Add(Claim trust)
+        public void Add(Claim claim)
         {
-            DBContext.Claims.Add(trust);
+            DBContext.Claims.Add(claim);
         }
 
         public void Remove(Claim claim)
@@ -259,7 +258,7 @@ namespace DtpCore.Services
             if ((package.Id != null && package.Id.Length > 0))
                 package.State = PackageStateType.Build;
 
-            if(package.Server != null && package.Server.Signature != null && package.Server.Signature.Length > 0)
+            if(package.Server != null && package.Server.Proof != null && package.Server.Proof.Length > 0)
                 package.State = PackageStateType.Signed;
         }
 

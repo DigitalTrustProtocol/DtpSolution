@@ -148,8 +148,8 @@ namespace DtpGraphCore.Model
             {
                 var graphClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.BINARY_TRUST_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
                 ClaimTypes.Add(graphClaim.Index);
-                var idClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.ID_IDENTITY_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
-                ClaimTypes.Add(idClaim.Index);
+                //var idClaim = GraphTrustService.CreateGraphClaim(PackageBuilder.ID_IDENTITY_DTP1, "", PackageBuilder.CreateBinaryTrustAttributes(true));
+                //ClaimTypes.Add(idClaim.Index);
 
             }
             else

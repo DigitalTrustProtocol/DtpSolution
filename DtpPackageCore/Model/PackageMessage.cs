@@ -29,9 +29,9 @@ namespace DtpPackageCore.Model
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                ms.WriteString(File);
-                ms.WriteString(Scope);
-                ms.WriteString(ServerId);
+                ms.LWriteString(File);
+                ms.LWriteString(Scope);
+                ms.LWriteString(ServerId);
                 return ms.ToArray();
             }
         }

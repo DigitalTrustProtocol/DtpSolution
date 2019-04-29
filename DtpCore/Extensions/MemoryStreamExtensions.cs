@@ -6,43 +6,73 @@ namespace DtpCore.Extensions
 {
     public static class MemoryStreamExtensions
     {
-        public static void WriteBytes(this MemoryStream ms, byte[] data)
+        public static void LWriteBytes(this MemoryStream ms, byte[] data)
         {
-            if (data == null)
+            // If there is no data, then only define the Length value and set it to 0.
+            if (data == null || data.Length == 0)
+            {
+                ms.WriteByte(0);
                 return;
+            }
 
+            // Needs to be dynamic, so its possible to define values higher than 256
+            // Currently per default, a property cannot be more than 127 bytes long. 
+            // This is limit the possible size of each claim.
+            ms.WriteByte((byte)data.Length); // Write length
             ms.Write(data, 0, data.Length);
         }
+
         /// <summary>
         /// Write a string in UTF8 format to the memoryStream
         /// </summary>
         /// <param name="ms"></param>
         /// <param name="text"></param>
-        public static void WriteString(this MemoryStream ms, string text)
+        public static void LWriteString(this MemoryStream ms, string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if(text == null)
+            {
+                ms.WriteByte(0);
                 return;
+            }
 
-            ms.WriteBytes(Encoding.UTF8.GetBytes(text));
+            var data = Encoding.UTF8.GetBytes(text);
+            ms.LWriteBytes(data);
         }
 
-        public static void WriteInteger(this MemoryStream ms, int num)
+        public static void WriteClaimInteger(this MemoryStream ms, int num)
         {
+            if (num == 0)
+            {
+                ms.WriteByte(0);
+                return;
+            }
+
             var bytes = BitConverter.GetBytes(num);
-            ms.WriteBytes(bytes);
+            ms.LWriteBytes(bytes);
         }
 
-        public static void WriteInteger(this MemoryStream ms, uint num)
+        public static void LWriteInteger(this MemoryStream ms, uint num)
         {
+            if(num == 0)
+            {
+                ms.WriteByte(0);
+                return;
+            }
+
             var bytes = BitConverter.GetBytes(num);
-            ms.WriteBytes(bytes);
+            ms.LWriteBytes(bytes);
         }
 
-        public static void WriteLong(this MemoryStream ms, long num)
+        public static void WriteClaimLong(this MemoryStream ms, long num)
         {
-            var bytes = BitConverter.GetBytes(num);
-            ms.WriteBytes(bytes);
-        }
+            if (num == 0)
+            {
+                ms.WriteByte(0);
+                return;
+            }
 
+            var bytes = BitConverter.GetBytes(num);
+            ms.LWriteBytes(bytes);
+        }
     }
 }

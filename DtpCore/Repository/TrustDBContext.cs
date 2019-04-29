@@ -152,7 +152,7 @@ namespace DtpCore.Repository
             if ((package.Id != null && package.Id.Length > 0))
                 package.State = PackageStateType.Build;
 
-            if (package.Server != null && package.Server.Signature != null && package.Server.Signature.Length > 0)
+            if (package.Server != null && package.Server.Proof != null && package.Server.Proof.Length > 0)
                 package.State = PackageStateType.Signed;
         }
 

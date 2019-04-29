@@ -55,7 +55,7 @@ namespace UnitTest.DtpCore.Model.Schema
         }
 
         [TestMethod]
-        public void ValidateTrust()
+        public void ValidateClaim()
         {
             var builder = new PackageBuilder();
             builder.SetServer("testserver")

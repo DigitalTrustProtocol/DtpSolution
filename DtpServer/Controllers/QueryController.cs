@@ -6,6 +6,7 @@ using DtpGraphCore.Interfaces;
 using DtpCore.Controllers;
 using DtpGraphCore.Builders;
 using DtpGraphCore.Enumerations;
+using System.Threading.Tasks;
 
 namespace DtpServer.Controllers
 {
@@ -18,7 +19,6 @@ namespace DtpServer.Controllers
 
         public IGraphQueryService SearchService { get; set; }
         private IQueryRequestService _queryRequestService;
-        public IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
         /// Constructor
@@ -26,11 +26,10 @@ namespace DtpServer.Controllers
         /// <param name="service"></param>
         /// <param name="queryRequestService"></param>
         /// <param name="serviceProvider"></param>
-        public QueryController(IGraphQueryService service, IQueryRequestService queryRequestService, IServiceProvider serviceProvider)
+        public QueryController(IGraphQueryService service, IQueryRequestService queryRequestService)
         {
             SearchService = service;
             _queryRequestService = queryRequestService;
-            ServiceProvider = serviceProvider;
         }
 
         //        public IHttpActionResult Get(string issuer, string subject, string subjectType = "", string? scope, bool? trust, bool? confirm, bool? rating)
@@ -60,7 +59,7 @@ namespace DtpServer.Controllers
         /// <param name="flags"></param>
         /// <returns></returns>
         [HttpGet]
-        public QueryContext Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
+        public IActionResult Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
         {
             var builder = new QueryRequestBuilder(null, PackageBuilder.BINARY_TRUST_DTP1);
             builder.Query.Flags = flags;
@@ -77,13 +76,15 @@ namespace DtpServer.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost]
-        public QueryContext ResolvePost([FromBody]QueryRequest query)
+        public IActionResult ResolvePost([FromBody]QueryRequest query)
         {
             _queryRequestService.Verify(query);
 
             var result = SearchService.Execute(query);
 
-            return result;
+
+
+            return StatusCode(201, result);
         }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using DtpCore.Builders;
 using DtpCore.Interfaces;
-using DtpCore.Model;
 using DtpCore.Extensions;
-using DtpCore.Strategy;
 using System;
-using DtpCore.Factories;
 using DtpCore.Enumerations;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
 namespace DtpCore.Model.Schema
@@ -19,16 +15,17 @@ namespace DtpCore.Model.Schema
         private IDerivationStrategyFactory _derivationServiceFactory;
         private IMerkleStrategyFactory _merkleStrategyFactory;
         private IHashAlgorithmFactory _hashAlgorithmFactory;
-        private IClaimBinary _trustBinary;
+        private IPackageBinary _packageBinary;
 
-
-        public PackageSchemaValidator(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary trustBinary)
+        public PackageSchemaValidator(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary)
         {
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
             _hashAlgorithmFactory = hashAlgorithmFactory;
-            _trustBinary = trustBinary;
+            _packageBinary = packageBinary;
         }
+
+
 
         /// <summary>
         /// Gets the trust type string in a sanitized form, always in lowercase.
@@ -53,20 +50,20 @@ namespace DtpCore.Model.Schema
             return claim.Type.ToLower();
         }
 
-        public TrustType GetTrustTypeObject(Claim trust)
+        public TrustType GetTrustTypeObject(Claim claim)
         {
             TrustType result;
-            if (!IsTrustTypeAnObject(trust))
+            if (!IsTrustTypeAnObject(claim))
             {
                 result = new TrustType();
-                var parts = trust.Type.Split(".");
+                var parts = claim.Type.Split(".");
                 if (parts.Length > 0) result.Attribute = parts[0];
                 if (parts.Length > 1) result.Group = parts[1];
                 if (parts.Length > 2) result.Protocol = parts[2];
             }
             else
             {
-                result = JsonConvert.DeserializeObject<TrustType>(trust.Type);
+                result = JsonConvert.DeserializeObject<TrustType>(claim.Type);
             }
 
             return result;
@@ -87,27 +84,29 @@ namespace DtpCore.Model.Schema
 
         public SchemaValidationResult Validate(Claim claim, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
-            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary, options);
+            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory,  _packageBinary, options);
             return engine.Validate(claim);
         }
 
         public SchemaValidationResult Validate(Package package, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
-            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _trustBinary, options);
+            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary, options);
             return engine.Validate(package);
         }
 
 
         private class ValidationEngine
         {
-            public const int ALGORITHM_MAX_LENGTH = 50;
-            public const int ID_MAX_LENGTH = 100;
-            public const int IDENTITY_ID_MAX_LENGTH = 100;
-            public const int SIGNATURE_MAX_LENGTH = 100;
-            public const int NOTE_MAX_LENGTH = 100;
+            public const int DEFAULT_MAX_LENGTH = 127;
+
+            public const int ALGORITHM_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int ID_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int IDENTITY_ID_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int SIGNATURE_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int METADATA_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int CLAIM_MAX_LENGTH = 1024;
-            public const int TYPE_MAX_LENGTH = 50;
-            public const int SCOPE_MAX_LENGTH = 100;
+            public const int TYPE_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int SCOPE_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int TIMESTAMP_MAX_COUNT = 10;
             public const int COST_LIMIT = 100;
             public const int TEXT50_MAX_LENGTH = 50;
@@ -118,7 +117,7 @@ namespace DtpCore.Model.Schema
 
 
             private SchemaValidationResult result = new SchemaValidationResult();
-            private IClaimBinary _claimBinary;
+            private IPackageBinary _packageBinary;
 
             private IDerivationStrategyFactory _derivationStrategyFactory;
             private IMerkleStrategyFactory _merkleStrategyFactory;
@@ -127,12 +126,12 @@ namespace DtpCore.Model.Schema
             private TrustSchemaValidationOptions _options; 
 
 
-            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IClaimBinary claimBinary, TrustSchemaValidationOptions options)
+            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary, TrustSchemaValidationOptions options)
             {
                 _derivationStrategyFactory = derivationStrategyFactory;
                 _merkleStrategyFactory = merkleStrategyFactory;
                 _hashAlgorithmFactory = hashAlgorithmFactory;
-                _claimBinary = claimBinary;
+                _packageBinary = packageBinary;
                 _options = options;
             }
 
@@ -140,7 +139,7 @@ namespace DtpCore.Model.Schema
             {
                 try
                 {
-                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _claimBinary);
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary);
                     var claimIndex = 0;
                     testBuilder.AddClaim(claim);
                     ValidateClaim(claimIndex++, claim, result);
@@ -163,7 +162,7 @@ namespace DtpCore.Model.Schema
                 {
                     var script = _merkleStrategyFactory.GetStrategy(package.Algorithm);
                 
-                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _claimBinary);
+                    var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary);
                     var claimIndex = 0;
                     if(package.Claims.Count == 0)
                     {
@@ -185,7 +184,7 @@ namespace DtpCore.Model.Schema
                         var testPackageID = testBuilder.Build().Package.Id;
 
                         if (testPackageID.Compare(package.Id) != 0)
-                            result.Errors.Add("Package Id is not same as merkle tree root of all trust ID");
+                            result.Errors.Add("Package Id is not same as merkle tree root of all claim ID");
                     }
 
                     ValidateTimestamps(package.Timestamps, "Package ", result);
@@ -205,50 +204,22 @@ namespace DtpCore.Model.Schema
 
                 MaxRangeCheck("Package Server Type", package.Server.Type, "", TYPE_MAX_LENGTH);
                 MaxRangeCheck("Package Server Id", package.Server.Id, "", IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("Package Server Signature", package.Server.Signature, "", SIGNATURE_MAX_LENGTH);
+                MaxRangeCheck("Package Server Signature", package.Server.Proof, "", SIGNATURE_MAX_LENGTH);
             }
 
-            private void ValidateClaim(int trustIndex, Claim claim, SchemaValidationResult result)
+            private void ValidateClaim(int claimIndex, Claim claim, SchemaValidationResult result)
             {
-                var location = $"Trust Index: {trustIndex} - ";
+                var location = $"Claim Index: {claimIndex} - ";
 
-                MaxRangeCheck("Algorithm", claim.Algorithm, location, ALGORITHM_MAX_LENGTH);
                 MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
                 MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("Claim", claim.Value, location, CLAIM_MAX_LENGTH);
-                MaxRangeCheck("Note", claim.Note, location, NOTE_MAX_LENGTH);
+                MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
+                MaxRangeCheck("Metadata", claim.Metadata, location, METADATA_MAX_LENGTH);
 
                 ValidateIssuer(claim, location, result);
                 ValidateSubject(claim, location, result);
                 ValidateScope(claim, location, result);
                 ValidateTimestamps(claim.Timestamps, location, result);
-
-                if (_options == TrustSchemaValidationOptions.Full)
-                {
-                    MissingCheck("Claim Id", claim.Id, location);
-
-                    // Avoid an attack vector, calculating hash on very large invalid trust
-                    if (result.ErrorsFound == 0) 
-                    {
-                        var hashService = _hashAlgorithmFactory.GetAlgorithm(claim.Algorithm);
-                        var trustID = hashService.HashOf(_claimBinary.GetIssuerBinary(claim));
-                        if (trustID.Compare(claim.Id) != 0)
-                            result.Errors.Add(location + "Invalid claim id");
-
-                        // Make sure that subject has been validated before checking for Cost.
-                        // Only Binarytrust has Cost property
-                        //if (trust.Cost < COST_LIMIT)
-                        //{
-                        //    // When cost is 0, then its default 100
-                        //    if (trust.Cost > 0)
-                        //    {
-                        //        // Cost is less than 100, check that the subject signature exist, and has previously been checked.
-                        //        if(trust.Subject.Signature == null || trust.Subject.Signature.Length == 0)
-                        //            result.Errors.Add(string.Format("{0}Missing Subject Signature for Cost to be lower than {1}", location, COST_LIMIT));
-                        //    }
-                        //}
-                    }
-                }
             }
 
             private void ValidateTimestamps(IList<Timestamp> timestamps, string location, SchemaValidationResult result)
@@ -258,7 +229,7 @@ namespace DtpCore.Model.Schema
 
                 if(timestamps.Count > TIMESTAMP_MAX_COUNT)
                 {
-                    result.Errors.Add(string.Format("{0}To many timestamps in trust, there may not be more than {1}", location, timestamps.Count));
+                    result.Errors.Add(string.Format("{0}To many timestamps in claim, there may not be more than {1}", location, timestamps.Count));
                     return; // Return before checking timestamps. Avoid attack vector.
                 }
 
@@ -273,22 +244,23 @@ namespace DtpCore.Model.Schema
             }
 
 
-            private void ValidateIssuer(Claim trust, string location, SchemaValidationResult result)
+            private void ValidateIssuer(Claim claim, string location, SchemaValidationResult result)
             {
-                if (!MissingCheck("Trust Issuer", trust.Issuer, location))
+                if (!MissingCheck("Claim Issuer", claim.Issuer, location))
                     return; 
 
-                MissingCheck("Issuer Id", trust.Issuer.Id, location);
+                MissingCheck("Issuer Id", claim.Issuer.Id, location);
 
-                MaxRangeCheck("trust.Issuer.Type", trust.Issuer.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("trust.Issuer.Id", trust.Issuer.Id, location, IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("trust.Issuer.Signature", trust.Issuer.Signature, location, SIGNATURE_MAX_LENGTH);
+                MaxRangeCheck("claim.Issuer.Type", claim.Issuer.Type, location, TYPE_MAX_LENGTH);
+                MaxRangeCheck("claim.Issuer.Id", claim.Issuer.Id, location, IDENTITY_ID_MAX_LENGTH);
+                MaxRangeCheck("claim.Issuer.Signature", claim.Issuer.Proof, location, SIGNATURE_MAX_LENGTH);
 
                 if (_options == TrustSchemaValidationOptions.Full)
                 {
-                    var scriptService = _derivationStrategyFactory.GetService(trust.Issuer.Type);
+                    var scriptService = _derivationStrategyFactory.GetService(claim.Issuer.Type);
 
-                    if (!scriptService.VerifySignatureMessage(trust.Id.ConvertToBase64(), trust.Issuer.Signature, trust.Issuer.Id))
+                    var message = _packageBinary.ClaimBinary.GetIdSource(claim).ConvertToBase64();
+                    if (!scriptService.VerifySignatureMessage(message, claim.Issuer.Proof, claim.Issuer.Id))
                     {
                         result.Errors.Add(location + "Invalid issuer signature");
                     }
@@ -297,25 +269,25 @@ namespace DtpCore.Model.Schema
 
 
 
-            private void ValidateSubject(Claim trust, string location, SchemaValidationResult result)
+            private void ValidateSubject(Claim claim, string location, SchemaValidationResult result)
             {
-                if (!MissingCheck("Trust Subject", trust.Subject, location))
+                if (!MissingCheck("Claim Subject", claim.Subject, location))
                     return;
 
-                MissingCheck("trust.Subject.Id", trust.Subject.Id, location);
+                MissingCheck("claim.Subject.Id", claim.Subject.Id, location);
 
-                MaxRangeCheck("trust.Subject.Type", trust.Subject.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("trust.Subject.Id", trust.Subject.Id, location, IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("trust.Subject.Signature", trust.Subject.Signature, location, SIGNATURE_MAX_LENGTH);
+                MaxRangeCheck("claim.Subject.Type", claim.Subject.Type, location, TYPE_MAX_LENGTH);
+                MaxRangeCheck("claim.Subject.Id", claim.Subject.Id, location, IDENTITY_ID_MAX_LENGTH);
+                MaxRangeCheck("claim.Subject.Signature", claim.Subject.Proof, location, SIGNATURE_MAX_LENGTH);
 
 
                 if (_options == TrustSchemaValidationOptions.Full)
                 {
-                    if (trust.Subject.Signature != null)
+                    if (claim.Subject.Proof != null)
                     {
-                        var scriptService = _derivationStrategyFactory.GetService(trust.Subject.Type);
-
-                        if (!scriptService.VerifySignatureMessage(trust.Id, trust.Subject.Signature, trust.Subject.Id))
+                        var scriptService = _derivationStrategyFactory.GetService(claim.Subject.Type);
+                        var message = _packageBinary.ClaimBinary.GetIdSource(claim).ConvertToBase64();
+                        if (!scriptService.VerifySignatureMessage(message, claim.Subject.Proof, claim.Subject.Id))
                         {
                             result.Errors.Add(location + "Invalid subject signature");
                         }
@@ -323,12 +295,12 @@ namespace DtpCore.Model.Schema
                 }
             }
 
-            private void ValidateScope(Claim trust, string location, SchemaValidationResult result)
+            private void ValidateScope(Claim claim, string location, SchemaValidationResult result)
             {
-                if (trust.Scope == null)
+                if (claim.Scope == null)
                     return;
 
-                MaxRangeCheck("trust.Scope", trust.Scope, location, SCOPE_MAX_LENGTH);
+                MaxRangeCheck("claim.Scope", claim.Scope, location, SCOPE_MAX_LENGTH);
             }
 
 

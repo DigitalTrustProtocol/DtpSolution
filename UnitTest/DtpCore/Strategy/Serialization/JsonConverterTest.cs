@@ -61,28 +61,27 @@ namespace UnitTest.DtpCore.Strategy
         public void SerializeDeserialize()
         {
             var builder = new PackageBuilder();
-            var trust = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
-            var data = JsonConvert.SerializeObject(trust, Formatting.Indented);
+            var claim = builder.BuildBinaryClaim("testissuer1", "testsubject1", true);
+            var data = JsonConvert.SerializeObject(claim, Formatting.Indented);
             Console.WriteLine(data);
-            var trust2 = JsonConvert.DeserializeObject<Claim>(data);
+            var claim2 = JsonConvert.DeserializeObject<Claim>(data);
 
-            Assert.AreEqual(trust2.Type, trust.Type, "Type");
-            Assert.AreEqual(trust2.Algorithm, trust.Algorithm);
-            Assert.AreEqual(trust2.Issuer.Type, trust.Issuer.Type, "Issuer Type");
-            Assert.AreEqual(trust2.Issuer.Id, trust.Issuer.Id, "Issuer Address");
-            Assert.IsTrue(trust2.Issuer.Signature.Compare(trust.Issuer.Signature) == 0, "Issuer Signature");
+            Assert.AreEqual(claim2.Type, claim.Type, "Type");
+            Assert.AreEqual(claim2.Issuer.Type, claim.Issuer.Type, "Issuer Type");
+            Assert.AreEqual(claim2.Issuer.Id, claim.Issuer.Id, "Issuer Address");
+            Assert.IsTrue(claim2.Issuer.Proof.Compare(claim.Issuer.Proof) == 0, "Issuer Signature");
 
-            Assert.AreEqual(trust2.Subject.Type, trust.Subject.Type, "Subject Type");
-            Assert.AreEqual(trust2.Subject.Id, trust.Subject.Id, "Subject Address");
-            Assert.IsTrue(trust2.Subject.Signature.Compare(trust.Subject.Signature) == 0, "Subject Signature");
+            Assert.AreEqual(claim2.Subject.Type, claim.Subject.Type, "Subject Type");
+            Assert.AreEqual(claim2.Subject.Id, claim.Subject.Id, "Subject Address");
+            Assert.IsTrue(claim2.Subject.Proof.Compare(claim.Subject.Proof) == 0, "Subject Signature");
 
-            Assert.AreEqual(trust2.Expire, trust.Expire);
-            Assert.AreEqual(trust2.Activate, trust.Activate);
-            Assert.AreEqual(trust2.Created, trust.Created);
-            Assert.AreEqual(trust2.Note, trust.Note);
-            Assert.AreEqual(trust2.Timestamps.Count, trust.Timestamps.Count);
-            Assert.AreEqual(trust2.Value, trust.Value, "Claim");
-            Assert.AreEqual(trust2.Scope, trust.Scope, "Scope");
+            Assert.AreEqual(claim2.Expire, claim.Expire);
+            Assert.AreEqual(claim2.Activate, claim.Activate);
+            Assert.AreEqual(claim2.Created, claim.Created);
+            Assert.AreEqual(claim2.Metadata, claim.Metadata);
+            Assert.AreEqual(claim2.Timestamps.Count, claim.Timestamps.Count);
+            Assert.AreEqual(claim2.Value, claim.Value, "Claim");
+            Assert.AreEqual(claim2.Scope, claim.Scope, "Scope");
         }
 
     }

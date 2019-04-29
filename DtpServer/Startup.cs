@@ -76,6 +76,16 @@ namespace DtpServer
 
                 ConfigureDbContext(services);
 
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        //.AllowCredentials()
+                        );
+                });
+
                 // Mvc stuff
                 services.AddMvc(options =>
                 {
@@ -206,6 +216,8 @@ namespace DtpServer
                 }
 
             }
+
+            app.UseCors("CorsPolicy");
 
             using (TimeMe.Track("DTP apps"))
             {

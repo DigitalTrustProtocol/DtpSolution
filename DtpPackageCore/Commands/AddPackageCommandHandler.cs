@@ -1,4 +1,5 @@
-﻿using DtpCore.Extensions;
+﻿using DtpCore.Builders;
+using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Model.Database;
@@ -57,6 +58,8 @@ namespace DtpPackageCore.Commands
 
             foreach (var claim in claims)
             {
+                claim.Id = PackageBuilder.GetClaimID(claim); // Make sure that the claim has an ID for the database.
+
                 var claimNotifications = await _mediator.Send(new AddClaimCommand { Claim = claim, Package = getPackage(claim.Scope) });
 
                 _notifications.AddRange(claimNotifications);

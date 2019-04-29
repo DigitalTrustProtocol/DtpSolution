@@ -8,7 +8,6 @@ using DtpCore.Model;
 using DtpCore.Services;
 using DtpCore.Strategy;
 using DtpCore.Workflows;
-using DtpCore.Repository;
 using DtpCore.Strategy.Serialization;
 using DtpCore.Builders;
 using DtpCore.Notifications;
@@ -26,6 +25,7 @@ namespace DtpCore.Extensions
             
             services.AddScoped<IDTPApiService, DTPApiService>();
             services.AddScoped<IClaimBinary, ClaimBinary>();
+            services.AddScoped<IPackageBinary, PackageBinary>();
             services.AddScoped<ITrustDBService, TrustDBService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IKeyValueService, KeyValueService>();

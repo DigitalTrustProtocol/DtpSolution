@@ -20,7 +20,7 @@ namespace DtpCore.Extensions
             if (package.Server == null)
                 package.Server = new ServerIdentity();
 
-            package.Server.Signature = signature;
+            package.Server.Proof = signature;
         }
         
     }

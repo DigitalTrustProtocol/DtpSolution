@@ -80,11 +80,11 @@ namespace DtpPackageCore.Commands
                 }
             }
 
-            // Create the relation between the package and trust
+            // Create the relation between the package and claim
             request.Claim.ClaimPackages.Add(new ClaimPackageRelationship {Package = request.Package });
 
             _trustDBService.Add(request.Claim);
-            _trustDBService.SaveChanges();
+            _trustDBService.SaveChanges(); //TODO: Save changes now?
             
             await _notifications.Publish(new ClaimAddedNotification { Claim = request.Claim });
 

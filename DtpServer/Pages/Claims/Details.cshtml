@@ -18,14 +18,6 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => Model.Claim.Algorithm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Claim.Algorithm)
-            </td>
-        </tr>
-        <tr>
-            <td>
                 @Html.DisplayNameFor(model => Model.Claim.Created)
             </td>
             <td>
@@ -56,10 +48,10 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Signature):
+                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Proof):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Signature)
+                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Proof)
                         </td>
                     </tr>
                 </table>
@@ -89,10 +81,10 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(model => Model.Claim.Subject.Signature):
+                            @Html.DisplayNameFor(model => Model.Claim.Subject.Proof):
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Signature)
+                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Proof)
                         </td>
                     </tr>
                 </table>
