@@ -32,6 +32,11 @@ namespace DtpCore.Extensions
             services.AddScoped<IClaimBanListService, ClaimBanListService>();
 
             services.AddTransient<PackageBuilder>();
+            services.AddTransient<NumericIdentityValidator>();
+            services.AddTransient<Secp256k1PKHIdentityValidator>();
+            services.AddTransient<DTPAddressIdentityValidator>();
+            
+            services.AddTransient<IValidatorFactory, ValidatorFactory>();
             services.AddTransient<IPackageSchemaValidator, PackageSchemaValidator>();
 
             services.AddTransient<IHashAlgorithmFactory, HashAlgorithmFactory>();

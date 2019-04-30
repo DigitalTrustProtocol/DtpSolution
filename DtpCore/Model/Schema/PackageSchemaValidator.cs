@@ -16,14 +16,17 @@ namespace DtpCore.Model.Schema
         private IMerkleStrategyFactory _merkleStrategyFactory;
         private IHashAlgorithmFactory _hashAlgorithmFactory;
         private IPackageBinary _packageBinary;
+        private IValidatorFactory _validatorFactory;
 
-        public PackageSchemaValidator(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary)
+        public PackageSchemaValidator(IDerivationStrategyFactory derivationServiceFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary, IValidatorFactory validatorFactory)
         {
             _derivationServiceFactory = derivationServiceFactory;
             _merkleStrategyFactory = merkleStrategyFactory;
             _hashAlgorithmFactory = hashAlgorithmFactory;
             _packageBinary = packageBinary;
+            _validatorFactory = validatorFactory;
         }
+
 
 
 
@@ -84,13 +87,13 @@ namespace DtpCore.Model.Schema
 
         public SchemaValidationResult Validate(Claim claim, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
-            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory,  _packageBinary, options);
+            var engine = new ValidationEngine(_packageBinary, _derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory,  options, _validatorFactory);
             return engine.Validate(claim);
         }
 
         public SchemaValidationResult Validate(Package package, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
-            var engine = new ValidationEngine(_derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary, options);
+            var engine = new ValidationEngine(_packageBinary, _derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, options, _validatorFactory);
             return engine.Validate(package);
         }
 
@@ -102,7 +105,7 @@ namespace DtpCore.Model.Schema
             public const int ALGORITHM_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int ID_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int IDENTITY_ID_MAX_LENGTH = DEFAULT_MAX_LENGTH;
-            public const int SIGNATURE_MAX_LENGTH = DEFAULT_MAX_LENGTH;
+            public const int PROOF_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int METADATA_MAX_LENGTH = DEFAULT_MAX_LENGTH;
             public const int CLAIM_MAX_LENGTH = 1024;
             public const int TYPE_MAX_LENGTH = DEFAULT_MAX_LENGTH;
@@ -123,22 +126,24 @@ namespace DtpCore.Model.Schema
             private IMerkleStrategyFactory _merkleStrategyFactory;
             private IHashAlgorithmFactory _hashAlgorithmFactory;
 
-            private TrustSchemaValidationOptions _options; 
+            private TrustSchemaValidationOptions _options;
+            private IValidatorFactory _validatorFactory;
 
-
-            public ValidationEngine(IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, IPackageBinary packageBinary, TrustSchemaValidationOptions options)
+            public ValidationEngine(IPackageBinary packageBinary, IDerivationStrategyFactory derivationStrategyFactory, IMerkleStrategyFactory merkleStrategyFactory, IHashAlgorithmFactory hashAlgorithmFactory, TrustSchemaValidationOptions options, IValidatorFactory validatorFactory)
             {
+                _packageBinary = packageBinary;
                 _derivationStrategyFactory = derivationStrategyFactory;
                 _merkleStrategyFactory = merkleStrategyFactory;
                 _hashAlgorithmFactory = hashAlgorithmFactory;
-                _packageBinary = packageBinary;
                 _options = options;
+                _validatorFactory = validatorFactory;
             }
 
             public SchemaValidationResult Validate(Claim claim)
             {
                 try
                 {
+                    result = new SchemaValidationResult();
                     var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary);
                     var claimIndex = 0;
                     testBuilder.AddClaim(claim);
@@ -153,10 +158,10 @@ namespace DtpCore.Model.Schema
 
             public SchemaValidationResult Validate(Package package)
             {
-                MaxRangeCheck("Package Algorithm", package.Algorithm, "", ALGORITHM_MAX_LENGTH);
-                MaxRangeCheck("Package Id", package.Id, "", ID_MAX_LENGTH);
+                result.MaxRangeCheck("Package Algorithm", package.Algorithm, "", ALGORITHM_MAX_LENGTH);
+                result.MaxRangeCheck("Package Id", package.Id, "", ID_MAX_LENGTH);
                 
-                ValidateServer(package, result);
+                ValidateServer(package);
 
                 try
                 {
@@ -166,7 +171,7 @@ namespace DtpCore.Model.Schema
                     var claimIndex = 0;
                     if(package.Claims.Count == 0)
                     {
-                        MissingCheck("Package claims", "", "");
+                        result.MissingCheck("Package claims", "", "");
                     }
 
                     foreach (var claim in package.Claims)
@@ -187,7 +192,7 @@ namespace DtpCore.Model.Schema
                             result.Errors.Add("Package Id is not same as merkle tree root of all claim ID");
                     }
 
-                    ValidateTimestamps(package.Timestamps, "Package ", result);
+                    ValidateTimestamps(package.Timestamps, "Package ");
                 }
                 catch (Exception ex)
                 {
@@ -197,32 +202,32 @@ namespace DtpCore.Model.Schema
                 return result;
             }
 
-            private void ValidateServer(Package package, SchemaValidationResult result)
+            private void ValidateServer(Package package)
             {
                 if (package.Server == null)
                     return;
 
-                MaxRangeCheck("Package Server Type", package.Server.Type, "", TYPE_MAX_LENGTH);
-                MaxRangeCheck("Package Server Id", package.Server.Id, "", IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("Package Server Signature", package.Server.Proof, "", SIGNATURE_MAX_LENGTH);
+                result.MaxRangeCheck("Package Server Type", package.Server.Type, "", TYPE_MAX_LENGTH);
+                result.MaxRangeCheck("Package Server Id", package.Server.Id, "", IDENTITY_ID_MAX_LENGTH);
+                result.MaxRangeCheck("Package Server Signature", package.Server.Proof, "", PROOF_MAX_LENGTH);
             }
 
             private void ValidateClaim(int claimIndex, Claim claim, SchemaValidationResult result)
             {
                 var location = $"Claim Index: {claimIndex} - ";
 
-                MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
-                MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
-                MaxRangeCheck("Metadata", claim.Metadata, location, METADATA_MAX_LENGTH);
+                result.MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
+                result.MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
+                result.MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
+                result.MaxRangeCheck("Metadata", claim.Metadata, location, METADATA_MAX_LENGTH);
 
-                ValidateIssuer(claim, location, result);
-                ValidateSubject(claim, location, result);
-                ValidateScope(claim, location, result);
-                ValidateTimestamps(claim.Timestamps, location, result);
+                ValidateIssuer(claim, location);
+                ValidateSubject(claim, location);
+                ValidateScope(claim, location);
+                ValidateTimestamps(claim.Timestamps, location);
             }
 
-            private void ValidateTimestamps(IList<Timestamp> timestamps, string location, SchemaValidationResult result)
+            private void ValidateTimestamps(IList<Timestamp> timestamps, string location)
             {
                 if (timestamps == null || timestamps.Count == 0)
                     return; // Zero timestamps are allowed.
@@ -235,136 +240,58 @@ namespace DtpCore.Model.Schema
 
                 foreach (var timestamp in timestamps)
                 {
-                    MaxRangeCheck("Timestamp Algorithm", timestamp.Algorithm, location, ALGORITHM_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Blockchain", timestamp.Blockchain, location, TEXT50_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Receipt", timestamp.Path, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Service", timestamp.Service, location, TEXT200_MAX_LENGTH);
-                    MaxRangeCheck("Timestamp Source", timestamp.Source, location, ID_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Algorithm", timestamp.Algorithm, location, ALGORITHM_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Blockchain", timestamp.Blockchain, location, TEXT50_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Receipt", timestamp.Path, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Service", timestamp.Service, location, TEXT200_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Source", timestamp.Source, location, ID_MAX_LENGTH);
                 }
             }
 
 
-            private void ValidateIssuer(Claim claim, string location, SchemaValidationResult result)
+            private void ValidateIssuer(Claim claim, string location)
             {
-                if (!MissingCheck("Claim Issuer", claim.Issuer, location))
-                    return; 
-
-                MissingCheck("Issuer Id", claim.Issuer.Id, location);
-
-                MaxRangeCheck("claim.Issuer.Type", claim.Issuer.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("claim.Issuer.Id", claim.Issuer.Id, location, IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("claim.Issuer.Signature", claim.Issuer.Proof, location, SIGNATURE_MAX_LENGTH);
-
-                if (_options == TrustSchemaValidationOptions.Full)
-                {
-                    var scriptService = _derivationStrategyFactory.GetService(claim.Issuer.Type);
-
-                    var message = _packageBinary.ClaimBinary.GetIdSource(claim).ConvertToBase64();
-                    if (!scriptService.VerifySignatureMessage(message, claim.Issuer.Proof, claim.Issuer.Id))
-                    {
-                        result.Errors.Add(location + "Invalid issuer signature");
-                    }
-                }
-            }
-
-
-
-            private void ValidateSubject(Claim claim, string location, SchemaValidationResult result)
-            {
-                if (!MissingCheck("Claim Subject", claim.Subject, location))
+                if (result.MissingCheck("Claim Issuer", claim.Issuer, location))
                     return;
 
-                MissingCheck("claim.Subject.Id", claim.Subject.Id, location);
-
-                MaxRangeCheck("claim.Subject.Type", claim.Subject.Type, location, TYPE_MAX_LENGTH);
-                MaxRangeCheck("claim.Subject.Id", claim.Subject.Id, location, IDENTITY_ID_MAX_LENGTH);
-                MaxRangeCheck("claim.Subject.Signature", claim.Subject.Proof, location, SIGNATURE_MAX_LENGTH);
-
-
-                if (_options == TrustSchemaValidationOptions.Full)
-                {
-                    if (claim.Subject.Proof != null)
-                    {
-                        var scriptService = _derivationStrategyFactory.GetService(claim.Subject.Type);
-                        var message = _packageBinary.ClaimBinary.GetIdSource(claim).ConvertToBase64();
-                        if (!scriptService.VerifySignatureMessage(message, claim.Subject.Proof, claim.Subject.Id))
-                        {
-                            result.Errors.Add(location + "Invalid subject signature");
-                        }
-                    }
-                }
+                ValidateIdentity("Issuer", claim.Issuer, claim, location);
             }
 
-            private void ValidateScope(Claim claim, string location, SchemaValidationResult result)
+
+
+            private void ValidateSubject(Claim claim, string location)
+            {
+                if (result.MissingCheck("Claim Subject", claim.Subject, location))
+                    return;
+
+                ValidateIdentity("Subject", claim.Subject, claim, location);
+            }
+
+            private void ValidateIdentity(string name, Identity identity, Claim claim, string location)
+            {
+                var missing = result.MissingCheck($"{name} Type", identity.Type, location);
+                result.MaxRangeCheck($"{name} Type", identity.Type, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                missing |= result.MissingCheck(name + " Id", identity.Id, location);
+
+                if (missing)
+                    return;
+                
+                var validator = _validatorFactory.GetIdentityValidator(identity.Type);
+                if(validator == null)
+                {
+                    result.Errors.Add(string.Format(SchemaValidationResult.NotSupportedErrorTemplate, location, $"{name} Type"));
+                    return;
+                }
+
+                validator.Validate(name, identity, claim, location, result);
+            }
+
+            private void ValidateScope(Claim claim, string location)
             {
                 if (claim.Scope == null)
                     return;
 
-                MaxRangeCheck("claim.Scope", claim.Scope, location, SCOPE_MAX_LENGTH);
-            }
-
-
-            public const string MssingErrorTemplate = "{0}{1} is missing.";
-            public const string MaxRangeErrorTemplate = "{0}{1} may not be longer than {2} - is {3} bytes.";
-
-            private bool MissingCheck(string name, Identity value, string location)
-            {
-                if (value == null)
-                {
-                    result.Errors.Add(string.Format(MssingErrorTemplate, location, name));
-                    return false;
-                }
-
-                return true;
-            }
-
-
-            private bool MissingCheck(string name, string value, string location)
-            {
-                if (String.IsNullOrWhiteSpace(value))
-                {
-                    result.Errors.Add(string.Format(MssingErrorTemplate, location, name));
-                    return false;
-                }
-
-                return true;
-            }
-
-            private bool MissingCheck(string name, byte[] value, string location)
-            {
-                if (value == null || value.Length == 0)
-                {
-                    result.Errors.Add(string.Format(MssingErrorTemplate, location, name));
-                    return false;
-                }
-
-                return true;
-            }
-
-            private bool MaxRangeCheck(string name, string value, string location, int maxLength)
-            {
-                if (value == null)
-                    return true;
-
-                if (value.Length > maxLength)
-                {
-                    result.Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
-                    return false;
-                }
-                return true;
-            }
-
-            private bool MaxRangeCheck(string name, byte[] value, string location, int maxLength)
-            {
-                if (value == null)
-                    return true;
-
-                if (value.Length > maxLength)
-                {
-                    result.Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
-                    return false;
-                }
-                return true;
+                result.MaxRangeCheck("claim.Scope", claim.Scope, location, SCOPE_MAX_LENGTH);
             }
         }
     }
