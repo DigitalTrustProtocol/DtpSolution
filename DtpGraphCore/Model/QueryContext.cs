@@ -110,13 +110,13 @@ namespace DtpGraphCore.Model
         internal void SetupIssuers(QueryRequest query)
         {
 
-            if (!GraphTrustService.Graph.IssuerIndex.ContainsKey(query.Issuer))
+            if (!GraphTrustService.Graph.IssuerIndex.ContainsKey(query.Issuer.Id))
             {
                 Errors.Add($"Unknown Issuer {query.Issuer}");
                 return;
             }
 
-            var index = GraphTrustService.Graph.IssuerIndex[query.Issuer];
+            var index = GraphTrustService.Graph.IssuerIndex[query.Issuer.Id];
             Issuer =  GraphTrustService.Graph.Issuers[index];
         }
 
@@ -124,24 +124,23 @@ namespace DtpGraphCore.Model
         {
             foreach (var subject in query.Subjects)
             {
-                if (GraphTrustService.Graph.IssuerIndex.ContainsKey(subject.Address))
+                if (GraphTrustService.Graph.IssuerIndex.ContainsKey(subject))
                 {
-                    var index = GraphTrustService.Graph.IssuerIndex[subject.Address];
+                    var index = GraphTrustService.Graph.IssuerIndex[subject];
                     Targets[index] = GraphTrustService.Graph.Issuers[index];
                 }
                 else
-                    Errors.Add($"Unknown subject {subject.Address}");
+                    Errors.Add($"Unknown subject {subject}");
             }
 
         }
 
         internal void SetupQueryClaim(QueryRequest query)
         {
-            var scopeValue = (query.Scope != null) ? query.Scope.Value : string.Empty;
-            if (!GraphTrustService.Graph.Scopes.ContainsKey(scopeValue))
-                Errors.Add($"Unknown claim scope {scopeValue}");
+            if (!GraphTrustService.Graph.Scopes.ContainsKey(query.Scope))
+                Errors.Add($"Unknown claim scope {query.Scope}");
             else
-                ClaimScope = GraphTrustService.Graph.Scopes.GetIndex(scopeValue);
+                ClaimScope = GraphTrustService.Graph.Scopes.GetIndex(query.Scope);
 
             // If no types have been defined then use the defaults
             if (query.Types == null || query.Types.Count == 0)

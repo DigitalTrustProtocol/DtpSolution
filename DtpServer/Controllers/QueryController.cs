@@ -7,6 +7,7 @@ using DtpCore.Controllers;
 using DtpGraphCore.Builders;
 using DtpGraphCore.Enumerations;
 using System.Threading.Tasks;
+using DtpServer.AspNetCore.MVC.Filters;
 
 namespace DtpServer.Controllers
 {
@@ -18,18 +19,17 @@ namespace DtpServer.Controllers
     {
 
         public IGraphQueryService SearchService { get; set; }
-        private IQueryRequestService _queryRequestService;
+        //private IQueryRequestService _queryRequestService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="service"></param>
         /// <param name="queryRequestService"></param>
-        /// <param name="serviceProvider"></param>
-        public QueryController(IGraphQueryService service, IQueryRequestService queryRequestService)
+        public QueryController(IGraphQueryService service)
         {
             SearchService = service;
-            _queryRequestService = queryRequestService;
+            //_queryRequestService = queryRequestService;
         }
 
         //        public IHttpActionResult Get(string issuer, string subject, string subjectType = "", string? scope, bool? trust, bool? confirm, bool? rating)
@@ -51,38 +51,39 @@ namespace DtpServer.Controllers
         //    return ResolvePost(builder.Query);
         //}
 
-        /// <summary>
-        /// Query the graph on a single subject
-        /// </summary>
-        /// <param name="issuer"></param>
-        /// <param name="subject"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
-        {
-            var builder = new QueryRequestBuilder(null, PackageBuilder.BINARY_TRUST_DTP1);
-            builder.Query.Flags = flags;
-            builder.Add(issuer, subject);
+        ///// <summary>
+        ///// Query the graph on a single subject
+        ///// </summary>
+        ///// <param name="issuer"></param>
+        ///// <param name="subject"></param>
+        ///// <param name="flags"></param>
+        ///// <returns>DtpGraphCore.Model.QueryContext</returns>
+        //[HttpGet]
+        //public ActionResult<QueryContext> Get(string issuer, string subject, QueryFlags flags = QueryFlags.LeafsOnly)
+        //{
+        //    var builder = new QueryRequestBuilder(null, PackageBuilder.BINARY_TRUST_DTP1);
+        //    builder.Query.Flags = flags;
+        //    builder.Add(issuer, subject);
 
-            _queryRequestService.Verify(builder.Query);
+        //    _queryRequestService.Verify(builder.Query);
 
-            return ResolvePost(builder.Query);
-        }
+        //    return ResolvePost(builder.Query);
+        //}
 
         /// <summary>
         /// Query the graph on multiple subject
         /// </summary>
         /// <param name="query"></param>
-        /// <returns></returns>
+        /// <returns>The result of the query</returns>
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ValidateModel(typeof(QueryRequest), typeof(IQueryRequestValidator))]
         [HttpPost]
-        public IActionResult ResolvePost([FromBody]QueryRequest query)
+        public ActionResult<QueryContext> ResolvePost([FromBody]QueryRequest query)
         {
-            _queryRequestService.Verify(query);
+            //_queryRequestService.Verify(query);
 
             var result = SearchService.Execute(query);
-
-
 
             return StatusCode(201, result);
         }

@@ -3,7 +3,7 @@ using DtpCore.Model;
 
 namespace DtpCore.Interfaces
 {
-    public interface IPackageSchemaValidator
+    public interface IPackageSchemaValidator : IModelSchemaValidator
     {
         string GetTrustTypeString(Claim trust);
         TrustType GetTrustTypeObject(Claim trust);

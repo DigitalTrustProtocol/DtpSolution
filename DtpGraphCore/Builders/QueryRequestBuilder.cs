@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DtpCore.Model;
 using DtpGraphCore.Enumerations;
 using DtpGraphCore.Model;
 
@@ -12,12 +13,12 @@ namespace DtpGraphCore.Builders
         {
         }
 
-        public QueryRequestBuilder(TrustScope scope, string type)
+        public QueryRequestBuilder(string scope, string type)
         {
             Query = new QueryRequest
             {
-                Issuer = null,
-                Subjects = new List<SubjectQuery>(),
+                Issuer = new Identity(),
+                Subjects = new List<string>(),
                 Scope = scope,
                 Types = new List<string>() { type },
                 Flags = QueryFlags.FullTree
@@ -26,8 +27,9 @@ namespace DtpGraphCore.Builders
 
         public QueryRequestBuilder Add(string issuerId, string subjectAddress)
         {
-            Query.Issuer = issuerId;
-            Query.Subjects.Add(new SubjectQuery { Address = subjectAddress });
+            Query.Issuer.Type = "address.dtp1";
+            Query.Issuer.Id = issuerId;
+            Query.Subjects.Add(subjectAddress);
 
             return this;
         }

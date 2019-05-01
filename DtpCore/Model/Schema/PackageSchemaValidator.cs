@@ -84,6 +84,10 @@ namespace DtpCore.Model.Schema
             return false;
         }
 
+        public SchemaValidationResult Validate(object model)
+        {
+            return null;
+        }
 
         public SchemaValidationResult Validate(Claim claim, TrustSchemaValidationOptions options = TrustSchemaValidationOptions.Full)
         {
@@ -96,7 +100,6 @@ namespace DtpCore.Model.Schema
             var engine = new ValidationEngine(_packageBinary, _derivationServiceFactory, _merkleStrategyFactory, _hashAlgorithmFactory, options, _validatorFactory);
             return engine.Validate(package);
         }
-
 
         private class ValidationEngine
         {

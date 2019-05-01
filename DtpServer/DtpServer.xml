@@ -4,6 +4,22 @@
         <name>DtpServer</name>
     </assembly>
     <members>
+        <member name="T:DtpServer.AspNetCore.MVC.Filters.ValidateModelAttribute">
+            <summary>
+            Validate the package
+            </summary>
+        </member>
+        <member name="M:DtpServer.AspNetCore.MVC.Filters.ValidateModelAttribute.#ctor(System.Type,System.Type)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DtpServer.AspNetCore.MVC.Filters.ValidateModelAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Validate data
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:DtpServer.AspNetCore.MVC.Filters.ValidatePackageAttribute">
             <summary>
             Validate the package
@@ -52,44 +68,24 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:DtpServer.Controllers.ThrowController">
-            <summary>
-            Test the exception handling in API
-            </summary>
-        </member>
-        <member name="T:DtpServer.Controllers.PingController">
-            <summary>
-            Test for heartbeat
-            </summary>
-        </member>
         <member name="T:DtpServer.Controllers.QueryController">
             <summary>
             Query the Graph
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.QueryController.#ctor(DtpGraphCore.Interfaces.IGraphQueryService,DtpGraphCore.Interfaces.IQueryRequestService)">
+        <member name="M:DtpServer.Controllers.QueryController.#ctor(DtpGraphCore.Interfaces.IGraphQueryService)">
             <summary>
             Constructor
             </summary>
             <param name="service"></param>
             <param name="queryRequestService"></param>
-            <param name="serviceProvider"></param>
-        </member>
-        <member name="M:DtpServer.Controllers.QueryController.Get(System.String,System.String,DtpGraphCore.Enumerations.QueryFlags)">
-            <summary>
-            Query the graph on a single subject
-            </summary>
-            <param name="issuer"></param>
-            <param name="subject"></param>
-            <param name="flags"></param>
-            <returns></returns>
         </member>
         <member name="M:DtpServer.Controllers.QueryController.ResolvePost(DtpGraphCore.Model.QueryRequest)">
             <summary>
             Query the graph on multiple subject
             </summary>
             <param name="query"></param>
-            <returns></returns>
+            <returns>The result of the query</returns>
         </member>
         <member name="M:DtpServer.Pages.Packages.DetailsModel.OnGetAsync(System.Nullable{System.Int32})">
             <summary>

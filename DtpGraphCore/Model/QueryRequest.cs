@@ -1,29 +1,30 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using DtpGraphCore.Enumerations;
+using DtpCore.Model;
 
 namespace DtpGraphCore.Model
 {
-    [JsonObject(MemberSerialization.OptIn)]
-    public class TrustScope
-    {
-        /// <summary>
-        /// Empty Scope is global.
-        /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public string Type;
-        public bool ShouldSerializeType()
-        {
-            return !string.IsNullOrEmpty(Type);
-        }
+    //[JsonObject(MemberSerialization.OptIn)]
+    //public class TrustScope
+    //{
+    //    /// <summary>
+    //    /// Empty Scope is global.
+    //    /// </summary>
+    //    [JsonProperty(PropertyName = "type")]
+    //    public string Type;
+    //    public bool ShouldSerializeType()
+    //    {
+    //        return !string.IsNullOrEmpty(Type);
+    //    }
 
-        [JsonProperty(PropertyName = "value")]
-        public string Value;
-        public bool ShouldSerializeValue()
-        {
-            return !string.IsNullOrEmpty(Value);
-        }
-    }
+    //    [JsonProperty(PropertyName = "value")]
+    //    public string Value;
+    //    public bool ShouldSerializeValue()
+    //    {
+    //        return !string.IsNullOrEmpty(Value);
+    //    }
+    //}
 
 
     /// <summary>
@@ -32,11 +33,11 @@ namespace DtpGraphCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class QueryRequest
     {
-        [JsonProperty(PropertyName = "issuers")]
-        public string Issuer;
+        [JsonProperty(PropertyName = "issuer")]
+        public Identity Issuer;
 
         [JsonProperty(PropertyName = "subjects")]
-        public List<SubjectQuery> Subjects;
+        public List<string> Subjects;
 
         /// <summary>
         /// The claim types to search on.
@@ -48,21 +49,15 @@ namespace DtpGraphCore.Model
         /// Empty Scope is global.
         /// </summary>
         [JsonProperty(PropertyName = "scope")]
-        public TrustScope Scope;
-        public bool ShouldSerializeClaimScope()
-        {
-            return Scope != null;
-        }
+        public string Scope = string.Empty;
+        public bool ShouldSerializeScope() { return !string.IsNullOrEmpty(Scope); }
 
         /// <summary>
         /// Limit the search level. Cannot be more than the predefined max level.
         /// </summary>
         [JsonProperty(PropertyName = "level")]
         public int Level;
-        public bool ShouldSerializeLevel()
-        {
-            return Level > 0;
-        }
+        public bool ShouldSerializeLevel() { return Level > 0; }
 
         /// <summary>
         /// Specifies how the search should be performed and what results should be returned.
