@@ -10,7 +10,7 @@ namespace DtpCore.Model.Schema
         public const string NotNumericErrorTemplate = "{0}{1} is invalid, has to be numeric.";
 
 
-        public void Validate(string name, Identity identity, Claim claim, string location, SchemaValidationResult result)
+        public void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result)
         {
             result.MaxRangeCheck($"{name} Id", identity.Id, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
             result.NotEmptyCheck($"{name} Proof", identity.Proof, location);

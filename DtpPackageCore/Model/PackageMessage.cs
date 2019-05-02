@@ -1,4 +1,5 @@
 ﻿using DtpCore.Extensions;
+using DtpCore.IO;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -29,9 +30,13 @@ namespace DtpPackageCore.Model
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                ms.LWriteString(File);
-                ms.LWriteString(Scope);
-                ms.LWriteString(ServerId);
+                var bw = new CompressedBinaryWriter(ms);
+
+                bw.Write(File);
+                bw.Write(Scope);
+                bw.Write(ServerId);
+                bw.Flush();
+
                 return ms.ToArray();
             }
         }

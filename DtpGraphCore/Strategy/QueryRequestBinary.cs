@@ -1,24 +1,25 @@
 ﻿using System.IO;
 using DtpCore.Extensions;
 using DtpCore.Model;
-using DtpCore.Interfaces;
+using DtpGraphCore.Model;
+using DtpGraphCore.Interfaces;
 using DtpCore.IO;
 
 namespace DtpCore.Strategy
 {
-    public class ClaimBinary : IClaimBinary
+    public class QueryRequestBinary : IQueryRequestBinary
     {
         /// <summary>
         /// Get the Id source data from the claim
         /// </summary>
         /// <param name="claim"></param>
         /// <returns></returns>
-        public byte[] GetIdSource(Claim claim)
+        public byte[] GetIdSource(QueryRequest queryRequest)
         {
             using (MemoryStream ms = new MemoryStream())
             {
                 var bw = new CompressedBinaryWriter(ms);
-                BuildSource(claim, bw);
+                BuildSource(queryRequest, bw);
                 bw.Flush();
 
                 return ms.ToArray();
@@ -31,28 +32,19 @@ namespace DtpCore.Strategy
         /// </summary>
         /// <param name="claim"></param>
         /// <returns></returns>
-        public byte[] Serialize(Claim claim)
+        public byte[] Serialize(QueryRequest queryRequest)
         {
+
             using (MemoryStream ms = new MemoryStream())
             {
                 var bw = new CompressedBinaryWriter(ms);
-                BuildSource(claim, bw);
 
-                bw.Write(claim.Issuer.Proof);
-                bw.Write(claim.Subject.Proof);
-                bw.Write(claim.Root);
-                bw.Write(claim.TemplateId);
+                BuildSource(queryRequest, bw);
+                bw.Write(queryRequest.Issuer.Proof);
 
-                // ID is not added as it is dependen on the issuer/subject type 
-
-                foreach (var timestamp in claim.Timestamps)
-                {
-
-                    // TODO: Need to add timestamps here!
-                }
                 bw.Flush();
-
-                return ms.ToArray();
+                
+                return ((MemoryStream)bw.BaseStream).ToArray();
             }
         }
 
@@ -66,24 +58,27 @@ namespace DtpCore.Strategy
         /// Get the binary data for ID calculation. Do not include the proof of Issuer and subject.
         /// </summary>
         /// <param name="claim"></param>
-        /// <param name="bw"></param>
-        private static void BuildSource(Claim claim, CompressedBinaryWriter bw)
+        /// <param name="ms"></param>
+        private static void BuildSource(QueryRequest queryRequest, CompressedBinaryWriter bw)
         {
-            bw.Write(claim.Type.ToLowerSafe()); // First type!
+            
+            bw.Write(queryRequest.Issuer.Type.ToLowerSafe());
+            bw.Write(queryRequest.Issuer.Id);
 
-            bw.Write(claim.Issuer.Type.ToLowerSafe());
-            bw.Write(claim.Issuer.Id);
+            bw.Write(queryRequest.Scope);
+            bw.Write((byte)queryRequest.Flags);
 
-            bw.Write(claim.Subject.Type.ToLowerSafe());
-            bw.Write(claim.Subject.Id);
+            bw.Write(queryRequest.Types.Count);
+            foreach (var type in queryRequest.Types)
+            {
+                bw.Write(type);
+            }
 
-            bw.Write(claim.Value);
-
-            bw.Write(claim.Scope);
-            bw.Write(claim.Metadata);
-            bw.Write(claim.Created);
-            bw.Write(claim.Activate);
-            bw.Write(claim.Expire);
+            bw.Write(queryRequest.Subjects.Count);
+            foreach (var subject in queryRequest.Subjects)
+            {
+                bw.Write(subject);
+            }
         }
 
     }

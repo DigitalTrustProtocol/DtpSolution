@@ -1,5 +1,6 @@
 ﻿using DtpCore.Extensions;
 using DtpCore.Interfaces;
+using DtpCore.IO;
 using DtpCore.Model;
 using System.IO;
 
@@ -15,6 +16,24 @@ namespace DtpCore.Strategy
             ClaimBinary = claimBinary;
         }
 
+        public byte[] GetIdSource(Package package)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var bw = new CompressedBinaryWriter(ms);
+
+                bw.Write(package.Algorithm.ToLowerSafe());
+                bw.Write(package.Server.Type.ToLowerSafe());
+                bw.Write(package.Server.Id);
+                bw.Write(package.Created);
+                //ms.WriteClaimString(package.Server.Id); // Id can always be calculated
+                bw.Flush();
+
+                return ms.ToArray();
+            }
+        }
+
+
         /// <summary>
         ///  Not implemented!
         /// </summary>
@@ -24,21 +43,6 @@ namespace DtpCore.Strategy
         {
 
             return null;
-        }
-
-
-        public byte[] GetIdSource(Package package)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                ms.LWriteString(package.Algorithm.ToLowerSafe());
-                ms.LWriteString(package.Server.Type.ToLowerSafe());
-                ms.LWriteString(package.Server.Id);
-                ms.LWriteInteger(package.Created);
-                //ms.WriteClaimString(package.Server.Id); // Id can always be calculated
-
-                return ms.ToArray();
-            }
         }
 
     }

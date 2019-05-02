@@ -8,6 +8,7 @@ namespace DtpCore.Model
     {
         public const string MssingErrorTemplate = "{0}{1} is missing.";
         public const string MaxRangeErrorTemplate = "{0}{1} may not be longer than {2} - is {3} bytes.";
+        public const string MaxValueErrorTemplate = "{0}{1} may not be larger than {2}.";
         public const string NotSupportedErrorTemplate = "{0}{1} is not supported.";
         public const string DefinedErrorTemplate = "{0}{1} has to be empty.";
 
@@ -63,7 +64,7 @@ namespace DtpCore.Model
         {
             if (value == null || value.Length == 0)
             {
-                this.Errors.Add(string.Format(MssingErrorTemplate, location, name));
+                Errors.Add(string.Format(MssingErrorTemplate, location, name));
                 return true;
             }
 
@@ -77,7 +78,7 @@ namespace DtpCore.Model
                 return false;
             }
 
-            this.Errors.Add(string.Format(DefinedErrorTemplate, location, name));
+            Errors.Add(string.Format(DefinedErrorTemplate, location, name));
             return true;
         }
 
@@ -88,7 +89,7 @@ namespace DtpCore.Model
                 return true;
             }
 
-            this.Errors.Add(string.Format(DefinedErrorTemplate, location, name));
+            Errors.Add(string.Format(DefinedErrorTemplate, location, name));
             return false;
         }
 
@@ -99,7 +100,17 @@ namespace DtpCore.Model
 
             if (value.Length > maxLength)
             {
-                this.Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
+                Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
+                return false;
+            }
+            return true;
+        }
+
+        public bool MaxRangeCheck(string name, int value, string location, int maxLength)
+        {
+            if (value > maxLength)
+            {
+                Errors.Add(string.Format(MaxValueErrorTemplate, location, name, maxLength, value));
                 return false;
             }
             return true;
@@ -112,7 +123,7 @@ namespace DtpCore.Model
 
             if (value.Length > maxLength)
             {
-                this.Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
+                Errors.Add(string.Format(MaxRangeErrorTemplate, location, name, maxLength, value.Length));
                 return false;
             }
             return true;

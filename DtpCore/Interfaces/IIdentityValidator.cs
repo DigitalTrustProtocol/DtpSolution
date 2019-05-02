@@ -4,6 +4,6 @@ namespace DtpCore.Interfaces
 {
     public interface IIdentityValidator
     {
-        void Validate(string name, Identity identity, Claim claim, string location, SchemaValidationResult result);
+        void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result);
     }
 }

@@ -24,8 +24,9 @@ namespace DtpCore.Model.Schema
             _claimBinary = claimBinary;
         }
 
-        public void Validate(string name, Identity identity, Claim claim, string location, SchemaValidationResult result)
+        public void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result)
         {
+            var claim = source as Claim;
             result.MaxRangeCheck($"{name} Id", identity.Id, location, 40);
             result.MissingCheck($"{name} Proof", identity.Id, location);
             result.MaxRangeCheck($"{name} Proof", identity.Proof, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);

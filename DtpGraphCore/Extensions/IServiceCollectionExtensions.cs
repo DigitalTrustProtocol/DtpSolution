@@ -16,9 +16,9 @@ namespace DtpGraphCore.Extensions
             services.AddScoped<IDerivationStrategy, DerivationSecp256k1PKH>();
             services.AddScoped<IGraphLoadSaveService, GraphLoadSaveService>();
             services.AddScoped<IGraphClaimService, GraphClaimService>();
+            services.AddTransient<IQueryRequestBinary, QueryRequestBinary>();
 
             services.AddTransient<IGraphQueryService, GraphQueryService>();
-            services.AddTransient<IQueryRequestService, QueryRequestService>();
             services.AddTransient<IGraphWorkflowService, GraphWorkflowService>();
             services.AddTransient<IQueryRequestValidator, QueryRequestValidator>();
             
