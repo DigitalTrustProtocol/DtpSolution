@@ -33,8 +33,11 @@ namespace DtpCore.Extensions
 
             services.AddTransient<PackageBuilder>();
             services.AddTransient<NumericIdentityValidator>();
+            services.AddTransient<AlphaNumericIdentityValidator>();
             services.AddTransient<Secp256k1PKHIdentityValidator>();
             services.AddTransient<DTPAddressIdentityValidator>();
+            services.AddTransient<UriIdentityValidator>();
+            services.AddTransient<StringIdentityValidator>();
 
             //services.AddTransient<ISecp256k1PKHIdentityValidator, Secp256k1PKHIdentityValidator>();
             //services.AddTransient<IAddressIdentityValidator, DTPAddressIdentityValidator>();

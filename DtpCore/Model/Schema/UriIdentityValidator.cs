@@ -1,13 +1,13 @@
 ﻿using DtpCore.Interfaces;
-using System.Text.RegularExpressions;
+using System;
 
 namespace DtpCore.Model.Schema
 {
-    public class NumericIdentityValidator : IIdentityValidator
+    public class UriIdentityValidator : IIdentityValidator
     {
 
-        public const string NAME = "numeric";
-        public const string NotNumericErrorTemplate = "{0}{1} is invalid, has to be numeric.";
+        public const string NAME = "uri";
+        public const string NotUriErrorTemplate = "{0}{1} is invalid, has to be a valid uri.";
 
 
         public void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result)
@@ -15,12 +15,9 @@ namespace DtpCore.Model.Schema
             result.MaxRangeCheck($"{name} Id", identity.Id, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
             result.MaxRangeCheck($"{name} Proof", identity.Proof, location, 0);
 
-
-            var regex = new Regex(@"^\d+$"); // ^[0-9]+$
-
-            if (!regex.IsMatch(identity.Id))
+            if (!Uri.IsWellFormedUriString(identity.Id, UriKind.Absolute))
             {
-                result.Errors.Add(string.Format(NotNumericErrorTemplate, location, $"{name}.Id"));
+                result.Errors.Add(string.Format(NotUriErrorTemplate, location, $"{name}.Id"));
             }
         }
     }

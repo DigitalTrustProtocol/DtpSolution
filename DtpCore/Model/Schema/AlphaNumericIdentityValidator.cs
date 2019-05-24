@@ -3,11 +3,11 @@ using System.Text.RegularExpressions;
 
 namespace DtpCore.Model.Schema
 {
-    public class NumericIdentityValidator : IIdentityValidator
+    public class AlphaNumericIdentityValidator : IIdentityValidator
     {
 
-        public const string NAME = "numeric";
-        public const string NotNumericErrorTemplate = "{0}{1} is invalid, has to be numeric.";
+        public const string NAME = "alphanumeric";
+        public const string NotAlphaNumericErrorTemplate = "{0}{1} is invalid, has to be alpha numeric.";
 
 
         public void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result)
@@ -15,12 +15,11 @@ namespace DtpCore.Model.Schema
             result.MaxRangeCheck($"{name} Id", identity.Id, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
             result.MaxRangeCheck($"{name} Proof", identity.Proof, location, 0);
 
-
-            var regex = new Regex(@"^\d+$"); // ^[0-9]+$
+            var regex = new Regex(@"^\w+$"); // ^[0-9]+$
 
             if (!regex.IsMatch(identity.Id))
             {
-                result.Errors.Add(string.Format(NotNumericErrorTemplate, location, $"{name}.Id"));
+                result.Errors.Add(string.Format(NotAlphaNumericErrorTemplate, location, $"{name}.Id"));
             }
         }
     }

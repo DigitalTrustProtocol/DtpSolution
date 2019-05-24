@@ -26,9 +26,13 @@ namespace DtpCore.Model.Schema
             Type type = null;
             switch (name.ToLower())
             {
-                case DerivationSecp256k1PKH.NAME: type = typeof(Secp256k1PKHIdentityValidator); break;
+                case Secp256k1PKHIdentityValidator.NAME: type = typeof(Secp256k1PKHIdentityValidator); break;
                 case NumericIdentityValidator.NAME: type = typeof(NumericIdentityValidator); break;
+                case AlphaNumericIdentityValidator.NAME: type = typeof(AlphaNumericIdentityValidator); break;
                 case DTPAddressIdentityValidator.NAME: type = typeof(DTPAddressIdentityValidator); break;
+                case UriIdentityValidator.NAME: type = typeof(UriIdentityValidator); break;
+                case StringIdentityValidator.NAME: type = typeof(StringIdentityValidator); break;
+
                 default: return null;
             }
 
