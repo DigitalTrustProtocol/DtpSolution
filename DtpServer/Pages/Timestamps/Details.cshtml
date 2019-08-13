@@ -9,8 +9,16 @@
 <table class="table table-bordered">
     <tbody>
         <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Type):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Type)</td>
+        </tr>
+        <tr>
             <td>@Html.DisplayNameFor(t => Model.Timestamp.Source):</td>
             <td>@Html.DisplayFor(t => Model.Timestamp.Source)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Path):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Path)</td>
         </tr>
         <tr>
             <td>@Html.DisplayNameFor(t => Model.Timestamp.Registered):</td>
@@ -26,15 +34,9 @@
             <td>@Html.DisplayNameFor(t => Model.Timestamp.Service):</td>
             <td>@Html.DisplayFor(t => Model.Timestamp.Service)</td>
         </tr>
-
         <tr>
-            <td>@Html.DisplayNameFor(t => Model.Timestamp.Path):</td>
-            <td>@Html.DisplayFor(t => Model.Timestamp.Path)</td>
-        </tr>
-
-        <tr>
-            <td>@Html.DisplayNameFor(t => Model.Timestamp.Algorithm):</td>
-            <td>@Html.DisplayFor(t => Model.Timestamp.Algorithm)</td>
+            <td>@Html.DisplayNameFor(t => Model.Timestamp.Receipt):</td>
+            <td>@Html.DisplayFor(t => Model.Timestamp.Receipt)</td>
         </tr>
 
         <tr>

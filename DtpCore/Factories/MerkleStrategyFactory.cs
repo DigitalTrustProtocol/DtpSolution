@@ -17,19 +17,22 @@ namespace DtpCore.Factories
 
         public IMerkleTree GetStrategy(string name = DOUBLE256_MERKLE_DTP1)
         {
-            if(string.IsNullOrWhiteSpace(name))
-                name = DOUBLE256_MERKLE_DTP1;
+            //if(string.IsNullOrWhiteSpace(name))
+            //    name = DOUBLE256_MERKLE_DTP1;
 
-            var parts = name.ToLower().Split(".");
-            if (parts.Length != 3)
-                throw new ApplicationException($"name {name} do not have 3 parts.");
+            // Always use default
+            return new MerkleTreeSorted(_hashAlgorithmFactory.GetAlgorithm(""));
 
-            var hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(parts[0]);
+            //var parts = name.ToLower().Split(".");
+            //if (parts.Length != 3)
+            //    throw new ApplicationException($"name {name} do not have 3 parts.");
 
-            if (parts[1].Equals("merkle") && parts[2].Equals("dtp1"))
-                return new MerkleTreeSorted(hashAlgorithm);
+            //var hashAlgorithm = _hashAlgorithmFactory.GetAlgorithm(parts[0]);
 
-            return null;
+            //if (parts[1].Equals("merkle") && parts[2].Equals("dtp1"))
+            //    return new MerkleTreeSorted(hashAlgorithm);
+
+            //return null;
         }
     }
 }

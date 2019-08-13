@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\Database.txt = Documentation\Database.txt
 		Documentation\Install.txt = Documentation\Install.txt
 		Documentation\PackageSchema.json = Documentation\PackageSchema.json
+		schema.json = schema.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpCore", "DtpCore\DtpCore.csproj", "{886C20DC-9124-4E2F-B248-E638BE6D855B}"

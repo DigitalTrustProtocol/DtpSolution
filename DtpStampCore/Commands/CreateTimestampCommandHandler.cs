@@ -32,12 +32,9 @@ namespace DtpStampCore.Commands
             var timestamp = await _mediator.Send(new GetTimestampCommand(request.Source, true));
             if (timestamp == null)
             {
-                // TODO: Lookup configuration
-                var algorithm = $"{DerivationSecp256k1PKH.DERIVATION_NAME}-{MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1}";
-
                 timestamp = new Timestamp
                 {
-                    Algorithm = algorithm,
+                    Type = Timestamp.DEFAULT_TYPE,
                     Blockchain = _configuration.Blockchain(),
                     Source = request.Source,
                     Registered = DateTime.Now.ToUnixTime()

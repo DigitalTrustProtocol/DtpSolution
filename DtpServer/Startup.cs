@@ -8,32 +8,22 @@ using DtpStampCore.Extensions;
 using DtpCore.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NicolasDorier.RateLimits;
 using DtpServer.Extensions;
-using Microsoft.Extensions.FileProviders;
 using DtpPackageCore.Extensions;
 using MediatR;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Reflection;
 using System.IO;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
 using Serilog;
-using System.Linq;
-using DtpServer.Platform;
 using DtpCore.Services;
 using DtpCore.Service;
-using DtpServer.Platform.ipfs;
-using DtpPackageCore.Interfaces;
 using System.Threading;
+using DtpServer.Platform;
 
 namespace DtpServer
 {
@@ -45,7 +35,7 @@ namespace DtpServer
         private readonly IHostingEnvironment _hostingEnv;
         private IServiceCollection _services;
         private CancellationTokenSource cancellationTokenSource;
-        public event EventHandler IPFSReady;
+        //public event EventHandler IPFSReady;
 
         /// <summary>
         /// Constructor
@@ -176,11 +166,11 @@ namespace DtpServer
         {
             using (TimeMe.Track("AddBackgroundServices"))
             {
-                services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, IPFSShell>(serviceProvider => {
-                    var ipfsShell = new IPFSShell(Program.Platform);
-                    ipfsShell.WaitForInputReady += (sender, args) => OnIPFSReady(args);
-                    return ipfsShell;
-                    });
+                //services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, IPFSShell>(serviceProvider => {
+                //    var ipfsShell = new IPFSShell(Program.Platform);
+                //    ipfsShell.WaitForInputReady += (sender, args) => OnIPFSReady(args);
+                //    return ipfsShell;
+                //    });
 
                 services.AddScheduler((sender, args) =>
                 {
@@ -198,7 +188,7 @@ namespace DtpServer
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime, RateLimitService rateLimitService, ApplicationEvents applicationEvents)
         {
             app.AllServices(_services);
-            applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
+            //applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
 
             using (TimeMe.Track("IsDevelopment"))
             {
@@ -234,7 +224,7 @@ namespace DtpServer
                 app.UseMiddleware<SerilogDiagnostics>();
                 app.UseHttpsRedirection();
                 app.UseStaticFiles();
-
+                //app.UseFileServer(enableDirectoryBrowsing: true);
                 //app.UseCookiePolicy();
                 //app.UseHealthChecks("/ready");
 
@@ -251,27 +241,27 @@ namespace DtpServer
                     routes.MapRoute(
                             name: "default",
                             template: "{controller}/{action=Index}/{id?}");
-            });
+                });
             }
 
-            IPFSReady += (sender, e) =>
-            {
-                // Wait for IPFS to be ready
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
-                    packageService.AddPackageSubscriptions();
-                }
-            };
+            //IPFSReady += (sender, e) =>
+            //{
+            //    // Wait for IPFS to be ready
+            //    using (var scope = app.ApplicationServices.CreateScope())
+            //    {
+            //        var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
+            //        packageService.AddPackageSubscriptions();
+            //    }
+            //};
 
-            applicationEvents.WaitBootupTasksAsync().Wait();
+            //applicationEvents.WaitBootupTasksAsync().Wait();
 
         }
 
-        protected virtual void OnIPFSReady(EventArgs e)
-        {
-            IPFSReady?.Invoke(this, e);
-        }
+        //protected virtual void OnIPFSReady(EventArgs e)
+        //{
+        //    IPFSReady?.Invoke(this, e);
+        //}
 
     }
 }

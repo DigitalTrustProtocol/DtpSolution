@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "type": {
+      "@id": "http://trust.dance/identity#type",
+      "@type": "xsd:string"
+    },
+    "id": {
+      "@id": "http://trust.dance/identity#id",
+      "@type": "xsd:string"
+    },
+    "mytest": {
+      "@id": "http://trust.dance/identity#mytest",
+      "@type": "xsd:string"
+    },
+    "proof": {
+      "@id": "http://trust.dance/identity#proof",
+      "@type": "xsd:string"
+    }
+  }
+}

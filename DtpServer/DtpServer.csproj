@@ -9,19 +9,25 @@
     <OutputType>Exe</OutputType>
     <StartupObject>DtpServer.Program</StartupObject>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DocumentationFile>C:\Users\keutm\source\repos\DtpSolution\DtpServer\DtpServer.xml</DocumentationFile>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Platform\**" />
     <Compile Remove="Resources\**" />
+    <Content Remove="Platform\**" />
     <Content Remove="Resources\**" />
+    <EmbeddedResource Remove="Platform\**" />
     <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Platform\**" />
     <None Remove="Resources\**" />
   </ItemGroup>
   <ItemGroup>
@@ -32,32 +38,12 @@
     <Content Remove="Views\Shared\DisplayTemplates\TitleDetailLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="domaincert.pfx" />
     <None Remove="Logs\log-20180620.txt" />
     <None Remove="Logs\log-20180621.txt" />
-    <None Remove="Platform\ipfs\config" />
-    <None Remove="Platform\ipfs\ipfs.exe" />
-    <None Remove="Platform\ipfs\ipfsinit.cmd" />
-    <None Remove="Platform\ipfs\ipfsrun.cmd" />
-    <None Remove="Platform\ipfs\swarm.key" />
     <None Remove="trust - backup.old" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Platform\ipfs\config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Platform\IPFS\ipfs.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Platform\IPFS\ipfsinit.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Platform\IPFS\ipfsrun.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Platform\IPFS\swarm.key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Compile Include="Platform\PlatformDirectory.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -80,6 +66,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Sieve" Version="2.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Topshelf" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\lib\bootstrap-table\bootstrap-table.js" />
@@ -100,6 +87,9 @@
     <ProjectReference Include="..\DtpStampCore\DtpStampCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Views\Shared\DisplayTemplates\ClaimStateType.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -109,5 +99,16 @@
     <Content Update="wwwroot\resources\Proof.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\schema\identity.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="domaincert.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="trust.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

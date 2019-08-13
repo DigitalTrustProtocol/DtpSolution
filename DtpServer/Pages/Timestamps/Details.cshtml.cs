@@ -47,8 +47,8 @@ namespace DtpServer.Pages.Timestamps
             if (Timestamp == null)
                 return NotFound();
 
-            if (string.IsNullOrEmpty(Timestamp.Algorithm))
-                Timestamp.Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1;
+            if (string.IsNullOrEmpty(Timestamp.Type))
+                Timestamp.Type = Timestamp.DEFAULT_TYPE;
 
             if (Timestamp.Source == null && Timestamp.Source.Length == 0)
                 return Page();

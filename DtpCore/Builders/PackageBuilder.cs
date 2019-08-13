@@ -62,8 +62,8 @@ namespace DtpCore.Builders
         {
             Package = new Package
             {
+                Type = Package.DEFAULT_TYPE,
                 Created = (uint)DateTime.UtcNow.ToUnixTime(),
-                Algorithm = MerkleStrategyFactory.DOUBLE256_MERKLE_DTP1,
                 State = PackageStateType.New
             };
             //_derivationServiceFactory = derivationServiceFactory;
@@ -298,7 +298,7 @@ namespace DtpCore.Builders
         /// <returns>PackageBuilder</returns>
         public PackageBuilder Build()
         {
-            var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Algorithm);
+            var merkleTree = _merkleStrategyFactory.GetStrategy(Package.Type);
             
             var packageHash =_packageBinary.GetIdSource(Package);
             merkleTree.Add(packageHash); // Start with adding the package hash

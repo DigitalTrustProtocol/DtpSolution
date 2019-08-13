@@ -82,3 +82,7 @@ DtpStampCore
             Config["database"]["cache"] = "shared";
             Config["database"]["syncmode"] = 0;
             Config["database"]["journalmode"] = -1;
+
+
+Create schema
+https://jsonschema.net/

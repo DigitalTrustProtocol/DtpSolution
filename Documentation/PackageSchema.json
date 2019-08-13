@@ -1,190 +1,101 @@
 /* Basic trust package*/
 // Open version
 {
-  [
-    {
-      "type": "dtp1",
-      "id": {
-        "type": "dtp1",
-        "algorithm": "double256",
-        "format": "base64",
-        "value": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-        "root": {
-          "type": "merkle.dtp1",
-          "algorithm": "rmd160",
-          "format": "base64",
-          "value": ""
-        }
-      },
+    "type": "dtp1", // Package type format
+    
+    "claims": [
+      {
+        "templateIndex": 0,
+        "type": "binary.claim.dtp1",
+        "id" :  "", // Optional placeholder for the ID, kinda out at the moment.
 
-      "claims": [
-        {
-          "templateIndex": 0,
-          "type": "binary.claim.dtp1",
-          "id": {
-            "type": "dtp1",
-            "algorithm": "double256",
-            "format": "base64",
-            "value": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-            "root": {
-              "type": "merkle.dtp1",
-              "algorithm": "rmd160",
-              "format": "base64",
-              "value": ""
-            }
-          },
+        "issuer": {
+          "type": "identity.dtp1",
+          "canonical": "default",
+          "id": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+          "path": "", // Optional merkle tree path. Calculated claim id + path + ID(identity) = proof with signature
+          "proof": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+        },
 
-          "issuer": {
-            "type": "pkh",
-            "algorithm": "secp256k1",
-            "format": "base58check",
-            "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-            "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
-          },
+        "subject": {
+          "type": "name.dtp1",
+          "canonical": "default",
+          "id": "MrClaim",
+          "proof": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+        },
 
-          "subject": {
-            "type": "pkh",
-            "algorithm": "secp256k1",
-            "format": "base58check",
-            "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
-            "signature": ""
-          },
+        "value": "true",
+        "scope": "",
 
-          "value": true,
-          "scope": {
-            "type": "uri",
-            "value": "www.reddit.com"
-          },
+        "created": 1524569738,
+        "activate": 1231006505,
+        "expire": 2231006505,
 
-          "created": 1524569738,
-          "cost": 100,
-          "activate": 1231006505,
-          "expire": 2231006505,
-
-          "timestamps": [
-            {
-              "type": "merkle.dtp1",
-              "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-              "blockchain": "btc",
-              "algorithm": "double256",
-              "format": "hex",
-              "service": "",
-              "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
-              "registered": 1524569739
-            }
-          ]
-        }
-      ],
+        "timestamps": [
+          {
+            "type": "timestamp.dtp1",
+            "blockchain": "btctest",
+            "canonical": "default", // falls within the Type attribute
+            "service":  "opentimestamp.org", // Defines the service and the receipt format
+            "receipt": "", // Receipt from timestamp service
+            "path":  "", // Optional merkle tree path combined with source
+            "registered": 1548757308,
+            "source": "xSJLFeSNTYn4AHjvbz4rCh7AFz1ZJyFwZW1M8GJy3g4=" // The source id from the claim.
+          }
+        ]
+      }
+    ],
 
 
-      "templates": [
-        {
-        }
-      ],
+    "templates": [
+      {
+        "type": "binary.claim.dtp1",
 
-      "packages": [],
+        "issuer": {
+          "type": "identity.dtp1",
+          "id": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
+          "proof": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+        },
 
-      "server": {
-        "type": "pkh",
-        "algorithm": "secp256k1",
-        "format": "base58check",
-        "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
-      },
+        "subject": {
+          "type": "thing.dtp1",
+          "id": "MrClaim",
+          "proof": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+        },
 
-      "timestamps": [
-        {
-          "type": "merkle.dtp1",
-          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-          "blockchain": "btc",
-          "algorithm": "double256.merkle.dtp1",
-          "value": "",
-          "service": "",
-          "registered": 1231006505
-        }
-      ]
+        "value": "true",
+        "scope": "url",
+
+        "created": 1524569738,
+        "activate": 1231006505,
+        "expire": 2231006505
+      }
+    ],
+
+    "server": {
+      "type": "identity.dtp1",
+      "id": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
+      "path":  "", // Optional if multiple packages are signed with a single signature.
+      "proof": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
     },
-    // close version
-    {
-      "type": "dtp1",
-      "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-      "root": "",
-      "claims": [
+
+    "timestamps": [
         {
-          "templateIndex": 0,
-          "type": "binary.claim.dtp1",
-          "id": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-          "root": "",
-
-          "issuer": {
-            "type": "identity",
-            "algorithm": "pkh",
-            "deviation": "secp256k1",
-            "format": "base58check",
-            "value": "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa",
-            "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
-          },
-
-          "subject": {
-            "type": "name",
-            "value": "MrClaim"
-          },
-
-          "value": "true",
-          "scope": {
-            "type": "uri",
-            "value": "reddit.com"
-          },
-
-          "created": 1524569738,
-          "cost": 100,
-          "activate": 1231006505,
-          "expire": 2231006505,
-
-          "timestamps": [
-            {
-              "type": "merkle.dtp1",
-              "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-              "blockchain": "btc",
-              "service": "",
-              "value": "DB5763238F5D93F35EBAA09A2A80922DEAB4A7EEEF642E98BE0663D7601418B3",
-              "registered": 1524569739
-            }
-          ]
-        }
-      ],
-
-
-      "templates": [
-        {
-        }
-      ],
-
-      "packages": [],
-
-      "server": {
-        "type": "pkh",
-        "algorithm": "secp256k1",
-        "format": "base58check",
-        "value": "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq",
-        "signature": "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
-      },
-
-      "timestamps": [
-        {
-          "type": "merkle.dtp1",
-          "source": "l/byiAk9jBBehQTz/uhZNfI7QjTqpC1ehkPIPkxYW9E=",
-          "blockchain": "btc",
-          "value": "",
-          "service": "",
-          "registered": 1231006505
+          "type": "timestamp.dtp1",
+          "blockchain": "btctest",
+          "service": "opentimestamp.org", // Defines the service and the receipt format
+          "receipt": "",
+          "path":  "",
+          "registered": 1548757308,
+          "source": "xSJLFeSNTYn4AHjvbz4rCh7AFz1ZJyFwZW1M8GJy3g4=" // The source id from the claim. Optional as this can be calculated!
         }
       ]
-    }
+  }
 
-  ]
-}
+// Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
+// Transaction time used for the timestamp
+// Merkletree path or description text, used for recreating the merkle root value.
 
-  // Merkle=Merkle algo, tc1=DTP version 1, double256=sha256(sha256))
-  // Transaction time used for the timestamp
-  // Merkletree path or description text, used for recreating the merkle root value.
+
+
+

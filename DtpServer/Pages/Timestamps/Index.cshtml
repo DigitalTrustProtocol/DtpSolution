@@ -45,26 +45,29 @@
     <tbody>
         @foreach (var item in Model.List)
         {
-            <tr>
-                <td>
-                    <a asp-page="./Details" asp-route-source="@Convert.ToBase64String(item.Source)">@Html.DisplayFor(modelItem => item.Source)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Registered)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Blockchain)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Algorithm)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Service)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Proof)
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <a asp-page="./Details" asp-route-source="@Convert.ToBase64String(item.Source)">@Html.DisplayFor(modelItem => item.Source)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Registered)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Blockchain)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Service)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Receipt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Proof)
+            </td>
+        </tr>
         }
     </tbody>
 </table>

@@ -1,0 +1,10 @@
+{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "name": {
+      "@id": "https://schema.org/name",
+      "@type": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    "issuer": "https://trust.dance/schema/identity.json"
+  }
+}

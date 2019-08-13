@@ -126,7 +126,7 @@
             Startup class
             </summary>
         </member>
-        <member name="P:DtpServer.Program.Configuration">
+        <member name="P:DtpServer.Program.ServiceHandler.Configuration">
             <summary>
             Static configuration 
             </summary>

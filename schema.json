@@ -1,0 +1,645 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "claims"
+  ],
+  "properties": {
+    "type": {
+      "$id": "#/properties/type",
+      "type": "string",
+      "title": "The Type Schema",
+      "default": "",
+      "examples": [
+        "dtp1"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "id": {
+      "$id": "#/properties/id",
+      "type": "string",
+      "title": "The Id Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "root": {
+      "$id": "#/properties/root",
+      "type": "string",
+      "title": "The Root Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "claims": {
+      "$id": "#/properties/claims",
+      "type": "array",
+      "title": "The Claims Schema",
+      "items": {
+        "$id": "#/properties/claims/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "templateIndex",
+          "type",
+          "path",
+          "issuer",
+          "subject",
+          "value",
+          "scope",
+          "created",
+          "activate",
+          "expire",
+          "timestamps"
+        ],
+        "properties": {
+          "templateIndex": {
+            "$id": "#/properties/claims/items/properties/templateIndex",
+            "type": "integer",
+            "title": "The Templateindex Schema",
+            "default": 0,
+            "examples": [
+              0
+            ]
+          },
+          "type": {
+            "$id": "#/properties/claims/items/properties/type",
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "binary.claim.dtp1"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "path": {
+            "$id": "#/properties/claims/items/properties/path",
+            "type": "string",
+            "title": "The Path Schema",
+            "default": "",
+            "examples": [
+              ""
+            ],
+            "pattern": "^(.*)$"
+          },
+          "issuer": {
+            "$id": "#/properties/claims/items/properties/issuer",
+            "type": "object",
+            "title": "The Issuer Schema",
+            "required": [
+              "type",
+              "canonical",
+              "id",
+              "proof"
+            ],
+            "properties": {
+              "type": {
+                "$id": "#/properties/claims/items/properties/issuer/properties/type",
+                "type": "string",
+                "title": "The Type Schema",
+                "default": "",
+                "examples": [
+                  "identity"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "canonical": {
+                "$id": "#/properties/claims/items/properties/issuer/properties/canonical",
+                "type": "string",
+                "title": "The Canonical Schema",
+                "default": "",
+                "examples": [
+                  "default"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "id": {
+                "$id": "#/properties/claims/items/properties/issuer/properties/id",
+                "type": "string",
+                "title": "The Id Schema",
+                "default": "",
+                "examples": [
+                  "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "proof": {
+                "$id": "#/properties/claims/items/properties/issuer/properties/proof",
+                "type": "string",
+                "title": "The Proof Schema",
+                "default": "",
+                "examples": [
+                  "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+                ],
+                "pattern": "^(.*)$"
+              }
+            }
+          },
+          "subject": {
+            "$id": "#/properties/claims/items/properties/subject",
+            "type": "object",
+            "title": "The Subject Schema",
+            "required": [
+              "type",
+              "canonical",
+              "id",
+              "proof"
+            ],
+            "properties": {
+              "type": {
+                "$id": "#/properties/claims/items/properties/subject/properties/type",
+                "type": "string",
+                "title": "The Type Schema",
+                "default": "",
+                "examples": [
+                  "name"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "canonical": {
+                "$id": "#/properties/claims/items/properties/subject/properties/canonical",
+                "type": "string",
+                "title": "The Canonical Schema",
+                "default": "",
+                "examples": [
+                  "default"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "id": {
+                "$id": "#/properties/claims/items/properties/subject/properties/id",
+                "type": "string",
+                "title": "The Id Schema",
+                "default": "",
+                "examples": [
+                  "MrClaim"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "proof": {
+                "$id": "#/properties/claims/items/properties/subject/properties/proof",
+                "type": "string",
+                "title": "The Proof Schema",
+                "default": "",
+                "examples": [
+                  "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+                ],
+                "pattern": "^(.*)$"
+              }
+            }
+          },
+          "value": {
+            "$id": "#/properties/claims/items/properties/value",
+            "type": "string",
+            "title": "The Value Schema",
+            "default": "",
+            "examples": [
+              "true"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "scope": {
+            "$id": "#/properties/claims/items/properties/scope",
+            "type": "string",
+            "title": "The Scope Schema",
+            "default": "",
+            "examples": [
+              ""
+            ],
+            "pattern": "^(.*)$"
+          },
+          "created": {
+            "$id": "#/properties/claims/items/properties/created",
+            "type": "integer",
+            "title": "The Created Schema",
+            "default": 0,
+            "examples": [
+              1524569738
+            ]
+          },
+          "activate": {
+            "$id": "#/properties/claims/items/properties/activate",
+            "type": "integer",
+            "title": "The Activate Schema",
+            "default": 0,
+            "examples": [
+              1231006505
+            ]
+          },
+          "expire": {
+            "$id": "#/properties/claims/items/properties/expire",
+            "type": "integer",
+            "title": "The Expire Schema",
+            "default": 0,
+            "examples": [
+              2231006505
+            ]
+          },
+          "timestamps": {
+            "$id": "#/properties/claims/items/properties/timestamps",
+            "type": "array",
+            "title": "The Timestamps Schema",
+            "items": {
+              "$id": "#/properties/claims/items/properties/timestamps/items",
+              "type": "object",
+              "title": "The Items Schema",
+              "required": [
+                "type",
+                "blockchain",
+                "canonical",
+                "source",
+                "path",
+                "registered"
+              ],
+              "properties": {
+                "type": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/type",
+                  "type": "string",
+                  "title": "The Type Schema",
+                  "default": "",
+                  "examples": [
+                    "secp256k1"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "blockchain": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/blockchain",
+                  "type": "string",
+                  "title": "The Blockchain Schema",
+                  "default": "",
+                  "examples": [
+                    "btctest"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "canonical": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/canonical",
+                  "type": "string",
+                  "title": "The Canonical Schema",
+                  "default": "",
+                  "examples": [
+                    "default"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "source": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/source",
+                  "type": "string",
+                  "title": "The Source Schema",
+                  "default": "",
+                  "examples": [
+                    "xSJLFeSNTYn4AHjvbz4rCh7AFz1ZJyFwZW1M8GJy3g4="
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "path": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/path",
+                  "type": "string",
+                  "title": "The Path Schema",
+                  "default": "",
+                  "examples": [
+                    ""
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "registered": {
+                  "$id": "#/properties/claims/items/properties/timestamps/items/properties/registered",
+                  "type": "integer",
+                  "title": "The Registered Schema",
+                  "default": 0,
+                  "examples": [
+                    1548757308
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "$id": "#/properties/templates",
+      "type": "array",
+      "title": "The Templates Schema",
+      "items": {
+        "$id": "#/properties/templates/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "type",
+          "issuer",
+          "subject",
+          "value",
+          "scope",
+          "created",
+          "activate",
+          "expire"
+        ],
+        "properties": {
+          "type": {
+            "$id": "#/properties/templates/items/properties/type",
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "binary.claim.dtp1"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "issuer": {
+            "$id": "#/properties/templates/items/properties/issuer",
+            "type": "object",
+            "title": "The Issuer Schema",
+            "required": [
+              "type",
+              "canonical",
+              "id",
+              "proof"
+            ],
+            "properties": {
+              "type": {
+                "$id": "#/properties/templates/items/properties/issuer/properties/type",
+                "type": "string",
+                "title": "The Type Schema",
+                "default": "",
+                "examples": [
+                  "identity"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "canonical": {
+                "$id": "#/properties/templates/items/properties/issuer/properties/canonical",
+                "type": "string",
+                "title": "The Canonical Schema",
+                "default": "",
+                "examples": [
+                  "default"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "id": {
+                "$id": "#/properties/templates/items/properties/issuer/properties/id",
+                "type": "string",
+                "title": "The Id Schema",
+                "default": "",
+                "examples": [
+                  "DCaWtJu35kM8DZJQKxB6Rtgu5oe4z6rbPa"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "proof": {
+                "$id": "#/properties/templates/items/properties/issuer/properties/proof",
+                "type": "string",
+                "title": "The Proof Schema",
+                "default": "",
+                "examples": [
+                  "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+                ],
+                "pattern": "^(.*)$"
+              }
+            }
+          },
+          "subject": {
+            "$id": "#/properties/templates/items/properties/subject",
+            "type": "object",
+            "title": "The Subject Schema",
+            "required": [
+              "type",
+              "canonical",
+              "id",
+              "proof"
+            ],
+            "properties": {
+              "type": {
+                "$id": "#/properties/templates/items/properties/subject/properties/type",
+                "type": "string",
+                "title": "The Type Schema",
+                "default": "",
+                "examples": [
+                  "name"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "canonical": {
+                "$id": "#/properties/templates/items/properties/subject/properties/canonical",
+                "type": "string",
+                "title": "The Canonical Schema",
+                "default": "",
+                "examples": [
+                  "default"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "id": {
+                "$id": "#/properties/templates/items/properties/subject/properties/id",
+                "type": "string",
+                "title": "The Id Schema",
+                "default": "",
+                "examples": [
+                  "MrClaim"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "proof": {
+                "$id": "#/properties/templates/items/properties/subject/properties/proof",
+                "type": "string",
+                "title": "The Proof Schema",
+                "default": "",
+                "examples": [
+                  "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+                ],
+                "pattern": "^(.*)$"
+              }
+            }
+          },
+          "value": {
+            "$id": "#/properties/templates/items/properties/value",
+            "type": "string",
+            "title": "The Value Schema",
+            "default": "",
+            "examples": [
+              "true"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "scope": {
+            "$id": "#/properties/templates/items/properties/scope",
+            "type": "string",
+            "title": "The Scope Schema",
+            "default": "",
+            "examples": [
+              ""
+            ],
+            "pattern": "^(.*)$"
+          },
+          "created": {
+            "$id": "#/properties/templates/items/properties/created",
+            "type": "integer",
+            "title": "The Created Schema",
+            "default": 0,
+            "examples": [
+              1524569738
+            ]
+          },
+          "activate": {
+            "$id": "#/properties/templates/items/properties/activate",
+            "type": "integer",
+            "title": "The Activate Schema",
+            "default": 0,
+            "examples": [
+              1231006505
+            ]
+          },
+          "expire": {
+            "$id": "#/properties/templates/items/properties/expire",
+            "type": "integer",
+            "title": "The Expire Schema",
+            "default": 0,
+            "examples": [
+              2231006505
+            ]
+          }
+        }
+      }
+    },
+    "server": {
+      "$id": "#/properties/server",
+      "type": "object",
+      "title": "The Server Schema",
+      "required": [
+        "type",
+        "canonical",
+        "id",
+        "proof"
+      ],
+      "properties": {
+        "type": {
+          "$id": "#/properties/server/properties/type",
+          "type": "string",
+          "title": "The Type Schema",
+          "default": "",
+          "examples": [
+            "secp256k1-pkh"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "canonical": {
+          "$id": "#/properties/server/properties/canonical",
+          "type": "string",
+          "title": "The Canonical Schema",
+          "default": "",
+          "examples": [
+            "default"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "id": {
+          "$id": "#/properties/server/properties/id",
+          "type": "string",
+          "title": "The Id Schema",
+          "default": "",
+          "examples": [
+            "1NWRXG1rQoxcCEhNEaUGVTUXxJi93mJLqq"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "proof": {
+          "$id": "#/properties/server/properties/proof",
+          "type": "string",
+          "title": "The Proof Schema",
+          "default": "",
+          "examples": [
+            "IA7JTpZDY0PUNGIT0g44DH68RUJ4sxBOOzHVOxB9VNJICv8cy3lFYu1JgKAbqCCyRn1l0p85bMGaTmV/33XItuk="
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "timestamps": {
+      "$id": "#/properties/timestamps",
+      "type": "array",
+      "title": "The Timestamps Schema",
+      "items": {
+        "$id": "#/properties/timestamps/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "type",
+          "blockchain",
+          "canonical",
+          "source",
+          "path",
+          "registered"
+        ],
+        "properties": {
+          "type": {
+            "$id": "#/properties/timestamps/items/properties/type",
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "secp256k1"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "blockchain": {
+            "$id": "#/properties/timestamps/items/properties/blockchain",
+            "type": "string",
+            "title": "The Blockchain Schema",
+            "default": "",
+            "examples": [
+              "btctest"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "canonical": {
+            "$id": "#/properties/timestamps/items/properties/canonical",
+            "type": "string",
+            "title": "The Canonical Schema",
+            "default": "",
+            "examples": [
+              "default"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "source": {
+            "$id": "#/properties/timestamps/items/properties/source",
+            "type": "string",
+            "title": "The Source Schema",
+            "default": "",
+            "examples": [
+              "xSJLFeSNTYn4AHjvbz4rCh7AFz1ZJyFwZW1M8GJy3g4="
+            ],
+            "pattern": "^(.*)$"
+          },
+          "path": {
+            "$id": "#/properties/timestamps/items/properties/path",
+            "type": "string",
+            "title": "The Path Schema",
+            "default": "",
+            "examples": [
+              ""
+            ],
+            "pattern": "^(.*)$"
+          },
+          "registered": {
+            "$id": "#/properties/timestamps/items/properties/registered",
+            "type": "integer",
+            "title": "The Registered Schema",
+            "default": 0,
+            "examples": [
+              1548757308
+            ]
+          }
+        }
+      }
+    }
+  }
+}

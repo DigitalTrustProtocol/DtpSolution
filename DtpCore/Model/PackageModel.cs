@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DtpCore.Interfaces;
-using DtpCore.Strategy.Serialization;
-using JsonSubTypes;
 using DtpCore.Model.Database;
 
 namespace DtpCore.Model
@@ -42,14 +40,14 @@ namespace DtpCore.Model
         /// <summary>
         /// The algorithm used to calculate the Id.
         /// </summary>
-        [JsonProperty(PropertyName = "algorithm", Order = -200)]
-        public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() => !string.IsNullOrWhiteSpace(Algorithm);
+        [JsonProperty(PropertyName = "type", Order = -200)]
+        public string Type { get; set; }
+        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
 
-        [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "root", Order = -99)]
-        public byte[] Root { get; set; }
-        public bool ShouldSerializeRoot() { return Root != null; }
+        //[UIHint("ByteToHex")]
+        //[JsonProperty(PropertyName = "root", Order = -99)]
+        //public byte[] Root { get; set; }
+        //public bool ShouldSerializeRoot() { return Root != null; }
 
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created", Order = -50)]
@@ -79,6 +77,8 @@ namespace DtpCore.Model
     //[JsonConverter(typeof(PackageConverter))] // logic for handling the template features has not been implemented.
     public class Package : PackageInformation
     {
+        public const string DEFAULT_TYPE = "package.dtp1";
+
         [JsonIgnore]
         public int DatabaseID { get; set; } // Database row key
 
@@ -150,20 +150,18 @@ namespace DtpCore.Model
     public class Claim : DatabaseEntity
     {
         /// <summary>
+        /// Type defines the claim and its format. 
+        /// </summary>
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; }
+
+        /// <summary>
         /// Id is an internal property used for identifying the claim within the database, it is not a part of the claim.
         /// The Issuer signs the claim binary data not the ID.
         /// </summary>
         [UIHint("ByteToHex")]
         [JsonIgnore] // Id is not serialized as it is an internal property
         public byte[] Id { get; set; }
-
-        /// <summary>
-        /// Defines a root id for the claim, enables for single signing of many claims.
-        /// </summary>
-        [UIHint("ByteToHex")]
-        [JsonProperty(PropertyName = "root")]
-        public byte[] Root { get; set; }
-        public bool ShouldSerializeRoot() { return Root != null; }
 
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created")]
@@ -190,10 +188,6 @@ namespace DtpCore.Model
         [NotMapped]
         public SignDelegate SubjectSign { get; set; }
 
-
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
-
         //[UIHint("JSON")]
         [JsonProperty(PropertyName = "value")]
         public virtual string Value { get; set; }
@@ -215,6 +209,7 @@ namespace DtpCore.Model
 
         /// <summary>
         /// A short comment on the reason for the trust. Very limit in size. Single word is optimal.
+        /// Usually ids for text tokens. 
         /// </summary>
         [JsonProperty(PropertyName = "metadata")]
         [Description("Issuers metadata about the claim.")]
@@ -254,51 +249,19 @@ namespace DtpCore.Model
     }
 
 
-
     //[JsonObject(MemberSerialization.OptIn)]
-    //public class BinaryClaim : Claim
+    //public class PartId
     //{
-    //    //Only relevant for the Binary trust type.
-    //    [JsonProperty(PropertyName = "cost")]
-    //    public short Cost { get; set; }
-    //    public bool ShouldSerializeCost() { return Cost > 0 && Cost != 100; }
+    //    [JsonProperty(PropertyName = "algorithm")]
+    //    public string Algorithm { get; set; }
+    //    public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
+
+    //    [UIHint("ByteToHexLong")]
+    //    [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
+    //    public byte[] Receipt { get; set; }
+    //    public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
     //}
 
-
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class PartId
-    {
-        [JsonProperty(PropertyName = "algorithm")]
-        public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
-
-        [UIHint("ByteToHexLong")]
-        [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
-        public byte[] Receipt { get; set; }
-        public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class TrustType
-    {
-        [JsonProperty(PropertyName = "attribute")]
-        public string Attribute { get; set; }
-        public bool ShouldSerializeAttribute() { return !string.IsNullOrWhiteSpace(Attribute); }
-
-        [JsonProperty(PropertyName = "group")]
-        public string Group { get; set; }
-        public bool ShouldSerializeGroup() { return !string.IsNullOrWhiteSpace(Group); }
-
-        [JsonProperty(PropertyName = "protocol")]
-        public string Protocol { get; set; }
-        public bool ShouldSerializeProtocol() { return !string.IsNullOrWhiteSpace(Protocol); }
-
-        public override string ToString()
-        {
-            return String.Join('.', Attribute, Group, Protocol);
-        }
-    }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class IssuerIdentity : Identity
@@ -327,6 +290,16 @@ namespace DtpCore.Model
         public string Id { get; set; }
         public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
 
+        /// <summary>
+        /// Optional merkle tree path
+        /// </summary>
+        [UIHint("ByteToHexLong")]
+        [DisplayName("Merkle tree path")]
+        [JsonProperty(PropertyName = "path", NullValueHandling = NullValueHandling.Ignore)]
+        public byte[] Path { get; set; }
+        public bool ShouldSerializePath() { return Path != null && Path.Length > 0; }
+
+
         //[UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "proof")]
         public byte[] Proof { get; set; }
@@ -343,33 +316,24 @@ namespace DtpCore.Model
         public SignDelegate Sign { get; set; }
     }
 
-    //[JsonObject(MemberSerialization.OptIn)]
-    //public class Scope
-    //{
-    //    [JsonProperty(PropertyName = "type")]
-    //    public string Type { get; set; }
-    //    public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
-
-    //    [JsonProperty(PropertyName = "value")]
-    //    public string Value { get; set; }
-    //    public bool ShouldSerializeValue() { return !string.IsNullOrWhiteSpace(Value); }
-    //}
-
 
     [Table("Timestamp")]
     [JsonObject(MemberSerialization.OptIn)]
     public class Timestamp : ITimestamp
     {
+        public const string DEFAULT_TYPE = "timestamp.dtp1";
+
         [JsonIgnore]
         public int DatabaseID { get; set; } // Database row key
+
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; }
+        public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
+
 
         [JsonProperty(PropertyName = "blockchain")]
         public string Blockchain { get; set; }
         public bool ShouldSerializeBlockchain() { return !string.IsNullOrWhiteSpace(Blockchain); }
-
-        [JsonProperty(PropertyName = "algorithm")]
-        public string Algorithm { get; set; }
-        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
 
         [JsonProperty(PropertyName = "service")]
         public string Service { get; set; }
@@ -381,7 +345,14 @@ namespace DtpCore.Model
         public bool ShouldSerializeSource() { return Source != null && Source.Length > 0; }
 
         [UIHint("ByteToHexLong")]
-        [DisplayName("Merkle path")]
+        [DisplayName("Service receipt")]
+        [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
+        public byte[] Receipt { get; set; }
+        public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
+
+        // Optional merkle tree path combined with source
+        [UIHint("ByteToHexLong")]
+        [DisplayName("Merkle tree path")]
         [JsonProperty(PropertyName = "path", NullValueHandling = NullValueHandling.Ignore)]
         public byte[] Path { get; set; }
         public bool ShouldSerializePath() { return Path != null && Path.Length > 0; }
@@ -421,11 +392,25 @@ namespace DtpCore.Model
         }
     }
 
-    public class TimestampAlgorithm
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TrustType
     {
-        public string Derivation { get; set; }
-        public string Hash { get; set; }
-        public string Merkle { get; set; }
+        [JsonProperty(PropertyName = "attribute")]
+        public string Attribute { get; set; }
+        public bool ShouldSerializeAttribute() { return !string.IsNullOrWhiteSpace(Attribute); }
+
+        [JsonProperty(PropertyName = "group")]
+        public string Group { get; set; }
+        public bool ShouldSerializeGroup() { return !string.IsNullOrWhiteSpace(Group); }
+
+        [JsonProperty(PropertyName = "protocol")]
+        public string Protocol { get; set; }
+        public bool ShouldSerializeProtocol() { return !string.IsNullOrWhiteSpace(Protocol); }
+
+        public override string ToString()
+        {
+            return String.Join('.', Attribute, Group, Protocol);
+        }
     }
 
 

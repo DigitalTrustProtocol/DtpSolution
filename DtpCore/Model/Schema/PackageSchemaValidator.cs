@@ -161,14 +161,14 @@ namespace DtpCore.Model.Schema
 
             public SchemaValidationResult Validate(Package package)
             {
-                result.MaxRangeCheck("Package Algorithm", package.Algorithm, "", ALGORITHM_MAX_LENGTH);
+                result.MaxRangeCheck("Package Type", package.Type, "", TYPE_MAX_LENGTH);
                 result.MaxRangeCheck("Package Id", package.Id, "", ID_MAX_LENGTH);
                 
                 ValidateServer(package);
 
                 try
                 {
-                    var script = _merkleStrategyFactory.GetStrategy(package.Algorithm);
+                    var script = _merkleStrategyFactory.GetStrategy(package.Type);
                 
                     var testBuilder = new PackageBuilder(_merkleStrategyFactory, _hashAlgorithmFactory, _packageBinary);
                     var claimIndex = 0;
@@ -185,7 +185,7 @@ namespace DtpCore.Model.Schema
 
                     if (package.Id != null && package.Id.Length > 0)
                     {
-                        testBuilder.Package.Algorithm = package.Algorithm;
+                        testBuilder.Package.Type = package.Type;
                         testBuilder.Package.Created = package.Created;
                         testBuilder.Package.Server = package.Server;
 
@@ -243,7 +243,7 @@ namespace DtpCore.Model.Schema
 
                 foreach (var timestamp in timestamps)
                 {
-                    result.MaxRangeCheck("Timestamp Algorithm", timestamp.Algorithm, location, ALGORITHM_MAX_LENGTH);
+                    result.MaxRangeCheck("Timestamp Type", timestamp.Type, location, TYPE_MAX_LENGTH);
                     result.MaxRangeCheck("Timestamp Blockchain", timestamp.Blockchain, location, TEXT50_MAX_LENGTH);
                     result.MaxRangeCheck("Timestamp Receipt", timestamp.Path, location, TIMESTAMP_RECEIPT_MAX_LENGTH);
                     result.MaxRangeCheck("Timestamp Service", timestamp.Service, location, TEXT200_MAX_LENGTH);

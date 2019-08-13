@@ -22,9 +22,10 @@ namespace DtpCore.Strategy
             {
                 var bw = new CompressedBinaryWriter(ms);
 
-                bw.Write(package.Algorithm.ToLowerSafe());
+                bw.Write(package.Type.ToLowerSafe());
                 bw.Write(package.Server.Type.ToLowerSafe());
                 bw.Write(package.Server.Id);
+                bw.Write(package.Server.Path);
                 bw.Write(package.Created);
                 //ms.WriteClaimString(package.Server.Id); // Id can always be calculated
                 bw.Flush();

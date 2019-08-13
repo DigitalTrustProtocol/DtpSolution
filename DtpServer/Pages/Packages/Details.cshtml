@@ -17,10 +17,10 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayNameFor(model => model.Package.Algorithm)
+                @Html.DisplayNameFor(model => model.Package.Type)
             </td>
             <td>
-                @Html.DisplayFor(model => model.Package.Algorithm)
+                @Html.DisplayFor(model => model.Package.Type)
             </td>
         </tr>
         <tr>
@@ -89,6 +89,11 @@
                         @foreach (var timestamp in Model.Package.Timestamps)
                         {
                             <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Type):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Type)</td>
+                            </tr>
+
+                            <tr>
                                 <td>@Html.DisplayNameFor(t => timestamp.Blockchain):</td>
                                 <td>@Html.DisplayFor(t => timestamp.Blockchain)</td>
                             </tr>
@@ -96,6 +101,10 @@
                             <tr>
                                 <td>@Html.DisplayNameFor(t => timestamp.Service):</td>
                                 <td>@Html.DisplayFor(t => timestamp.Service)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Receipt):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Receipt)</td>
                             </tr>
 
                             <tr>
@@ -126,10 +135,6 @@
                             <tr>
                                 <td>@Html.DisplayNameFor(t => timestamp.Proof.MerkleRoot):</td>
                                 <td>@Html.DisplayFor(t => timestamp.Proof.MerkleRoot)</td>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayNameFor(t => timestamp.Algorithm):</td>
-                                <td>@Html.DisplayFor(t => timestamp.Algorithm)</td>
                             </tr>
                         }
                     </tbody>

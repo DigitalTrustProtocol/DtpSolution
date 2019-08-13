@@ -76,7 +76,7 @@ namespace DtpServer.Pages.Timestamps
 
             var likeSearch = $"%{searchString}%";
             q = q.Or(s => EF.Functions.Like(s.Blockchain, likeSearch)
-                || EF.Functions.Like(s.Algorithm, likeSearch)
+                || EF.Functions.Like(s.Type, likeSearch)
                 || EF.Functions.Like(s.Service, likeSearch));
 
             return query.Where(q);

@@ -10,6 +10,14 @@
     <tbody>
         <tr>
             <td>
+                @Html.DisplayNameFor(model => Model.Claim.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Claim.Type)
+            </td>
+        </tr>
+        <tr>
+            <td>
                 @Html.DisplayNameFor(model => Model.Claim.Id)
             </td>
             <td>
@@ -48,6 +56,14 @@
                     </tr>
                     <tr>
                         <td>
+                            @Html.DisplayNameFor(model => Model.Claim.Issuer.Path):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Claim.Issuer.Path)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             @Html.DisplayNameFor(model => Model.Claim.Issuer.Proof):
                         </td>
                         <td>
@@ -81,6 +97,14 @@
                     </tr>
                     <tr>
                         <td>
+                            @Html.DisplayNameFor(model => Model.Claim.Subject.Path):
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Claim.Subject.Path)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             @Html.DisplayNameFor(model => Model.Claim.Subject.Proof):
                         </td>
                         <td>
@@ -88,14 +112,6 @@
                         </td>
                     </tr>
                 </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DisplayNameFor(model => Model.Claim.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Claim.Type)
             </td>
         </tr>
         <tr>
@@ -148,8 +164,16 @@
                         @foreach (var timestamp in Model.Claim.Timestamps)
                         {
                             <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Type):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Type)</td>
+                            </tr>
+                            <tr>
                                 <td>@Html.DisplayNameFor(t => timestamp.Source):</td>
                                 <td><a asp-page="/Timestamps/Details" asp-route-source="@Convert.ToBase64String(timestamp.Source)">@Html.DisplayFor(t => timestamp.Source)</a></td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => timestamp.Path):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Path)</td>
                             </tr>
 
                             <tr>
@@ -166,16 +190,11 @@
                                 <td>@Html.DisplayNameFor(t => timestamp.Service):</td>
                                 <td>@Html.DisplayFor(t => timestamp.Service)</td>
                             </tr>
-
                             <tr>
-                                <td>@Html.DisplayNameFor(t => timestamp.Path):</td>
-                                <td>@Html.DisplayFor(t => timestamp.Path)</td>
+                                <td>@Html.DisplayNameFor(t => timestamp.Receipt):</td>
+                                <td>@Html.DisplayFor(t => timestamp.Receipt)</td>
                             </tr>
 
-                            <tr>
-                                <td>@Html.DisplayNameFor(t => timestamp.Algorithm):</td>
-                                <td>@Html.DisplayFor(t => timestamp.Algorithm)</td>
-                            </tr>
                         }
                     </tbody>
                 </table>
@@ -201,6 +220,14 @@
                             <tr>
                                 <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Id):</td>
                                 <td>@Html.DisplayFor(t => trustPackage.Package.Server.Id)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Path):</td>
+                                <td>@Html.DisplayFor(t => trustPackage.Package.Server.Path)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(t => trustPackage.Package.Server.Proof):</td>
+                                <td>@Html.DisplayFor(t => trustPackage.Package.Server.Proof)</td>
                             </tr>
                         }
                     </tbody>

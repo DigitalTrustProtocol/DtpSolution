@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190429101410_source")]
-    partial class source
+    [Migration("20190813104957_FakeNews")]
+    partial class FakeNews
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,8 +58,6 @@ namespace DtpCore.Migrations
                     b.Property<byte[]>("Id");
 
                     b.Property<string>("Metadata");
-
-                    b.Property<byte[]>("Root");
 
                     b.Property<string>("Scope");
 
@@ -113,8 +111,6 @@ namespace DtpCore.Migrations
                     b.Property<int>("DatabaseID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Algorithm");
-
                     b.Property<uint>("Created");
 
                     b.Property<string>("File");
@@ -123,11 +119,11 @@ namespace DtpCore.Migrations
 
                     b.Property<string>("Obsoletes");
 
-                    b.Property<byte[]>("Root");
-
                     b.Property<string>("Scopes");
 
                     b.Property<long>("State");
+
+                    b.Property<string>("Type");
 
                     b.Property<string>("Types");
 
@@ -143,8 +139,6 @@ namespace DtpCore.Migrations
                     b.Property<int>("DatabaseID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Algorithm");
-
                     b.Property<string>("Blockchain");
 
                     b.Property<int?>("ClaimDatabaseID");
@@ -155,11 +149,15 @@ namespace DtpCore.Migrations
 
                     b.Property<int?>("ProofDatabaseID");
 
+                    b.Property<byte[]>("Receipt");
+
                     b.Property<long>("Registered");
 
                     b.Property<string>("Service");
 
                     b.Property<byte[]>("Source");
+
+                    b.Property<string>("Type");
 
                     b.HasKey("DatabaseID");
 
@@ -208,6 +206,8 @@ namespace DtpCore.Migrations
 
                             b1.Property<string>("Id");
 
+                            b1.Property<byte[]>("Path");
+
                             b1.Property<byte[]>("Proof");
 
                             b1.Property<string>("Type");
@@ -229,6 +229,8 @@ namespace DtpCore.Migrations
                             b1.Property<int>("ClaimDatabaseID");
 
                             b1.Property<string>("Id");
+
+                            b1.Property<byte[]>("Path");
 
                             b1.Property<byte[]>("Proof");
 
@@ -267,6 +269,8 @@ namespace DtpCore.Migrations
                             b1.Property<int>("PackageDatabaseID");
 
                             b1.Property<string>("Id");
+
+                            b1.Property<byte[]>("Path");
 
                             b1.Property<byte[]>("Proof");
 

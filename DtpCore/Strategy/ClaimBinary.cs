@@ -40,7 +40,6 @@ namespace DtpCore.Strategy
 
                 bw.Write(claim.Issuer.Proof);
                 bw.Write(claim.Subject.Proof);
-                bw.Write(claim.Root);
                 bw.Write(claim.TemplateId);
 
                 // ID is not added as it is dependen on the issuer/subject type 
@@ -73,9 +72,11 @@ namespace DtpCore.Strategy
 
             bw.Write(claim.Issuer.Type.ToLowerSafe());
             bw.Write(claim.Issuer.Id);
+            bw.Write(claim.Issuer.Path);
 
             bw.Write(claim.Subject.Type.ToLowerSafe());
             bw.Write(claim.Subject.Id);
+            bw.Write(claim.Subject.Path);
 
             bw.Write(claim.Value);
 
