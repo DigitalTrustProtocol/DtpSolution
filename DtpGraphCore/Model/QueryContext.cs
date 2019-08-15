@@ -112,7 +112,7 @@ namespace DtpGraphCore.Model
 
             if (!GraphTrustService.Graph.IssuerIndex.ContainsKey(query.Issuer.Id))
             {
-                Errors.Add($"Unknown Issuer {query.Issuer}");
+                Errors.Add($"Unknown Issuer {query.Issuer.Id}");
                 return;
             }
 

@@ -32,6 +32,7 @@ namespace DtpCore.Model.Schema
                 case DTPAddressIdentityValidator.NAME: type = typeof(DTPAddressIdentityValidator); break;
                 case UriIdentityValidator.NAME: type = typeof(UriIdentityValidator); break;
                 case StringIdentityValidator.NAME: type = typeof(StringIdentityValidator); break;
+                case ThingIdentityValidator.NAME: type = typeof(ThingIdentityValidator); break;
 
                 default: return null;
             }

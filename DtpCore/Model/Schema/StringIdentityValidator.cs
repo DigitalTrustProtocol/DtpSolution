@@ -5,7 +5,7 @@ namespace DtpCore.Model.Schema
     public class StringIdentityValidator : IIdentityValidator
     {
 
-        public const string NAME = "string";
+        public const string NAME = "string.dtp1";
         public const string NotStringErrorTemplate = "{0}{1} is invalid, has to be string.";
 
 

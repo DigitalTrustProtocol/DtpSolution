@@ -28,8 +28,11 @@ namespace DtpCore.Model.Schema
         {
             var claim = source as Claim;
             result.MaxRangeCheck($"{name} Id", identity.Id, location, 40);
-            result.MissingCheck($"{name} Proof", identity.Id, location);
-            result.MaxRangeCheck($"{name} Proof", identity.Proof, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+            if (claim != null)
+            {
+                result.MissingCheck($"{name} Proof", identity.Id, location);
+                result.MaxRangeCheck($"{name} Proof", identity.Proof, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+            }
 
             // TODO: Properly validate Id
             var regex = new Regex(@"^[13nmD][a-km-zA-HJ-NP-Z0-9]{26,33}$"); 
@@ -38,11 +41,13 @@ namespace DtpCore.Model.Schema
                 result.Errors.Add(string.Format(InvalidAddressErrorTemplate, location, $"{name} Id"));
                 return;
             }
-
-            var message = _claimBinary.GetIdSource(claim).ConvertToBase64();
-            if (!_derivationSecp256K1PKH.VerifySignatureMessage(message, identity.Proof, identity.Id))
+            if (claim != null) 
             {
-                result.Errors.Add(string.Format(InvalidProofErrorTemplate,location,$"{name} Proof"));
+                var message = _claimBinary.GetIdSource(claim).ConvertToBase64();
+                if (!_derivationSecp256K1PKH.VerifySignatureMessage(message, identity.Proof, identity.Id))
+                {
+                    result.Errors.Add(string.Format(InvalidProofErrorTemplate, location, $"{name} Proof"));
+                }
             }
         }
     }
