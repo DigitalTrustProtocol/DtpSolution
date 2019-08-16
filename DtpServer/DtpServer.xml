@@ -44,6 +44,31 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="T:DtpServer.Controllers.IdentityController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DtpServer.Controllers.IdentityController.trustDBContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.IdentityController.#ctor(DtpCore.Repository.TrustDBContext)">
+            <summary>
+            
+            </summary>
+            <param name="trustDBContext"></param>
+        </member>
+        <member name="M:DtpServer.Controllers.IdentityController.Search(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="term"></param>
+            <param name="scope"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="T:DtpServer.Controllers.PackageController">
             <summary>
             Handles packages 
