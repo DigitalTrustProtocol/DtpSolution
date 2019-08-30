@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class FakeNews : Migration
+    public partial class Context : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,14 +33,19 @@ namespace DtpCore.Migrations
                 {
                     DatabaseID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Context = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Id = table.Column<byte[]>(nullable: true),
                     Created = table.Column<uint>(nullable: false),
+                    Issuer_Context = table.Column<string>(nullable: true),
                     Issuer_Type = table.Column<string>(nullable: true),
+                    Issuer_Algorithm = table.Column<string>(nullable: true),
                     Issuer_Id = table.Column<string>(nullable: true),
                     Issuer_Path = table.Column<byte[]>(nullable: true),
                     Issuer_Proof = table.Column<byte[]>(nullable: true),
+                    Subject_Context = table.Column<string>(nullable: true),
                     Subject_Type = table.Column<string>(nullable: true),
+                    Subject_Algorithm = table.Column<string>(nullable: true),
                     Subject_Id = table.Column<string>(nullable: true),
                     Subject_Path = table.Column<byte[]>(nullable: true),
                     Subject_Proof = table.Column<byte[]>(nullable: true),
@@ -77,13 +82,16 @@ namespace DtpCore.Migrations
                 {
                     DatabaseID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Context = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
                     Id = table.Column<byte[]>(nullable: true),
                     File = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
                     Created = table.Column<uint>(nullable: false),
                     Types = table.Column<string>(nullable: true),
                     Scopes = table.Column<string>(nullable: true),
+                    Server_Context = table.Column<string>(nullable: true),
                     Server_Type = table.Column<string>(nullable: true),
+                    Server_Algorithm = table.Column<string>(nullable: true),
                     Server_Id = table.Column<string>(nullable: true),
                     Server_Path = table.Column<byte[]>(nullable: true),
                     Server_Proof = table.Column<byte[]>(nullable: true),
@@ -144,11 +152,12 @@ namespace DtpCore.Migrations
                     DatabaseID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Type = table.Column<string>(nullable: true),
+                    Algorithm = table.Column<string>(nullable: true),
                     Blockchain = table.Column<string>(nullable: true),
-                    Service = table.Column<string>(nullable: true),
                     Source = table.Column<byte[]>(nullable: true),
-                    Receipt = table.Column<byte[]>(nullable: true),
                     Path = table.Column<byte[]>(nullable: true),
+                    Service = table.Column<string>(nullable: true),
+                    Receipt = table.Column<byte[]>(nullable: true),
                     Registered = table.Column<long>(nullable: false),
                     ProofDatabaseID = table.Column<int>(nullable: true),
                     PackageDatabaseID = table.Column<int>(nullable: true),

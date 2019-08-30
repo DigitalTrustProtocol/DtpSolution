@@ -278,8 +278,8 @@ namespace DtpCore.Model.Schema
 
                 if (missing)
                     return;
-                
-                var validator = _validatorFactory.GetIdentityValidator(identity.Type);
+
+                var validator = _validatorFactory.GetIdentityValidator(identity);
                 if(validator == null)
                 {
                     result.Errors.Add(string.Format(SchemaValidationResult.NotSupportedErrorTemplate, location, $"{name} Type"));

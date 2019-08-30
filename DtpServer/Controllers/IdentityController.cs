@@ -52,7 +52,8 @@ namespace DtpServer.Controllers
                 type = type.ToLowerInvariant();
                 query = query.Where(p => p.Type == type);
             }
-            query = query.Take(100);
+            query = query.Take(100).OrderBy(p => p.DatabaseID);
+
 
             SortedSet<string> hs = new SortedSet<string>();
             foreach (var claim in query)

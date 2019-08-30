@@ -1,7 +1,9 @@
-﻿namespace DtpCore.Interfaces
+﻿using DtpCore.Model;
+
+namespace DtpCore.Interfaces
 {
     public interface IValidatorFactory
     {
-        IIdentityValidator GetIdentityValidator(string type);
+        IIdentityValidator GetIdentityValidator(Identity identity);
     }
 }

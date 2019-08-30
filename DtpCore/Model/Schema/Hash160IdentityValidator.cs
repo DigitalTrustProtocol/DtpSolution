@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 
 namespace DtpCore.Model.Schema
 {
-    public class ThingIdentityValidator : IIdentityValidator
+    public class Hash160IdentityValidator : IIdentityValidator
     {
 
-        public const string NAME = "thing.dtp1";
+        public const string NAME = "hash160";
         public const string NotStringErrorTemplate = "{0}{1} is invalid, has to be string.";
 
         public IFormatProvider InvalidAddressErrorTemplate { get; private set; }

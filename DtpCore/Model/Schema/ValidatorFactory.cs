@@ -1,4 +1,6 @@
-﻿using DtpCore.Interfaces;
+﻿using DtpCore.Builders;
+using DtpCore.Extensions;
+using DtpCore.Interfaces;
 using DtpCore.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,13 +20,21 @@ namespace DtpCore.Model.Schema
             _serviceProvider = serviceProvider;
         }
 
-        public IIdentityValidator GetIdentityValidator(string name)
+        public IIdentityValidator GetIdentityValidator(Identity identity)
         {
-            if (String.IsNullOrWhiteSpace(name))
-                name = NumericIdentityValidator.NAME;
+
+            var algo = identity.Algorithm;
+            if(string.IsNullOrEmpty(identity.Algorithm))
+            {
+                switch(identity.Type.ToLowerInvariant())
+                {
+                    case "entity": algo = Secp256k1PKHIdentityValidator.NAME; break;
+                    case "thing": algo = Hash160IdentityValidator.NAME; break;
+                }
+            }
 
             Type type = null;
-            switch (name.ToLower())
+            switch (algo.ToLower())
             {
                 case Secp256k1PKHIdentityValidator.NAME: type = typeof(Secp256k1PKHIdentityValidator); break;
                 case NumericIdentityValidator.NAME: type = typeof(NumericIdentityValidator); break;
@@ -32,7 +42,7 @@ namespace DtpCore.Model.Schema
                 case DTPAddressIdentityValidator.NAME: type = typeof(DTPAddressIdentityValidator); break;
                 case UriIdentityValidator.NAME: type = typeof(UriIdentityValidator); break;
                 case StringIdentityValidator.NAME: type = typeof(StringIdentityValidator); break;
-                case ThingIdentityValidator.NAME: type = typeof(ThingIdentityValidator); break;
+                case Hash160IdentityValidator.NAME: type = typeof(Hash160IdentityValidator); break;
 
                 default: return null;
             }

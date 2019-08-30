@@ -15,14 +15,14 @@ namespace DtpCore.Builders
 {
     public class PackageBuilder
     {
-        public const string BINARY_TRUST_DTP1 = "binary.trust.dtp1";
-        public const string BINARY_TRUST_DTP1_SHORTFORM = "bt1";
+        public const string BINARY_TRUST_DTP1 = "binarytrust";
+        public const string BINARY_TRUST_DTP1_SHORTFORM = "bt";
 
-        public const string CONFIRM_TRUST_DTP1 = "confirm.trust.dtp1";
-        public const string CONFIRM_TRUST_DTP1_SHORTFORM = "ct1";
+        public const string CONFIRM_TRUST_DTP1 = "confirmtrust";
+        public const string CONFIRM_TRUST_DTP1_SHORTFORM = "ct";
 
-        public const string RATING_TRUST_DTP1 = "rating.trust.dtp1";
-        public const string RATING_TRUST_DTP1_SHORTFORM = "rt1";
+        public const string RATING_TRUST_DTP1 = "ratingtrust";
+        public const string RATING_TRUST_DTP1_SHORTFORM = "rt";
 
         public const string ID_IDENTITY_DTP1 = "id.identity.dtp1";
         public const string ID_IDENTITY_DTP1_SHORTFORM = "iid1";

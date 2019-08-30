@@ -49,6 +49,8 @@ namespace DtpCore.Migrations
 
                     b.Property<uint>("Activate");
 
+                    b.Property<string>("Context");
+
                     b.Property<uint>("Created");
 
                     b.Property<uint>("Expire");
@@ -109,6 +111,8 @@ namespace DtpCore.Migrations
                     b.Property<int>("DatabaseID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Context");
+
                     b.Property<uint>("Created");
 
                     b.Property<string>("File");
@@ -136,6 +140,8 @@ namespace DtpCore.Migrations
                 {
                     b.Property<int>("DatabaseID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Algorithm");
 
                     b.Property<string>("Blockchain");
 
@@ -202,6 +208,10 @@ namespace DtpCore.Migrations
                         {
                             b1.Property<int>("ClaimDatabaseID");
 
+                            b1.Property<string>("Algorithm");
+
+                            b1.Property<string>("Context");
+
                             b1.Property<string>("Id");
 
                             b1.Property<byte[]>("Path");
@@ -225,6 +235,10 @@ namespace DtpCore.Migrations
                     b.OwnsOne("DtpCore.Model.SubjectIdentity", "Subject", b1 =>
                         {
                             b1.Property<int>("ClaimDatabaseID");
+
+                            b1.Property<string>("Algorithm");
+
+                            b1.Property<string>("Context");
 
                             b1.Property<string>("Id");
 
@@ -265,6 +279,10 @@ namespace DtpCore.Migrations
                     b.OwnsOne("DtpCore.Model.ServerIdentity", "Server", b1 =>
                         {
                             b1.Property<int>("PackageDatabaseID");
+
+                            b1.Property<string>("Algorithm");
+
+                            b1.Property<string>("Context");
 
                             b1.Property<string>("Id");
 

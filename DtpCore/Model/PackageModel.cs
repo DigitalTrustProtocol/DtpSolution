@@ -17,8 +17,28 @@ namespace DtpCore.Model
     /// <returns>Signature</returns>
     public delegate byte[] SignDelegate(byte[] data);
 
+
+    public class JSON_LD_Object
+    {
+        /// <summary>
+        /// Type defines the claim and its format. 
+        /// </summary>
+        [JsonProperty(PropertyName = "@context", Order = -300)]
+        public string Context { get; set; }
+        public bool ShouldSerializeContext() => !string.IsNullOrWhiteSpace(Context);
+
+
+        /// <summary>
+        /// Type defines the claim and its format. 
+        /// </summary>
+        [JsonProperty(PropertyName = "type", Order = -200)]
+        public string Type { get; set; }
+        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
+    }
+
+
     [NotMapped]
-    public class PackageReference
+    public class PackageReference : JSON_LD_Object
     {
         /// <summary>
         /// The Id of the package. 
@@ -37,18 +57,6 @@ namespace DtpCore.Model
     [NotMapped]
     public class PackageInformation : PackageReference
     {
-        /// <summary>
-        /// The algorithm used to calculate the Id.
-        /// </summary>
-        [JsonProperty(PropertyName = "type", Order = -200)]
-        public string Type { get; set; }
-        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
-
-        //[UIHint("ByteToHex")]
-        //[JsonProperty(PropertyName = "root", Order = -99)]
-        //public byte[] Root { get; set; }
-        //public bool ShouldSerializeRoot() { return Root != null; }
-
         [UIHint("UnixTimeUInt")]
         [JsonProperty(PropertyName = "created", Order = -50)]
         public uint Created { get; set; }
@@ -77,7 +85,7 @@ namespace DtpCore.Model
     //[JsonConverter(typeof(PackageConverter))] // logic for handling the template features has not been implemented.
     public class Package : PackageInformation
     {
-        public const string DEFAULT_TYPE = "package.dtp1";
+        public const string DEFAULT_TYPE = "package";
 
         [JsonIgnore]
         public int DatabaseID { get; set; } // Database row key
@@ -147,13 +155,11 @@ namespace DtpCore.Model
 
     [Table("Claim")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Claim : DatabaseEntity
+    public class Claim : JSON_LD_Object
     {
-        /// <summary>
-        /// Type defines the claim and its format. 
-        /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+
+        [JsonIgnore]
+        public int DatabaseID { get; set; } // Database row key
 
         /// <summary>
         /// Id is an internal property used for identifying the claim within the database, it is not a part of the claim.
@@ -248,21 +254,6 @@ namespace DtpCore.Model
         }
     }
 
-
-    //[JsonObject(MemberSerialization.OptIn)]
-    //public class PartId
-    //{
-    //    [JsonProperty(PropertyName = "algorithm")]
-    //    public string Algorithm { get; set; }
-    //    public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
-
-    //    [UIHint("ByteToHexLong")]
-    //    [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
-    //    public byte[] Receipt { get; set; }
-    //    public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
-    //}
-
-
     [JsonObject(MemberSerialization.OptIn)]
     public class IssuerIdentity : Identity
     {
@@ -279,11 +270,16 @@ namespace DtpCore.Model
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Identity
+    public class Identity : JSON_LD_Object
     {
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
-        public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
+        //[JsonProperty(PropertyName = "type")]
+        //public string Type { get; set; }
+        //public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
+
+        [JsonProperty(PropertyName = "algorithm")]
+        public string Algorithm { get; set; }
+        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
+
 
         //[UIHint("ByteToAddress")]
         [JsonProperty(PropertyName = "id")]
@@ -330,25 +326,18 @@ namespace DtpCore.Model
         public string Type { get; set; }
         public bool ShouldSerializeType() { return !string.IsNullOrWhiteSpace(Type); }
 
+        [JsonProperty(PropertyName = "algorithm")]
+        public string Algorithm { get; set; }
+        public bool ShouldSerializeAlgorithm() { return !string.IsNullOrWhiteSpace(Algorithm); }
 
         [JsonProperty(PropertyName = "blockchain")]
         public string Blockchain { get; set; }
         public bool ShouldSerializeBlockchain() { return !string.IsNullOrWhiteSpace(Blockchain); }
 
-        [JsonProperty(PropertyName = "service")]
-        public string Service { get; set; }
-        public bool ShouldSerializeService() { return !string.IsNullOrWhiteSpace(Service); }
-
         [UIHint("ByteToHex")]
         [JsonProperty(PropertyName = "source", NullValueHandling = NullValueHandling.Ignore)]
         public byte[] Source { get; set; }
         public bool ShouldSerializeSource() { return Source != null && Source.Length > 0; }
-
-        [UIHint("ByteToHexLong")]
-        [DisplayName("Service receipt")]
-        [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
-        public byte[] Receipt { get; set; }
-        public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
 
         // Optional merkle tree path combined with source
         [UIHint("ByteToHexLong")]
@@ -356,6 +345,17 @@ namespace DtpCore.Model
         [JsonProperty(PropertyName = "path", NullValueHandling = NullValueHandling.Ignore)]
         public byte[] Path { get; set; }
         public bool ShouldSerializePath() { return Path != null && Path.Length > 0; }
+
+        [JsonProperty(PropertyName = "service")]
+        public string Service { get; set; }
+        public bool ShouldSerializeService() { return !string.IsNullOrWhiteSpace(Service); }
+
+        [UIHint("ByteToHexLong")]
+        [DisplayName("Service receipt")]
+        [JsonProperty(PropertyName = "receipt", NullValueHandling = NullValueHandling.Ignore)]
+        public byte[] Receipt { get; set; }
+        public bool ShouldSerializeReceipt() { return Receipt != null && Receipt.Length > 0; }
+
 
         [UIHint("UnixTimeLong")]
         [JsonProperty(PropertyName = "registered")]
