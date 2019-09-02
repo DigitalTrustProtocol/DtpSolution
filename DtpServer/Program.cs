@@ -33,7 +33,7 @@ namespace DtpServer
             {
                 Console.WriteLine("Running in debug mode!");
                 var service = new ServiceHandler();
-                service.Start();
+                service.Init().Run();
             }
             else
             {
@@ -42,8 +42,9 @@ namespace DtpServer
                     windowsService.Service<ServiceHandler>(s =>
                     {
                         s.ConstructUsing(service => new ServiceHandler());
-                        s.WhenStarted(service => service.Start());
+                        s.WhenStarted(service => service.Init().Start());
                         s.WhenStopped(service => service.Stop());
+                        s.WhenShutdown(service => service.Stop());
                     });
 
                     windowsService.RunAsLocalSystem();
@@ -63,52 +64,41 @@ namespace DtpServer
             /// <summary>
             /// Static configuration 
             /// </summary>
-            public static IConfiguration Configuration { get; private set; }
+            public IConfiguration Configuration { get; private set; }
 
-            public static PlatformDirectory Platform { get; private set; }
+            public PlatformDirectory Platform { get; private set; }
 
+            private IWebHost webHost;
 
             public ServiceHandler()
             {
             }
 
-            public void Start()
+            public IWebHost Init()
             {
-                try
-                {
-                    Platform = new PlatformDirectory();
-                    Platform.EnsureDtpServerDirectory();
+                Platform = new PlatformDirectory();
+                Platform.EnsureDtpServerDirectory();
 
-                    SetupConfiguration();
-                    SetupLogger();
+                SetupConfiguration();
+                SetupLogger();
 
-                    Log.Information("Getting the motors running...");
-
-                    // Renaming BuildWebHost to InitWebHost avoids problems with add-migration command.
-                    // IDesignTimeDbContextFactory implemented for add-migration specifically.
-                    InitWebHost(null).Run();
-
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Fatal(ex, "Host terminated unexpectedly");
-                    return;
-                }
-                finally
-                {
-                    Log.Information("Started");
-                    Log.CloseAndFlush();
-                }
+                Log.Information("Getting the motors running...");
+                    
+                // Renaming BuildWebHost to InitWebHost avoids problems with add-migration command.
+                // IDesignTimeDbContextFactory implemented for add-migration specifically.
+                webHost = InitWebHost(null);
+                return webHost;
             }
 
             public void Stop()
             {
+                webHost?.Dispose();
                 Log.Information("Stopped");
+                Log.CloseAndFlush();
             }
 
 
-            public static IWebHost InitWebHost(string[] args) =>
+            public IWebHost InitWebHost(string[] args) =>
                 WebHost.CreateDefaultBuilder(args)
                     .UseStartup<Startup>()
                     .UseConfiguration(Configuration)
@@ -156,7 +146,7 @@ namespace DtpServer
                     .Build();
 
 
-            private static void SetupLogger()
+            private void SetupLogger()
             {
                 var formatter = (false) ? (ITextFormatter)new RenderedCompactJsonFormatter() : new MessageTemplateTextFormatter("{Timestamp:o} {RequestId,13} [{Level:u3}] {Message} ({EventId:x8}){NewLine}{Exception}", null);
 
@@ -182,7 +172,7 @@ namespace DtpServer
 
             }
 
-            private static void SetupConfiguration()
+            private void SetupConfiguration()
             {
                 var serverKeywordFilename = "ServerKeyword.json";
                 var isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
@@ -204,7 +194,7 @@ namespace DtpServer
                 }
             }
 
-            private static string EnsureDataFile(bool isDevelopment, string filename, string destination)
+            private string EnsureDataFile(bool isDevelopment, string filename, string destination)
             {
                 if (isDevelopment)
                     return filename;
