@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190823090659_Context")]
-    partial class Context
+    [Migration("20190913132705_Alias")]
+    partial class Alias
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,6 +136,22 @@ namespace DtpCore.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("Package");
+                });
+
+            modelBuilder.Entity("DtpCore.Model.SubjectSource", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Data");
+
+                    b.Property<string>("Label");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubjectSources");
                 });
 
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>

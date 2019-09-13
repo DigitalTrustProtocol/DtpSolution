@@ -44,6 +44,21 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="T:DtpServer.Controllers.ClaimController">
+            <summary>
+            Handles trust related stuff.
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.ClaimController.GetOne(System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="issuerId"></param>
+            <param name="subjectId"></param>
+            <param name="scope"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="T:DtpServer.Controllers.IdentityController">
             <summary>
             

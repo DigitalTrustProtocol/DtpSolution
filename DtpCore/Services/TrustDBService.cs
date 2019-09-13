@@ -136,6 +136,13 @@ namespace DtpCore.Services
         }
 
 
+        public IQueryable<Claim> BindTitle(IQueryable<Claim> query)
+        {
+            
+            return query;
+        }
+
+
         public void Add(Claim claim)
         {
             DBContext.Claims.Add(claim);

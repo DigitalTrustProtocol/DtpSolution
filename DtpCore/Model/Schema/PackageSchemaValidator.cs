@@ -5,6 +5,10 @@ using System;
 using DtpCore.Enumerations;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using NBitcoin.Crypto;
+using System.Text;
+using NBitcoin;
+using NBitcoin.DataEncoders;
 
 namespace DtpCore.Model.Schema
 {
@@ -268,6 +272,36 @@ namespace DtpCore.Model.Schema
                     return;
 
                 ValidateIdentity("Subject", claim.Subject, claim, location);
+                
+                ValidateSubjectSource("Subject Source", claim.Subject, claim, location);
+            }
+
+            private void ValidateSubjectSource(string name, SubjectIdentity subject, Claim claim, string location)
+            {
+                SubjectSource source = subject.Source;
+
+                if (source == null)
+                    return;
+
+                result.MaxRangeCheck($"{name} Type", source.Type, location, SchemaValidationResult.LENGTH20);
+                result.MaxRangeCheck($"{name} Label", source.Label, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                result.MaxRangeCheck($"{name} Data", source.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
+
+                var missing = result.MissingCheck($"{name} Data", source.Data, location);
+
+                if (missing)
+                    return;
+
+                var data = (source.Label + source.Data).ToBytes();
+                var hash = Hashes.Hash160(data);
+                var prefix = new byte[] { 30 };
+                var predixData = prefix.Combine(hash.ToBytes());
+                var address = Encoders.Base58Check.EncodeData(predixData);
+
+                if(address != subject.Id)
+                {
+                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Source));
+                }
             }
 
             private void ValidateIdentity(string name, Identity identity, Claim claim, string location)

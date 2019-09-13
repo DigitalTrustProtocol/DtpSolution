@@ -84,9 +84,11 @@ namespace DtpPackageCore.Commands
             request.Claim.ClaimPackages.Add(new ClaimPackageRelationship {Package = request.Package });
 
             _trustDBService.Add(request.Claim);
-            _trustDBService.SaveChanges(); //TODO: Save changes now?
             
             await _notifications.Publish(new ClaimAddedNotification { Claim = request.Claim });
+
+            // Now save all the changes to database
+            _trustDBService.SaveChanges(); 
 
             return _notifications;
         }

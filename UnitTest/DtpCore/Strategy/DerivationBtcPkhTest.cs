@@ -2,6 +2,9 @@
 using System;
 using System.Text;
 using DtpCore.Strategy;
+using NBitcoin.Crypto;
+using DtpCore.Extensions;
+using NBitcoin.DataEncoders;
 
 namespace UnitTest.DtpCore.Strategy
 {
@@ -20,6 +23,22 @@ namespace UnitTest.DtpCore.Strategy
 
             Console.WriteLine(addressString);
             Assert.IsNotNull(addressString);
+        }
+
+        [TestMethod]
+        public void CompileThingAddress()
+        {
+            var source = "https://www.dr.dk";
+
+            var data = source.ToBytes();
+            var hash = Hashes.Hash160(data);
+            var prefix = new byte[] { 30 };
+            var predixData = prefix.Combine(hash.ToBytes());
+            var addressString = Encoders.Base58Check.EncodeData(predixData);
+
+            Console.WriteLine(addressString);
+            Assert.AreEqual("D6AQSCAhksDdWfESsGyXRmpxeP1mSt7UPQ", addressString);
+
         }
     }
 }

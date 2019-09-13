@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Context : Migration
+    public partial class Alias : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,6 +101,20 @@ namespace DtpCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Package", x => x.DatabaseID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubjectSources",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    Label = table.Column<string>(nullable: true),
+                    Data = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectSources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -255,6 +269,9 @@ namespace DtpCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "KeyValues");
+
+            migrationBuilder.DropTable(
+                name: "SubjectSources");
 
             migrationBuilder.DropTable(
                 name: "Timestamp");

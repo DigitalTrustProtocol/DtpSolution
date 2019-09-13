@@ -136,6 +136,22 @@ namespace DtpCore.Migrations
                     b.ToTable("Package");
                 });
 
+            modelBuilder.Entity("DtpCore.Model.SubjectSource", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Data");
+
+                    b.Property<string>("Label");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubjectSources");
+                });
+
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>
                 {
                     b.Property<int>("DatabaseID")

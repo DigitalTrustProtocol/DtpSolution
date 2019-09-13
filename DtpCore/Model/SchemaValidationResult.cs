@@ -12,7 +12,9 @@ namespace DtpCore.Model
         public const string NotSupportedErrorTemplate = "{0}{1} is not supported.";
         public const string DefinedErrorTemplate = "{0}{1} has to be empty.";
 
+        public const int LENGTH20 = 20;
         public const int DEFAULT_MAX_LENGTH = 127;
+        public const int MAX_URL_LENGTH = 4096;
 
 
         public List<string> Errors { get; set; }

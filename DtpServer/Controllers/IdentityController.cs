@@ -37,6 +37,7 @@ namespace DtpServer.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [HttpGet]
+        [Route("search/id")]
         public string[] Search(string term, string scope, string type)
         {
 

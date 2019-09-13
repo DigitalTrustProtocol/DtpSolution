@@ -24,6 +24,8 @@ namespace DtpCore.Repository
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
 
+        public DbSet<SubjectSource> SubjectSources { get; set; }
+
         public TrustDBContext(DbContextOptions options) : base(options)
         {
         }
@@ -88,6 +90,8 @@ namespace DtpCore.Repository
             builder.Entity<Timestamp>().HasIndex(p => p.Source);
             //builder.Entity<Timestamp>().HasIndex(p => p.BlockchainProof_db_ID);
 
+
+            builder.Entity<SubjectSource>().HasKey(p => p.Id);
 
             builder.Entity<BlockchainProof>().HasKey(p => p.DatabaseID);
 

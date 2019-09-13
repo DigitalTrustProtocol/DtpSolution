@@ -257,12 +257,61 @@ namespace DtpCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class IssuerIdentity : Identity
     {
+        [JsonProperty(PropertyName = "alias")]
+        [NotMapped]
+        public string Alias { get; set; }
+        public bool ShouldSerializeAlias() { return !string.IsNullOrEmpty(Alias); } //  
+
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class SubjectIdentity : Identity
     {
+        /// <summary>
+        /// Represents the source used for calculating the Subject ID. Usually by a hash of the Source.
+        /// </summary>
+        [JsonProperty(PropertyName = "source")]
+        [NotMapped]
+        public SubjectSource Source { get; set; }
+        public bool ShouldSerializeSource() { return Source != null; } // !string.IsNullOrEmpty(Source); 
     }
+
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class SubjectSource 
+    {
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+        public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
+
+        /// <summary>
+        /// Type defines the content of data. 
+        /// "Text" or "reference"
+        /// </summary>
+        [JsonProperty(PropertyName = "type", Order = -200)]
+        public string Type { get; set; }
+        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
+
+        /// <summary>
+        /// A label on the data is for display and is included in the calculation of the Subject ID.
+        /// The format is always text and is limited in length.
+        /// </summary>
+        [JsonProperty(PropertyName = "label")]
+        public string Label { get; set; }
+        public bool ShouldSerializeLabel() { return !string.IsNullOrEmpty(Label); }
+
+
+        /// <summary>
+        /// Represents the source data used for calculating the Subject ID. Usually by a hash of the data.
+        /// The data cannot be longer than 4k bytes in text. For data sources like pictures and documents, 
+        /// a url link is defined in the Data field and the Type field is then set to "ref".
+        /// </summary>
+        [JsonProperty(PropertyName = "data")]
+        public string Data { get; set; }
+        public bool ShouldSerializeData() { return !string.IsNullOrEmpty(Data); }
+    }
+
 
     [JsonObject(MemberSerialization.OptIn)]
     public class ServerIdentity : Identity
