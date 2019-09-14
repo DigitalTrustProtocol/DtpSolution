@@ -245,7 +245,6 @@ namespace DtpCore.Model
         [Description("The system state of the claim.")]
         public ClaimStateType State { get; set; }
 
-
         public Claim()
         {
             Timestamps = new List<Timestamp>();
@@ -257,49 +256,39 @@ namespace DtpCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class IssuerIdentity : Identity
     {
-        [JsonProperty(PropertyName = "alias")]
-        [NotMapped]
-        public string Alias { get; set; }
-        public bool ShouldSerializeAlias() { return !string.IsNullOrEmpty(Alias); } //  
-
-
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class SubjectIdentity : Identity
     {
-        /// <summary>
-        /// Represents the source used for calculating the Subject ID. Usually by a hash of the Source.
-        /// </summary>
-        [JsonProperty(PropertyName = "source")]
-        [NotMapped]
-        public SubjectSource Source { get; set; }
-        public bool ShouldSerializeSource() { return Source != null; } // !string.IsNullOrEmpty(Source); 
     }
 
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class SubjectSource 
+    public class IdentityMetadata 
     {
+        /// <summary>
+        /// The ID of the identity
+        /// </summary>
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
         public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
 
-        /// <summary>
-        /// Type defines the content of data. 
-        /// "Text" or "reference"
-        /// </summary>
-        [JsonProperty(PropertyName = "type", Order = -200)]
-        public string Type { get; set; }
-        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
+        ///// <summary>
+        ///// Type defines the content of data. 
+        ///// "Text" or "reference"
+        ///// </summary>
+        //[JsonProperty(PropertyName = "type", Order = -200)]
+        //public string Type { get; set; }
+        //public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
 
-        /// <summary>
-        /// A label on the data is for display and is included in the calculation of the Subject ID.
-        /// The format is always text and is limited in length.
-        /// </summary>
-        [JsonProperty(PropertyName = "label")]
-        public string Label { get; set; }
-        public bool ShouldSerializeLabel() { return !string.IsNullOrEmpty(Label); }
+        ///// <summary>
+        ///// A label on the data is for display and is included in the calculation of the Subject ID.
+        ///// The format is always text and is limited in length.
+        ///// </summary>
+        //[JsonProperty(PropertyName = "label")]
+        //public string Label { get; set; }
+        //public bool ShouldSerializeLabel() { return !string.IsNullOrEmpty(Label); }
 
 
         /// <summary>
@@ -352,6 +341,13 @@ namespace DtpCore.Model
         {
             return Proof != null && Proof.Length > 0;
         }
+
+        /// <summary>
+        /// Represents the metadata used for alias of the issuer ID.
+        /// </summary>
+        [JsonProperty(PropertyName = "meta")]
+        public IdentityMetadata Meta { get; set; }
+        public bool ShouldSerializeMetadata() { return Meta != null; } // 
 
         /// <summary>
         /// Internal property for holding the private key to sign with

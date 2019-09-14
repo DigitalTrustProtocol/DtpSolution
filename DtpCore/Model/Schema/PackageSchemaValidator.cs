@@ -9,6 +9,7 @@ using NBitcoin.Crypto;
 using System.Text;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using Newtonsoft.Json.Linq;
 
 namespace DtpCore.Model.Schema
 {
@@ -278,21 +279,22 @@ namespace DtpCore.Model.Schema
 
             private void ValidateSubjectSource(string name, SubjectIdentity subject, Claim claim, string location)
             {
-                SubjectSource source = subject.Source;
+                IdentityMetadata metadata = subject.Meta;
 
-                if (source == null)
+                if (metadata == null)
                     return;
 
-                result.MaxRangeCheck($"{name} Type", source.Type, location, SchemaValidationResult.LENGTH20);
-                result.MaxRangeCheck($"{name} Label", source.Label, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
-                result.MaxRangeCheck($"{name} Data", source.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
+                //result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
+                //result.MaxRangeCheck($"{name} Label", source.Label, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
 
-                var missing = result.MissingCheck($"{name} Data", source.Data, location);
+                var missing = result.MissingCheck($"{name} Data", metadata.Data, location);
 
                 if (missing)
                     return;
 
-                var data = (source.Label + source.Data).ToBytes();
+                var obj = JObject.Parse(metadata.Data);
+                var data = (obj["label"].ToStringValue() + obj["data"].ToStringValue()).ToBytes();
                 var hash = Hashes.Hash160(data);
                 var prefix = new byte[] { 30 };
                 var predixData = prefix.Combine(hash.ToBytes());
@@ -300,7 +302,7 @@ namespace DtpCore.Model.Schema
 
                 if(address != subject.Id)
                 {
-                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Source));
+                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Meta));
                 }
             }
 

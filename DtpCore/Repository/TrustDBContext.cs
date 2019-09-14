@@ -24,7 +24,7 @@ namespace DtpCore.Repository
         public DbSet<WorkflowContainer> Workflows { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
 
-        public DbSet<SubjectSource> SubjectSources { get; set; }
+        public DbSet<IdentityMetadata> IdentityMetadata { get; set; }
 
         public TrustDBContext(DbContextOptions options) : base(options)
         {
@@ -76,14 +76,30 @@ namespace DtpCore.Repository
                     v => string.IsNullOrWhiteSpace(v) ? null : JsonConvert.DeserializeObject<List<PackageReference>>(v));
 
             //builder.Entity<Package>().Ignore(p => p.Templates);
+            builder.Entity<IdentityMetadata>().HasKey(p => p.Id);
 
             builder.Entity<Claim>().HasKey(p => p.DatabaseID);
-            builder.Entity<Claim>().OwnsOne(p => p.Issuer).HasIndex(i => i.Id);
-            builder.Entity<Claim>().OwnsOne(p => p.Subject).HasIndex(i => i.Id);
+            builder.Entity<Claim>().OwnsOne(p => p.Issuer, sa =>
+            {
+                sa.Property(p => p.Id).HasColumnName("Issuer_Id");
+            }
+            ).HasIndex(i => i.Id);
+
+            builder.Entity<Claim>().OwnsOne(p => p.Subject, sa =>
+            {
+                sa.Property(p => p.Id).HasColumnName("Subject_Id");
+            }).HasIndex(i => i.Id);
 
             builder.Entity<Claim>().HasIndex(p => p.Id).IsUnique(true);
+            //builder.Entity<Claim>().HasIndex(p=>new { Issuer_Id = p.Issuer.Id, Subject_Id = p.Subject.Id });
 
-//           builder.Entity<Trust>().HasMany(b => b.Timestamps).WithOne().HasForeignKey(p=>p.ParentID);
+            //builder.Entity<Claim>()
+            //    .HasOne<IdentityMetadata>("Issuer_Meta")
+
+            //builder.Entity<SubjectIdentity>()
+            //    .HasOne(p=>p.Meta)
+            //    .WithOne()
+            //    .HasForeignKey<IdentityMetadata>(p => p.Id);
 
             //builder.Entity<Trust>().HasIndex(p => new { p.IssuerAddress, p.SubjectAddress, p.Type, p.Scope }).IsUnique(true);
             builder.Entity<Timestamp>().HasKey(p => p.DatabaseID);
@@ -91,7 +107,6 @@ namespace DtpCore.Repository
             //builder.Entity<Timestamp>().HasIndex(p => p.BlockchainProof_db_ID);
 
 
-            builder.Entity<SubjectSource>().HasKey(p => p.Id);
 
             builder.Entity<BlockchainProof>().HasKey(p => p.DatabaseID);
 
