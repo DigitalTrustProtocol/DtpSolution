@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190913234658_claim4")]
-    partial class claim4
+    [Migration("20190914235854_Meta2")]
+    partial class Meta2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -97,7 +97,13 @@ namespace DtpCore.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Data");
+                    b.Property<byte[]>("Data");
+
+                    b.Property<string>("Href");
+
+                    b.Property<string>("Icon");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
@@ -229,6 +235,8 @@ namespace DtpCore.Migrations
                             b1.Property<string>("Id")
                                 .HasColumnName("Issuer_Id");
 
+                            b1.Property<string>("MetaId");
+
                             b1.Property<byte[]>("Path");
 
                             b1.Property<byte[]>("Proof");
@@ -237,7 +245,7 @@ namespace DtpCore.Migrations
 
                             b1.HasKey("ClaimDatabaseID");
 
-                            b1.HasIndex("Id");
+                            b1.HasIndex("MetaId");
 
                             b1.ToTable("Claim");
 
@@ -248,7 +256,7 @@ namespace DtpCore.Migrations
 
                             b1.HasOne("DtpCore.Model.IdentityMetadata", "Meta")
                                 .WithMany()
-                                .HasForeignKey("Id");
+                                .HasForeignKey("MetaId");
                         });
 
                     b.OwnsOne("DtpCore.Model.SubjectIdentity", "Subject", b1 =>
@@ -262,6 +270,8 @@ namespace DtpCore.Migrations
                             b1.Property<string>("Id")
                                 .HasColumnName("Subject_Id");
 
+                            b1.Property<string>("MetaId");
+
                             b1.Property<byte[]>("Path");
 
                             b1.Property<byte[]>("Proof");
@@ -270,7 +280,7 @@ namespace DtpCore.Migrations
 
                             b1.HasKey("ClaimDatabaseID");
 
-                            b1.HasIndex("Id");
+                            b1.HasIndex("MetaId");
 
                             b1.ToTable("Claim");
 
@@ -281,7 +291,7 @@ namespace DtpCore.Migrations
 
                             b1.HasOne("DtpCore.Model.IdentityMetadata", "Meta")
                                 .WithMany()
-                                .HasForeignKey("Id");
+                                .HasForeignKey("MetaId");
                         });
                 });
 
@@ -310,6 +320,8 @@ namespace DtpCore.Migrations
 
                             b1.Property<string>("Id");
 
+                            b1.Property<string>("MetaId");
+
                             b1.Property<byte[]>("Path");
 
                             b1.Property<byte[]>("Proof");
@@ -318,13 +330,13 @@ namespace DtpCore.Migrations
 
                             b1.HasKey("PackageDatabaseID");
 
-                            b1.HasIndex("Id");
+                            b1.HasIndex("MetaId");
 
                             b1.ToTable("Package");
 
                             b1.HasOne("DtpCore.Model.IdentityMetadata", "Meta")
                                 .WithMany()
-                                .HasForeignKey("Id");
+                                .HasForeignKey("MetaId");
 
                             b1.HasOne("DtpCore.Model.Package")
                                 .WithOne("Server")

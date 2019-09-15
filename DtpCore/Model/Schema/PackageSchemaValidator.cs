@@ -274,27 +274,22 @@ namespace DtpCore.Model.Schema
 
                 ValidateIdentity("Subject", claim.Subject, claim, location);
                 
-                ValidateSubjectSource("Subject Source", claim.Subject, claim, location);
+                ValidateIdentityMetadata("Subject Source", claim.Subject, claim, location);
             }
 
-            private void ValidateSubjectSource(string name, SubjectIdentity subject, Claim claim, string location)
+            private void ValidateIdentityMetadata(string name, SubjectIdentity subject, Claim claim, string location)
             {
                 IdentityMetadata metadata = subject.Meta;
 
                 if (metadata == null)
                     return;
 
-                //result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
-                //result.MaxRangeCheck($"{name} Label", source.Label, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                result.MaxRangeCheck($"{name} Title", metadata.Title, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
                 result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
+                result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
+                result.MaxRangeCheck($"{name} Icon", metadata.Icon, location, SchemaValidationResult.MAX_URL_LENGTH);
 
-                var missing = result.MissingCheck($"{name} Data", metadata.Data, location);
-
-                if (missing)
-                    return;
-
-                var obj = JObject.Parse(metadata.Data);
-                var data = (obj["label"].ToStringValue() + obj["data"].ToStringValue()).ToBytes();
+                var data = metadata.Title.ToBytes().Combine(metadata.Data);
                 var hash = Hashes.Hash160(data);
                 var prefix = new byte[] { 30 };
                 var predixData = prefix.Combine(hash.ToBytes());

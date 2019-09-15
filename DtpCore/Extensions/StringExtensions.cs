@@ -235,6 +235,9 @@ namespace DtpCore.Extensions
 
         public static byte[] ToBytes(this string text)
         {
+            if (text == null)
+                return new byte[0];
+
             return Encoding.UTF8.GetBytes(text);
         }
     }

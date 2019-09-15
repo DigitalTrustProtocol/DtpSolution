@@ -2,13 +2,11 @@
 using DtpCore.Model;
 using Microsoft.AspNetCore.Mvc;
 using DtpCore.Controllers;
-using DtpCore.Interfaces;
-using System;
 using DtpCore.Extensions;
-using DtpCore.Repository;
-using DtpCore.Model.Database;
 using System.Collections.Generic;
 using DtpCore.Services;
+using Microsoft.EntityFrameworkCore;
+using DtpCore.Interfaces;
 
 namespace DtpServer.Controllers
 {
@@ -19,49 +17,67 @@ namespace DtpServer.Controllers
     [Route("api/[controller]")]
     public class ClaimController : ApiController
     {
-        public TrustDBService trustDBService;
+        public ITrustDBService trustDBService;
 
-        public ClaimController(TrustDBService trustDBService)
+        public ClaimController(ITrustDBService trustDBService)
         {
             this.trustDBService = trustDBService;
         }
 
 
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="issuerId"></param>
+        ///// <param name="subjectId"></param>
+        ///// <param name="scope"></param>
+        ///// <param name="type"></param>
+        ///// <returns></returns>
+        //[HttpGet]
+        //public Claim GetOne(string issuerId, string subjectId, string scope, string type)
+        //{
+        //    var query = this.trustDBService.GetActiveClaims();
+
+        //    query = query.Where(p =>
+        //                 p.Issuer.Id.Equals(issuerId) 
+        //                 && p.Subject.Id.Equals(subjectId));
+
+        //    if (!string.IsNullOrEmpty(scope))
+        //    {
+        //        scope = scope.ToLowerInvariant();
+        //        query = query.Where(p => p.Scope == scope);
+        //    }
+
+        //    if (!string.IsNullOrEmpty(type))
+        //    {
+        //        type = type.ToLowerInvariant();
+        //        query = query.Where(p => p.Type == type);
+        //    }
+        //    query = query.Take(100).OrderBy(p => p.DatabaseID);
+
+        //    var result = query.Take(1).FirstOrDefault();
+
+        //    return result;
+        //}
+
         /// <summary>
-        /// 
+        /// Return a list of the latest create claims.
         /// </summary>
-        /// <param name="issuerId"></param>
-        /// <param name="subjectId"></param>
-        /// <param name="scope"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
-        [HttpGet]
-        public Claim GetOne(string issuerId, string subjectId, string scope, string type)
+        [HttpGet()]
+        [Route("latest")]
+        public IEnumerable<Claim> GetLastest([FromQuery]int max = 10)
         {
             var query = this.trustDBService.GetActiveClaims();
+            query = query
+                .Include(p => p.Issuer.Meta)
+                .Include(p => p.Subject.Meta)
+                .OrderByDescending(p => p.Created);
 
-            query = query.Where(p =>
-                         p.Issuer.Id.Equals(issuerId) 
-                         && p.Subject.Id.Equals(subjectId));
-
-            if (!string.IsNullOrEmpty(scope))
-            {
-                scope = scope.ToLowerInvariant();
-                query = query.Where(p => p.Scope == scope);
-            }
-
-            if (!string.IsNullOrEmpty(type))
-            {
-                type = type.ToLowerInvariant();
-                query = query.Where(p => p.Type == type);
-            }
-            query = query.Take(100).OrderBy(p => p.DatabaseID);
-
-            var result = query.Take(1).FirstOrDefault();
+            var result = query.Take(max).ToList();
 
             return result;
         }
-
 
 
 

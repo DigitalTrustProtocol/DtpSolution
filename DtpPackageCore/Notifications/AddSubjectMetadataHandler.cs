@@ -1,4 +1,6 @@
-﻿using DtpCore.Model;
+﻿using DtpCore.Collections.Generic;
+using DtpCore.Extensions;
+using DtpCore.Model;
 using DtpCore.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -33,28 +35,28 @@ namespace DtpPackageCore.Notifications
                 if (claim.Subject.Meta == null)
                     return;
 
+                claim.Subject.Meta.Id = claim.Subject.Id + claim.Scope; // Ensure that the key has an ID value
                 var metaEntry = _trustDBContext.Entry(claim.Subject.Meta);
-                var dbEntry = _trustDBContext.IdentityMetadata.AsNoTracking().Where(p => p.Id == claim.Subject.Id).FirstOrDefault();
+                var dbEntry = _trustDBContext.IdentityMetadata.AsNoTracking().Where(p => p.Id == claim.Subject.Meta.Id).FirstOrDefault();
                 if(dbEntry == null)
                 {
                     metaEntry.State = EntityState.Added;
                 }
                 else
                 {
-                    metaEntry.State = EntityState.Modified;
-                    var o1 = JObject.Parse(dbEntry.Data);
-                    var o2 = JObject.Parse(claim.Subject.Meta.Data);
-                    o1.Merge(o2, new JsonMergeSettings
-                    {
-                        // union array values together to avoid duplicates
-                        MergeArrayHandling = MergeArrayHandling.Union
-                    });
-                    var result = o1.ToString(Formatting.None);
-                    if(result == claim.Subject.Meta.Data)
-                    {
-                        // No need to update database
-                        metaEntry.State = EntityState.Unchanged;
-                    }
+                    metaEntry.State = EntityState.Unchanged; // No need to update database to begin with
+
+                    if (metaEntry.Entity.Title != dbEntry.Title)
+                        metaEntry.State = EntityState.Modified;
+
+                    if(metaEntry.Entity.Href != dbEntry.Href)
+                        metaEntry.State = EntityState.Modified;
+
+                    if (metaEntry.Entity.Href != dbEntry.Href)
+                        metaEntry.State = EntityState.Modified;
+
+                    if (metaEntry.Entity.Data.Compare(dbEntry.Data) != 0)
+                        metaEntry.State = EntityState.Modified;
                 }
                 // The entry will be updated in database by a SaveChanges() some where else.
             });

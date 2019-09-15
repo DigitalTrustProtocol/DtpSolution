@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class claim4 : Migration
+    public partial class Meta2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,7 +32,10 @@ namespace DtpCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Data = table.Column<string>(nullable: true)
+                    Icon = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Data = table.Column<byte[]>(nullable: true),
+                    Href = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -87,12 +90,14 @@ namespace DtpCore.Migrations
                     Issuer_Id = table.Column<string>(nullable: true),
                     Issuer_Path = table.Column<byte[]>(nullable: true),
                     Issuer_Proof = table.Column<byte[]>(nullable: true),
+                    Issuer_MetaId = table.Column<string>(nullable: true),
                     Subject_Context = table.Column<string>(nullable: true),
                     Subject_Type = table.Column<string>(nullable: true),
                     Subject_Algorithm = table.Column<string>(nullable: true),
                     Subject_Id = table.Column<string>(nullable: true),
                     Subject_Path = table.Column<byte[]>(nullable: true),
                     Subject_Proof = table.Column<byte[]>(nullable: true),
+                    Subject_MetaId = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
                     Scope = table.Column<string>(nullable: true),
                     Activate = table.Column<uint>(nullable: false),
@@ -105,14 +110,14 @@ namespace DtpCore.Migrations
                 {
                     table.PrimaryKey("PK_Claim", x => x.DatabaseID);
                     table.ForeignKey(
-                        name: "FK_Claim_IdentityMetadata_Issuer_Id",
-                        column: x => x.Issuer_Id,
+                        name: "FK_Claim_IdentityMetadata_Issuer_MetaId",
+                        column: x => x.Issuer_MetaId,
                         principalTable: "IdentityMetadata",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Claim_IdentityMetadata_Subject_Id",
-                        column: x => x.Subject_Id,
+                        name: "FK_Claim_IdentityMetadata_Subject_MetaId",
+                        column: x => x.Subject_MetaId,
                         principalTable: "IdentityMetadata",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -137,6 +142,7 @@ namespace DtpCore.Migrations
                     Server_Id = table.Column<string>(nullable: true),
                     Server_Path = table.Column<byte[]>(nullable: true),
                     Server_Proof = table.Column<byte[]>(nullable: true),
+                    Server_MetaId = table.Column<string>(nullable: true),
                     Obsoletes = table.Column<string>(nullable: true),
                     State = table.Column<long>(nullable: false)
                 },
@@ -144,8 +150,8 @@ namespace DtpCore.Migrations
                 {
                     table.PrimaryKey("PK_Package", x => x.DatabaseID);
                     table.ForeignKey(
-                        name: "FK_Package_IdentityMetadata_Server_Id",
-                        column: x => x.Server_Id,
+                        name: "FK_Package_IdentityMetadata_Server_MetaId",
+                        column: x => x.Server_MetaId,
                         principalTable: "IdentityMetadata",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -223,14 +229,14 @@ namespace DtpCore.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Claim_Issuer_Id",
+                name: "IX_Claim_Issuer_MetaId",
                 table: "Claim",
-                column: "Issuer_Id");
+                column: "Issuer_MetaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Claim_Subject_Id",
+                name: "IX_Claim_Subject_MetaId",
                 table: "Claim",
-                column: "Subject_Id");
+                column: "Subject_MetaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClaimPackageRelationship_PackageID",
@@ -248,9 +254,9 @@ namespace DtpCore.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Package_Server_Id",
+                name: "IX_Package_Server_MetaId",
                 table: "Package",
-                column: "Server_Id");
+                column: "Server_MetaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_ClaimDatabaseID",

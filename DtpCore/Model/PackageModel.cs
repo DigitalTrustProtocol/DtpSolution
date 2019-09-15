@@ -274,22 +274,20 @@ namespace DtpCore.Model
         public string Id { get; set; }
         public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
 
-        ///// <summary>
-        ///// Type defines the content of data. 
-        ///// "Text" or "reference"
-        ///// </summary>
-        //[JsonProperty(PropertyName = "type", Order = -200)]
-        //public string Type { get; set; }
-        //public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
+        /// <summary>
+        /// An Icon of the identity
+        /// </summary>
+        [JsonProperty(PropertyName = "icon", Order = -200)]
+        public string Icon { get; set; }
+        public bool ShouldSerializeIcon() => !string.IsNullOrWhiteSpace(Icon);
 
-        ///// <summary>
-        ///// A label on the data is for display and is included in the calculation of the Subject ID.
-        ///// The format is always text and is limited in length.
-        ///// </summary>
-        //[JsonProperty(PropertyName = "label")]
-        //public string Label { get; set; }
-        //public bool ShouldSerializeLabel() { return !string.IsNullOrEmpty(Label); }
-
+        /// <summary>
+        /// A label on the data is for display and is included in the calculation of the Subject ID.
+        /// The format is always text and is limited in length.
+        /// </summary>
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+        public bool ShouldSerializeTitle() { return !string.IsNullOrEmpty(Title); }
 
         /// <summary>
         /// Represents the source data used for calculating the Subject ID. Usually by a hash of the data.
@@ -297,8 +295,13 @@ namespace DtpCore.Model
         /// a url link is defined in the Data field and the Type field is then set to "ref".
         /// </summary>
         [JsonProperty(PropertyName = "data")]
-        public string Data { get; set; }
-        public bool ShouldSerializeData() { return !string.IsNullOrEmpty(Data); }
+        public byte[] Data { get; set; }
+        public bool ShouldSerializeData() { return Data != null; }
+
+        [JsonProperty(PropertyName = "href")]
+        public string Href { get; set; }
+        public bool ShouldSerializeHref() { return !string.IsNullOrEmpty(Href); }
+
     }
 
 
@@ -342,6 +345,8 @@ namespace DtpCore.Model
             return Proof != null && Proof.Length > 0;
         }
 
+        [JsonIgnore]
+        public string MetaId { get; set; }
         /// <summary>
         /// Represents the metadata used for alias of the issuer ID.
         /// </summary>

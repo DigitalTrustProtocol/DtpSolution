@@ -49,14 +49,10 @@
             Handles trust related stuff.
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.ClaimController.GetOne(System.String,System.String,System.String,System.String)">
+        <member name="M:DtpServer.Controllers.ClaimController.GetLastest(System.Int32)">
             <summary>
-            
+            Return a list of the latest create claims.
             </summary>
-            <param name="issuerId"></param>
-            <param name="subjectId"></param>
-            <param name="scope"></param>
-            <param name="type"></param>
             <returns></returns>
         </member>
         <member name="T:DtpServer.Controllers.IdentityController">

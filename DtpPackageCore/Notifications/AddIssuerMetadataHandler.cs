@@ -26,27 +26,26 @@ namespace DtpPackageCore.Notifications
             return Task.Run(() => {
                 var claim = notification.Claim;
                 
-                if (!"alias".EqualsIgnoreCase(claim.Type))
-                    return;
-
                 if (claim.Issuer.Id != claim.Subject.Id)
                     return; // Not the same issuer and subject
 
 
-                var entry = _trustDBContext.IdentityMetadata.Find(claim.Issuer.Id);
+                if (!"alias".EqualsIgnoreCase(claim.Type))
+                    return;
+
+                var metadataId = claim.Issuer.Id + claim.Scope;
+                var entry = _trustDBContext.IdentityMetadata.Find(metadataId);
                 if (entry == null)
                 {
                     entry = new IdentityMetadata
                     {
-                        Id = claim.Issuer.Id,
-                        Data = JsonConvert.SerializeObject(new { alias = claim.Value }, Formatting.None)
+                        Id = metadataId,
+                        Title = claim.Value
                     };
                     _trustDBContext.Add(entry);
                 } else
                 {
-                    var data = JObject.Parse(entry.Data);
-                    data["alias"] = claim.Value;
-                    entry.Data = data.ToString(Formatting.None);
+                    entry.Title = claim.Value;
                 }
                 // The entry will be updated in database by a SaveChanges() some where else.
             });

@@ -100,7 +100,7 @@ namespace DtpCore.Services
                          && (trust.Expire > time || trust.Expire == 0) 
                          && (trust.State & exclude) == 0
                          select trust;
-
+            
             return trusts;
         }
 

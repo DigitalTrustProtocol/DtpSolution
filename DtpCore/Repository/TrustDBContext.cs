@@ -91,14 +91,15 @@ namespace DtpCore.Repository
             }).HasIndex(i => i.Id);
 
             builder.Entity<Claim>().HasIndex(p => p.Id).IsUnique(true);
-            //builder.Entity<Claim>().HasIndex(p=>new { Issuer_Id = p.Issuer.Id, Subject_Id = p.Subject.Id });
 
             //builder.Entity<Claim>()
-            //    .HasOne<IdentityMetadata>("Issuer_Meta")
-
-            //builder.Entity<SubjectIdentity>()
-            //    .HasOne(p=>p.Meta)
+            //    .HasOne(p => p.Issuer_Meta)
             //    .WithOne()
+            //    .HasForeignKey<IdentityMetadata>(p => p.Id);
+
+            //builder.Entity<Claim>()
+            //    .HasOne(p => p.Subject_Meta)
+            //    .WithOne(p=>p.Id)
             //    .HasForeignKey<IdentityMetadata>(p => p.Id);
 
             //builder.Entity<Trust>().HasIndex(p => new { p.IssuerAddress, p.SubjectAddress, p.Type, p.Scope }).IsUnique(true);
