@@ -217,10 +217,10 @@ namespace DtpCore.Model
         /// A short comment on the reason for the trust. Very limit in size. Single word is optimal.
         /// Usually ids for text tokens. 
         /// </summary>
-        [JsonProperty(PropertyName = "metadata")]
-        [Description("Issuers metadata about the claim.")]
-        public string Metadata { get; set; }
-        public bool ShouldSerializeMetadata() { return Metadata != null; }
+        [JsonProperty(PropertyName = "note")]
+        [Description("Issuers note about the claim.")]
+        public string Note { get; set; }
+        public bool ShouldSerializeMetadata() { return Note != null; }
 
 
         [UIHint("Serialize")]

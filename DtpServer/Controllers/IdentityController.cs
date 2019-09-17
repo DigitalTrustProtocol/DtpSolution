@@ -1,4 +1,5 @@
 ﻿using DtpCore.Controllers;
+using DtpCore.Model;
 using DtpCore.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -53,8 +54,7 @@ namespace DtpServer.Controllers
                 type = type.ToLowerInvariant();
                 query = query.Where(p => p.Type == type);
             }
-            query = query.Take(100).OrderBy(p => p.DatabaseID);
-
+            query = query.OrderBy(p => p.DatabaseID).Take(100);
 
             SortedSet<string> hs = new SortedSet<string>();
             foreach (var claim in query)
@@ -67,6 +67,21 @@ namespace DtpServer.Controllers
             }
 
             return hs.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("metadata")]
+        public IdentityMetadata GetMetadata(string id, string scope = "")
+        {
+            var combinedId = id + scope.ToLowerInvariant();
+            var query = trustDBContext.IdentityMetadata.Where(p => p.Id == combinedId);
+            return query.FirstOrDefault();
         }
     }
 }

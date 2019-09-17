@@ -39,7 +39,7 @@ namespace DtpCore.Model.Schema
                 case Secp256k1PKHIdentityValidator.NAME: type = typeof(Secp256k1PKHIdentityValidator); break;
                 //case NumericIdentityValidator.NAME: type = typeof(NumericIdentityValidator); break;
                 //case AlphaNumericIdentityValidator.NAME: type = typeof(AlphaNumericIdentityValidator); break;
-                //case DTPAddressIdentityValidator.NAME: type = typeof(DTPAddressIdentityValidator); break;
+                case DTPAddressIdentityValidator.NAME: type = typeof(DTPAddressIdentityValidator); break;
                 //case UriIdentityValidator.NAME: type = typeof(UriIdentityValidator); break;
                 //case StringIdentityValidator.NAME: type = typeof(StringIdentityValidator); break;
                 case Hash160IdentityValidator.NAME: type = typeof(Hash160IdentityValidator); break;

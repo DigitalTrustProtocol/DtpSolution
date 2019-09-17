@@ -227,7 +227,7 @@ namespace DtpCore.Model.Schema
                 result.MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
                 result.MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
                 result.MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
-                result.MaxRangeCheck("Metadata", claim.Metadata, location, METADATA_MAX_LENGTH);
+                result.MaxRangeCheck("Metadata", claim.Note, location, METADATA_MAX_LENGTH);
 
                 ValidateIssuer(claim, location);
                 ValidateSubject(claim, location);

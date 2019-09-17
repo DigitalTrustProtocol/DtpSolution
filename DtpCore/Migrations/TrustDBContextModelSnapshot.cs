@@ -57,7 +57,7 @@ namespace DtpCore.Migrations
 
                     b.Property<byte[]>("Id");
 
-                    b.Property<string>("Metadata");
+                    b.Property<string>("Note");
 
                     b.Property<string>("Scope");
 

@@ -81,7 +81,7 @@ namespace DtpCore.Strategy
             bw.Write(claim.Value);
 
             bw.Write(claim.Scope);
-            bw.Write(claim.Metadata);
+            bw.Write(claim.Note);
             bw.Write(claim.Created);
             bw.Write(claim.Activate);
             bw.Write(claim.Expire);

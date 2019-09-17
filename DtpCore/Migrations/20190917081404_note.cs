@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class Meta2 : Migration
+    public partial class note : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -102,7 +102,7 @@ namespace DtpCore.Migrations
                     Scope = table.Column<string>(nullable: true),
                     Activate = table.Column<uint>(nullable: false),
                     Expire = table.Column<uint>(nullable: false),
-                    Metadata = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true),
                     TemplateId = table.Column<uint>(nullable: false),
                     State = table.Column<long>(nullable: false)
                 },

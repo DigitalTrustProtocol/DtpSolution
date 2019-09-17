@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DtpCore.Migrations
 {
     [DbContext(typeof(TrustDBContext))]
-    [Migration("20190914235854_Meta2")]
-    partial class Meta2
+    [Migration("20190917081404_note")]
+    partial class note
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,7 +59,7 @@ namespace DtpCore.Migrations
 
                     b.Property<byte[]>("Id");
 
-                    b.Property<string>("Metadata");
+                    b.Property<string>("Note");
 
                     b.Property<string>("Scope");
 

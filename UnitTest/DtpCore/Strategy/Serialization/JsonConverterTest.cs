@@ -78,7 +78,7 @@ namespace UnitTest.DtpCore.Strategy
             Assert.AreEqual(claim2.Expire, claim.Expire);
             Assert.AreEqual(claim2.Activate, claim.Activate);
             Assert.AreEqual(claim2.Created, claim.Created);
-            Assert.AreEqual(claim2.Metadata, claim.Metadata);
+            Assert.AreEqual(claim2.Note, claim.Note);
             Assert.AreEqual(claim2.Timestamps.Count, claim.Timestamps.Count);
             Assert.AreEqual(claim2.Value, claim.Value, "Claim");
             Assert.AreEqual(claim2.Scope, claim.Scope, "Scope");
