@@ -49,6 +49,26 @@
             Handles trust related stuff.
             </summary>
         </member>
+        <member name="M:DtpServer.Controllers.ClaimController.GetOneInline(System.String,System.String,System.String,System.String)">
+            <summary>
+            Get one claim
+            </summary>
+            <param name="issuerId"></param>
+            <param name="subjectId"></param>
+            <param name="scope"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DtpServer.Controllers.ClaimController.GetOne(System.String,System.String,System.String,System.String)">
+            <summary>
+            Get one claim
+            </summary>
+            <param name="issuerId"></param>
+            <param name="subjectId"></param>
+            <param name="scope"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="M:DtpServer.Controllers.ClaimController.GetLastest(System.Int32)">
             <summary>
             Return a list of the latest create claims.
@@ -78,6 +98,14 @@
             <param name="term"></param>
             <param name="scope"></param>
             <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DtpServer.Controllers.IdentityController.GetMetadata(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="scope"></param>
             <returns></returns>
         </member>
         <member name="T:DtpServer.Controllers.PackageController">

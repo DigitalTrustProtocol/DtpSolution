@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using DtpCore.Services;
 using Microsoft.EntityFrameworkCore;
 using DtpCore.Interfaces;
+using DtpCore.Model.Database;
+using System;
 
 namespace DtpServer.Controllers
 {
@@ -25,21 +27,122 @@ namespace DtpServer.Controllers
         }
 
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="issuerId"></param>
-        ///// <param name="subjectId"></param>
-        ///// <param name="scope"></param>
-        ///// <param name="type"></param>
-        ///// <returns></returns>
+
+        /// <summary>
+        /// Get one claim
+        /// </summary>
+        /// <param name="issuerId"></param>
+        /// <param name="subjectId"></param>
+        /// <param name="scope"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("inline")]
+        public Claim GetOneInline(string issuerId, string subjectId, string scope, string type)
+        {
+            var time = DateTime.Now.ToUnixTime();
+            var db = trustDBService.DBContext;
+            var query = this.trustDBService.GetActiveClaims();
+            query = query.Where(p =>
+                         p.Issuer.Id.Equals(issuerId)
+                         && p.Subject.Id.Equals(subjectId));
+
+            if (!string.IsNullOrEmpty(scope))
+            {
+                scope = scope.ToLowerInvariant();
+                query = query.Where(p => p.Scope == scope);
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = type.ToLowerInvariant();
+                query = query.Where(p => p.Type == type);
+            }
+
+            var trusts = from c in query
+                         join issuer in db.IdentityMetadata on c.Issuer.Id+c.Scope equals issuer.Id into issuerMeta
+                         from issuerItem in issuerMeta.DefaultIfEmpty()
+                         join subject in db.IdentityMetadata on c.Subject.Id + c.Scope equals subject.Id into subjectMeta
+                         from subjectItem in subjectMeta.DefaultIfEmpty()
+                         select new
+                         {
+                             claim = c,
+                             issuerMeta = issuerItem,
+                             subjectMeta = subjectItem
+
+                         };
+
+
+            var result = trusts.FirstOrDefault();
+            if (result != null)
+            {
+                result.claim.Issuer.Meta = result.issuerMeta;
+                result.claim.Subject.Meta = result.subjectMeta;
+            }
+
+            return result.claim;
+
+
+            //query.GroupJoin(db.IdentityMetadata, c => c.Issuer.Id + c.Scope, m => m.Id, (c, m) => new { claim = c, meta = m });
+
+            //var tet = query.SelectMany
+            //(
+            //    c => db.IdentityMetadata.Where(m => m.Id.Equals(c.Issuer.Id+c.Type)).DefaultIfEmpty(),
+            //    (c, m) => new
+            //    {
+            //        claim = c,
+            //        meta = m
+            //    }
+            //);
+
+        }
+
+
+        /// <summary>
+        /// Get one claim
+        /// </summary>
+        /// <param name="issuerId"></param>
+        /// <param name="subjectId"></param>
+        /// <param name="scope"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public Claim GetOne(string issuerId, string subjectId, string scope, string type)
+        {
+            var query = this.trustDBService.GetActiveClaims();
+
+            query = query.Where(p =>
+                         p.Issuer.Id.Equals(issuerId)
+                         && p.Subject.Id.Equals(subjectId));
+
+            if (!string.IsNullOrEmpty(scope))
+            {
+                scope = scope.ToLowerInvariant();
+                query = query.Where(p => p.Scope == scope);
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = type.ToLowerInvariant();
+                query = query.Where(p => p.Type == type);
+            }
+
+            query = query
+                .Include(p => p.Issuer.Meta)
+                .Include(p => p.Subject.Meta);
+
+            var result = query.FirstOrDefault();
+
+            return result;
+        }
+
         //[HttpGet]
-        //public Claim GetOne(string issuerId, string subjectId, string scope, string type)
+        //public IEnumerable<Claim> GetMany([FromBody]List<Claim> claims)
         //{
         //    var query = this.trustDBService.GetActiveClaims();
 
         //    query = query.Where(p =>
-        //                 p.Issuer.Id.Equals(issuerId) 
+        //                 p.Issuer.Id.Equals(issuerId)
         //                 && p.Subject.Id.Equals(subjectId));
 
         //    if (!string.IsNullOrEmpty(scope))
@@ -53,9 +156,12 @@ namespace DtpServer.Controllers
         //        type = type.ToLowerInvariant();
         //        query = query.Where(p => p.Type == type);
         //    }
-        //    query = query.Take(100).OrderBy(p => p.DatabaseID);
 
-        //    var result = query.Take(1).FirstOrDefault();
+        //    query = query
+        //        .Include(p => p.Issuer.Meta)
+        //        .Include(p => p.Subject.Meta);
+
+        //    var result = query.FirstOrDefault();
 
         //    return result;
         //}

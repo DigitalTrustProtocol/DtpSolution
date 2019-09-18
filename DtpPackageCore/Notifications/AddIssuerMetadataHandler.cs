@@ -43,6 +43,7 @@ namespace DtpPackageCore.Notifications
                         Title = claim.Value
                     };
                     _trustDBContext.Add(entry);
+
                 } else
                 {
                     entry.Title = claim.Value;

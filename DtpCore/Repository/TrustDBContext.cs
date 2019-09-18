@@ -8,6 +8,7 @@ using System.Diagnostics;
 using DtpCore.Model.Database;
 using System.Threading.Tasks;
 using DtpCore.Builders;
+using Microsoft.Extensions.Logging;
 
 namespace DtpCore.Repository
 {
@@ -26,16 +27,31 @@ namespace DtpCore.Repository
 
         public DbSet<IdentityMetadata> IdentityMetadata { get; set; }
 
+        private readonly ILoggerFactory _loggerFactory;
+
+
+        //public TrustDBContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
+        //{
+        //    this._loggerFactory = loggerFactory;
+        //}
+
         public TrustDBContext(DbContextOptions options) : base(options)
         {
+           
         }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //if (Debugger.IsAttached)
+            //{
+            //    // Probably shouldn't log sql statements in production
+            //    optionsBuilder.UseLoggerFactory(this._loggerFactory);
+            //}
             EnableSensitiveDataLogging(optionsBuilder);
         }
 
-        [Conditional("DEBUG")]
+        //[Conditional("DEBUG")]
         private void EnableSensitiveDataLogging(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging(true);
