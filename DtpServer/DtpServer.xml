@@ -49,7 +49,18 @@
             Handles trust related stuff.
             </summary>
         </member>
-        <member name="M:DtpServer.Controllers.ClaimController.GetOneInline(System.String,System.String,System.String,System.String)">
+        <member name="F:DtpServer.Controllers.ClaimController.trustDBService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DtpServer.Controllers.ClaimController.#ctor(DtpCore.Interfaces.ITrustDBService)">
+            <summary>
+            
+            </summary>
+            <param name="trustDBService"></param>
+        </member>
+        <member name="M:DtpServer.Controllers.ClaimController.GetOne(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
             Get one claim
             </summary>
@@ -57,19 +68,16 @@
             <param name="subjectId"></param>
             <param name="scope"></param>
             <param name="type"></param>
+            <param name="meta"></param>
             <returns></returns>
         </member>
-        <member name="M:DtpServer.Controllers.ClaimController.GetOne(System.String,System.String,System.String,System.String)">
+        <member name="M:DtpServer.Controllers.ClaimController.GetHistory(System.String,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Get one claim
+            Return a list of the latest create claims.
             </summary>
-            <param name="issuerId"></param>
-            <param name="subjectId"></param>
-            <param name="scope"></param>
-            <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="M:DtpServer.Controllers.ClaimController.GetLastest(System.Int32)">
+        <member name="M:DtpServer.Controllers.ClaimController.GetLastest(System.Int32,System.Int32,System.Boolean)">
             <summary>
             Return a list of the latest create claims.
             </summary>

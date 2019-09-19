@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DtpCore.Migrations
 {
-    public partial class note : Migration
+    public partial class MetaType : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,14 +28,48 @@ namespace DtpCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Claim",
+                columns: table => new
+                {
+                    DatabaseID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Context = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Id = table.Column<byte[]>(nullable: true),
+                    Created = table.Column<uint>(nullable: false),
+                    Issuer_Context = table.Column<string>(nullable: true),
+                    Issuer_Type = table.Column<string>(nullable: true),
+                    Issuer_Algorithm = table.Column<string>(nullable: true),
+                    Issuer_Id = table.Column<string>(nullable: true),
+                    Issuer_Path = table.Column<byte[]>(nullable: true),
+                    Issuer_Proof = table.Column<byte[]>(nullable: true),
+                    Subject_Context = table.Column<string>(nullable: true),
+                    Subject_Type = table.Column<string>(nullable: true),
+                    Subject_Algorithm = table.Column<string>(nullable: true),
+                    Subject_Id = table.Column<string>(nullable: true),
+                    Subject_Path = table.Column<byte[]>(nullable: true),
+                    Subject_Proof = table.Column<byte[]>(nullable: true),
+                    Value = table.Column<string>(nullable: true),
+                    Scope = table.Column<string>(nullable: true),
+                    Activate = table.Column<uint>(nullable: false),
+                    Expire = table.Column<uint>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    TemplateId = table.Column<uint>(nullable: false),
+                    State = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Claim", x => x.DatabaseID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IdentityMetadata",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Icon = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
-                    Data = table.Column<byte[]>(nullable: true),
-                    Href = table.Column<string>(nullable: true)
+                    Data = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,73 +91,6 @@ namespace DtpCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Workflow",
-                columns: table => new
-                {
-                    DatabaseID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Type = table.Column<string>(nullable: true),
-                    Active = table.Column<bool>(nullable: false),
-                    State = table.Column<string>(nullable: true),
-                    Tag = table.Column<string>(nullable: true),
-                    NextExecution = table.Column<long>(nullable: false),
-                    Data = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Workflow", x => x.DatabaseID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Claim",
-                columns: table => new
-                {
-                    DatabaseID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Context = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    Id = table.Column<byte[]>(nullable: true),
-                    Created = table.Column<uint>(nullable: false),
-                    Issuer_Context = table.Column<string>(nullable: true),
-                    Issuer_Type = table.Column<string>(nullable: true),
-                    Issuer_Algorithm = table.Column<string>(nullable: true),
-                    Issuer_Id = table.Column<string>(nullable: true),
-                    Issuer_Path = table.Column<byte[]>(nullable: true),
-                    Issuer_Proof = table.Column<byte[]>(nullable: true),
-                    Issuer_MetaId = table.Column<string>(nullable: true),
-                    Subject_Context = table.Column<string>(nullable: true),
-                    Subject_Type = table.Column<string>(nullable: true),
-                    Subject_Algorithm = table.Column<string>(nullable: true),
-                    Subject_Id = table.Column<string>(nullable: true),
-                    Subject_Path = table.Column<byte[]>(nullable: true),
-                    Subject_Proof = table.Column<byte[]>(nullable: true),
-                    Subject_MetaId = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
-                    Scope = table.Column<string>(nullable: true),
-                    Activate = table.Column<uint>(nullable: false),
-                    Expire = table.Column<uint>(nullable: false),
-                    Note = table.Column<string>(nullable: true),
-                    TemplateId = table.Column<uint>(nullable: false),
-                    State = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Claim", x => x.DatabaseID);
-                    table.ForeignKey(
-                        name: "FK_Claim_IdentityMetadata_Issuer_MetaId",
-                        column: x => x.Issuer_MetaId,
-                        principalTable: "IdentityMetadata",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Claim_IdentityMetadata_Subject_MetaId",
-                        column: x => x.Subject_MetaId,
-                        principalTable: "IdentityMetadata",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Package",
                 columns: table => new
                 {
@@ -142,19 +109,30 @@ namespace DtpCore.Migrations
                     Server_Id = table.Column<string>(nullable: true),
                     Server_Path = table.Column<byte[]>(nullable: true),
                     Server_Proof = table.Column<byte[]>(nullable: true),
-                    Server_MetaId = table.Column<string>(nullable: true),
                     Obsoletes = table.Column<string>(nullable: true),
                     State = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Package", x => x.DatabaseID);
-                    table.ForeignKey(
-                        name: "FK_Package_IdentityMetadata_Server_MetaId",
-                        column: x => x.Server_MetaId,
-                        principalTable: "IdentityMetadata",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Workflow",
+                columns: table => new
+                {
+                    DatabaseID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Type = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    State = table.Column<string>(nullable: true),
+                    Tag = table.Column<string>(nullable: true),
+                    NextExecution = table.Column<long>(nullable: false),
+                    Data = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Workflow", x => x.DatabaseID);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,16 +207,6 @@ namespace DtpCore.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Claim_Issuer_MetaId",
-                table: "Claim",
-                column: "Issuer_MetaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Claim_Subject_MetaId",
-                table: "Claim",
-                column: "Subject_MetaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClaimPackageRelationship_PackageID",
                 table: "ClaimPackageRelationship",
                 column: "PackageID");
@@ -252,11 +220,6 @@ namespace DtpCore.Migrations
                 name: "IX_Package_Id",
                 table: "Package",
                 column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Package_Server_MetaId",
-                table: "Package",
-                column: "Server_MetaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_ClaimDatabaseID",
@@ -295,6 +258,9 @@ namespace DtpCore.Migrations
                 name: "ClaimPackageRelationship");
 
             migrationBuilder.DropTable(
+                name: "IdentityMetadata");
+
+            migrationBuilder.DropTable(
                 name: "KeyValues");
 
             migrationBuilder.DropTable(
@@ -311,9 +277,6 @@ namespace DtpCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "BlockchainProof");
-
-            migrationBuilder.DropTable(
-                name: "IdentityMetadata");
         }
     }
 }

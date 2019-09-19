@@ -50,9 +50,9 @@ namespace DtpCore.Model.Schema
 
             switch (claim.Type.ToLower())
             {
-                case PackageBuilder.BINARY_TRUST_DTP1_SHORTFORM : return PackageBuilder.BINARY_TRUST_DTP1;
-                case PackageBuilder.CONFIRM_TRUST_DTP1_SHORTFORM: return PackageBuilder.CONFIRM_TRUST_DTP1;
-                case PackageBuilder.RATING_TRUST_DTP1_SHORTFORM : return PackageBuilder.RATING_TRUST_DTP1;
+                case PackageBuilder.BINARY_CLAIM_DTP1_SHORTFORM : return PackageBuilder.BINARY_CLAIM_DTP1;
+                case PackageBuilder.CONFIRM_CLAIM_DTP1_SHORTFORM: return PackageBuilder.CONFIRM_CLAIM_DTP1;
+                case PackageBuilder.RATING_CLAIM_DTP1_SHORTFORM : return PackageBuilder.RATING_CLAIM_DTP1;
             }
             
             return claim.Type.ToLower();
@@ -286,8 +286,8 @@ namespace DtpCore.Model.Schema
 
                 result.MaxRangeCheck($"{name} Title", metadata.Title, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
                 result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
-                result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
-                result.MaxRangeCheck($"{name} Icon", metadata.Icon, location, SchemaValidationResult.MAX_URL_LENGTH);
+                //result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
+                result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
 
                 var data = metadata.Title.ToBytes().Combine(metadata.Data);
                 var hash = Hashes.Hash160(data);

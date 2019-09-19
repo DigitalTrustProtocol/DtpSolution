@@ -253,7 +253,7 @@ namespace DtpGraphCore.Services
                             Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
                         };
 
-                        claim.Type = PackageBuilder.BINARY_TRUST_DTP1;
+                        claim.Type = PackageBuilder.BINARY_CLAIM_DTP1;
                         claim.Value = PackageBuilder.CreateBinaryTrustAttributes(true);
 
                         context.Results.Claims.Add(claim);

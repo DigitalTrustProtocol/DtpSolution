@@ -36,27 +36,11 @@ namespace DtpPackageCore.Notifications
                     return;
 
                 claim.Subject.Meta.Id = claim.Subject.Id + claim.Scope; // Ensure that the key has an ID value
-                var metaEntry = _trustDBContext.Entry(claim.Subject.Meta);
-                var dbEntry = _trustDBContext.IdentityMetadata.AsNoTracking().Where(p => p.Id == claim.Subject.Meta.Id).FirstOrDefault();
+                //var metaEntry = _trustDBContext.Entry(claim.Subject.Meta);
+                var dbEntry = _trustDBContext.IdentityMetadata.Find(claim.Subject.Meta.Id);
                 if(dbEntry == null)
                 {
-                    metaEntry.State = EntityState.Added;
-                }
-                else
-                {
-                    metaEntry.State = EntityState.Unchanged; // No need to update database to begin with
-
-                    if (metaEntry.Entity.Title != dbEntry.Title)
-                        metaEntry.State = EntityState.Modified;
-
-                    if(metaEntry.Entity.Href != dbEntry.Href)
-                        metaEntry.State = EntityState.Modified;
-
-                    if (metaEntry.Entity.Href != dbEntry.Href)
-                        metaEntry.State = EntityState.Modified;
-
-                    if (metaEntry.Entity.Data.Compare(dbEntry.Data) != 0)
-                        metaEntry.State = EntityState.Modified;
+                    _trustDBContext.Add(claim.Subject.Meta);
                 }
                 // The entry will be updated in database by a SaveChanges() some where else.
             });

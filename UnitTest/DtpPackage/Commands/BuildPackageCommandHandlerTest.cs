@@ -19,7 +19,7 @@ namespace UnitTest.DtpPackage.Commands
         {
             var builder = new PackageBuilder();
             builder.SetServer("testserver");
-            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(value)).BuildClaimID();
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_CLAIM_DTP1, PackageBuilder.CreateBinaryTrustAttributes(value)).BuildClaimID();
 
             var command = new AddPackageCommand(builder.Package);
             Mediator.SendAndWait(command);

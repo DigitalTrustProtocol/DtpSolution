@@ -64,7 +64,7 @@ namespace DtpServer.Controllers
         [HttpGet]
         public PackageInfoCollection GetPackageInfoCollection([FromQuery]long from = 0)
         {
-            var query = _trustDBService.DBContext.Packages.AsNoTracking(); // Makes read-only queries faster
+            var query = _trustDBService.DB.Packages.AsNoTracking(); // Makes read-only queries faster
             
             // The package need to be signed and not replaced!
             query = query.Where(p => (p.State & PackageStateType.Signed) > 0 && (p.State & PackageStateType.Replaced) == 0);

@@ -29,7 +29,7 @@ namespace UnitTest.DtpCore.Model.Schema
             claim.Type = JsonConvert.SerializeObject(trustType);
 
             var result = schemaService.GetTrustTypeString(claim);
-            Assert.IsTrue(result == PackageBuilder.BINARY_TRUST_DTP1);
+            Assert.IsTrue(result == PackageBuilder.BINARY_CLAIM_DTP1);
         }
 
 

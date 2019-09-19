@@ -12,18 +12,19 @@ using System.Threading.Tasks;
 
 namespace DtpCore.Services
 {
+
     public class TrustDBService : ITrustDBService
     {
         private static object lockObj = new object();
 
         public long ID { get; set; }
-        public TrustDBContext DBContext { get; }
+        public TrustDBContext DB { get; }
 
         public IQueryable<Package> Packages
         {
             get
             {
-                return DBContext.Packages
+                return DB.Packages
                 .Include(c => c.Timestamps);
             }
         }
@@ -32,7 +33,7 @@ namespace DtpCore.Services
         {
             get
             {
-                return DBContext.Claims;
+                return DB.Claims;
             }
         }
 
@@ -41,7 +42,7 @@ namespace DtpCore.Services
         {
             get
             {
-                return DBContext.Timestamps.AsQueryable();
+                return DB.Timestamps.AsQueryable();
             }
         }
 
@@ -49,13 +50,13 @@ namespace DtpCore.Services
         {
             get
             {
-                return DBContext.Workflows.AsQueryable();
+                return DB.Workflows.AsQueryable();
             }
         }
 
         public TrustDBService(TrustDBContext trustDBContext)
         {
-            DBContext = trustDBContext;
+            DB = trustDBContext;
         }
 
         public bool DoClaimExist(byte[] id)
@@ -63,14 +64,14 @@ namespace DtpCore.Services
             if (id == null || id.Length == 0)
                 return false;
 
-            var dbTrust = DBContext.Claims.FirstOrDefault(p => p.Id == id);
+            var dbTrust = DB.Claims.FirstOrDefault(p => p.Id == id);
             
             return (dbTrust != null);
         }
 
         public Claim GetClaimById(byte[] id)
         {
-            var dbTrust = DBContext.Claims
+            var dbTrust = DB.Claims
                 .Include(cl => cl.Timestamps)
                 .Include(p => p.ClaimPackages)
                 .FirstOrDefault(p => p.Id == id);
@@ -78,31 +79,53 @@ namespace DtpCore.Services
         }
 
 
-        public IQueryable<Claim> GetClaims(string issuerId, string subjectId, string scopeValue)
+        public IQueryable<Claim> GetClaims(IQueryable<Claim> query, string issuerId, string subjectId, string scope, string type)
         {
-            var query = from p in DBContext.Claims
-                        where p.Issuer.Id == issuerId
-                              && p.Subject.Id == subjectId
-                        select p;
+            
+            if (!string.IsNullOrEmpty(issuerId))
+                query = query.Where(p => p.Issuer.Id.Equals(issuerId));
 
-            if (scopeValue != null)
-                query = query.Where(p => p.Scope == scopeValue);
+            if (!string.IsNullOrEmpty(subjectId))
+                query = query.Where(p => p.Subject.Id.Equals(subjectId));
 
+
+            if (!string.IsNullOrEmpty(scope))
+            {
+                scope = scope.ToLowerInvariant();
+                query = query.Where(p => p.Scope == scope);
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = type.ToLowerInvariant();
+                query = query.Where(p => p.Type == type);
+            }
+            
             return query;
         }
 
-        public IQueryable<Claim> GetActiveClaims(ClaimStateType exclude = ClaimStateType.Replaced)
+        public IQueryable<Claim> GetActiveClaims(IQueryable<Claim> query, ClaimStateType exclude = ClaimStateType.Replaced)
         {
             var time = DateTime.Now.ToUnixTime();
 
-            var trusts = from trust in DBContext.Claims
-                         where (trust.Activate <= time || trust.Activate == 0) 
-                         && (trust.Expire > time || trust.Expire == 0) 
-                         && (trust.State & exclude) == 0
-                         select trust;
-            
-            return trusts;
+            return query.Where(p=> (p.Activate <= time || p.Activate == 0)
+                         && (p.Expire > time || p.Expire == 0)
+                         && (p.State & exclude) == 0);
         }
+
+
+        public IQueryable<Claim> AddClaimMeta(IQueryable<Claim> query)
+        {
+            var result = from c in query
+                         join issuer in DB.IdentityMetadata on c.Issuer.Id + c.Scope equals issuer.Id into issuerMeta
+                         from issuerItem in issuerMeta.DefaultIfEmpty()
+                         join subject in DB.IdentityMetadata on c.Subject.Id + c.Scope equals subject.Id into subjectMeta
+                         from subjectItem in subjectMeta.DefaultIfEmpty()
+                         select (c != null) ? c.UpdateMeta(issuerItem, subjectItem) : null;
+
+            return result;
+        }
+
 
         /// <summary>
         /// Get the same claim or a similar claim from database.
@@ -111,7 +134,7 @@ namespace DtpCore.Services
         /// <returns></returns>
         public Claim GetSimilarClaim(Claim claim)
         {
-            var query = from p in DBContext.Claims select p;
+            var query = from p in DB.Claims select p;
 
             query = query.Where(p => p.Id == claim.Id 
                             || (p.Issuer.Id == claim.Issuer.Id
@@ -145,22 +168,22 @@ namespace DtpCore.Services
 
         public void Add(Claim claim)
         {
-            DBContext.Claims.Add(claim);
+            DB.Claims.Add(claim);
         }
 
         public void Remove(Claim claim)
         {
-            DBContext.Remove(claim);
+            DB.Remove(claim);
         }
 
         public void Add(Package package)
         {
-            DBContext.Packages.Add(package);
+            DB.Packages.Add(package);
         }
 
         public void Remove(Package package)
         {
-            DBContext.Remove(package);
+            DB.Remove(package);
         }
 
 
@@ -168,7 +191,7 @@ namespace DtpCore.Services
         public async Task<List<Package>> GetBuildPackagesAsync()
         {
             // Check if there is a builder package ready
-            var buildPackages = DBContext.Packages
+            var buildPackages = DB.Packages
                 .Where(p => (p.State & PackageStateType.Building) > 0)
                 .Include(p => p.ClaimPackages)
                 .ThenInclude(p => p.Claim);
@@ -192,7 +215,7 @@ namespace DtpCore.Services
         public Package EnsureBuildPackage(string scope)
         {
             // Check if there is a builder package ready
-            var buildPackage = DBContext.Packages
+            var buildPackage = DB.Packages
                 .Where(p => (p.State & PackageStateType.Building) > 0 && p.Scopes == scope)
                 .Include(p=>p.ClaimPackages)
                 .ThenInclude(p=>p.Claim)
@@ -206,7 +229,7 @@ namespace DtpCore.Services
                 buildPackage.Scopes = scope;
 
                 Add(buildPackage);
-                DBContext.SaveChanges();
+                DB.SaveChanges();
             }
             return buildPackage;
         }
@@ -216,19 +239,19 @@ namespace DtpCore.Services
             if (package == null)
                 return;
 
-            package.ClaimPackages = DBContext.ClaimPackageRelationships.Where(p => p.PackageID == package.DatabaseID).Include(p => p.Claim).ToList();
+            package.ClaimPackages = DB.ClaimPackageRelationships.Where(p => p.PackageID == package.DatabaseID).Include(p => p.Claim).ToList();
             package.Claims = package.ClaimPackages.OrderBy(p => p.Claim.DatabaseID).Select(p => p.Claim).ToList();
         }
 
 
         public void Update(Claim trust)
         {
-            DBContext.Claims.Update(trust);
+            DB.Claims.Update(trust);
         }
 
         public void Update(Package package)
         {
-            DBContext.Packages.Update(package);
+            DB.Packages.Update(package);
         }
 
 
@@ -271,7 +294,7 @@ namespace DtpCore.Services
 
         public void SaveChanges()
         {
-            DBContext.SaveChanges();
+            DB.SaveChanges();
         }
     }
 }

@@ -115,13 +115,13 @@ namespace DtpCore.Services
 
             if (workflow.Container.DatabaseID != 0)
             {
-                _trustDBService.DBContext.Workflows.Update(workflow.Container);
-                return _trustDBService.DBContext.SaveChanges();
+                _trustDBService.DB.Workflows.Update(workflow.Container);
+                return _trustDBService.DB.SaveChanges();
             }
             else
             {
-                _trustDBService.DBContext.Workflows.Add(workflow.Container);
-                return _trustDBService.DBContext.SaveChanges();
+                _trustDBService.DB.Workflows.Add(workflow.Container);
+                return _trustDBService.DB.SaveChanges();
             }
         }
 
@@ -164,7 +164,7 @@ namespace DtpCore.Services
         public void Dispose()
         {
             if (_trustDBService != null)
-                _trustDBService.DBContext.Dispose();
+                _trustDBService.DB.Dispose();
         }
     }
 }

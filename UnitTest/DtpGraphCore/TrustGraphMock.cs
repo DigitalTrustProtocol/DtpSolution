@@ -107,30 +107,30 @@ namespace UnitTest.DtpGraphCore
         {
             _trustBuilder.SetServer("testserver");
 
-            _trustBuilder.AddClaim("A", "B", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("B", "C", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("C", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("B", "E", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("E", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("B", "F", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("F", "G", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("G", "D", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
-            _trustBuilder.AddClaim("G", "Unreach", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
+            _trustBuilder.AddClaim("A", "B", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("B", "C", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("C", "D", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("B", "E", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("E", "D", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("B", "F", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("F", "G", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("G", "D", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
+            _trustBuilder.AddClaim("G", "Unreach", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes); // Long way, no trust
 
-            _trustBuilder.AddClaim("A", "B", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
-            _trustBuilder.AddClaim("C", "D", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
-            _trustBuilder.AddClaim("G", "D", PackageBuilder.CONFIRM_TRUST_DTP1, ConfirmAttributes);
+            _trustBuilder.AddClaim("A", "B", PackageBuilder.CONFIRM_CLAIM_DTP1, ConfirmAttributes);
+            _trustBuilder.AddClaim("C", "D", PackageBuilder.CONFIRM_CLAIM_DTP1, ConfirmAttributes);
+            _trustBuilder.AddClaim("G", "D", PackageBuilder.CONFIRM_CLAIM_DTP1, ConfirmAttributes);
 
-            _trustBuilder.AddClaim("A", "B", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
-            _trustBuilder.AddClaim("C", "D", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
-            _trustBuilder.AddClaim("G", "D", PackageBuilder.RATING_TRUST_DTP1, RatingAtrributes);
+            _trustBuilder.AddClaim("A", "B", PackageBuilder.RATING_CLAIM_DTP1, RatingAtrributes);
+            _trustBuilder.AddClaim("C", "D", PackageBuilder.RATING_CLAIM_DTP1, RatingAtrributes);
+            _trustBuilder.AddClaim("G", "D", PackageBuilder.RATING_CLAIM_DTP1, RatingAtrributes);
 
-            _trustBuilder.AddClaim("A", "NoTrustB", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
-            _trustBuilder.AddClaim("B", "NoTrustC", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
-            _trustBuilder.AddClaim("C", "NoTrustD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddClaim("A", "NoTrustB", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddClaim("B", "NoTrustC", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddClaim("C", "NoTrustD", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustFalseAttributes);
 
-            _trustBuilder.AddClaim("C", "MixD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustTrueAttributes);
-            _trustBuilder.AddClaim("E", "MixD", PackageBuilder.BINARY_TRUST_DTP1, BinaryTrustFalseAttributes);
+            _trustBuilder.AddClaim("C", "MixD", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustTrueAttributes);
+            _trustBuilder.AddClaim("E", "MixD", PackageBuilder.BINARY_CLAIM_DTP1, BinaryTrustFalseAttributes);
 
             _trustBuilder.Build().Sign();
         }

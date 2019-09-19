@@ -19,8 +19,15 @@ namespace DtpServer.Controllers
     [Route("api/[controller]")]
     public class ClaimController : ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ITrustDBService trustDBService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trustDBService"></param>
         public ClaimController(ITrustDBService trustDBService)
         {
             this.trustDBService = trustDBService;
@@ -35,105 +42,15 @@ namespace DtpServer.Controllers
         /// <param name="subjectId"></param>
         /// <param name="scope"></param>
         /// <param name="type"></param>
+        /// <param name="meta"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("inline")]
-        public Claim GetOneInline(string issuerId, string subjectId, string scope, string type)
+        public Claim GetOne(string issuerId, string subjectId, string scope, string type, bool meta = true)
         {
-            var time = DateTime.Now.ToUnixTime();
-            var db = trustDBService.DBContext;
-            var query = this.trustDBService.GetActiveClaims();
-            query = query.Where(p =>
-                         p.Issuer.Id.Equals(issuerId)
-                         && p.Subject.Id.Equals(subjectId));
+            var query = trustDBService.GetClaims(trustDBService.Claims, issuerId, subjectId, scope, type);
+            query = trustDBService.GetActiveClaims(query);
 
-            if (!string.IsNullOrEmpty(scope))
-            {
-                scope = scope.ToLowerInvariant();
-                query = query.Where(p => p.Scope == scope);
-            }
-
-            if (!string.IsNullOrEmpty(type))
-            {
-                type = type.ToLowerInvariant();
-                query = query.Where(p => p.Type == type);
-            }
-
-            var trusts = from c in query
-                         join issuer in db.IdentityMetadata on c.Issuer.Id+c.Scope equals issuer.Id into issuerMeta
-                         from issuerItem in issuerMeta.DefaultIfEmpty()
-                         join subject in db.IdentityMetadata on c.Subject.Id + c.Scope equals subject.Id into subjectMeta
-                         from subjectItem in subjectMeta.DefaultIfEmpty()
-                         select new
-                         {
-                             claim = c,
-                             issuerMeta = issuerItem,
-                             subjectMeta = subjectItem
-
-                         };
-
-
-            var result = trusts.FirstOrDefault();
-            if (result != null)
-            {
-                result.claim.Issuer.Meta = result.issuerMeta;
-                result.claim.Subject.Meta = result.subjectMeta;
-            }
-
-            return result.claim;
-
-
-            //query.GroupJoin(db.IdentityMetadata, c => c.Issuer.Id + c.Scope, m => m.Id, (c, m) => new { claim = c, meta = m });
-
-            //var tet = query.SelectMany
-            //(
-            //    c => db.IdentityMetadata.Where(m => m.Id.Equals(c.Issuer.Id+c.Type)).DefaultIfEmpty(),
-            //    (c, m) => new
-            //    {
-            //        claim = c,
-            //        meta = m
-            //    }
-            //);
-
-        }
-
-
-        /// <summary>
-        /// Get one claim
-        /// </summary>
-        /// <param name="issuerId"></param>
-        /// <param name="subjectId"></param>
-        /// <param name="scope"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public Claim GetOne(string issuerId, string subjectId, string scope, string type)
-        {
-            var query = this.trustDBService.GetActiveClaims();
-
-            query = query.Where(p =>
-                         p.Issuer.Id.Equals(issuerId)
-                         && p.Subject.Id.Equals(subjectId));
-
-            if (!string.IsNullOrEmpty(scope))
-            {
-                scope = scope.ToLowerInvariant();
-                query = query.Where(p => p.Scope == scope);
-            }
-
-            if (!string.IsNullOrEmpty(type))
-            {
-                type = type.ToLowerInvariant();
-                query = query.Where(p => p.Type == type);
-            }
-
-            query = query
-                .Include(p => p.Issuer.Meta)
-                .Include(p => p.Subject.Meta);
-
-            var result = query.FirstOrDefault();
-
-            return result;
+            return trustDBService.AddClaimMeta(query).FirstOrDefault();
         }
 
         //[HttpGet]
@@ -171,18 +88,33 @@ namespace DtpServer.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet()]
-        [Route("latest")]
-        public IEnumerable<Claim> GetLastest([FromQuery]int max = 10)
+        [Route("history")]
+        public IEnumerable<Claim> GetHistory(string id, [FromQuery]int page = 10, [FromQuery]int skip = 0, [FromQuery]bool meta = true)
         {
-            var query = this.trustDBService.GetActiveClaims();
-            query = query
-                .Include(p => p.Issuer.Meta)
-                .Include(p => p.Subject.Meta)
-                .OrderByDescending(p => p.Created);
+            var query = trustDBService.GetActiveClaims(trustDBService.Claims);
+            query = query.Where(p => p.Issuer.Id == id);
+            query = query.OrderByDescending(p => p.Created).Skip(skip).Take(page);
+            if (meta)
+                query = trustDBService.AddClaimMeta(query);
 
-            var result = query.Take(max).ToList();
+            return query.ToList();
+        }
 
-            return result;
+
+        /// <summary>
+        /// Return a list of the latest create claims.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet()]
+        [Route("latest")]
+        public IEnumerable<Claim> GetLastest([FromQuery]int page = 10, [FromQuery]int skip = 0, [FromQuery]bool meta = true)
+        {
+            var query = trustDBService.GetActiveClaims(trustDBService.Claims);
+            query = query.OrderByDescending(p => p.Created).Skip(skip).Take(page);
+            if (meta)
+                query = trustDBService.AddClaimMeta(query);
+
+            return query.ToList();
         }
 
 

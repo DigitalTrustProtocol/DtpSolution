@@ -15,22 +15,29 @@ namespace DtpCore.Builders
 {
     public class PackageBuilder
     {
-        public const string BINARY_TRUST_DTP1 = "binarytrust";
-        public const string BINARY_TRUST_DTP1_SHORTFORM = "bt";
+        public const string BINARY_CLAIM_DTP1 = "binarytrust";
+        public const string BINARY_CLAIM_DTP1_SHORTFORM = "bt";
 
-        public const string CONFIRM_TRUST_DTP1 = "confirmtrust";
-        public const string CONFIRM_TRUST_DTP1_SHORTFORM = "ct";
+        public const string CONFIRM_CLAIM_DTP1 = "confirm";
+        public const string CONFIRM_CLAIM_DTP1_SHORTFORM = "ct";
 
-        public const string RATING_TRUST_DTP1 = "ratingtrust";
-        public const string RATING_TRUST_DTP1_SHORTFORM = "rt";
+        public const string RATING_CLAIM_DTP1 = "rating";
+        public const string RATING_CLAIM_DTP1_SHORTFORM = "rt";
 
-        public const string ID_IDENTITY_DTP1 = "id.identity.dtp1";
+        public const string ID_IDENTITY_DTP1 = "id";
         public const string ID_IDENTITY_DTP1_SHORTFORM = "iid1";
 
-        public const string ALIAS_IDENTITY_DTP1 = "alias.identity.dtp1";
+        public const string ENTITY_IDENTITY_DTP1 = "entity";
+        public const string ENTITY_IDENTITY_DTP1_SHORTFORM = "eid1";
+
+        public const string THING_IDENTITY_DTP1 = "thing";
+        public const string THING_IDENTITY_DTP1_SHORTFORM = "tid1";
+
+
+        public const string ALIAS_IDENTITY_DTP1 = "alias";
         public const string ALIAS_IDENTITY_DTP1_SHORTFORM = "aid1";
 
-        public const string REMOVE_CLAIMS_DTP1 = "remove.claims.dtp1";
+        public const string REMOVE_CLAIMS_DTP1 = "remove";
         public const string REMOVE_CLAIMS_DTP1_SHORTFORM = "rc1";
 
 
@@ -429,7 +436,7 @@ namespace DtpCore.Builders
 
         public static bool IsTrustTrue(string type, string data)
         {
-            if (!BINARY_TRUST_DTP1.EqualsIgnoreCase(type))
+            if (!BINARY_CLAIM_DTP1.EqualsIgnoreCase(type))
                 return false;
 
             if ("true".EqualsIgnoreCase(data) || "1".EqualsIgnoreCase(data))

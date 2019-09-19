@@ -251,6 +251,24 @@ namespace DtpCore.Model
             ClaimPackages = new List<ClaimPackageRelationship>();
             Scope = string.Empty;
         }
+
+        public Claim UpdateMeta(IdentityMetadata issuerMeta, IdentityMetadata subjectMeta)
+        {
+            if (issuerMeta != null)
+            {
+                if (Issuer == null)
+                    Issuer = new IssuerIdentity();
+                Issuer.Meta = issuerMeta;
+            }
+            if (subjectMeta != null)
+            {
+                if (Subject == null)
+                    Subject = new SubjectIdentity();
+
+                Subject.Meta = subjectMeta;
+            }
+            return this;
+        }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -261,47 +279,6 @@ namespace DtpCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class SubjectIdentity : Identity
     {
-    }
-
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class IdentityMetadata 
-    {
-        /// <summary>
-        /// The ID of the identity
-        /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-        public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
-
-        /// <summary>
-        /// An Icon of the identity
-        /// </summary>
-        [JsonProperty(PropertyName = "icon", Order = -200)]
-        public string Icon { get; set; }
-        public bool ShouldSerializeIcon() => !string.IsNullOrWhiteSpace(Icon);
-
-        /// <summary>
-        /// A label on the data is for display and is included in the calculation of the Subject ID.
-        /// The format is always text and is limited in length.
-        /// </summary>
-        [JsonProperty(PropertyName = "title")]
-        public string Title { get; set; }
-        public bool ShouldSerializeTitle() { return !string.IsNullOrEmpty(Title); }
-
-        /// <summary>
-        /// Represents the source data used for calculating the Subject ID. Usually by a hash of the data.
-        /// The data cannot be longer than 4k bytes in text. For data sources like pictures and documents, 
-        /// a url link is defined in the Data field and the Type field is then set to "ref".
-        /// </summary>
-        [JsonProperty(PropertyName = "data")]
-        public byte[] Data { get; set; }
-        public bool ShouldSerializeData() { return Data != null; }
-
-        [JsonProperty(PropertyName = "href")]
-        public string Href { get; set; }
-        public bool ShouldSerializeHref() { return !string.IsNullOrEmpty(Href); }
-
     }
 
 
@@ -345,14 +322,13 @@ namespace DtpCore.Model
             return Proof != null && Proof.Length > 0;
         }
 
-        [JsonIgnore]
-        public string MetaId { get; set; }
         /// <summary>
         /// Represents the metadata used for alias of the issuer ID.
         /// </summary>
         [JsonProperty(PropertyName = "meta")]
+        [NotMapped]
         public IdentityMetadata Meta { get; set; }
-        public bool ShouldSerializeMetadata() { return Meta != null; } // 
+        public bool ShouldSerializeMeta() { return Meta != null; } 
 
         /// <summary>
         /// Internal property for holding the private key to sign with
@@ -361,6 +337,53 @@ namespace DtpCore.Model
         [NotMapped]
         public SignDelegate Sign { get; set; }
     }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class IdentityMetadata
+    {
+        /// <summary>
+        /// The ID of the identity
+        /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+        public bool ShouldSerializeId() { return !string.IsNullOrWhiteSpace(Id); }
+
+        /// <summary>
+        /// An Icon of the identity
+        /// Types:
+        /// alias = title 
+        /// string = text
+        /// ref: reference to a resource
+        /// url: string in the format of url
+        /// </summary>
+        [JsonProperty(PropertyName = "type", Order = -200)]
+        public string Type { get; set; }
+        public bool ShouldSerializeType() => !string.IsNullOrWhiteSpace(Type);
+
+        /// <summary>
+        /// A label on the data is for display and is included in the calculation of the Subject ID.
+        /// The format is always text and is limited in length.
+        /// </summary>
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+        public bool ShouldSerializeTitle() { return !string.IsNullOrEmpty(Title); }
+
+        /// <summary>
+        /// Represents the source data used for calculating the Subject ID. Usually by a hash of the data.
+        /// The data cannot be longer than 4k bytes in text. For data sources like pictures and documents, 
+        /// a url link is defined in the Data field and the Type field is then set to "ref".
+        /// </summary>
+        [JsonProperty(PropertyName = "data")]
+        public byte[] Data { get; set; }
+        public bool ShouldSerializeData() { return Data != null; }
+
+        //[JsonProperty(PropertyName = "href")]
+        //public string Href { get; set; }
+        //public bool ShouldSerializeHref() { return !string.IsNullOrEmpty(Href); }
+
+    }
+
+
 
 
     [Table("Timestamp")]

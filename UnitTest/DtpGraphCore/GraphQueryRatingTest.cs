@@ -25,7 +25,7 @@ namespace UnitTest.DtpGraphCore
     [TestClass]
     public class GraphQueryRatingTest : TrustGraphMock
     {
-        private string _claimRatingType = PackageBuilder.RATING_TRUST_DTP1;
+        private string _claimRatingType = PackageBuilder.RATING_CLAIM_DTP1;
 
         /// <summary>
         /// 1 Source, 1 targets
@@ -49,7 +49,7 @@ namespace UnitTest.DtpGraphCore
 
             VerfifyResult(context, "A", "B");
             VerfifyResult(context, "B", "C");
-            VerfifyResult(context, "C", "D", PackageBuilder.RATING_TRUST_DTP1);
+            VerfifyResult(context, "C", "D", PackageBuilder.RATING_CLAIM_DTP1);
         }
 
 
@@ -74,9 +74,9 @@ namespace UnitTest.DtpGraphCore
             //Assert.AreEqual(3, context.Results.Trusts.Count, $"Should be {3} results!");
 
             VerfifyResult(context, "A", "B");
-            VerfifyResult(context, "A", "B", PackageBuilder.RATING_TRUST_DTP1);
+            VerfifyResult(context, "A", "B", PackageBuilder.RATING_CLAIM_DTP1);
             VerfifyResult(context, "B", "C");
-            VerfifyResult(context, "C", "D", PackageBuilder.RATING_TRUST_DTP1);
+            VerfifyResult(context, "C", "D", PackageBuilder.RATING_CLAIM_DTP1);
         }
 
         ///// <summary>

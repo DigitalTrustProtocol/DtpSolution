@@ -74,7 +74,7 @@ namespace DtpServer.Pages.Claims
 
         private IQueryable<Claim> BuildQuery(string searchString)
         {
-            var query = from s in _trustDBService.DBContext.Claims.AsNoTracking()
+            var query = from s in _trustDBService.DB.Claims.AsNoTracking()
                         select s;
 
             if (String.IsNullOrEmpty(searchString))

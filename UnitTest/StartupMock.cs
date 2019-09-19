@@ -79,7 +79,7 @@ namespace UnitTest
 
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
             TrustDBService = ServiceProvider.GetRequiredService<ITrustDBService>();
-            DB = TrustDBService.DBContext;
+            DB = TrustDBService.DB;
 
             ClaimBanListService = ServiceProvider.GetRequiredService<IClaimBanListService>();
         }

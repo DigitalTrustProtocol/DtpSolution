@@ -1,4 +1,5 @@
-﻿using DtpCore.Extensions;
+﻿using DtpCore.Builders;
+using DtpCore.Extensions;
 using DtpCore.Model;
 using DtpCore.Repository;
 using MediatR;
@@ -29,8 +30,8 @@ namespace DtpPackageCore.Notifications
                 if (claim.Issuer.Id != claim.Subject.Id)
                     return; // Not the same issuer and subject
 
-
-                if (!"alias".EqualsIgnoreCase(claim.Type))
+                
+                if (!PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
                     return;
 
                 var metadataId = claim.Issuer.Id + claim.Scope;

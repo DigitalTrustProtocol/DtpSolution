@@ -39,7 +39,7 @@ namespace UnitTest.DtpCore.Extensions
 
         public static PackageBuilder AddClaimTrue(this PackageBuilder builder, string issuerName, string subjectName)
         {
-            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_CLAIM_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
             return builder;
         }
 
@@ -69,7 +69,7 @@ namespace UnitTest.DtpCore.Extensions
         public static Claim BuildBinaryClaim(this PackageBuilder builder, string issuerName, string subjectName, bool claim, uint created = 0)
         {
             builder.SetServer("testserver");
-            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(claim));
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_CLAIM_DTP1, PackageBuilder.CreateBinaryTrustAttributes(claim));
 
             if (created > 0)
                 builder.CurrentClaim.Created = created;

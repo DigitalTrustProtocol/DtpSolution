@@ -12,7 +12,7 @@ namespace UnitTest.TestData
 
         public static Package CreateBinary(int claims = 1)
         {
-            var builder = CreateUnsigned(claims, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true));
+            var builder = CreateUnsigned(claims, PackageBuilder.BINARY_CLAIM_DTP1, PackageBuilder.CreateBinaryTrustAttributes(true));
 
             builder.Build();
             builder.Sign();
@@ -30,7 +30,7 @@ namespace UnitTest.TestData
             return builder.Package;
         }
 
-        public static PackageBuilder CreateUnsigned(int claims = 1, string type = PackageBuilder.BINARY_TRUST_DTP1, string value = "true")
+        public static PackageBuilder CreateUnsigned(int claims = 1, string type = PackageBuilder.BINARY_CLAIM_DTP1, string value = "true")
         {
             var builder = new PackageBuilder();
             builder.SetServer("testserver");
@@ -46,7 +46,7 @@ namespace UnitTest.TestData
         private Claim CreateBinaryClaim(string issuerName, string subjectName, bool value = true)
         {
             var builder = new PackageBuilder();
-            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_TRUST_DTP1, PackageBuilder.CreateBinaryTrustAttributes(value)).BuildClaimID();
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_CLAIM_DTP1, PackageBuilder.CreateBinaryTrustAttributes(value)).BuildClaimID();
 
             return builder.CurrentClaim;
         }
