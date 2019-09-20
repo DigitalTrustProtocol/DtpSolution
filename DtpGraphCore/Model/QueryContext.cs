@@ -38,6 +38,13 @@ namespace DtpGraphCore.Model
         [JsonIgnore]
         public Dictionary<int, GraphTracker> TrackerResults = new Dictionary<int, GraphTracker>();
 
+        [JsonIgnore]
+        public int GlobalScopeIndex { get; set; }
+        [JsonIgnore]
+        public int BinaryClaimTypeIndex { get; set; }
+
+
+
 
         [JsonIgnore]
         public int MaxCost = 0;
@@ -98,6 +105,7 @@ namespace DtpGraphCore.Model
             SetupIssuers(query);
             SetupSubjects(query);
             SetupQueryClaim(query);
+            SetupIndexs();
 
             if (query.Level > 0 && query.Level < MaxLevel)
                 MaxLevel = query.Level;
@@ -105,6 +113,15 @@ namespace DtpGraphCore.Model
             Flags = query.Flags;
 
             Visited = new BitArrayFast(GraphTrustService.Graph.Issuers.Count + 1024, false); // 1024 is buffer for new Issuers when searching
+        }
+
+        private void SetupIndexs()
+        {
+            if (GraphTrustService.Graph.ClaimType.TryGetKey(PackageBuilder.BINARY_CLAIM_DTP1, out int claimIndex))
+                BinaryClaimTypeIndex = claimIndex;
+
+            if (GraphTrustService.Graph.Scopes.TryGetKey("", out int scopeIndex))
+                GlobalScopeIndex = scopeIndex;
         }
 
         internal void SetupIssuers(QueryRequest query)
@@ -161,7 +178,7 @@ namespace DtpGraphCore.Model
                         ClaimTypes.Add(GraphTrustService.Graph.ClaimType.GetIndex(type));
                 }
 
-                if (!ClaimTypes.Contains(GraphTrustService.BinaryClaimTypeIndex))
+                if (!ClaimTypes.Contains(this.BinaryClaimTypeIndex))
                     Flags |= QueryFlags.IncludeClaimTrust;
             }
         }

@@ -9,9 +9,9 @@ namespace DtpGraphCore.Model
         [FieldOffset(0)]
         public Int64 Value;
         [FieldOffset(0)]
-        public Int32 Type;
+        public readonly Int32 Type;
         [FieldOffset(4)]
-        public Int32 Scope;
+        public readonly Int32 Scope;
 
         public SubjectClaimIndex(Int64 value)
         {

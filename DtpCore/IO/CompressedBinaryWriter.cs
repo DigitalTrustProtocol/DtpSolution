@@ -11,7 +11,7 @@ namespace DtpCore.IO
             var start = base.BaseStream.Length;
             base.Write7BitEncodedInt(i);
             long count = base.BaseStream.Length - start;
-            Trace.WriteLine($"Value: {i} are using {count} bytes");
+            //Trace.WriteLine($"Value: {i} are using {count} bytes");
             return count;
         }
 

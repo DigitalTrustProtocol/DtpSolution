@@ -8,8 +8,9 @@ namespace DtpGraphCore.Interfaces
     {
         GraphModel Graph { get; set; }
 
-        int GlobalScopeIndex { get; set; }
-        int BinaryClaimTypeIndex { get; set; }
+        //int GlobalScopeIndex { get; set; }
+        //int BinaryClaimTypeIndex { get; set; }
+
 
         void Add(Package package);
         void Add(IEnumerable<Claim> claims);

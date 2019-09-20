@@ -18,9 +18,6 @@ namespace DtpGraphCore.Services
         public IPackageSchemaValidator TrustSchema { get; }
         private IClaimBanListService _claimBanListService;
 
-        public int GlobalScopeIndex { get; set; }
-        public int BinaryClaimTypeIndex { get; set; }
-
         public GraphClaimService(GraphModel graph, IPackageSchemaValidator trustSchema, IClaimBanListService claimBanListService)
         {
             Graph = graph;
@@ -48,6 +45,12 @@ namespace DtpGraphCore.Services
 
             if (_claimBanListService.IsBanned(claim))
                 return;
+
+            if (PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
+                return;
+
+            //if (PackageBuilder.RATING_CLAIM_DTP1.EqualsIgnoreCase(claim.Type))
+            //    return;
 
             var issuer = EnsureGraphIssuer(claim.Issuer.Id);
 
@@ -182,16 +185,16 @@ namespace DtpGraphCore.Services
             return graphSubject;
         }
 
-        public GraphClaim EnsureGraphClaim(Claim trust)
+        public GraphClaim EnsureGraphClaim(Claim claim)
         {
-            var graphClaim = CreateGraphClaim(trust);
+            var graphClaim = CreateGraphClaim(claim);
 
             var id = graphClaim.ID();
             if (!Graph.ClaimIndex.TryGetValue(id, out int index))
             {
                 graphClaim.Index = Graph.Claims.Count;
 
-                if (PackageBuilder.IsTrustTrue(trust.Type, trust.Value))
+                if (PackageBuilder.IsTrustTrue(claim.Type, claim.Value))
                     graphClaim.Flags |= ClaimFlags.Trust;
 
                 Graph.Claims.Add(graphClaim);

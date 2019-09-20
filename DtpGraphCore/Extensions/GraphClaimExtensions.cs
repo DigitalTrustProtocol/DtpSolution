@@ -11,14 +11,14 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Exist(this Dictionary<long, int> claims, int scope, int type)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex (scope, type );
             return claims.ContainsKey(subjectClaimIndex.Value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool GetIndex(this Dictionary<long, int> claims, int scope, int type, out int index)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             return claims.TryGetValue(subjectClaimIndex.Value, out index);
         }
 
@@ -26,7 +26,7 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Ensure(this Dictionary<long, int> claims, int scope, int type, int claimIndex)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             if (claims.ContainsKey(subjectClaimIndex.Value))
                 return true;
 
@@ -37,8 +37,8 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Remove(this Dictionary<long, int> claims, int scope, int type)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
-            if(claims.Remove(subjectClaimIndex.Value, out int claimIndex))
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
+            if (claims.Remove(subjectClaimIndex.Value, out int claimIndex))
                 return claimIndex;
             return -1;
         }
@@ -46,14 +46,14 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Exist(this ConcurrentDictionary<long, int> claims, int scope, int type)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             return claims.ContainsKey(subjectClaimIndex.Value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool GetIndex(this ConcurrentDictionary<long, int> claims, int scope, int type, out int index)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             return claims.TryGetValue(subjectClaimIndex.Value, out index);
         }
 
@@ -61,7 +61,7 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Ensure(this ConcurrentDictionary<long, int> claims, int scope, int type, int claimIndex)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             claims.Add(subjectClaimIndex.Value, claimIndex);
             return true;
         }
@@ -69,7 +69,7 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Remove(this ConcurrentDictionary<long, int> claims, int scope, int type)
         {
-            var subjectClaimIndex = new SubjectClaimIndex { Scope = scope, Type = type };
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             if (claims.Remove(subjectClaimIndex.Value, out int claimIndex))
                 return claimIndex;
             return -1;

@@ -35,7 +35,7 @@ namespace DtpPackageCore.Notifications
                 if (claim.Subject.Meta == null)
                     return;
 
-                claim.Subject.Meta.Id = claim.Subject.Id + claim.Scope; // Ensure that the key has an ID value
+                claim.Subject.Meta.Id = claim.Subject.Id; // Ensure that the key has an ID value
                 //var metaEntry = _trustDBContext.Entry(claim.Subject.Meta);
                 var dbEntry = _trustDBContext.IdentityMetadata.Find(claim.Subject.Meta.Id);
                 if(dbEntry == null)

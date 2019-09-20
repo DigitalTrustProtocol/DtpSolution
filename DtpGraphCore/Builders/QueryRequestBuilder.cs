@@ -9,7 +9,7 @@ namespace DtpGraphCore.Builders
     {
         public QueryRequest Query { get; }
 
-        public QueryRequestBuilder(string type) : this(null, type)
+        public QueryRequestBuilder(string type) : this("", type)
         {
         }
 

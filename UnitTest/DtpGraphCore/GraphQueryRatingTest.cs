@@ -36,7 +36,7 @@ namespace UnitTest.DtpGraphCore
             // Build up
             EnsureTestGraph();
 
-            _graphTrustService.Add(_trustBuilder.Package);
+            //_graphTrustService.Add(_trustBuilder.Package);
 
             var queryBuilder = new QueryRequestBuilder(_claimRatingType);
             BuildQuery(queryBuilder, "A", "D"); // Query if "person" have a confimation within A's trust sphere.

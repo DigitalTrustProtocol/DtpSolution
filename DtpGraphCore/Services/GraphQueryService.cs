@@ -79,8 +79,10 @@ namespace DtpGraphCore.Services
             {
                 context.IssuerCount++;
 
+                // Run though all targets
                 foreach (var targetIndex in context.Targets.Keys)
                 {
+                    // Check the current issuer if it has trusted the target!
                     if (!issuer.Subjects.TryGetValue(targetIndex, out GraphSubject graphSubject))
                         continue;
 
@@ -92,7 +94,7 @@ namespace DtpGraphCore.Services
             }
             else
             {   // Otherwise continue down!
-                foreach (var subjectEntry in issuer.Subjects)
+                foreach (var subjectEntry in issuer.Subjects) // Need only to iterate subjects that are entities not things
                 {
                     tracker.SubjectKey = subjectEntry.Key;
 
@@ -114,7 +116,7 @@ namespace DtpGraphCore.Services
                 return true;
 
             var follow = false;
-            if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex, out int index))
+            if (subject.Claims.GetIndex(context.ClaimScope, context.BinaryClaimTypeIndex, out int index))
                 follow = (TrustService.Graph.Claims[index].Flags == ClaimFlags.Trust);
 
             //if (!follow) // Check Global scope disable for now. Need more expirence.
@@ -141,8 +143,8 @@ namespace DtpGraphCore.Services
                 return;
 
             if(context.Flags == QueryFlags.IncludeClaimTrust)
-                if (subject.Claims.GetIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex, out index)) // Check local scope for claims
-                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, TrustService.BinaryClaimTypeIndex).Value, index));
+                if (subject.Claims.GetIndex(context.ClaimScope, context.BinaryClaimTypeIndex, out index)) // Check local scope for claims
+                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, context.BinaryClaimTypeIndex).Value, index));
                 //else // Check Global scope disable for now. Need more expirence.
                     //if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, TrustService.BinaryClaimTypeIndex, out index)) // Check global scope for claims
                        //claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, TrustService.BinaryClaimTypeIndex).Value, index));
@@ -164,8 +166,8 @@ namespace DtpGraphCore.Services
                 if (subject.Claims.GetIndex(context.ClaimScope, type, out index)) // Check local scope for claims
                     claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.ClaimScope, type).Value, index));
                 else
-                    if (subject.Claims.GetIndex(TrustService.GlobalScopeIndex, type, out index)) // Check global scope for claims
-                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(TrustService.GlobalScopeIndex, type).Value, index));
+                    if (subject.Claims.GetIndex(context.GlobalScopeIndex, type, out index)) // Check global scope for claims
+                    claims.Add(new Tuple<long, int>(new SubjectClaimIndex(context.GlobalScopeIndex, type).Value, index));
             }
 
             return claims;

@@ -91,7 +91,6 @@ namespace DtpCore.Services
 
             if (!string.IsNullOrEmpty(scope))
             {
-                scope = scope.ToLowerInvariant();
                 query = query.Where(p => p.Scope == scope);
             }
 
@@ -117,9 +116,9 @@ namespace DtpCore.Services
         public IQueryable<Claim> AddClaimMeta(IQueryable<Claim> query)
         {
             var result = from c in query
-                         join issuer in DB.IdentityMetadata on c.Issuer.Id + c.Scope equals issuer.Id into issuerMeta
+                         join issuerMetaTable in DB.IdentityMetadata on c.Issuer.Id equals issuerMetaTable.Id into issuerMeta
                          from issuerItem in issuerMeta.DefaultIfEmpty()
-                         join subject in DB.IdentityMetadata on c.Subject.Id + c.Scope equals subject.Id into subjectMeta
+                         join subjectMetaTable in DB.IdentityMetadata on c.Subject.Id equals subjectMetaTable.Id into subjectMeta
                          from subjectItem in subjectMeta.DefaultIfEmpty()
                          select (c != null) ? c.UpdateMeta(issuerItem, subjectItem) : null;
 

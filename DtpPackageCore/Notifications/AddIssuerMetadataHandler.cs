@@ -34,7 +34,7 @@ namespace DtpPackageCore.Notifications
                 if (!PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
                     return;
 
-                var metadataId = claim.Issuer.Id + claim.Scope;
+                var metadataId = claim.Issuer.Id;
                 var entry = _trustDBContext.IdentityMetadata.Find(metadataId);
                 if (entry == null)
                 {
