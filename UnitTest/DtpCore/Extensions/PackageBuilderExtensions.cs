@@ -10,6 +10,7 @@ namespace UnitTest.DtpCore.Extensions
     {
         public static IDerivationStrategy ScriptService { get; set; } = new DerivationSecp256k1PKH();
 
+
         public static string GetAddress(string name)
         {
             var issuerKey = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
@@ -42,6 +43,13 @@ namespace UnitTest.DtpCore.Extensions
             builder.AddClaim(issuerName, subjectName, PackageBuilder.BINARY_CLAIM_DTP1,  PackageBuilder.CreateBinaryTrustAttributes());
             return builder;
         }
+
+        public static PackageBuilder AddRating(this PackageBuilder builder, string issuerName, string subjectName, int value)
+        {
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.RATING_CLAIM_DTP1, value.ToString());
+            return builder;
+        }
+
 
         public static PackageBuilder AddSubject(this PackageBuilder builder, string subjectName, string type, string attributes)
         {

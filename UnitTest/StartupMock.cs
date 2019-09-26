@@ -91,6 +91,7 @@ namespace UnitTest
         {
             ClaimBanListService.Clean();
             ServiceScope.Dispose();
+
         }
 
         public StartupMock() : base(null, null)
