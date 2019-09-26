@@ -7,6 +7,8 @@ using DtpStampCore.Repository;
 using DtpStampCore.Services;
 using DtpStampCore.Workflows;
 using DtpStampCore.Model.Schema;
+using System.Reflection;
+using MediatR;
 
 namespace DtpStampCore.Extensions
 {
@@ -14,6 +16,8 @@ namespace DtpStampCore.Extensions
     {
         public static void DtpStrampCore(this IServiceCollection services)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddTransient<IHashAlgorithm, Double256>();
             services.AddTransient<IMerkleTree, MerkleTreeSorted>();
 

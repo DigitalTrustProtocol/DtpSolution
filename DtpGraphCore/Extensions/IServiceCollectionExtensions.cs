@@ -5,6 +5,8 @@ using DtpGraphCore.Interfaces;
 using DtpGraphCore.Model;
 using DtpGraphCore.Services;
 using DtpGraphCore.Model.Schema;
+using MediatR;
+using System.Reflection;
 
 namespace DtpGraphCore.Extensions
 {
@@ -12,6 +14,8 @@ namespace DtpGraphCore.Extensions
     {
         public static void DtpGraphCore(this IServiceCollection services)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddSingleton(new GraphModel());
             services.AddScoped<IDerivationStrategy, DerivationSecp256k1PKH>();
             services.AddScoped<IGraphLoadSaveService, GraphLoadSaveService>();

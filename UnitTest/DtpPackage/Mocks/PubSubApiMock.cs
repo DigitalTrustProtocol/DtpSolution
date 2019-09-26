@@ -2,6 +2,7 @@
 using Ipfs.CoreApi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,16 @@ namespace UnitTest.DtpPackage.Mocks
         public Task PublishAsync(string topic, string message, CancellationToken cancel = default(CancellationToken))
         {
             return Task.CompletedTask;
+        }
+
+        public Task PublishAsync(string topic, byte[] message, CancellationToken cancel = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PublishAsync(string topic, Stream message, CancellationToken cancel = default)
+        {
+            throw new NotImplementedException();
         }
 
         public Task SubscribeAsync(string topic, Action<IPublishedMessage> handler, CancellationToken cancellationToken)

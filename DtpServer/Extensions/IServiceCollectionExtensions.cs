@@ -1,9 +1,10 @@
 ﻿using DtpServer.AspNetCore;
-//using DtpServer.Platform;
-//using DtpServer.Platform.ipfs;
-//using DtpServer.Platform.IPFS;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Sieve.Services;
+using System.Reflection;
 
 namespace DtpServer.Extensions
 {
@@ -11,6 +12,9 @@ namespace DtpServer.Extensions
     {
         public static void DtpServer(this IServiceCollection services)
         {
+            services.AddTransient<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             // https://github.com/Biarity/Sieve/issues/4#issuecomment-364629048
             services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
             //services.AddTransient<PlatformDirectory>();

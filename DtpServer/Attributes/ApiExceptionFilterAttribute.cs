@@ -4,7 +4,7 @@ using System.Net;
 using DtpCore.Enumerations;
 using DtpCore.Model;
 
-namespace DtpCore.Attributes
+namespace DtpServer.Attributes
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {

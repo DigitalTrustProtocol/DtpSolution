@@ -9,7 +9,7 @@ namespace DtpServer.Pages
         {
         }
 
-        public void OnGet(string command)
+        public void OnGet()
         {
             // Temp hack for controlling data on the database
             //if (command == "cleandatabase")

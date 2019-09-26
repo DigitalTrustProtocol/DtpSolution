@@ -1,20 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <UserSecretsId>2af78036-f463-4616-8b5b-d83582cb7f5b</UserSecretsId>
     <ApplicationIcon></ApplicationIcon>
     <RazorCompileToolset>PrecompilationTool</RazorCompileToolset>
-    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
     <OutputType>Exe</OutputType>
     <StartupObject>DtpServer.Program</StartupObject>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+    <Authors>Carsten Keutmann</Authors>
+    
+    <!-- Fix a bug in SDK when building: https://github.com/aspnet/AspNetCore/issues/14410 -->
+    <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
+  
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DocumentationFile>C:\Users\keutm\source\repos\DtpSolution\DtpServer\DtpServer.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -46,26 +51,23 @@
     <Compile Include="Platform\PlatformDirectory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="NicolasDorier.RateLimits" Version="1.0.0.3" />
-    <!--<PackageReference Include="NSwag.Core" Version="12.0.10" />-->
-    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NicolasDorier.RateLimits" Version="1.0.0.9" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Sieve" Version="2.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Sieve" Version="2.3.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc3" />
     <PackageReference Include="Topshelf" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Attributes\" />
     <Folder Include="public\" />
     <Folder Include="wwwroot\lib\NewFolder\" />
   </ItemGroup>
@@ -107,8 +108,19 @@
     <None Update="domaincert.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="trust.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
+  <!--<ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.0.0" Alias="LegacyAspNetCoreJsonFormatter" />
+  </ItemGroup>
+  <Target Name="AddPackageAliases" BeforeTargets="ResolveReferences" Outputs="%(PackageReference.Identity)">
+    <PropertyGroup>
+      <AliasPackageReference>@(PackageReference->'%(Identity)')</AliasPackageReference>
+      <AliasName>@(PackageReference->'%(Alias)')</AliasName>
+    </PropertyGroup>
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)'=='$(AliasPackageReference)' and '$(AliasName)' != ''">
+        <Aliases>$(AliasName)</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>-->
 </Project>

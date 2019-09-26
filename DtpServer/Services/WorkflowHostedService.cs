@@ -3,13 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DtpCore.Extensions;
+using DtpCore.Services;
 
-namespace DtpCore.Services
+namespace DtpServer.Services
 {
     /// <summary>
     /// Depricated, replaced by SchedulerHostedService for better async handling.

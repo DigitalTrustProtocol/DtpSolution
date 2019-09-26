@@ -4,13 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using DtpCore.Enumerations;
-using DtpCore.Model;
-using DtpGraphCore.Enumerations;
-using DtpGraphCore.Model;
 using UnitTest.DtpCore.Extensions;
 using DtpServer.Controllers;
-using DtpCore.Controllers;
+
 
 namespace UnitTest.DtpGraphCore
 {

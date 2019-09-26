@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using DtpCore.Factories;
@@ -12,6 +11,8 @@ using DtpCore.Strategy.Serialization;
 using DtpCore.Builders;
 using DtpCore.Notifications;
 using DtpCore.Model.Schema;
+using MediatR;
+using System.Reflection;
 
 namespace DtpCore.Extensions
 {
@@ -19,6 +20,7 @@ namespace DtpCore.Extensions
     {
         public static void DtpCore(this IServiceCollection services)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddSingleton<ApplicationEvents>();
             services.AddScoped<NotificationSegment>();
@@ -59,7 +61,6 @@ namespace DtpCore.Extensions
             services.AddTransient<IContractResolver, DIContractResolver>();
             services.AddTransient<IContractReverseResolver, DIContractReverseResolver>();
             
-            services.AddTransient<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
             services.AddTransient<IWorkflowContext, WorkflowContext>();
 
             services.AddTransient<WorkflowContainer>();

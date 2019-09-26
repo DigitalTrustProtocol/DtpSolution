@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DtpCore.Model;
-using DtpCore.Controllers;
 using DtpServer.AspNetCore.MVC.Filters;
 using DtpCore.Interfaces;
 using MediatR;

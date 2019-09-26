@@ -37,6 +37,8 @@ namespace UnitTest.DtpPackage.Mocks
 
         public ISwarmApi Swarm => throw new NotImplementedException();
 
+        public IBlockRepositoryApi BlockRepository => throw new NotImplementedException();
+
         public IpfsClientMock()
         {
             FileSystem = new FileSystemApiMock();

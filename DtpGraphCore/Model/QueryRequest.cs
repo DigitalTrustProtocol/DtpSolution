@@ -5,28 +5,6 @@ using DtpCore.Model;
 
 namespace DtpGraphCore.Model
 {
-    //[JsonObject(MemberSerialization.OptIn)]
-    //public class TrustScope
-    //{
-    //    /// <summary>
-    //    /// Empty Scope is global.
-    //    /// </summary>
-    //    [JsonProperty(PropertyName = "type")]
-    //    public string Type;
-    //    public bool ShouldSerializeType()
-    //    {
-    //        return !string.IsNullOrEmpty(Type);
-    //    }
-
-    //    [JsonProperty(PropertyName = "value")]
-    //    public string Value;
-    //    public bool ShouldSerializeValue()
-    //    {
-    //        return !string.IsNullOrEmpty(Value);
-    //    }
-    //}
-
-
     /// <summary>
     /// Defines the Query send from the client.
     /// </summary>
@@ -34,29 +12,29 @@ namespace DtpGraphCore.Model
     public class QueryRequest
     {
         [JsonProperty(PropertyName = "issuer")]
-        public Identity Issuer;
+        public Identity Issuer { get; set; }
 
         [JsonProperty(PropertyName = "subjects")]
-        public List<string> Subjects;
+        public List<string> Subjects { get; set; }
 
         /// <summary>
         /// The claim types to search on.
         /// </summary>
         [JsonProperty(PropertyName = "types")]
-        public List<string> Types;
+        public List<string> Types { get; set; }
 
         /// <summary>
         /// Empty Scope is global.
         /// </summary>
         [JsonProperty(PropertyName = "scope")]
-        public string Scope = string.Empty;
+        public string Scope { get; set; }
         public bool ShouldSerializeScope() { return !string.IsNullOrEmpty(Scope); }
 
         /// <summary>
         /// Limit the search level. Cannot be more than the predefined max level.
         /// </summary>
         [JsonProperty(PropertyName = "level")]
-        public int Level;
+        public int Level { get; set; }
         public bool ShouldSerializeLevel() { return Level > 0; }
 
         /// <summary>
@@ -64,6 +42,7 @@ namespace DtpGraphCore.Model
         /// LeafsOnly is default.
         /// </summary>
         [JsonProperty(PropertyName = "flags")]
-        public QueryFlags Flags;
+        public QueryFlags Flags { get; set; }
     }
+
 }

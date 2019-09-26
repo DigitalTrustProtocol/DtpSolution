@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -36,19 +36,17 @@
     <Compile Remove="Workflows\WorkflowEngine.cs" />
     <Compile Remove="Workflows\WorkflowStep.cs" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="JsonSubTypes" Version="1.5.2" />
-    <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
-    <PackageReference Include="NBitcoin" Version="4.1.1.82" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.10" />
+    <PackageReference Include="JsonSubTypes" Version="1.6.0" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
+    <PackageReference Include="NBitcoin" Version="4.2.11" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
 

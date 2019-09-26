@@ -12,6 +12,7 @@ using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using DtpCore.Model;
 using DtpCore.Repository;
+using DtpCore.Services;
 using DtpCore.Strategy.Cron;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DtpCore.Services
+namespace DtpServer.Services
 {
     public class SchedulerHostedService : BackgroundService
     {

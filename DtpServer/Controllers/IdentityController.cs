@@ -1,11 +1,9 @@
-﻿using DtpCore.Controllers;
-using DtpCore.Model;
+﻿using DtpCore.Model;
 using DtpCore.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace DtpServer.Controllers
 {

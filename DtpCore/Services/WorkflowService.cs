@@ -8,7 +8,6 @@ using Newtonsoft.Json.Serialization;
 using DtpCore.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 using DtpCore.Enumerations;
 
 namespace DtpCore.Services

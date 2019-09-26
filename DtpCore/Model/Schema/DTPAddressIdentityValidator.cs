@@ -5,7 +5,7 @@ namespace DtpCore.Model.Schema
 {
     public class DTPAddressIdentityValidator : IIdentityValidator
     {
-        public const string NAME = "address.dtp1";
+        public const string NAME = "thing";
         public const string InvalidAddressErrorTemplate = "{0}{1} has invalid format.";
 
         public void Validate(string name, Identity identity, object source, string location, SchemaValidationResult result)

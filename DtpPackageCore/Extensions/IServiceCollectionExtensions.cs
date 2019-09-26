@@ -7,6 +7,7 @@ using Ipfs.CoreApi;
 using Ipfs.Http;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace DtpPackageCore.Extensions
 {
@@ -14,6 +15,8 @@ namespace DtpPackageCore.Extensions
     {
         public static void DtpPackageCore(this IServiceCollection services)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddSingleton<PubSubMessageController>();
 
             services.AddTransient<BuildPackageCommandHandler>();

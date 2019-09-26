@@ -60,7 +60,7 @@ namespace DtpCore.Strategy
 
         public string GetAddress(byte[] key)
         {
-            return new Key(key).PubKey.GetAddress(network).ToString();
+            return new Key(key).PubKey.GetAddress(ScriptPubKeyType.Legacy, network).ToString();
         }
 
         public byte[] Sign(byte[] key, byte[] data)
@@ -89,7 +89,7 @@ namespace DtpCore.Strategy
         {
             var hashkeyid = new uint256(data); 
             var recoverAddress = PubKey.RecoverCompact(hashkeyid, signature);
-            return recoverAddress.GetAddress(network).ToString() == address;
+            return recoverAddress.GetAddress(ScriptPubKeyType.Legacy, network).ToString() == address;
 
         }
 
@@ -97,14 +97,14 @@ namespace DtpCore.Strategy
         {
             var sig = Encoders.Base64.EncodeData(signature);
             var recoverAddress = PubKey.RecoverFromMessage(data, sig);
-            return recoverAddress.GetAddress(network).ToString() == address;
+            return recoverAddress.GetAddress(ScriptPubKeyType.Legacy, network).ToString() == address;
         }
 
         public bool VerifySignatureMessage(string message, byte[] signature, string address)
         {
             var sig = Encoders.Base64.EncodeData(signature);
             var recoverAddress = PubKey.RecoverFromMessage(message, sig);
-            return recoverAddress.GetAddress(network).ToString() == address;
+            return recoverAddress.GetAddress(ScriptPubKeyType.Legacy, network).ToString() == address;
         }
 
     }

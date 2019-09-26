@@ -9,12 +9,13 @@ using Serilog.Formatting;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Display;
 using Serilog.Events;
-using Microsoft.AspNetCore.Server.Kestrel.Https.Internal;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using DtpServer.Platform;
 using DtpCore.Extensions;
 using Topshelf;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Microsoft.Extensions.Hosting;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -25,11 +26,17 @@ namespace DtpServer
     /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static bool isDevelopment = false;
+
         public static void Main(string[] args)
         {
 
-            var isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            if(isDevelopment)
+            isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+
+            if (isDevelopment)
             {
                 Console.WriteLine("Running in debug mode!");
                 var service = new ServiceHandler();
@@ -68,13 +75,13 @@ namespace DtpServer
 
             public PlatformDirectory Platform { get; private set; }
 
-            private IWebHost webHost;
+            private IHost webHost;
 
             public ServiceHandler()
             {
             }
 
-            public IWebHost Init()
+            public IHost Init()
             {
                 Platform = new PlatformDirectory();
                 Platform.EnsureDtpServerDirectory();
@@ -86,7 +93,7 @@ namespace DtpServer
                     
                 // Renaming BuildWebHost to InitWebHost avoids problems with add-migration command.
                 // IDesignTimeDbContextFactory implemented for add-migration specifically.
-                webHost = InitWebHost(null);
+                webHost = CreateHostBuilder(null).Build();
                 return webHost;
             }
 
@@ -98,52 +105,56 @@ namespace DtpServer
             }
 
 
-            public IWebHost InitWebHost(string[] args) =>
-                WebHost.CreateDefaultBuilder(args)
-                    .UseStartup<Startup>()
-                    .UseConfiguration(Configuration)
-                    .UseDefaultServiceProvider((context, options) =>
+            public IHostBuilder CreateHostBuilder(string[] args) =>
+                Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                    .ConfigureWebHostDefaults(webBuilder =>
                     {
-                        options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
-                    })
-                    .UseKestrel((context, options) =>
-                    {
-                        var isDevelopment = context.HostingEnvironment.IsDevelopment();
-
-                        options.AddServerHeader = false;
-                        options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
-
-                        options.Listen(IPAddress.Any, 80);
-
-                        var file = EnsureDataFile(isDevelopment, "domaincert.pfx", Platform.DtpServerDataPath); // GetPfxFile
-                        if (File.Exists(file))
-                        {
-                            options.Listen(IPAddress.Any, 443, listenOptions =>
-                            {
-                                listenOptions.UseHttps(file, "123");
-                            });
-                            Log.Information("Certiticate loaded!");
-                        }
-                        else
-                        {
-                            try
-                            {
-                                var cert = CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true);
-                                options.Listen(IPAddress.Loopback, 443, listenOptions =>
+                        webBuilder.UseStartup<Startup>();
+                        webBuilder.UseConfiguration(Configuration);
+                        webBuilder.UseDefaultServiceProvider((context, options) =>
                                 {
-                                    listenOptions.UseHttps(cert);
+                                    options.ValidateScopes = isDevelopment;// context.HostingEnvironment.IsDevelopment();
                                 });
-                            }
-                            catch
+                        webBuilder.UseKestrel((context, options) =>
+                        {
+                            //var isDevelopment = context.HostingEnvironment.IsDevelopment();
+
+                            options.AddServerHeader = false;
+                            options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
+
+                            options.Listen(IPAddress.Any, 80);
+
+                            var file = EnsureDataFile(isDevelopment, "domaincert.pfx", Platform.DtpServerDataPath); // GetPfxFile
+                            if (File.Exists(file))
                             {
-                                Log.Warning("Localhost https certificate not supported.");
+                                options.Listen(IPAddress.Any, 443, listenOptions =>
+                                {
+                                    listenOptions.UseHttps(file, "123");
+                                });
+                                Log.Information("Certiticate loaded!");
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    var cert = CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true);
+                                    options.Listen(IPAddress.Loopback, 443, listenOptions =>
+                                    {
+                                        listenOptions.UseHttps(cert);
+                                    });
+                                }
+                                catch
+                                {
+                                    Log.Warning("Localhost https certificate not supported.");
+                                }
+
                             }
 
-                        }
+                        });
+                        webBuilder.CaptureStartupErrors(true);
+                        webBuilder.UseSerilog();
+                    });
 
-                    })
-                    .UseSerilog()
-                    .Build();
 
 
             private void SetupLogger()

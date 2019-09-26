@@ -41,6 +41,8 @@ Update-Database
 Add-Migration -Name MyMigration -OutputDir MyMigrationDir -Context MyContext -Project MyProject -StartupProject MyStartupProject
 
 
+dotnet ef migrations add MyFirstMigration
+
 Scaffold model
 https://docs.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/model
 

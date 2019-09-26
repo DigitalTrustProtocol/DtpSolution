@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using DtpCore.Builders;
 using DtpGraphCore.Model;
 using DtpGraphCore.Interfaces;
-using DtpCore.Controllers;
-using DtpGraphCore.Builders;
-using DtpGraphCore.Enumerations;
-using System.Threading.Tasks;
 using DtpServer.AspNetCore.MVC.Filters;
+using DtpCore.Model;
 
 namespace DtpServer.Controllers
 {
@@ -15,6 +10,7 @@ namespace DtpServer.Controllers
     /// Query the Graph
     /// </summary>
     [Route("api/graph/[controller]")]
+    [ApiController]
     public class QueryController : ApiController
     {
 
@@ -79,7 +75,7 @@ namespace DtpServer.Controllers
         [ProducesResponseType(400)]
         [ValidateModel(typeof(QueryRequest), typeof(IQueryRequestValidator))]
         [HttpPost]
-        public ActionResult<QueryContext> ResolvePost([FromBody]QueryRequest query)
+        public ActionResult<QueryContext> ResolvePost([FromBody] QueryRequest query)
         {
             //_queryRequestService.Verify(query);
 

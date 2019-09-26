@@ -14,28 +14,37 @@ namespace DtpCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
+                .HasAnnotation("ProductVersion", "3.0.0");
 
             modelBuilder.Entity("DtpCore.Model.BlockchainProof", b =>
                 {
                     b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("BlockTime");
+                    b.Property<long>("BlockTime")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Blockchain");
+                    b.Property<string>("Blockchain")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Confirmations");
+                    b.Property<int>("Confirmations")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("MerkleRoot");
+                    b.Property<byte[]>("MerkleRoot")
+                        .HasColumnType("BLOB");
 
-                    b.Property<byte[]>("Receipt");
+                    b.Property<byte[]>("Receipt")
+                        .HasColumnType("BLOB");
 
-                    b.Property<int>("RetryAttempts");
+                    b.Property<int>("RetryAttempts")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
 
@@ -45,29 +54,41 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.Claim", b =>
                 {
                     b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<uint>("Activate");
+                    b.Property<uint>("Activate")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Context");
+                    b.Property<string>("Context")
+                        .HasColumnType("TEXT");
 
-                    b.Property<uint>("Created");
+                    b.Property<uint>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<uint>("Expire");
+                    b.Property<uint>("Expire")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("Id");
+                    b.Property<byte[]>("Id")
+                        .HasColumnType("BLOB");
 
-                    b.Property<string>("Note");
+                    b.Property<string>("Note")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Scope");
+                    b.Property<string>("Scope")
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("State");
+                    b.Property<long>("State")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<uint>("TemplateId");
+                    b.Property<uint>("TemplateId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
 
@@ -79,9 +100,11 @@ namespace DtpCore.Migrations
 
             modelBuilder.Entity("DtpCore.Model.ClaimPackageRelationship", b =>
                 {
-                    b.Property<int?>("ClaimID");
+                    b.Property<int?>("ClaimID")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PackageID");
+                    b.Property<int?>("PackageID")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ClaimID", "PackageID");
 
@@ -93,13 +116,16 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.IdentityMetadata", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("Data");
+                    b.Property<string>("Data")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -109,11 +135,14 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.KeyValue", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("Value");
+                    b.Property<byte[]>("Value")
+                        .HasColumnType("BLOB");
 
                     b.HasKey("ID");
 
@@ -125,25 +154,35 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.Package", b =>
                 {
                     b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Context");
+                    b.Property<string>("Context")
+                        .HasColumnType("TEXT");
 
-                    b.Property<uint>("Created");
+                    b.Property<uint>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("File");
+                    b.Property<string>("File")
+                        .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("Id");
+                    b.Property<byte[]>("Id")
+                        .HasColumnType("BLOB");
 
-                    b.Property<string>("Obsoletes");
+                    b.Property<string>("Obsoletes")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Scopes");
+                    b.Property<string>("Scopes")
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("State");
+                    b.Property<long>("State")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Types");
+                    b.Property<string>("Types")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
 
@@ -155,29 +194,41 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>
                 {
                     b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Algorithm");
+                    b.Property<string>("Algorithm")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Blockchain");
+                    b.Property<string>("Blockchain")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("ClaimDatabaseID");
+                    b.Property<int?>("ClaimDatabaseID")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PackageDatabaseID");
+                    b.Property<int?>("PackageDatabaseID")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("Path");
+                    b.Property<byte[]>("Path")
+                        .HasColumnType("BLOB");
 
-                    b.Property<int?>("ProofDatabaseID");
+                    b.Property<int?>("ProofDatabaseID")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("Receipt");
+                    b.Property<byte[]>("Receipt")
+                        .HasColumnType("BLOB");
 
-                    b.Property<long>("Registered");
+                    b.Property<long>("Registered")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Service");
+                    b.Property<string>("Service")
+                        .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("Source");
+                    b.Property<byte[]>("Source")
+                        .HasColumnType("BLOB");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
 
@@ -195,19 +246,26 @@ namespace DtpCore.Migrations
             modelBuilder.Entity("DtpCore.Model.WorkflowContainer", b =>
                 {
                     b.Property<int>("DatabaseID")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Active");
+                    b.Property<bool>("Active")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Data");
+                    b.Property<string>("Data")
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("NextExecution");
+                    b.Property<long>("NextExecution")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("State");
+                    b.Property<string>("State")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Tag");
+                    b.Property<string>("Tag")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
 
@@ -222,56 +280,66 @@ namespace DtpCore.Migrations
                 {
                     b.OwnsOne("DtpCore.Model.IssuerIdentity", "Issuer", b1 =>
                         {
-                            b1.Property<int>("ClaimDatabaseID");
+                            b1.Property<int>("ClaimDatabaseID")
+                                .HasColumnType("INTEGER");
 
-                            b1.Property<string>("Algorithm");
+                            b1.Property<string>("Algorithm")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<string>("Context");
+                            b1.Property<string>("Context")
+                                .HasColumnType("TEXT");
 
                             b1.Property<string>("Id")
-                                .HasColumnName("Issuer_Id");
+                                .HasColumnName("Issuer_Id")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<byte[]>("Path");
+                            b1.Property<byte[]>("Path")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<byte[]>("Proof");
+                            b1.Property<byte[]>("Proof")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<string>("Type");
+                            b1.Property<string>("Type")
+                                .HasColumnType("TEXT");
 
                             b1.HasKey("ClaimDatabaseID");
 
                             b1.ToTable("Claim");
 
-                            b1.HasOne("DtpCore.Model.Claim")
-                                .WithOne("Issuer")
-                                .HasForeignKey("DtpCore.Model.IssuerIdentity", "ClaimDatabaseID")
-                                .OnDelete(DeleteBehavior.Cascade);
+                            b1.WithOwner()
+                                .HasForeignKey("ClaimDatabaseID");
                         });
 
                     b.OwnsOne("DtpCore.Model.SubjectIdentity", "Subject", b1 =>
                         {
-                            b1.Property<int>("ClaimDatabaseID");
+                            b1.Property<int>("ClaimDatabaseID")
+                                .HasColumnType("INTEGER");
 
-                            b1.Property<string>("Algorithm");
+                            b1.Property<string>("Algorithm")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<string>("Context");
+                            b1.Property<string>("Context")
+                                .HasColumnType("TEXT");
 
                             b1.Property<string>("Id")
-                                .HasColumnName("Subject_Id");
+                                .HasColumnName("Subject_Id")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<byte[]>("Path");
+                            b1.Property<byte[]>("Path")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<byte[]>("Proof");
+                            b1.Property<byte[]>("Proof")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<string>("Type");
+                            b1.Property<string>("Type")
+                                .HasColumnType("TEXT");
 
                             b1.HasKey("ClaimDatabaseID");
 
                             b1.ToTable("Claim");
 
-                            b1.HasOne("DtpCore.Model.Claim")
-                                .WithOne("Subject")
-                                .HasForeignKey("DtpCore.Model.SubjectIdentity", "ClaimDatabaseID")
-                                .OnDelete(DeleteBehavior.Cascade);
+                            b1.WithOwner()
+                                .HasForeignKey("ClaimDatabaseID");
                         });
                 });
 
@@ -280,50 +348,57 @@ namespace DtpCore.Migrations
                     b.HasOne("DtpCore.Model.Claim", "Claim")
                         .WithMany("ClaimPackages")
                         .HasForeignKey("ClaimID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DtpCore.Model.Package", "Package")
                         .WithMany("ClaimPackages")
                         .HasForeignKey("PackageID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DtpCore.Model.Package", b =>
                 {
                     b.OwnsOne("DtpCore.Model.ServerIdentity", "Server", b1 =>
                         {
-                            b1.Property<int>("PackageDatabaseID");
+                            b1.Property<int>("PackageDatabaseID")
+                                .HasColumnType("INTEGER");
 
-                            b1.Property<string>("Algorithm");
+                            b1.Property<string>("Algorithm")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<string>("Context");
+                            b1.Property<string>("Context")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<string>("Id");
+                            b1.Property<string>("Id")
+                                .HasColumnType("TEXT");
 
-                            b1.Property<byte[]>("Path");
+                            b1.Property<byte[]>("Path")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<byte[]>("Proof");
+                            b1.Property<byte[]>("Proof")
+                                .HasColumnType("BLOB");
 
-                            b1.Property<string>("Type");
+                            b1.Property<string>("Type")
+                                .HasColumnType("TEXT");
 
                             b1.HasKey("PackageDatabaseID");
 
                             b1.ToTable("Package");
 
-                            b1.HasOne("DtpCore.Model.Package")
-                                .WithOne("Server")
-                                .HasForeignKey("DtpCore.Model.ServerIdentity", "PackageDatabaseID")
-                                .OnDelete(DeleteBehavior.Cascade);
+                            b1.WithOwner()
+                                .HasForeignKey("PackageDatabaseID");
                         });
                 });
 
             modelBuilder.Entity("DtpCore.Model.Timestamp", b =>
                 {
-                    b.HasOne("DtpCore.Model.Claim")
+                    b.HasOne("DtpCore.Model.Claim", null)
                         .WithMany("Timestamps")
                         .HasForeignKey("ClaimDatabaseID");
 
-                    b.HasOne("DtpCore.Model.Package")
+                    b.HasOne("DtpCore.Model.Package", null)
                         .WithMany("Timestamps")
                         .HasForeignKey("PackageDatabaseID");
 

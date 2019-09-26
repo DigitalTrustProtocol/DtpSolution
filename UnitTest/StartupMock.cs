@@ -66,6 +66,8 @@ namespace UnitTest
             Services.AddTransient<PackageController>();
             Services.AddTransient<QueryController>();
             Services.AddScoped<ICoreApi, IpfsClientMock>();
+            Services.AddScoped<ILoggerFactory, LoggerFactory>();
+            Services.AddScoped(typeof(ILogger<>), typeof(Logger<>));
 
             ServiceScope = Services.BuildServiceProvider(false).CreateScope();
             ServiceProvider = ServiceScope.ServiceProvider;

@@ -49,21 +49,21 @@ namespace DtpServer.AspNetCore.MVC.Filters
                 return;
             }
             var model = keyValue.Value;
-            var result = validatorService.Validate(model);
-            if (result == null)
-                return;
+            //var result = validatorService.Validate(model);
+            //if (result == null)
+//                return;
 
-            if(result.Errors.Count > 0)
-            {
+            //if(result.Errors.Count > 0)
+            //{
                 
-                foreach (var item in result.Errors)
-                {
-                    context.ModelState.AddModelError(_modelType.Name, item);
-                }
+            //    foreach (var item in result.Errors)
+            //    {
+            //        context.ModelState.AddModelError(_modelType.Name, item);
+            //    }
                 
-                context.Result = new BadRequestObjectResult(context.ModelState);
-                return;
-            }
+            //    context.Result = new BadRequestObjectResult(context.ModelState);
+            //    return;
+            //}
         }
     }
 }

@@ -44,6 +44,15 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="M:DtpServer.Controllers.ApiController.ApiOk(System.Object,System.String,System.String)">
+            <summary>
+            Returns a standard api return object as a wrapper around the data object
+            </summary>
+            <param name="data">if null then no render</param>
+            <param name="status">if null then Success</param>
+            <param name="message">if null then no render</param>
+            <returns>Returns a standard api return object as a wrapper around the data object</returns>
+        </member>
         <member name="T:DtpServer.Controllers.ClaimController">
             <summary>
             Handles trust related stuff.
@@ -159,6 +168,11 @@
             <param name="query"></param>
             <returns>The result of the query</returns>
         </member>
+        <member name="T:DtpServer.Extensions.JsonOptionsSetup">
+            <summary>
+            http://www.dotnet-programming.com/post/2017/05/08/Aspnet-core-Deserializing-Json-with-Dependency-Injection.aspx
+            </summary>
+        </member>
         <member name="M:DtpServer.Pages.Packages.DetailsModel.OnGetAsync(System.Nullable{System.Int32})">
             <summary>
             Get a package
@@ -198,25 +212,20 @@
             Startup class
             </summary>
         </member>
+        <member name="F:DtpServer.Program.isDevelopment">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:DtpServer.Program.ServiceHandler.Configuration">
             <summary>
             Static configuration 
             </summary>
         </member>
-        <member name="T:DtpServer.Startup">
+        <member name="T:DtpServer.Services.WorkflowHostedService">
             <summary>
-            Startup class for Server
+            Depricated, replaced by SchedulerHostedService for better async handling.
             </summary>
-        </member>
-        <member name="M:DtpServer.Startup.#ctor(Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="env"></param>
-            <param name="configuration"></param>
-        </member>
-        <member name="M:DtpServer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Hosting.IApplicationLifetime,NicolasDorier.RateLimits.RateLimitService,DtpCore.Services.ApplicationEvents)">
-            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         </member>
     </members>
 </doc>

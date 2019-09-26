@@ -283,7 +283,7 @@ namespace DtpCore.Builders
             if (CurrentClaim.Subject == null)
                 CurrentClaim.Subject = new SubjectIdentity();
 
-            _currentClaim.Subject.Type = "address.dtp1";
+            _currentClaim.Subject.Type = "thing";
             _currentClaim.Subject.Id = id;
 
             return this;

@@ -14,7 +14,7 @@ namespace DtpCore.Repository
 {
     public class TrustDBContext : DbContext
     {
-        private static object lockObj = new object();
+        private static readonly object lockObj = new object();
 
         public DbSet<Package> Packages { get; set; }
         public DbSet<Claim> Claims { get; set; }
@@ -30,10 +30,10 @@ namespace DtpCore.Repository
         private readonly ILoggerFactory _loggerFactory;
 
 
-        //public TrustDBContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
-        //{
-        //    this._loggerFactory = loggerFactory;
-        //}
+        public TrustDBContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
+        {
+            _loggerFactory = loggerFactory;
+        }
 
         public TrustDBContext(DbContextOptions options) : base(options)
         {
@@ -43,17 +43,15 @@ namespace DtpCore.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //if (Debugger.IsAttached)
-            //{
-            //    // Probably shouldn't log sql statements in production
-            //    optionsBuilder.UseLoggerFactory(this._loggerFactory);
-            //}
             EnableSensitiveDataLogging(optionsBuilder);
         }
 
-        //[Conditional("DEBUG")]
+        [Conditional("DEBUG")]
         private void EnableSensitiveDataLogging(DbContextOptionsBuilder optionsBuilder)
         {
+            // Probably shouldn't log sql statements in production
+            optionsBuilder.UseLoggerFactory(_loggerFactory);
+
             optionsBuilder.EnableSensitiveDataLogging(true);
         }
 

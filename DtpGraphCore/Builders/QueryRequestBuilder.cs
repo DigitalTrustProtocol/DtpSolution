@@ -27,7 +27,7 @@ namespace DtpGraphCore.Builders
 
         public QueryRequestBuilder Add(string issuerId, string subjectAddress)
         {
-            Query.Issuer.Type = "address.dtp1";
+            Query.Issuer.Type = "thing";
             Query.Issuer.Id = issuerId;
             Query.Subjects.Add(subjectAddress);
 

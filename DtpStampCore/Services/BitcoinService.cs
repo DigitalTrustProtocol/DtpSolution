@@ -19,7 +19,7 @@ namespace DtpStampCore.Services
 
         public IBlockchainRepository Repository { get; set; }
 
-        private IDerivationStrategyFactory _derivationStrategyFactory;
+        private readonly IDerivationStrategyFactory _derivationStrategyFactory;
 
         public BitcoinService(IBlockchainRepository repository, IDerivationStrategyFactory derivationStrategyFactory)
         {
@@ -41,7 +41,7 @@ namespace DtpStampCore.Services
         {
             //var serverAddress2 = DerivationStrategy.GetAddress(fundingKey);
             var serverKey = new Key(fundingKey);
-            var serverAddress = serverKey.PubKey.GetAddress(Network);
+            var serverAddress = serverKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network);
             
             var fee = Repository.GetEstimatedFee().FeePerK;
 
@@ -90,7 +90,7 @@ namespace DtpStampCore.Services
         public IList<byte[]> Send(byte[] merkleRoot, byte[] fundingKey, IList<byte[]> previousTx = null)
         {
             var serverKey = new Key(fundingKey);
-            var serverAddress = serverKey.PubKey.GetAddress(Network);
+            var serverAddress = serverKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network);
             var txs = new List<byte[]>();
 
             Key merkleRootKey = new Key(DerivationStrategy.GetKey(merkleRoot));
@@ -104,7 +104,7 @@ namespace DtpStampCore.Services
             var sourceTx = new TransactionBuilder()
                 .AddCoins(coins)
                 .AddKeys(serverKey)
-                .Send(merkleRootKey.PubKey.GetAddress(Network), fee) // Send to Batch address
+                .Send(merkleRootKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network), fee) // Send to Batch address
                 .SendFees(fee)
                 .SetChange(serverAddress)
                 .BuildTransaction(true);

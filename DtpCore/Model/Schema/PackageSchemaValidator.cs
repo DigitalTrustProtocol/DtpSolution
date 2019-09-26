@@ -122,8 +122,10 @@ namespace DtpCore.Model.Schema
             public const int COST_LIMIT = 100;
             public const int TEXT50_MAX_LENGTH = 50;
             public const int TEXT200_MAX_LENGTH = 200;
+            public const int TEXT500_MAX_LENGTH = 500;
             public const int TIMESTAMP_RECEIPT_MAX_LENGTH = 1024; // Allows for 4 billion timestamps with 32 byte hash
-            
+            public const int NOTE_MAX_LENGTH = TEXT500_MAX_LENGTH;
+
 
 
 
@@ -227,7 +229,7 @@ namespace DtpCore.Model.Schema
                 result.MaxRangeCheck("Id", claim.Id, location, ID_MAX_LENGTH);
                 result.MaxRangeCheck("Type", claim.Type, location, TYPE_MAX_LENGTH);
                 result.MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
-                result.MaxRangeCheck("Metadata", claim.Note, location, METADATA_MAX_LENGTH);
+                result.MaxRangeCheck("Note", claim.Note, location, NOTE_MAX_LENGTH);
 
                 ValidateIssuer(claim, location);
                 ValidateSubject(claim, location);
@@ -289,7 +291,7 @@ namespace DtpCore.Model.Schema
                 //result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
                 result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
 
-                var data = metadata.Title.ToBytes().Combine(metadata.Data);
+                var data = metadata.Title.ToBytes().Combine(metadata.Data?.ToBytes());
                 var hash = Hashes.Hash160(data);
                 var prefix = new byte[] { 30 };
                 var predixData = prefix.Combine(hash.ToBytes());

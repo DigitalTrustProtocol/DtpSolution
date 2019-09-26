@@ -1,5 +1,4 @@
-﻿using DtpCore.Controllers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace DtpServer.Controllers

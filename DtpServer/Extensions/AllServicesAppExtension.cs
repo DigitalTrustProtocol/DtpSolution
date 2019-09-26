@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 
-namespace DtpCore.Extensions
+namespace DtpServer.Extensions
 {
     public static class AllServicesAppExtension
     {
@@ -26,7 +24,8 @@ namespace DtpCore.Extensions
                     sb.Append("</tr>");
                 }
                 sb.Append("</tbody></table>");
-                await context.Response.WriteAsync(sb.ToString());
+                var data = UTF8Encoding.UTF8.GetBytes(sb.ToString());
+                await context.Response.Body.WriteAsync(data, 0, data.Length);
             }));
 
         }

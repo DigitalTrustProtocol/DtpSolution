@@ -88,7 +88,7 @@ namespace UnitTest.DtpCore.Commands.Trusts
             NotificationSegment result = Mediator.SendAndWait(new AddPackageCommand(ban));
 
             Assert.AreEqual(1, DB.Claims.Count());
-            Assert.AreEqual(2, DB.Packages.Count(), "There should be packages for deleted claims remaining."); 
+            Assert.AreEqual(1, DB.Packages.Count(), "There should be packages for deleted claims remaining."); 
             Assert.AreEqual(1, DB.ClaimPackageRelationships.Count(),"There should not be old references remaining."); 
         }
 

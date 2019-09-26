@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DtpCore.Attributes;
 using DtpCore.Builders;
+using DtpServer.Attributes;
 
-namespace DtpCore.Controllers
+namespace DtpServer.Controllers
 {
     [ApiExceptionFilter()]
     public class ApiController : Controller

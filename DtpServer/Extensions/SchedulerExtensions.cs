@@ -3,13 +3,13 @@
 
 using System;
 using System.Threading.Tasks;
-using DtpCore.Services;
+using DtpServer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DtpCore.Extensions
+namespace DtpServer.Extensions
 {
     public static class SchedulerExtensions
     {

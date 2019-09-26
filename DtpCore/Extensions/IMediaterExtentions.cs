@@ -10,7 +10,7 @@ namespace DtpCore.Extensions
     public static class IMediaterExtentions
     {
 
-        public static TResponse SendAndWait<TResponse>(this IMediator mediator, IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
+        public static TResponse SendAndWait<TResponse>(this IMediator mediator, IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             var task = mediator.Send(request, cancellationToken);
             

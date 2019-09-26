@@ -374,7 +374,7 @@ namespace DtpCore.Model
         /// a url link is defined in the Data field and the Type field is then set to "ref".
         /// </summary>
         [JsonProperty(PropertyName = "data")]
-        public byte[] Data { get; set; }
+        public string Data { get; set; }
         public bool ShouldSerializeData() { return Data != null; }
 
         //[JsonProperty(PropertyName = "href")]

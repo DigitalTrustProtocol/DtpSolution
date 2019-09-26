@@ -23,7 +23,7 @@ namespace UnitTest.DtpCore.Extensions
             var issuerKey = ScriptService.GetKey(Encoding.UTF8.GetBytes(name));
             var address = ScriptService.GetAddress(issuerKey);
 
-            builder.AddClaim().SetIssuer(address, ScriptService.ScriptName, (byte[] data) =>
+            builder.AddClaim().SetIssuer(address, "entity", (byte[] data) =>
             {
                 return ScriptService.SignMessage(issuerKey, data);
             });

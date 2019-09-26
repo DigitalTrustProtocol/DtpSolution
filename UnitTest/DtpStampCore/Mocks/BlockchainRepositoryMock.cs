@@ -32,7 +32,7 @@ namespace UnitTest.DtpStampCore.Mocks
             {
                 new BalanceOperation
                 {
-                    Amount = 0,
+                    Amount = 0L,
                     TransactionId = uint256.Parse("8e8bdc68a4546962bf21582af8c827cb6f27715986391bdbbeee8b2b19488896"),
                     FirstSeen = DatetimeExtensions.FromUnixTime(1509013624),
                     Confirmations= 2487,
@@ -92,7 +92,7 @@ namespace UnitTest.DtpStampCore.Mocks
 
         public FeeRate GetEstimatedFee()
         {
-            return new FeeRate(new Money(100));
+            return new FeeRate(new Money(100L));
         }
 
         public Task<BalanceModel> GetReceivedAsync(string address)

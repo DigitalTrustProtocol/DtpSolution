@@ -15,18 +15,17 @@ namespace DtpPackageCore.Commands
     public class RemoveClaimsCommandHandler : IRequestHandler<RemoveClaimsCommand, NotificationSegment>
     {
 
-        private IMediator _mediator;
-        private ITrustDBService _trustDBService;
-        private TrustDBContext _db;
-        private NotificationSegment _notifications;
-        private readonly ILogger<AddClaimCommandHandler> _logger;
+        //private readonly IMediator _mediator;
+        private readonly TrustDBContext _db;
+        private readonly NotificationSegment _notifications;
+        //private readonly ILogger<AddClaimCommandHandler> _logger;
 
-        public RemoveClaimsCommandHandler(IMediator mediator, ITrustDBService trustDBService, TrustDBContext db, NotificationSegment notifications, ILogger<AddClaimCommandHandler> logger)
+        public RemoveClaimsCommandHandler(TrustDBContext db, NotificationSegment notifications) // ILogger<AddClaimCommandHandler> logger
         {
-            _mediator = mediator;
+            //_mediator = mediator;
             _db = db;
             _notifications = notifications;
-            _logger = logger;
+            //_logger = logger;
         }
 
 
