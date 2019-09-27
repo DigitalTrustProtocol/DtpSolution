@@ -9,6 +9,7 @@ using System.Linq;
 using DtpCore.Extensions;
 using DtpCore.Interfaces;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
 
 namespace DtpGraphCore.Services
 {
@@ -125,6 +126,9 @@ namespace DtpGraphCore.Services
 
                 foreach (var subject in graphIssuer.Subjects.Values)
                 {
+                    if (subject.Claims == null)
+                        continue; 
+
                     var list = subject.Claims.Keys.ToList();
                     foreach (var key in list)
                     {
@@ -179,7 +183,8 @@ namespace DtpGraphCore.Services
             var graphSubject = new GraphSubject
             {
                 TargetIssuer =  EnsureGraphIssuer(subjectId),
-                Claims = new ConcurrentDictionary<long, int>()
+                //Claims = new ConcurrentDictionary<long, int>()
+                //Claims = new Dictionary<long, int>(0)
             };
 
             return graphSubject;
@@ -248,7 +253,7 @@ namespace DtpGraphCore.Services
             {
                 foreach (var ts in tracker.Subjects.Values)
                 {
-                    if(ts.Claims.Count() == 0)
+                    if(ts.Claims == null || ts.Claims.Count() == 0)
                     {
                         var claim = new Claim
                         {
@@ -291,6 +296,17 @@ namespace DtpGraphCore.Services
                     }
                 }
             }
+        }
+
+        public string JsonSerialize()
+        {
+            return JsonConvert.SerializeObject(this.Graph);
+
+        }
+
+        public void JsonDeserialize(string json)
+        {
+            Graph = (GraphModel)JsonConvert.DeserializeObject(json, typeof(GraphModel));
         }
     }
 }

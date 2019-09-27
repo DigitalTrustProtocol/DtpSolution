@@ -196,7 +196,7 @@ namespace DtpGraphCore.Services
         {
             if (!context.TrackerResults.ContainsKey(tracker.Issuer.Index))
             {
-                tracker.Subjects = new Dictionary<int, GraphSubject>();
+                tracker.Subjects = new GraphSubjectDictionary<int, GraphSubject>();
                 context.TrackerResults.Add(tracker.Issuer.Index, tracker);
             }
 
@@ -206,14 +206,15 @@ namespace DtpGraphCore.Services
             if (!result.Subjects.ContainsKey(tracker.SubjectKey))
             {   // Only subjects with unique keys
                 graphSubject = tracker.Issuer.Subjects[tracker.SubjectKey]; // GraphSubject is a value type and therefore its copied
-                graphSubject.Claims = new ConcurrentDictionary<long, int>();
+                //graphSubject.Claims = new ConcurrentDictionary<long, int>();
+                graphSubject.Claims = new GraphSubjectDictionary<long, int>();
                 result.Subjects.Add(tracker.SubjectKey, graphSubject);
                 // Register the target found 
             } else
             {
                 graphSubject = result.Subjects[tracker.SubjectKey];
             }
-
+            
             if (graphSubject.Claims.Count == 0)
             {
                 // Add claims to the current tracker level.

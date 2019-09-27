@@ -54,7 +54,7 @@ namespace UnitTest.DtpGraphCore
             BinaryTrustTrueAttributes = PackageBuilder.CreateBinaryTrustAttributes(true);
             BinaryTrustFalseAttributes = PackageBuilder.CreateBinaryTrustAttributes(false);
             ConfirmAttributes = PackageBuilder.CreateConfirmAttributes();
-            RatingAtrributes = PackageBuilder.CreateRatingAttributes(100);
+            RatingAtrributes = PackageBuilder.CreateRatingAttributes(5);
         }
 
 

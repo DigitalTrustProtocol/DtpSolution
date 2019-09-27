@@ -29,6 +29,7 @@ namespace UnitTest.DtpGraphCore
 
         /// <summary>
         /// 1 Source, 1 targets
+        /// 2 Degrees out with the final rating
         /// </summary>
         [TestMethod]
         public void Source1Target1()
@@ -50,6 +51,8 @@ namespace UnitTest.DtpGraphCore
             VerfifyResult(context, "A", "B");
             VerfifyResult(context, "B", "C");
             VerfifyResult(context, "C", "D", PackageBuilder.RATING_CLAIM_DTP1);
+
+            Assert.AreEqual(3, context.Results.Claims.Count, "There is not the correct number of claims in the query result!");
         }
 
 

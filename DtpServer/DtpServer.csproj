@@ -5,7 +5,7 @@
     <UserSecretsId>2af78036-f463-4616-8b5b-d83582cb7f5b</UserSecretsId>
     <ApplicationIcon></ApplicationIcon>
     <RazorCompileToolset>PrecompilationTool</RazorCompileToolset>
-    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <OutputType>Exe</OutputType>
     <StartupObject>DtpServer.Program</StartupObject>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>

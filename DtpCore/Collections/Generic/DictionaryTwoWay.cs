@@ -9,20 +9,20 @@ namespace DtpCore.Collections.Generic
     {
         private static object syncLock = new object();
 
-
-        private readonly Dictionary<T2, int> _forward = new Dictionary<T2, int>();
-        private readonly Dictionary<int, T2> _reverse = new Dictionary<int, T2>();
+        
+        public Dictionary<T2, int> Index { get; set; } 
+        public Dictionary<int, T2> Table { get; set; } 
 
         public DictionaryTwoWay()
         {
-            _reverse = new Dictionary<int, T2>();
-            _forward = new Dictionary<T2, int>();
+            Table = new Dictionary<int, T2>();
+            Index = new Dictionary<T2, int>();
         }
 
         public DictionaryTwoWay(IEqualityComparer<T2> comparer)
         {
-            _reverse = new Dictionary<int, T2>();
-            _forward = new Dictionary<T2, int>(comparer);
+            Table = new Dictionary<int, T2>();
+            Index = new Dictionary<T2, int>(comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,7 +30,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _forward.Count;
+                return Index.Count;
             }
         }
 
@@ -42,16 +42,16 @@ namespace DtpCore.Collections.Generic
                 if (value == null)
                     return 0;
 
-                if (!_forward.ContainsKey(value))
+                if (!Index.ContainsKey(value))
                 {
-                    var index = Count();
-                    _forward.Add(value, index);
-                    _reverse.Add(index, value);
+                    var index = Index.Count;
+                    Index.Add(value, index);
+                    Table.Add(index, value);
 
                     return index;
                 }
 
-                return _forward[value];
+                return Index[value];
             }
         }
 
@@ -60,7 +60,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _forward.ContainsKey(value);
+                return Index.ContainsKey(value);
             }
         }
 
@@ -69,7 +69,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _reverse.ContainsKey(index);
+                return Table.ContainsKey(index);
             }
         }
 
@@ -78,7 +78,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _forward[value];
+                return Index[value];
             }
         }
 
@@ -87,7 +87,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _reverse[index];
+                return Table[index];
             }
         }
 
@@ -96,7 +96,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _reverse.TryGetValue(index, out value);
+                return Table.TryGetValue(index, out value);
             }
         }
 
@@ -105,7 +105,7 @@ namespace DtpCore.Collections.Generic
         {
             lock (syncLock)
             {
-                return _forward.TryGetValue(value, out index);
+                return Index.TryGetValue(value, out index);
             }
         }
 

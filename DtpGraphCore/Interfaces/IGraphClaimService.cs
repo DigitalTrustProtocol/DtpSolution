@@ -23,6 +23,9 @@ namespace DtpGraphCore.Interfaces
         /// <param name="claim"></param>
         void RemoveByIssuer(Claim claim);
 
+        string JsonSerialize();
+        void JsonDeserialize(string json);
+
         GraphSubject CreateGraphSubject(string subjectId);
         GraphIssuer EnsureGraphIssuer(string address);
         GraphClaim EnsureGraphClaim(Claim claim);

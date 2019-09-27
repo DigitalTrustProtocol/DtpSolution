@@ -11,6 +11,9 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Exist(this Dictionary<long, int> claims, int scope, int type)
         {
+            if (claims == null)
+                return false;
+
             var subjectClaimIndex = new SubjectClaimIndex (scope, type );
             return claims.ContainsKey(subjectClaimIndex.Value);
         }
@@ -18,14 +21,34 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool GetIndex(this Dictionary<long, int> claims, int scope, int type, out int index)
         {
+            index = 0;
+            if (claims == null)
+                return false;
+
             var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             return claims.TryGetValue(subjectClaimIndex.Value, out index);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Ensure(this GraphSubjectDictionary<long, int> claims, int scope, int type, int claimIndex)
+        {
+            if (claims == null)
+                claims = new GraphSubjectDictionary<long, int>(1);
 
+            var subjectClaimIndex = new SubjectClaimIndex(scope, type);
+            if (claims.ContainsKey(subjectClaimIndex.Value))
+                return true;
+
+            claims[subjectClaimIndex.Value] = claimIndex;
+            return true;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Ensure(this Dictionary<long, int> claims, int scope, int type, int claimIndex)
         {
+            if (claims == null)
+                claims = new Dictionary<long, int>(1);
+
             var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             if (claims.ContainsKey(subjectClaimIndex.Value))
                 return true;
@@ -37,6 +60,9 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Remove(this Dictionary<long, int> claims, int scope, int type)
         {
+            if (claims != null)
+                return -1;
+
             var subjectClaimIndex = new SubjectClaimIndex(scope, type);
             if (claims.Remove(subjectClaimIndex.Value, out int claimIndex))
                 return claimIndex;

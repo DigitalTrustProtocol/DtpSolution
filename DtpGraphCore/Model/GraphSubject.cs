@@ -13,7 +13,8 @@ namespace DtpGraphCore.Model
         public GraphIssuer TargetIssuer; // The type of the subject
         public SubjectFlags Flags; // Containes metadata about the GraphSubject object
         public int AliasIndex; // The name of the issuer for this subject
-        public ConcurrentDictionary<long, int> Claims;  // Int is scope index
+        //public ConcurrentDictionary<long, int> Claims;  // Int is scope index
+        public GraphSubjectDictionary<long, int> Claims;  // Int is scope index
 
         [JsonIgnore]
         public object ClaimsData;
