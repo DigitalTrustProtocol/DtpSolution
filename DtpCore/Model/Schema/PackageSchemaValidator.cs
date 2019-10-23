@@ -286,10 +286,11 @@ namespace DtpCore.Model.Schema
                 if (metadata == null)
                     return;
 
-                result.MaxRangeCheck($"{name} Title", metadata.Title, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
-                result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.MAX_URL_LENGTH);
+                result.MaxRangeCheck($"{name} Title", metadata.Title, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
+                result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.DEFAULT_CONTENT_LENGTH);
                 //result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
                 result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
+                result.MaxRangeCheck($"{name} Icon", metadata.Icon, location, SchemaValidationResult.DEFAULT_URL_LENGTH);
 
                 var data = metadata.Title.ToBytes().Combine(metadata.Data?.ToBytes());
                 var hash = Hashes.Hash160(data);
@@ -299,14 +300,14 @@ namespace DtpCore.Model.Schema
 
                 if(address != subject.Id)
                 {
-                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Meta));
+                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Meta.Id));
                 }
             }
 
             private void ValidateIdentity(string name, Identity identity, Claim claim, string location)
             {
                 var missing = result.MissingCheck($"{name} Type", identity.Type, location);
-                result.MaxRangeCheck($"{name} Type", identity.Type, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                result.MaxRangeCheck($"{name} Type", identity.Type, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
                 missing |= result.MissingCheck(name + " Id", identity.Id, location);
 
                 if (missing)

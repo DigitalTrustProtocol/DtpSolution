@@ -266,3 +266,5 @@ Trustchain/Program.cs
 /DtpServer/trust20181009.db
 /DtpServer/Logs
 /DtpServer/public
+/IS4Amin.STS.Identity/Properties/PublishProfiles
+/IS4Amin.Admin.Api/Properties/PublishProfiles

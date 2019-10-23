@@ -381,6 +381,11 @@ namespace DtpCore.Model
         //public string Href { get; set; }
         //public bool ShouldSerializeHref() { return !string.IsNullOrEmpty(Href); }
 
+        [JsonProperty(PropertyName = "icon")]
+        public string Icon { get; set; }
+        public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
+
+
     }
 
 

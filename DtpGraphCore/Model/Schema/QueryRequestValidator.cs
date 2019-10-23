@@ -23,7 +23,7 @@ namespace DtpGraphCore.Model.Schema
 
             result.MissingCheck($"Issuer", data.Issuer, location);
             result.MissingCheck($"Issuer.Type", data.Issuer.Type, location);
-            result.MaxRangeCheck($"Issuer.Type", data.Issuer.Type, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+            result.MaxRangeCheck($"Issuer.Type", data.Issuer.Type, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
 
             var identityValidator = _validatorFactory.GetIdentityValidator(data.Issuer);
 

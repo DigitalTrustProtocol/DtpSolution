@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{57F04FF0-3F98-47EF-8698-BEFB46FDD699}"
 EndProject
@@ -24,6 +24,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpPackageCore", "DtpPackageCore\DtpPackageCore.csproj", "{E3EDBD81-365A-4A18-91E0-393E59070AA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtpServerSpike", "DtpServerSpike\DtpServerSpike.csproj", "{7466212C-8CBA-43EF-825F-4EEA3E828C2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS4Amin.STS.Identity", "IS4Amin.STS.Identity\IS4Amin.STS.Identity.csproj", "{5FC63271-0B34-4417-947C-7D5E9E7F1EFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS4Amin.Admin.EntityFramework.Shared", "IS4Amin.Admin.EntityFramework.Shared\IS4Amin.Admin.EntityFramework.Shared.csproj", "{6A829D6A-22E0-4ACA-A2CA-8DF4AC085B0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS4Amin.Admin.Api", "IS4Amin.Admin.Api\IS4Amin.Admin.Api.csproj", "{700AADCE-1910-4D53-8FE7-E480DBDACC58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS4Amin.Admin", "IS4Amin.Admin\IS4Amin.Admin.csproj", "{613E0EFC-6D39-4163-B542-DE8A42B882AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +66,22 @@ Global
 		{7466212C-8CBA-43EF-825F-4EEA3E828C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7466212C-8CBA-43EF-825F-4EEA3E828C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7466212C-8CBA-43EF-825F-4EEA3E828C2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC63271-0B34-4417-947C-7D5E9E7F1EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC63271-0B34-4417-947C-7D5E9E7F1EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC63271-0B34-4417-947C-7D5E9E7F1EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC63271-0B34-4417-947C-7D5E9E7F1EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A829D6A-22E0-4ACA-A2CA-8DF4AC085B0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A829D6A-22E0-4ACA-A2CA-8DF4AC085B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A829D6A-22E0-4ACA-A2CA-8DF4AC085B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A829D6A-22E0-4ACA-A2CA-8DF4AC085B0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{700AADCE-1910-4D53-8FE7-E480DBDACC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{700AADCE-1910-4D53-8FE7-E480DBDACC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{700AADCE-1910-4D53-8FE7-E480DBDACC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{700AADCE-1910-4D53-8FE7-E480DBDACC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613E0EFC-6D39-4163-B542-DE8A42B882AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613E0EFC-6D39-4163-B542-DE8A42B882AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613E0EFC-6D39-4163-B542-DE8A42B882AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613E0EFC-6D39-4163-B542-DE8A42B882AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

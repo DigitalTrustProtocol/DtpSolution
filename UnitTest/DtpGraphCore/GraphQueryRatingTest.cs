@@ -32,6 +32,109 @@ namespace UnitTest.DtpGraphCore
         /// 2 Degrees out with the final rating
         /// </summary>
         [TestMethod]
+        public void ZeroDegreeRating()
+        {
+            // Build up
+            _trustBuilder.AddClaimRating("A", "B", 5);
+
+            _graphTrustService.Add(_trustBuilder.Package);
+
+            var queryBuilder = new QueryRequestBuilder(_claimRatingType);
+            BuildQuery(queryBuilder, "A", "B"); // Query if "person" have a confimation within A's trust sphere.
+
+            // Execute
+            var context = _graphQueryService.Execute(queryBuilder.Query);
+
+            // Verify
+            Assert.AreEqual(1, context.Results.Claims.Count, "There is not the correct number of claims in the query result!");
+            VerfifyResult(context, "A", "B", PackageBuilder.RATING_CLAIM_DTP1);
+
+        }
+
+        /// <summary>
+        /// 1 Source, 1 targets
+        /// 1 Degrees out with the final rating
+        /// </summary>
+        [TestMethod]
+        public void OneDegreeRating()
+        {
+            // Build up
+            _trustBuilder.AddClaimTrue("A", "B");
+            _trustBuilder.AddClaimRating("B", "C", 5);
+
+            _graphTrustService.Add(_trustBuilder.Package);
+
+            var queryBuilder = new QueryRequestBuilder(_claimRatingType);
+            BuildQuery(queryBuilder, "A", "C"); 
+
+            // Execute
+            var context = _graphQueryService.Execute(queryBuilder.Query);
+
+            VerfifyResult(context, "A", "B");
+            VerfifyResult(context, "B", "C", PackageBuilder.RATING_CLAIM_DTP1);
+
+            Assert.AreEqual(2, context.Results.Claims.Count, "There is not the correct number of claims in the query result!");
+        }
+
+        /// <summary>
+        /// 1 Source, 1 targets
+        /// 2 Degrees out with the final rating
+        /// </summary>
+        [TestMethod]
+        public void TwoDegreeRating()
+        {
+            // Build up
+            _trustBuilder.AddClaimTrue("A", "B");
+            _trustBuilder.AddClaimTrue("B", "C");
+            _trustBuilder.AddClaimRating("C", "D", 5);
+
+            _graphTrustService.Add(_trustBuilder.Package);
+
+            var queryBuilder = new QueryRequestBuilder(_claimRatingType);
+            BuildQuery(queryBuilder, "A", "D"); 
+
+            // Execute
+            var context = _graphQueryService.Execute(queryBuilder.Query);
+
+            Assert.AreEqual(3, context.Results.Claims.Count, "There is not the correct number of claims in the query result!");
+
+            VerfifyResult(context, "A", "B");
+            VerfifyResult(context, "B", "C");
+            VerfifyResult(context, "C", "D", PackageBuilder.RATING_CLAIM_DTP1);
+        }
+
+        /// <summary>
+        /// 1 Source, 1 targets
+        /// 1 Degrees out with the final rating
+        /// </summary>
+        [TestMethod]
+        public void OneDegreeRatingWithNoice()
+        {
+            // Build up
+            _trustBuilder.AddClaimTrue("A", "B");
+            _trustBuilder.AddClaimConfirm("A", "B"); // Noice
+            _trustBuilder.AddClaimRating("A", "B", 5); // Noice
+            _trustBuilder.AddClaimRating("B", "C", 5);
+
+            _graphTrustService.Add(_trustBuilder.Package);
+
+            var queryBuilder = new QueryRequestBuilder(_claimRatingType);
+            BuildQuery(queryBuilder, "A", "C");
+
+            // Execute
+            var context = _graphQueryService.Execute(queryBuilder.Query);
+
+            VerfifyResult(context, "A", "B");
+            VerfifyResult(context, "B", "C", PackageBuilder.RATING_CLAIM_DTP1);
+
+            Assert.AreEqual(2, context.Results.Claims.Count, "There is not the correct number of claims in the query result!");
+        }
+
+        /// <summary>
+        /// 1 Source, 1 targets
+        /// 2 Degrees out with the final rating
+        /// </summary>
+        [TestMethod]
         public void Source1Target1()
         {
             // Build up

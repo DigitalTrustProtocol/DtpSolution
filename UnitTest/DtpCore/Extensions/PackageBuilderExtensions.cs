@@ -44,9 +44,15 @@ namespace UnitTest.DtpCore.Extensions
             return builder;
         }
 
-        public static PackageBuilder AddRating(this PackageBuilder builder, string issuerName, string subjectName, int value)
+        public static PackageBuilder AddClaimRating(this PackageBuilder builder, string issuerName, string subjectName, int value)
         {
             builder.AddClaim(issuerName, subjectName, PackageBuilder.RATING_CLAIM_DTP1, value.ToString());
+            return builder;
+        }
+
+        public static PackageBuilder AddClaimConfirm(this PackageBuilder builder, string issuerName, string subjectName)
+        {
+            builder.AddClaim(issuerName, subjectName, PackageBuilder.CONFIRM_CLAIM_DTP1, PackageBuilder.CreateConfirmAttributes());
             return builder;
         }
 

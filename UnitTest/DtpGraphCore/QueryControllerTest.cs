@@ -84,7 +84,7 @@ namespace UnitTest.DtpGraphCore
                 addPeer(issuerPeer, maxPeers, 0, maxDegrees, (issuer, subject) =>
                 {
                     b.AddClaimTrue(issuer, subject);
-                    b.AddRating(issuer, subject, 5);
+                    b.AddClaimRating(issuer, subject, 5);
                     lastClaim = b.CurrentClaim;
                     lastSubjectName = subject;
                     //var result = (ObjectResult)_packageController.PostPackage(_trustBuilder.Package).GetAwaiter().GetResult();

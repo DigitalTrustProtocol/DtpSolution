@@ -60,7 +60,7 @@ namespace DtpGraphCore.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Remove(this Dictionary<long, int> claims, int scope, int type)
         {
-            if (claims != null)
+            if (claims == null)
                 return -1;
 
             var subjectClaimIndex = new SubjectClaimIndex(scope, type);

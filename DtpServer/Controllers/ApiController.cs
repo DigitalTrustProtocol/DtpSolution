@@ -5,7 +5,7 @@ using DtpServer.Attributes;
 namespace DtpServer.Controllers
 {
     [ApiExceptionFilter()]
-    public class ApiController : Controller
+    public class ApiController : ControllerBase
     {
         /// <summary>
         /// Returns a standard api return object as a wrapper around the data object

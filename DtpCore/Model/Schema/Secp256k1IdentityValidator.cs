@@ -31,7 +31,7 @@ namespace DtpCore.Model.Schema
             if (claim != null)
             {
                 result.MissingCheck($"{name} Proof", identity.Id, location);
-                result.MaxRangeCheck($"{name} Proof", identity.Proof, location, SchemaValidationResult.DEFAULT_MAX_LENGTH);
+                result.MaxRangeCheck($"{name} Proof", identity.Proof, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
             }
 
             // TODO: Properly validate Id

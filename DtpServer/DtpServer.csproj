@@ -105,7 +105,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Update="domaincert.pfx">
+    <None Update="domaincert_single.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

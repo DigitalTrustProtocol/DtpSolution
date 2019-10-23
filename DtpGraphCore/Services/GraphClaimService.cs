@@ -55,10 +55,12 @@ namespace DtpGraphCore.Services
 
             var issuer = EnsureGraphIssuer(claim.Issuer.Id);
 
-            var graphSubject = EnsureGraphSubject(issuer, claim.Subject.Id);
-
+            var subject = EnsureGraphIssuer(claim.Subject.Id);
             var graphClaim = EnsureGraphClaim(claim);
-            graphSubject.Claims.Ensure(graphClaim.Scope, graphClaim.Type, graphClaim.Index);
+            issuer.AddSubjectAndClaim(subject, graphClaim.Index);
+            //var graphSubject = EnsureGraphSubject(issuer, claim.Subject.Id);
+
+            //graphSubject.AddClaim(graphClaim.Scope, graphClaim.Type, graphClaim.Index);
         }
 
         public void Remove(Claim claim)
@@ -83,8 +85,6 @@ namespace DtpGraphCore.Services
             if (!Graph.Scopes.TryGetKey(claim.Scope, out scopeIndex))
                 return; // Scope was not found !
 
-            //var graphClaim = CreateGraphClaim(trust);
-            //var id = graphClaim.ID();
 
             //if (!Graph.ClaimIndex.TryGetValue(id, out int claimIndex))
             //    return; // No cliam, no trust to remove!
@@ -92,15 +92,16 @@ namespace DtpGraphCore.Services
             //var claim = Graph.Claims[claimIndex];
             //if (!subject.Claims.GetIndex(claim.Scope, claim.Type, out int subjectClaimIndex))
             //    return; // No claim on subject that is a match;
+            var graphClaim = CreateGraphClaim(claim);
+            var id = graphClaim.ID();
+            Graph.ClaimIndex.TryGetValue(id, out int claimIndex);
 
-            var claimIndex = subject.Claims.Remove(scopeIndex, claimTypeIndex);
-            if (claimIndex < 0)
+            if(!subject.RemoveClaim(claimIndex))
                 return; // There was no claim found
-            
+
             // Its currently no prossible to remove GraphClaim object, as we do not know if any other is referencing to it.
 
-
-            if (subject.Claims.Count > 0)
+            if (subject.ClaimCount() > 0)
                 return; // There are more claims, therefore do not remove subject.
 
             graphIssuer.Subjects.Remove(subjectIndex);
@@ -126,15 +127,17 @@ namespace DtpGraphCore.Services
 
                 foreach (var subject in graphIssuer.Subjects.Values)
                 {
-                    if (subject.Claims == null)
-                        continue; 
+                    //var list = subject.Claims.Keys.ToList();
+                    var e = subject.GetClaimIndexEnumerator();
+                    if (e == null)
+                        continue;
 
-                    var list = subject.Claims.Keys.ToList();
-                    foreach (var key in list)
+                    while(e.MoveNext())
                     {
-                        var subjectClaimIndex = new SubjectClaimIndex(key);
-                        if (subjectClaimIndex.Scope == scopeIndex)
-                            subject.Claims.Remove(subjectClaimIndex.Scope, subjectClaimIndex.Type);
+                        var indexClaim = Graph.Claims[e.Current];
+                        //var subjectClaimIndex = new SubjectClaimIndex(key);
+                        if (indexClaim.Scope == scopeIndex)
+                            subject.RemoveClaim(e.Current);
                     }
                 }
             }
@@ -184,7 +187,7 @@ namespace DtpGraphCore.Services
             {
                 TargetIssuer =  EnsureGraphIssuer(subjectId),
                 //Claims = new ConcurrentDictionary<long, int>()
-                //Claims = new Dictionary<long, int>(0)
+                //Claims = new GraphSubjectDictionary<long, int>(0)
             };
 
             return graphSubject;
@@ -253,7 +256,8 @@ namespace DtpGraphCore.Services
             {
                 foreach (var ts in tracker.Subjects.Values)
                 {
-                    if(ts.Claims == null || ts.Claims.Count() == 0)
+                    var e = ts.GetClaimIndexEnumerator();
+                    if(e == null)
                     {
                         var claim = new Claim
                         {
@@ -268,7 +272,7 @@ namespace DtpGraphCore.Services
                     }
                     else
                     {
-                        foreach (var claimEntry in ts.Claims)
+                        while(e.MoveNext())
                         {
                             var claim = new Claim
                             {
@@ -276,8 +280,7 @@ namespace DtpGraphCore.Services
                                 Subject = new SubjectIdentity { Id = ts.TargetIssuer.Id }
                             };
 
-                            var claimIndex = claimEntry.Value;
-                            var trackerClaim = Graph.Claims[claimIndex];
+                            var trackerClaim = Graph.Claims[e.Current];
 
                             if (Graph.ClaimType.TryGetValue(trackerClaim.Type, out string type))
                                 claim.Type = type;
