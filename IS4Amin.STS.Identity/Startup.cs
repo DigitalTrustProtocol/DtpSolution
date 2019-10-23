@@ -8,6 +8,7 @@ using IS4Amin.Admin.EntityFramework.Shared.Entities.Identity;
 using IS4Amin.STS.Identity.Helpers;
 using System;
 using Microsoft.AspNetCore.Http;
+using IdentityServer4.Validation;
 
 namespace IS4Amin.STS.Identity
 {
@@ -37,6 +38,9 @@ namespace IS4Amin.STS.Identity
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Make sure that we can use Chrome Extensions
+            services.AddTransient<IRedirectUriValidator, DynamicRedirectUriValidator>();
+
             services.ConfigureRootConfiguration(Configuration);
 
             // Add DbContext for Asp.Net Core Identity
