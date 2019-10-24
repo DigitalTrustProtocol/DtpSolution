@@ -110,48 +110,13 @@ namespace DtpServer
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.UseStartup<Startup>();
+                        //webBuilder.UseUrls("http://trust.dance");
                         webBuilder.UseConfiguration(Configuration);
                         webBuilder.UseDefaultServiceProvider((context, options) =>
                                 {
                                     options.ValidateScopes = isDevelopment;// context.HostingEnvironment.IsDevelopment();
                                 });
-                        webBuilder.UseKestrel((context, options) =>
-                        {
-                            //var isDevelopment = context.HostingEnvironment.IsDevelopment();
-
-                            options.AddServerHeader = false;
-                            options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10Mb, 
-
-                            options.Listen(IPAddress.Any, 80);
-
-                            var file = EnsureDataFile(isDevelopment, "domaincert.pfx", Platform.DtpServerDataPath); // GetPfxFile
-                            if (File.Exists(file))
-                            {
-                                options.Listen(IPAddress.Any, 443, listenOptions =>
-                                {
-                                    listenOptions.UseHttps(file, "123");
-                                });
-                                Log.Information("Certiticate loaded!");
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    var cert = CertificateLoader.LoadFromStoreCert("localhost", "My", StoreLocation.CurrentUser, allowInvalid: true);
-                                    options.Listen(IPAddress.Loopback, 443, listenOptions =>
-                                    {
-                                        listenOptions.UseHttps(cert);
-                                    });
-                                }
-                                catch
-                                {
-                                    Log.Warning("Localhost https certificate not supported.");
-                                }
-
-                            }
-
-                        });
-                        webBuilder.CaptureStartupErrors(true);
+                        //webBuilder.CaptureStartupErrors(true);
                         webBuilder.UseSerilog();
                     });
 

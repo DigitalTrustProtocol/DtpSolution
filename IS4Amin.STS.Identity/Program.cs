@@ -17,9 +17,6 @@ namespace IS4Amin.STS.Identity
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                //.UseUrls("http://sts.trust.dance")
-                //.UseKestrel()
-                .UseUrls("http://localhost:5000")
                 .UseStartup<Startup>();
 
     }

@@ -2,7 +2,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.Localization
 @using IS4Amin.Admin.EntityFramework.Shared.Entities.Identity
+@using IS4Amin.STS.Identity.Configuration.Constants
+@using Microsoft.Extensions.Configuration
 @inject IViewLocalizer Localizer
+@inject IConfiguration configuration
 @{
     string name = null;
     if (!true.Equals(ViewData["signed-out"]))

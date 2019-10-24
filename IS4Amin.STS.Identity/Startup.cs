@@ -39,7 +39,7 @@ namespace IS4Amin.STS.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             // Make sure that we can use Chrome Extensions
-            services.AddTransient<IRedirectUriValidator, DynamicRedirectUriValidator>();
+            //services.AddTransient<IRedirectUriValidator, DynamicRedirectUriValidator>(); // Maybe not needed here!
 
             services.ConfigureRootConfiguration(Configuration);
 

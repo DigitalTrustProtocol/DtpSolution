@@ -179,7 +179,9 @@ namespace DtpServer
                 app.UseHsts();
                 //                    //if (!"Off".EndsWithIgnoreCase(Configuration.RateLimits()))
                 //                    //    rateLimitService.SetZone(Configuration.RateLimits());
+                
 
+                app.UseCors("CorsPolicy");
             }
 
             using (TimeMe.Track("DTP apps"))
@@ -193,12 +195,10 @@ namespace DtpServer
             {
 
                 app.UseMiddleware<SerilogDiagnostics>();
-
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
                 app.UseStaticFiles();
 
                 app.UseRouting();
-                app.UseCors("CorsPolicy");
                 //app.UseAuthorization();
 
                 //app.UseFileServer(enableDirectoryBrowsing: true);

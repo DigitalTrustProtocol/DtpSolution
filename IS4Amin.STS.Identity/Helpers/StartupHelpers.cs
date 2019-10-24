@@ -246,6 +246,7 @@ namespace IS4Amin.STS.Identity.Helpers
 
             builder.AddCustomSigningCredential(configuration, logger);
             builder.AddCustomValidationKey(configuration, logger);
+            builder.AddRedirectUriValidator<DynamicRedirectUriValidator>(); // Make sure that Chrome Extension ID can be dynamic in url
         }
 
         /// <summary>

@@ -101,7 +101,12 @@ namespace IS4Amin.Admin.Helpers
             }
 
             // Create admin user
-            if (await userManager.FindByNameAsync(Users.AdminUserName) != null) return;
+            var adminUser = await userManager.FindByNameAsync(Users.AdminUserName);
+            if (adminUser != null)
+            {
+                await userManager.DeleteAsync(adminUser);
+                //return;
+            }
 
             var user = new TUser
             {

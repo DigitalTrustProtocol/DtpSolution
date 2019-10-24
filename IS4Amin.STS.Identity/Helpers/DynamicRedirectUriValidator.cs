@@ -31,7 +31,7 @@ namespace IS4Amin.STS.Identity.Helpers
 
         public Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
         {
-            var result = client.PostLogoutRedirectUris.Contains(requestedUri);
+            var result = client.RedirectUris.Contains(requestedUri);
             if (!result)
             {
                 result = requestedUri.StartsWith("chrome");

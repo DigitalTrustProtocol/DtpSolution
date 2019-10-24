@@ -88,3 +88,18 @@ DtpStampCore
 
 Create schema
 https://jsonschema.net/
+
+
+
+//add-migration AspNetIdentityDbInit -Context AdminIdentityDbContext
+update-database AspNetIdentityDbInit -Context AdminIdentityDbContext
+update-database IdentityServerConfigurationDbInit -Context IdentityServerConfigurationDbContext
+update-database IdentityServerPersistedGrantsDbInit -Context IdentityServerPersistedGrantDbContext
+update-database LoggingDbInit -Context AdminLogDbContext
+
+
+Fix Chrome Https redirect problem
+
+chrome://net-internals/#hsts
+Delete domain security policies
+add localhost to the last text box and press "Delete"
