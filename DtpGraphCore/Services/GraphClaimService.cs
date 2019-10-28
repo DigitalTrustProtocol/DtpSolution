@@ -50,6 +50,9 @@ namespace DtpGraphCore.Services
             if (PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
                 return;
 
+            if (PackageBuilder.ICON_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
+                return;
+
             //if (PackageBuilder.RATING_CLAIM_DTP1.EqualsIgnoreCase(claim.Type))
             //    return;
 

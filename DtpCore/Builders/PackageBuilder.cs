@@ -37,6 +37,9 @@ namespace DtpCore.Builders
         public const string ALIAS_IDENTITY_DTP1 = "alias";
         public const string ALIAS_IDENTITY_DTP1_SHORTFORM = "aid1";
 
+        public const string ICON_IDENTITY_DTP1 = "icon";
+        //public const string ICON_IDENTITY_DTP1_SHORTFORM = "icid1";
+
         public const string REMOVE_CLAIMS_DTP1 = "remove";
         public const string REMOVE_CLAIMS_DTP1_SHORTFORM = "rc1";
 
