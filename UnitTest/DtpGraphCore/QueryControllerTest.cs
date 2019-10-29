@@ -24,7 +24,6 @@ namespace UnitTest.DtpGraphCore
         public void AddAndQuery1()
         {
             // Setup
-
             _trustBuilder.SetServer("testserver")
                 .AddClaimTrue("A", "B")
                 .AddClaimTrue("B", "C")
@@ -70,7 +69,7 @@ namespace UnitTest.DtpGraphCore
 
             // Setup
             var maxPeers = 20;
-            var maxDegrees = 2;
+            var maxDegrees = 1;
             var issuerPeer = "A";
             var counter = 0;
             //var _packageController = ServiceProvider.GetRequiredService<PackageController>();
@@ -80,7 +79,7 @@ namespace UnitTest.DtpGraphCore
             var b = new PackageBuilder().SetServer("testserver");
 
             using (new TimeMe("Build"))
-            { 
+            {
                 addPeer(issuerPeer, maxPeers, 0, maxDegrees, (issuer, subject) =>
                 {
                     b.AddClaimTrue(issuer, subject);
@@ -92,7 +91,7 @@ namespace UnitTest.DtpGraphCore
 
                 });
 
-                Console.WriteLine("Memory after package build: "+ AutoSize(GC.GetTotalMemory(true)));
+                Console.WriteLine("Memory after package build: " + AutoSize(GC.GetTotalMemory(true)));
 
 
             }
@@ -106,7 +105,7 @@ namespace UnitTest.DtpGraphCore
             }
             Console.WriteLine("Memory after graph build: " + AutoSize(GC.GetTotalMemory(true)));
 
-            Console.WriteLine("Inserted Claims: "+ counter);
+            Console.WriteLine("Inserted Claims: " + counter);
             //Console.WriteLine(JsonConvert.SerializeObject(_trustBuilder.Package, Formatting.Indented));
 
 
@@ -125,7 +124,7 @@ namespace UnitTest.DtpGraphCore
             {
                 context = _graphQueryService.Execute(queryBuilder.Query);
             }
-            PrintJson("Claims found : "+ context.Results.Claims.Count);
+            PrintJson("Claims found : " + context.Results.Claims.Count);
 
 
             Console.WriteLine("-----------------------------------------------");
@@ -136,7 +135,7 @@ namespace UnitTest.DtpGraphCore
             {
                 data = _graphTrustService.JsonSerialize();
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "graph.json");
-                Console.WriteLine("Saving graph data to : "+path);
+                Console.WriteLine("Saving graph data to : " + path);
                 File.WriteAllText(path, data);
             }
 
@@ -165,40 +164,40 @@ namespace UnitTest.DtpGraphCore
             PrintJson("Re Claims found : " + context.Results.Claims.Count);
         }
 
-        [TestMethod]
-        public void LoadLargeDataSize()
-        {
-            var startMem = GC.GetTotalMemory(true);
-            Console.WriteLine("Memory on test start: " + AutoSize(startMem));
+        //[TestMethod]
+        //public void LoadLargeDataSize()
+        //{
+        //    var startMem = GC.GetTotalMemory(true);
+        //    Console.WriteLine("Memory on test start: " + AutoSize(startMem));
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "graph.json");
+        //    var path = Path.Combine(Directory.GetCurrentDirectory(), "graph.json");
 
-            using (new TimeMe("Load and Deserialize"))
-            {
-                // deserialize JSON directly from a file
-                using (StreamReader file = File.OpenText(path))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
+        //    using (new TimeMe("Load and Deserialize"))
+        //    {
+        //        // deserialize JSON directly from a file
+        //        using (StreamReader file = File.OpenText(path))
+        //        {
+        //            JsonSerializer serializer = new JsonSerializer();
 
-                    _graphTrustService.Graph = (GraphModel)serializer.Deserialize(file, typeof(GraphModel));
-                }
-            }
-            //var claimsCounter = 27930;
-            var g = _graphTrustService.Graph;
-            g.Issuers.TrimExcess();
+        //            _graphTrustService.Graph = (GraphModel)serializer.Deserialize(file, typeof(GraphModel));
+        //        }
+        //    }
+        //    //var claimsCounter = 27930;
+        //    var g = _graphTrustService.Graph;
+        //    g.Issuers.TrimExcess();
 
-            var claimsCounter = g.IssuerIndex.Count;           
+        //    var claimsCounter = g.IssuerIndex.Count;           
 
 
-            Console.WriteLine("IssuerIndex count found : " + _graphTrustService.Graph.IssuerIndex.Count);
+        //    Console.WriteLine("IssuerIndex count found : " + _graphTrustService.Graph.IssuerIndex.Count);
 
-            var endMem = GC.GetTotalMemory(true);
-            var memSize = endMem - startMem;
-            var memPerClaim = memSize / claimsCounter;
+        //    var endMem = GC.GetTotalMemory(true);
+        //    var memSize = endMem - startMem;
+        //    var memPerClaim = memSize / claimsCounter;
 
-            Console.WriteLine("Memory on test end: " + AutoSize(memSize));
-            Console.WriteLine("Memory per Claim: " + AutoSize(memPerClaim));
-        }
+        //    Console.WriteLine("Memory on test end: " + AutoSize(memSize));
+        //    Console.WriteLine("Memory per Claim: " + AutoSize(memPerClaim));
+        //}
 
         private void addPeer(string issuerPeer, int count, int degree, int maxDegree, Action<string,string> addP)
         {

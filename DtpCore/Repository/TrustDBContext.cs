@@ -158,7 +158,6 @@ namespace DtpCore.Repository
             Proofs.RemoveRange(Proofs);
             Claims.RemoveRange(Claims);
             Packages.RemoveRange(Packages);
-
             SaveChanges();
         }
 

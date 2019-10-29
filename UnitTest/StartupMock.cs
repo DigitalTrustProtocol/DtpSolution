@@ -89,6 +89,7 @@ namespace UnitTest
         [TestCleanup]
         public virtual void Cleanup()
         {
+            DB.ClearAllData();
             ClaimBanListService.Clean();
             ServiceScope.Dispose();
 

@@ -44,7 +44,7 @@ namespace DtpCore.Model
         {
             if (value == null)
             {
-                this.Errors.Add(string.Format(MssingErrorTemplate, location, name));
+                Errors.Add(string.Format(MssingErrorTemplate, location, name));
                 return true;
             }
 

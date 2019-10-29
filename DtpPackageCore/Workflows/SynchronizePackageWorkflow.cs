@@ -63,32 +63,33 @@ namespace DtpPackageCore.Workflows
 
         public override void Execute()
         {
-            var scope = _configuration.PackageScope();
+            // Disabled!
+            //var scope = _configuration.PackageScope();
 
-            var localPeer = _packageService.GetLocalPeer().GetAwaiter().GetResult();
-            var localPeerHashId = localPeer.Id.GetHashCode();
-            var peers = _packageService.GetPeersAsync(scope).GetAwaiter().GetResult();
+            //var localPeer = _packageService.GetLocalPeer().GetAwaiter().GetResult();
+            //var localPeerHashId = localPeer.Id.GetHashCode();
+            //var peers = _packageService.GetPeersAsync(scope).GetAwaiter().GetResult();
 
-            foreach (var peer in peers)
-            {
-                if (!peer.IsValid())
-                    continue;
+            //foreach (var peer in peers)
+            //{
+            //    if (!peer.IsValid())
+            //        continue;
 
-                var peerHashId = peer.Id.GetHashCode();
-                if (peerHashId == localPeerHashId)
-                    continue; // Do not process one self
+            //    var peerHashId = peer.Id.GetHashCode();
+            //    if (peerHashId == localPeerHashId)
+            //        continue; // Do not process one self
 
-                if (peerCache.ContainsKey(peerHashId))
-                    continue; // Do not process known peers
+            //    if (peerCache.ContainsKey(peerHashId))
+            //        continue; // Do not process known peers
 
-                var cco = peer.ConnectedAddress;
+            //    var cco = peer.ConnectedAddress;
 
-                if(ProcessPeer(peer)) // All new peers gets processed
-                    peerCache[peerHashId] = peer;
-            }
+            //    if(ProcessPeer(peer)) // All new peers gets processed
+            //        peerCache[peerHashId] = peer;
+            //}
 
-            if (peers.Count() > 2) // Only save if where was more than 2 connections.
-                LastSyncTime = DateTime.Now.ToUnixTime(); // Save last sync time.
+            //if (peers.Count() > 2) // Only save if where was more than 2 connections.
+            //    LastSyncTime = DateTime.Now.ToUnixTime(); // Save last sync time.
 
             Wait(_configuration.SynchronizePackageWorkflowInterval()); // Never end the workflow
         }

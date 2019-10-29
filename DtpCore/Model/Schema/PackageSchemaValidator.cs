@@ -231,10 +231,28 @@ namespace DtpCore.Model.Schema
                 result.MaxRangeCheck("Value", claim.Value, location, CLAIM_MAX_LENGTH);
                 result.MaxRangeCheck("Note", claim.Note, location, NOTE_MAX_LENGTH);
 
+                ValidateType(claim, location);
                 ValidateIssuer(claim, location);
                 ValidateSubject(claim, location);
                 ValidateScope(claim, location);
                 ValidateTimestamps(claim.Timestamps, location);
+            }
+
+
+            private void ValidateType(Claim claim, string location)
+            {
+                if (result.MissingCheck("Claim Type", claim.Type, location))
+                    return;
+
+                switch(claim.Type.ToLower())
+                {
+                    case PackageBuilder.BINARY_CLAIM_DTP1: break;
+                    //case PackageBuilder.CONFIRM_CLAIM_DTP1: break; // Not implemented
+                    case PackageBuilder.RATING_CLAIM_DTP1: break;
+                    case PackageBuilder.ALIAS_IDENTITY_DTP1: break;
+                    case PackageBuilder.ICON_IDENTITY_DTP1: break;
+                    default: result.Errors.Add(string.Format("{0} have claim type that is not supported by the server", location)); break;
+                }
             }
 
             private void ValidateTimestamps(IList<Timestamp> timestamps, string location)

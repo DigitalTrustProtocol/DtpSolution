@@ -35,12 +35,12 @@ namespace UnitTest.DtpPackage
             ).Wait();
         }
 
-        [TestMethod]
-        public void Engine_Exists()
-        {
-            Assert.IsNotNull(Ipfs);
-            Assert.IsNotNull(IpfsOther);
-        }
+        //[TestMethod]
+        //public void Engine_Exists()
+        //{
+        //    Assert.IsNotNull(Ipfs);
+        //    Assert.IsNotNull(IpfsOther);
+        //}
 
         [AssemblyCleanup]
         public static void Cleanup()
