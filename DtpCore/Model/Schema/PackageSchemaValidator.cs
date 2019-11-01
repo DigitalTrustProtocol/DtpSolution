@@ -10,6 +10,7 @@ using System.Text;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace DtpCore.Model.Schema
 {
@@ -299,27 +300,73 @@ namespace DtpCore.Model.Schema
 
             private void ValidateIdentityMetadata(string name, SubjectIdentity subject, Claim claim, string location)
             {
-                IdentityMetadata metadata = subject.Meta;
+                IdentityMetadata meta = subject.Meta;
 
-                if (metadata == null)
+                if (meta == null)
                     return;
 
-                result.MaxRangeCheck($"{name} Title", metadata.Title, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
-                result.MaxRangeCheck($"{name} Data", metadata.Data, location, SchemaValidationResult.DEFAULT_CONTENT_LENGTH);
+                result.MaxRangeCheck($"{name} Title", meta.Title, location, SchemaValidationResult.DEFAULT_TITLE_LENGTH);
+                result.MaxRangeCheck($"{name} Data", meta.Data, location, SchemaValidationResult.DEFAULT_CONTENT_LENGTH);
                 //result.MaxRangeCheck($"{name} Href", metadata.Href, location, SchemaValidationResult.MAX_URL_LENGTH);
-                result.MaxRangeCheck($"{name} Type", metadata.Type, location, SchemaValidationResult.LENGTH20);
-                result.MaxRangeCheck($"{name} Icon", metadata.Icon, location, SchemaValidationResult.DEFAULT_URL_LENGTH);
+                result.MaxRangeCheck($"{name} Type", meta.Type, location, SchemaValidationResult.LENGTH20);
+                result.MaxRangeCheck($"{name} Icon", meta.Icon, location, SchemaValidationResult.DEFAULT_URL_LENGTH);
 
-                var data = metadata.Title.ToBytes().Combine(metadata.Data?.ToBytes());
+                if (meta.Type == "url")
+                {
+                    var eb = meta.EntityID?.ToBytes();
+                    var mt = SanitizeContent(meta.Title).ToBytes();
+                    var md = meta.Data?.ToBytes();
+                    var td = mt.Combine(md);
+                    var ff = eb.Combine(td);
+                    var contentId = GetDTPaddress(ff);
+                    if (contentId != subject.Id)
+                    {
+                        result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", contentId, subject.Meta.Id));
+                    }
+
+                }
+
+                if (meta.Type == "alias")
+                {
+                    result.Errors.Add(string.Format("{0}{1} - meta type {2} is not allowed.", location, $"{name}", meta.Type));
+                    //var contentId = GetDTPaddress(meta.EntityID?.ToBytes().Combine(meta.Title?.ToBytes()));
+                    //if (contentId != subject.Id)
+                    //{
+                    //    result.Errors.Add(string.Format("{0}{1} hash of EntityID + Title = {2} do not match Subject ID: {3}.", location, $"{name}", contentId, subject.Meta.Id));
+                    //}
+                }
+                if (meta.Type == "content")
+                {
+                    var eb = meta.EntityID?.ToBytes();
+                    var mt = SanitizeContent(meta.Title).ToBytes();
+                    var md = SanitizeContent(meta.Data).ToBytes();
+                    var td = mt.Combine(md);
+                    var ff = eb.Combine(td);
+                    var contentId = GetDTPaddress(ff);
+                    if (contentId != subject.Id)
+                    {
+                        result.Errors.Add(string.Format("{0}{1} hash of EntityID + Title + Data = {2} do not match Subject ID: {3}.", location, $"{name}", contentId, subject.Meta.Id));
+                    }
+                }
+            }
+
+            
+
+            private string SanitizeContent(string content)
+            {
+                if (content == null)
+                    return string.Empty;
+
+                return Regex.Replace(content, @"[\r\n\t\s\f]+", "");
+            }
+            private string GetDTPaddress(byte[] content)
+            {
+                var data = content;
                 var hash = Hashes.Hash160(data);
                 var prefix = new byte[] { 30 };
                 var predixData = prefix.Combine(hash.ToBytes());
-                var address = Encoders.Base58Check.EncodeData(predixData);
-
-                if(address != subject.Id)
-                {
-                    result.Errors.Add(string.Format("{0}{1} data hash {2} do not match Subject ID: {3}.", location, $"{name} Data", address, subject.Meta.Id));
-                }
+                var contentId = Encoders.Base58Check.EncodeData(predixData);
+                return contentId;
             }
 
             private void ValidateIdentity(string name, Identity identity, Claim claim, string location)

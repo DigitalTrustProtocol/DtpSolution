@@ -1,0 +1,27 @@
+﻿@page
+@model DtpServer.Pages.Apps.Afn.SignedContentModel
+@{
+    ViewData["Title"] = "Signed content demo";
+}
+
+<h2>Signed Content Demostration</h2>
+<p>How to prove that you are the author of some content? Just create a snippet of content and add it to any page that supports Html. The content is now available to be directly trusted within the App, removing the dependency on the URL.</p>
+<div itemscope itemtype="http://digitaltrustprotocol.org/entity">
+    <h4 itemprop="alias">Carsten Keutmann</h4>
+    <div itemprop="id">1JfGPkHbZE6JhwvgAyFNaGDpzGpLcx776H</div>
+    <span itemprop="proof" itemvalue="INZf78OcilE14rSPbYHlfXByjv53IOlxcjDnWOKPf7BdUaPtnmFop7nntWGrs3IpLsaLqcXcrvyfrsj+b13xeI4="></span>
+</div>
+<hr />
+<div itemscope itemtype="http://digitaltrustprotocol.org/content" style="background-color:antiquewhite">
+    <h4 itemprop="title">Digital Trust Protocol</h4>
+    <div itemprop="content">
+        <p>The Digital Trust Protocol (DTP) is a protocol for the handling of trust in the digital space. The protocol is broadly designed to work with all aspects of trust; this includes identity, reputation, and security.</p>
+        <p>The protocol is designed to be very minimalistic and system/platform agnostic. The intention is to extend the protocol with layers above rather than direct implementations. The protocol claim message data is designed to be self-provable of authenticity, by use of private/public key algorithms and the blockchain timestamping feature. This enables the protocol to be decentralized without a need for a central authority, as servers can use a peer-to-peer communication system and verify all the data it receives individually, without having to rely on the sender.</p>
+        <p>The Protocol allows anyone, including automated software, to issue their own cryptographic identities, for the use of trust and reputation and be able to verify those of others, without the need for a trusted third party. Users issue claims to other identities, and this way build a personal web of trust network.</p>
+        <p>Users can search for claims on subjects by use of the user’s trust network. The search only includes results from trusted sources, claims from untrusted sources are not returned. The system is resistant to attacks like Sybil and bot networks as they are usually not a part of the uses networks and therefore not considered when evaluating searches.</p>
+        <p>The system works on the incentive of the user’s reputation and established trust, to be a good actor within their networks, since no one will listen to them if no one trusts them.</p>
+        <p>It is possible to trust anything digitally, and therefore, the protocol suitable to be used for anything that requires some degree of trust shared between systems related or unrelated. The DTP protocol is ideal for identity, reputation, and security management that needs to be used in a broader sense without a central authority and furthermore, it can augment existing systems already in place.</p>
+    </div>
+    <span itemprop="id" itemvalue="1JfGPkHbZE6JhwvgAyFNaGDpzGpLcx776H"></span>
+    <span itemprop="proof" itemvalue="H1rae4eC8j7SeVI0xZjFmdESsHBTrxVaV/Nn46K0AQK9LsFBjLNEGedTPnTaejXRItQGGCnK54OQZFLkWw7yKJ8="></span>
+</div>

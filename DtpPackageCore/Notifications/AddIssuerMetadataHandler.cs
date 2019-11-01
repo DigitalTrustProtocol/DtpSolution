@@ -31,24 +31,19 @@ namespace DtpPackageCore.Notifications
                     return; // Not the same issuer and subject
 
 
-                if (!PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type) ||
-                    !PackageBuilder.ICON_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
-                    return;
-
-                var metadataId = claim.Issuer.Id;
-                var entry = _trustDBContext.IdentityMetadata.Find(metadataId);
-
-
                 if (PackageBuilder.ALIAS_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
-                    UpdateEntry(claim, metadataId, entry, (entry) => entry.Title = claim.Value);// The entry will be updated in database by a SaveChanges() some where else.
+                    UpdateEntry(claim, (entry) => entry.Title = claim.Value);
 
                 if (PackageBuilder.ICON_IDENTITY_DTP1.EqualsIgnoreCase(claim.Type))
-                    UpdateEntry(claim, metadataId, entry, (entry) => entry.Icon = claim.Value);// The entry will be updated in database by a SaveChanges() some where else.
+                    UpdateEntry(claim, (entry) => entry.Icon = claim.Value);
             });
         }
 
-        private void UpdateEntry(Claim claim, string metadataId, IdentityMetadata entry, Action<IdentityMetadata> callback)
+        private void UpdateEntry(Claim claim, Action<IdentityMetadata> callback)
         {
+            var metadataId = claim.Issuer.Id;
+            var entry = _trustDBContext.IdentityMetadata.Find(metadataId);
+
             if (entry == null)
             {
                 entry = new IdentityMetadata

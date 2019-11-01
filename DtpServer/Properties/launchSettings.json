@@ -8,14 +8,6 @@
     }
   },
   "profiles": {
-    //"trust.dance": {
-    //  "commandName": "Project",
-    //  "launchBrowser": true,
-    //  "environmentVariables": {
-    //    "ASPNETCORE_ENVIRONMENT": "Development"
-    //  },
-    //  "applicationUrl": "http://trust.dance"
-    //},
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -26,10 +18,14 @@
     "TestTrustDance": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5010", 
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:5010"
+    },
+    "Azure Dev Spaces": {
+      "commandName": "AzureDevSpaces",
+      "launchBrowser": true
     }
   }
 }

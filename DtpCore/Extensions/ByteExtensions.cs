@@ -23,6 +23,12 @@ namespace DtpCore.Extensions
 
         public static byte[] Combine(this byte[] left, byte[] right)
         {
+            if (left == null)
+                if (right != null)
+                    return right;
+                else
+                    return null;
+
             var s = new List<byte>(left);
             if(right != null)
                 s.AddRange(right);

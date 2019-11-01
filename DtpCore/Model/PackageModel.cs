@@ -386,6 +386,10 @@ namespace DtpCore.Model
         public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
 
 
+        [NotMapped]
+        [JsonProperty(PropertyName = "entityId")]
+        public string EntityID { get; set; }
+        public bool ShouldSerializeEntityID() { return !string.IsNullOrEmpty(EntityID); }
     }
 
 
