@@ -15,6 +15,8 @@ using DtpServer.AspNetCore.Mvc.RazorPages;
 using DtpCore.Collections.Generic;
 using System.Collections;
 using DtpCore.Workflows;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace DtpServer.Pages.Workflows
 {
@@ -22,13 +24,18 @@ namespace DtpServer.Pages.Workflows
     {
         private readonly TrustDBContext _context;
         private readonly IWorkflowService _workflowService;
+        private readonly IWebHostEnvironment _hostingEnv;
 
         public string WorkflowType { get; set; }
+        public bool IsAdmin { get; set; }
 
-        public ListModel(TrustDBContext context, IWorkflowService workflowService)
+
+        public ListModel(TrustDBContext context, IWorkflowService workflowService, IWebHostEnvironment env)
         {
+            _hostingEnv = env;
             _context = context;
             _workflowService = workflowService;
+            IsAdmin = _hostingEnv.IsDevelopment();
         }
 
         public IList<WorkflowContainer> WorkflowContainer { get;set; }

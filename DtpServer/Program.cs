@@ -33,36 +33,8 @@ namespace DtpServer
 
         public static void Main(string[] args)
         {
-
-            isDevelopment = "Development".EqualsIgnoreCase(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-
-            if (isDevelopment)
-            {
-                Console.WriteLine("Running in debug mode!");
-                var service = new ServiceHandler();
-                service.Init().Run();
-            }
-            else
-            {
-                HostFactory.Run(windowsService =>
-                {
-                    windowsService.Service<ServiceHandler>(s =>
-                    {
-                        s.ConstructUsing(service => new ServiceHandler());
-                        s.WhenStarted(service => service.Init().Start());
-                        s.WhenStopped(service => service.Stop());
-                        s.WhenShutdown(service => service.Stop());
-                    });
-
-                    windowsService.RunAsLocalSystem();
-                    windowsService.StartAutomatically();
-
-                    windowsService.SetDescription("DTP Server service for hosting trust");
-                    windowsService.SetDisplayName("DTP Server");
-                    windowsService.SetServiceName("DTPServer");
-                });
-
-            }
+            var service = new ServiceHandler();
+            service.Init().Run();
         }
 
 
@@ -110,7 +82,6 @@ namespace DtpServer
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.UseStartup<Startup>();
-                        //webBuilder.UseUrls("http://trust.dance");
                         webBuilder.UseConfiguration(Configuration);
                         webBuilder.UseDefaultServiceProvider((context, options) =>
                                 {

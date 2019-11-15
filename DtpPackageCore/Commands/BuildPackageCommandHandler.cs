@@ -66,14 +66,12 @@ namespace DtpPackageCore.Commands
             foreach (var claim in sourcePackage.Claims)
             {
                 if (claim.State.Match(ClaimStateType.Replaced))
-                    _db.Claims.Remove(claim); // Should BuildPackageCommandHandler do the cleanup?
-                else
-                {
-                    claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != sourcePackage.DatabaseID).ToList(); // Remove relation to static build package
-                    claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
+                    continue;
 
-                    builder.AddClaim(claim);
-                }
+                claim.ClaimPackages = claim.ClaimPackages.Where(p => p.PackageID != sourcePackage.DatabaseID).ToList(); // Remove relation to static build package
+                claim.ClaimPackages.Add(new ClaimPackageRelationship { Claim = claim, Package = builder.Package }); // Add relation to new package
+
+                builder.AddClaim(claim);
             }
 
             if (builder.Package.Claims.Count == 0)

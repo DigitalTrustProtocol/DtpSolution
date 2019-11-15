@@ -13,7 +13,7 @@ namespace DtpServer.Services
     /// <summary>
     /// Depricated, replaced by SchedulerHostedService for better async handling.
     /// </summary>
-    public class WorkflowHostedService : BackgroundService //IHostedService
+    public class WorkflowHostedService : BackgroundService
     {
         private readonly ILogger _logger;
         private IConfiguration _configuration;

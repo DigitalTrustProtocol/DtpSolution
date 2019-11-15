@@ -7,7 +7,6 @@
 }
 
 <h2>Workflows</h2>
-
 <form asp-page="./Index" method="get">
     <div class="form-actions no-color">
         <p>
@@ -69,17 +68,17 @@
             @Html.DisplayFor(modelItem => item.Data)
         </td>*@
             <td>
-                @if (HttpContext.Session.Get<bool>("isadmin") && Model.ShowRunNow(item))
+                @if (Model.IsAdmin && Model.ShowRunNow(item))
                 {
                     <a asp-page-handler="RunNow" asp-route-id="@item.DatabaseID">Run now</a> @Html.Encode("|")
                 }
-                @if (HttpContext.Session.Get<bool>("isadmin"))
+                @if (Model.IsAdmin)
                 {
                     <a asp-page="./Edit" asp-route-id="@item.DatabaseID">Edit</a> @Html.Encode("|")
                 }
 
                 <a asp-page="./Details" asp-route-id="@item.DatabaseID">Details</a>
-                @if (HttpContext.Session.Get<bool>("isadmin"))
+                @if (Model.IsAdmin)
                 {
                     @Html.Encode("|") <a asp-page="./Delete" asp-route-id="@item.DatabaseID">Delete</a>
                 }
@@ -88,6 +87,7 @@
 }
     </tbody>
 </table>
+
 @{
     var prevDisabled = !Model.List.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.List.HasNextPage ? "disabled" : "";

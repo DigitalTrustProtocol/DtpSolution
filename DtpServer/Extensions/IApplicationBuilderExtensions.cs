@@ -51,10 +51,10 @@ namespace DtpServer.Extensions
                 {
                     var workflowService = scope.ServiceProvider.GetRequiredService<IWorkflowService>();
                     workflowService.EnsureWorkflow<CreateTrustPackageWorkflow>();
-                    workflowService.EnsureWorkflow<SynchronizePackageWorkflow>();
+                    //workflowService.EnsureWorkflow<SynchronizePackageWorkflow>();
 
-                    var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
-                    packageService.AddPackageSubscriptions();
+                    //var packageService = scope.ServiceProvider.GetRequiredService<IPackageService>();
+                    //packageService.AddPackageSubscriptions();
                 }
             }));
         }

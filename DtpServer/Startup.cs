@@ -1,3 +1,4 @@
+using NicolasDorier.RateLimits;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,6 @@ using DtpCore.Repository;
 using Microsoft.EntityFrameworkCore;
 using DtpServer.Middleware;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using NicolasDorier.RateLimits;
 using DtpServer.Extensions;
 using DtpPackageCore.Extensions;
 using MediatR;
@@ -20,10 +20,10 @@ using DtpServer.Platform;
 using System.Reflection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text.Json.Serialization;
+using DtpCore.Services;
 
 namespace DtpServer
 {
@@ -162,11 +162,9 @@ namespace DtpServer
 
         //        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime)
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime, ApplicationEvents applicationEvents)
         {
-            //            //app.AllServices(_services);
-            //            //applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
-
+            applicationLifetime.ApplicationStopping.Register(() => applicationEvents.StopAsync().Wait());
 
             if (env.IsDevelopment())
             {
@@ -189,6 +187,7 @@ namespace DtpServer
                 //app.DtpCore(); // Ensure configuration of core
                 app.DtpGraph(); // Load the Trust Graph from Database
                 app.DtpStamp();
+                app.DtpPackage();
             }
 
             using (TimeMe.Track("Serilog, Swagger and UseMVC"))
@@ -219,6 +218,8 @@ namespace DtpServer
                     endpoints.MapControllers();
                     endpoints.MapRazorPages();
                 });
+
+                applicationEvents.WaitBootupTasksAsync().Wait();
             }
         }
 

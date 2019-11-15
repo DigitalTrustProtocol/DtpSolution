@@ -24,7 +24,7 @@ namespace DtpPackageCore.Notifications
         public async Task Handle(PackageBuildNotification notification, CancellationToken cancellationToken)
         {
             // Store the package at local drive 
-            _notifications.AddRange(await _mediator.Send(new StorePackageCommand(notification.Package)));
+            //_notifications.AddRange(await _mediator.Send(new StorePackageCommand(notification.Package)));
         }
     }
 

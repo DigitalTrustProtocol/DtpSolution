@@ -22,8 +22,11 @@ namespace UnitTest.DtpStampCore.Services
             var one = Encoding.UTF8.GetBytes("Hello world\n");
             var oneHash = hashAlgorithm.HashOf(one);
             var timestamp = new Timestamp { Source = oneHash };
+            System.Console.WriteLine("Source hex: "+timestamp.Source.ToHex());
             var oneProof = merkle.Add(timestamp);
+
             var merkleRoot = merkle.Build();
+            System.Console.WriteLine("MerkleRoot hex: " + merkleRoot.Hash.ToHex());
 
             var timestampMerkleRoot = timestampService.GetMerkleRoot(timestamp);
             Assert.IsTrue(ByteExtensions.Compare(timestampMerkleRoot, merkleRoot.Hash) == 0, $"Calculated timestamp merkle root {timestampMerkleRoot.ToHex()} are not equal to source {merkleRoot.Hash.ToHex()}");

@@ -22,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DtpServer.Services
 {
-    public class SchedulerHostedService : BackgroundService
+    public class SchedulerHostedService : BackgroundService, ISchedulerHostedService
     {
         public static CancellationTokenSource DelayTokenSource = null;
 
@@ -37,6 +37,7 @@ namespace DtpServer.Services
 
         public void RunNow(int containerId)
         {
+            DelayTokenSource = DelayTokenSource ?? new CancellationTokenSource();
             ContainerId = containerId;
             ExecuteOne(DelayTokenSource.Token);
         }
@@ -80,21 +81,13 @@ namespace DtpServer.Services
             // Get all workflows group by type.
             var workflowContainers = GetWorkflowContainers();
 
-            //// Run containers
-            //foreach (var entry in workflowContainers)
-            //{
-            //    await taskFactory.StartNew(
-            //        RunContainers(entry.Value, cancellationToken),
-            //        cancellationToken);
-            //}
-
             var taskFactory = new TaskFactory(TaskScheduler.Current);
             var list = new List<Task>();
             foreach (var entry in workflowContainers)
             {
                 list.Add(taskFactory.StartNew(RunContainers(entry.Value, cancellationToken)));
             }
-            Task.WaitAll(list.ToArray());
+            Task.WaitAll(list.ToArray()); // Do not leave before every workflow is done!
         }
 
         private void ExecuteOne(CancellationToken cancellationToken)

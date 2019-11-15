@@ -101,10 +101,12 @@ namespace DtpStampCore.Services
             if(EnsureFee(fee, coins) > 0)
                 throw new ApplicationException("Not enough coin to spend.");
 
-            var sourceTx = new TransactionBuilder()
+            IDestination targetAddress = merkleRootKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network);
+
+            var sourceTx = Network.CreateTransactionBuilder()
                 .AddCoins(coins)
                 .AddKeys(serverKey)
-                .Send(merkleRootKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network), fee) // Send to Batch address
+                .Send(targetAddress, fee) // Send to Batch address
                 .SendFees(fee)
                 .SetChange(serverAddress)
                 .BuildTransaction(true);
@@ -113,7 +115,7 @@ namespace DtpStampCore.Services
 
             txs.Add(sourceTx.ToBytes());
 
-            var txNota = new TransactionBuilder()
+            var txNota = Network.CreateTransactionBuilder()
                 .AddCoins(sourceTx.Outputs.AsCoins())
                 .SendOP_Return(merkleRoot) // Put batch root on the OP_Return out tx
                 .AddKeys(merkleRootKey)

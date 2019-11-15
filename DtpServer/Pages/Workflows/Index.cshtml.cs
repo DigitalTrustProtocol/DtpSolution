@@ -2,24 +2,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using DtpCore.Repository;
 using MediatR;
 using DtpCore.Commands.Workflow;
-using DtpCore.Extensions;
 using DtpCore.ViewModel;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Threading;
 using DtpServer.Services;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DtpServer.Pages.Workflows
 {
     public class IndexModel : PageModel
     {
         private readonly IMediator _mediator;
-        private readonly IHostedService _schedulerHostedService;
+        private readonly ISchedulerHostedService _schedulerHostedService;
         private readonly IConfiguration _configuration;
+
 
         public IList<WorkflowView> WorkflowViews { get; set; }
         public bool Admin { get; set; }
@@ -28,12 +26,13 @@ namespace DtpServer.Pages.Workflows
         public int DatabaseID { get; set; }
         public object Datetime { get; private set; }
 
-        public IndexModel(IMediator mediator,IHostedService schedulerHostedService, IConfiguration configuration)
+        public IndexModel(IMediator mediator, ISchedulerHostedService schedulerHostedService, IConfiguration configuration, IWebHostEnvironment env)
         {
             _mediator = mediator;
             _schedulerHostedService = schedulerHostedService;
             _configuration = configuration;
-            Admin = _configuration.IsAdminEnabled(Admin);
+            //Admin = _configuration.IsAdminEnabled(Admin);
+            Admin = env.IsDevelopment();
         }
 
 
@@ -50,7 +49,7 @@ namespace DtpServer.Pages.Workflows
 
             if (Admin && id > 0)
             {
-                ((SchedulerHostedService)_schedulerHostedService).RunNow(id);
+                _schedulerHostedService.RunNow(id);
 
                 return Redirect("./Workflows");
             }

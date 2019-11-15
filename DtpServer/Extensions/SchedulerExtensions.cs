@@ -15,12 +15,12 @@ namespace DtpServer.Extensions
     {
         public static IServiceCollection AddScheduler(this IServiceCollection services)
         {
-            return services.AddSingleton<IHostedService, SchedulerHostedService>();
+            return services.AddSingleton<ISchedulerHostedService, SchedulerHostedService>();
         }
 
         public static IServiceCollection AddScheduler(this IServiceCollection services, EventHandler<UnobservedTaskExceptionEventArgs> unobservedTaskExceptionHandler)
         {
-            return services.AddSingleton<IHostedService, SchedulerHostedService>(serviceProvider =>
+            return services.AddSingleton<ISchedulerHostedService, SchedulerHostedService>(serviceProvider =>
             {
                 var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();

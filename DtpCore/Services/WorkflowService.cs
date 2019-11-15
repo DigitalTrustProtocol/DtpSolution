@@ -132,7 +132,7 @@ namespace DtpCore.Services
             var containers = (from p in _trustDBService.Workflows
                               where p.Active 
                               && p.NextExecution <= time 
-                              && p.State != WorkflowStatusType.Running.ToString()
+                              //&& p.State != WorkflowStatusType.Running.ToString() 
                               select p).ToArray();
 
             return containers;

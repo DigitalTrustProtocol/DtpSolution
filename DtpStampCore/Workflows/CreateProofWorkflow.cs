@@ -71,7 +71,7 @@ namespace DtpStampCore.Workflows
 
                 // If funding key is available then use, local timestamping.
 
-                if (IsFundingAvailable())
+                if (IsFundingAvailable(proof))
                     LocalTimestamp(proof);
                 else
                     RemoteTimestamp(proof);
@@ -96,9 +96,9 @@ namespace DtpStampCore.Workflows
         }
 
 
-        private bool IsFundingAvailable()
+        private bool IsFundingAvailable(BlockchainProof proof)
         {
-            return string.IsNullOrEmpty(_configuration.FundingKey());
+            return !string.IsNullOrEmpty(_configuration.FundingKey(proof.Blockchain));
         }
 
         public void Merkle(BlockchainProof proof)
