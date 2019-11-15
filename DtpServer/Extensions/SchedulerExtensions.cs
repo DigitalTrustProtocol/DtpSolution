@@ -20,7 +20,9 @@ namespace DtpServer.Extensions
 
         public static IServiceCollection AddScheduler(this IServiceCollection services, EventHandler<UnobservedTaskExceptionEventArgs> unobservedTaskExceptionHandler)
         {
-            return services.AddSingleton<ISchedulerHostedService, SchedulerHostedService>(serviceProvider =>
+            services.AddTransient<ISchedulerHostedService, SchedulerHostedService>();
+
+            return services.AddHostedService(serviceProvider =>
             {
                 var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();

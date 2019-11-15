@@ -9,13 +9,14 @@ using Serilog.Formatting;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Display;
 using Serilog.Events;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using DtpServer.Platform;
 using DtpCore.Extensions;
 using Topshelf;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using DtpServer.Services;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -88,8 +89,13 @@ namespace DtpServer
                                     options.ValidateScopes = isDevelopment;// context.HostingEnvironment.IsDevelopment();
                                 });
                         //webBuilder.CaptureStartupErrors(true);
+                        webBuilder.ConfigureServices(services =>
+                        {
+                            //ervices.AddHostedService<VideosWatcher>();
+                        });
                         webBuilder.UseSerilog();
                     });
+ 
 
 
 

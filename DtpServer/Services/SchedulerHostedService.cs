@@ -63,6 +63,7 @@ namespace DtpServer.Services
             {
                 ExecuteOnce(cancellationToken);
 
+                _logger.LogInformation($"Scheduler Service now waiting for next run...");
                 await Task.Delay(_configuration.WorkflowInterval() * 1000, DelayTokenSource.Token);
                 //_logger.LogInformation("Checking Workflows !");
                 if (DelayTokenSource.IsCancellationRequested)
@@ -74,7 +75,7 @@ namespace DtpServer.Services
 
         private void ExecuteOnce(CancellationToken cancellationToken)
         {
-
+            _logger.LogInformation($"Running Scheduler Service...");
             if (ContainerId > 0)
                 return; // Do not execute now!
 
